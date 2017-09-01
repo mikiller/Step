@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_upload_image">
+
+    <View
+        android:id="@+id/mask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_upload_image_mask"
+        android:visibility="visible"/>
+
+    <ProgressBar
+        android:id="@+id/pgb_line"
+        style="@style/progressbar_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:background="@android:color/transparent"
+        android:visibility="gone"/>
+
+    <com.uilib.mxprogressbar.MXProgressbar
+        android:id="@+id/pgb_circle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="10dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_wait"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="等待中"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:layout_centerInParent="true"/>
+
+    <LinearLayout
+        android:id="@+id/ll_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/refresh"
+            android:layout_marginBottom="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="重新上传"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"/>
+    </LinearLayout>
+
+</RelativeLayout>

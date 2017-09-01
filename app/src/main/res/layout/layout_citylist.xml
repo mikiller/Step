@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_mask">
+
+    <ImageButton
+        android:id="@+id/btn_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_close"
+        android:background="@null"
+        android:padding="30dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="30dp">
+
+        <View android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@color/tagBgGray" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            style="@style/cityTxt"
+            android:text="快速选择"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
+
+        <View android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@color/tagBgGray" />
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/rdg_mainCity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="30dp">
+
+        <RadioButton
+            android:id="@+id/rdb_Shanghai"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            style="@style/cityTxt"
+            android:button="@null"
+            android:text="上海"
+            android:drawableTop="@mipmap/ic_shanghai"
+            android:gravity="center"/>
+
+        <RadioButton
+            android:id="@+id/rdb_Beijing"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            style="@style/cityTxt"
+            android:button="@null"
+            android:text="北京"
+            android:drawableTop="@mipmap/ic_beijing"
+            android:gravity="center"/>
+
+        <RadioButton
+            android:id="@+id/rdb_Guangzhou"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            style="@style/cityTxt"
+            android:button="@null"
+            android:text="广州"
+            android:drawableTop="@mipmap/ic_guangzhou"
+            android:gravity="center"/>
+
+        <RadioButton
+            android:id="@+id/rdb_Hangzhou"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            style="@style/cityTxt"
+            android:button="@null"
+            android:text="杭州"
+            android:drawableTop="@mipmap/ic_hangzhou"
+            android:gravity="center"/>
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp">
+
+        <View android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@color/tagBgGray" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            style="@style/cityTxt"
+            android:text="全部城市"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
+
+        <View android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@color/tagBgGray" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcv_city"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent">
+
+        </android.support.v7.widget.RecyclerView>
+
+        <com.mcxtzhang.indexlib.IndexBar.widget.IndexBar
+            xmlns:idx="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/indexBar"
+            android:layout_width="24dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:paddingBottom="50dp"
+            idx:indexBarTextSize="12sp"
+            idx:indexBarTextColor="@android:color/white"/>
+    </FrameLayout>
+</LinearLayout>

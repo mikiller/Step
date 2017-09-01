@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+ * Copyright (c) 2009 VanceInfo  Ltd.
+ * History : 2010.02.02  Clark create
+ * All Rights Reserved.
+ -->
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+	<translate 
+		android:fromYDelta="+50%p"
+		android:toYDelta="0"
+		android:duration="500"
+		android:interpolator="@android:anim/decelerate_interpolator"/>
+
+</set>

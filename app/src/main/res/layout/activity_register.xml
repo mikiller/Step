@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_regist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_mask"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.uilib.joooonho.SelectableRoundedImageView xmlns:round="http://schemas.android.com/apk/res-auto"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="30dp"
+            android:src="@mipmap/ic_default_head"
+            round:sriv_oval="true" />
+
+        <EditText
+            android:id="@+id/edt_nickName"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="30dp"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:maxLines="1"
+            android:hint="请输入昵称"
+            android:textColorHint="@color/colorHint"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@android:color/darker_gray" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="40dp">
+
+            <TextView
+                android:id="@+id/tv_city"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:drawableRight="@mipmap/ic_city"
+                android:text="请选择城市"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@android:color/darker_gray" />
+
+        <RadioGroup
+            android:id="@+id/rdg_gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="90dp">
+
+            <RadioButton
+                android:id="@+id/rdb_male"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="30dp"
+                android:background="@drawable/selector_male"
+                android:button="@null" />
+
+            <RadioButton
+                android:id="@+id/rdb_female"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="30dp"
+                android:background="@drawable/selector_female"
+                android:button="@null" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btn_signup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_btn_regist"
+            android:paddingBottom="5dp"
+            android:paddingLeft="60dp"
+            android:paddingRight="60dp"
+            android:paddingTop="5dp"
+            android:text="Step up"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <include
+        android:id="@+id/layout_citylist"
+        layout="@layout/layout_citylist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:visibility="gone"/>
+</RelativeLayout>

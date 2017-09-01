@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="IndexBar">
+        <attr name="indexBarTextSize" format="dimension"/>
+        <attr name="indexBarTextColor" format="color"/>
+        <attr name="indexBarPressBackground" format="color" />
+    </declare-styleable>
+</resources>

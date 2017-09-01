@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">SpannableEditbox</string>
+    <string name="network_error">网络无连接</string>
+    <string name="network_error_needlogin">请打开浏览器，登录连接wifi!</string>
+    <string name="parse_date_error">解析网络数据异常!</string>
+
+    <string name="richedt_alert_cleartag">模板‘【正文】、【导语】、【编后】’不能删除</string>
+    <string name="richedt_alert_notext_before_main">【正文】前请不要有内容</string>
+    <string name="richedt_alert_order">模板‘【正文】、【导语】、【编后】’顺序不能改变</string>
+    <string name="richedt_alert_norepeat">你的内容不能含有‘【正文】、【导语】、【编后】’</string>
+
+    <string name="maintxt_model">正文: %1$d 字 %2$d 秒</string>
+    <string name="lead_model">导语: %1$d 字 %2$d 秒</string>
+
+    <string name="tab_unselected">未选择(1%$d)</string>
+    <string name="tab_all">全部(1%$d)</string>
+    <string name="file_provider">com.reporterclue.fileprovider</string>
+</resources>

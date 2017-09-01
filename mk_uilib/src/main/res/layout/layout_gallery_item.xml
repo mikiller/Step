@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content" android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:scaleType="centerCrop"/>
+
+    <CheckBox
+        android:id="@+id/ckb_isCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/iv_img"
+        android:layout_alignRight="@+id/iv_img"
+        android:scaleX="0.8"
+        android:scaleY="0.8"
+        android:button="@null"
+        android:background="@drawable/selector_img_check" />
+
+    <LinearLayout
+        android:id="@+id/ll_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/iv_img"
+        android:gravity="right|center_vertical"
+        android:background="@drawable/shape_item_time_bg"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:text="00:00:00"
+            android:layout_margin="5dp"/>
+    </LinearLayout>
+</RelativeLayout>

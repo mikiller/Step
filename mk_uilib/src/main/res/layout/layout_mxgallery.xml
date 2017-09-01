@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bar="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="android.support.v4.app.FragmentActivity">
+
+    <com.uilib.mxgallery.widgets.GalleryTabGroup
+        android:id="@+id/tabGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rcv_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tabGroup"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp" />
+
+    <com.uilib.mxgallery.widgets.BottomBar
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        bar:leftTxt="预览"
+        bar:needNum="true"
+        bar:rightTxt="确定"
+        android:clickable="true"
+        android:layout_alignParentBottom="true"/>
+
+    <FrameLayout
+        android:id="@+id/fl_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</RelativeLayout>

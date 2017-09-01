@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/rdg_guideBar"
+        android:layout_marginBottom="1dp" />
+
+    <RadioGroup
+        android:id="@+id/rdg_guideBar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/blackPrimary"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:paddingBottom="4dp">
+
+        <RadioButton
+            android:id="@+id/rdb_msg"
+            style="@style/mainTab"
+            android:drawableTop="@drawable/selector_tab_msg"
+            android:text="消息" />
+
+        <RadioButton
+            android:id="@+id/rdb_track"
+            style="@style/mainTab"
+            android:drawableTop="@drawable/selector_tab_track"
+            android:text="足迹" />
+
+        <RadioButton
+            android:id="@+id/rdb_discovery"
+            style="@style/mainTab"
+            android:drawableTop="@drawable/selector_tab_discovery"
+            android:text="发现" />
+
+        <RadioButton
+            android:id="@+id/rdb_mine"
+            style="@style/mainTab"
+            android:drawableTop="@drawable/selector_tab_mine"
+            android:text="我的" />
+    </RadioGroup>
+</RelativeLayout>

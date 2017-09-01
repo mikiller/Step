@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:re="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <jp.wasabeef.richeditor.RichEditor
+        android:id="@+id/editor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="top"
+        android:layout_above="@+id/toolbar"
+        re:fontColor="@color/edit_color"
+        re:fontSize="15"
+        re:paddingTop="10"
+        re:paddingBottom="10"
+        re:paddingLeft="10"
+        re:paddingRight="10"
+        re:editorHeight="400" />
+
+    <LinearLayout
+        android:id="@+id/ll_statCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignBottom="@+id/editor"
+        android:gravity="right"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="15dp">
+
+        <TextView
+            android:id="@+id/tv_mainTextCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正文: 0 字 0 秒"
+            android:textColor="@color/hintTxt"/>
+
+        <ImageView
+            android:layout_width="1px"
+            android:layout_height="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/sliptLine" />
+
+        <TextView
+            android:id="@+id/tv_LeadCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="导语: 0 字 0 秒"
+            android:textColor="@color/hintTxt"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:layout_alignParentBottom="true"
+        android:background="@color/toolbarColor"
+        >
+
+        <ImageButton
+            android:id="@+id/action_undo"
+            style="@style/icon_style"
+            android:background="@null"
+            />
+
+        <ImageButton
+            android:id="@+id/action_redo"
+            style="@style/icon_style"
+            android:background="@null"
+            />
+
+        <CheckBox
+            android:id="@+id/action_bold"
+            style="@style/icon_style"
+            />
+
+        <CheckBox
+            android:id="@+id/action_underline"
+            style="@style/icon_style"
+            />
+
+        <CheckBox
+            android:id="@+id/action_italic"
+            style="@style/icon_style"
+            />
+
+        <ImageButton
+            android:id="@+id/action_mainTxt"
+            style="@style/icon_style"
+            android:background="@null"
+            />
+
+        <ImageButton
+            android:id="@+id/action_lead"
+            style="@style/icon_style"
+            android:background="@null"
+            />
+
+        <ImageButton
+            android:id="@+id/action_post"
+            style="@style/icon_style"
+            android:background="@null"
+            />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="SpannableEditbox">
+        <attr name="clickableSpan" format="boolean" />
+        <attr name="bold" format="boolean" />
+        <attr name="italic" format="boolean" />
+        <attr name="underLine" format="boolean" />
+        <attr name="showToolbar" format="boolean" />
+        <attr name="foregroundColor" format="color"/>
+        <attr name="undoAndRedo" format="boolean"/>
+        <attr name="boldBg" format="reference" />
+        <attr name="italicBg" format="reference" />
+        <attr name="underLineBg" format="reference" />
+        <attr name="mainTxtBg" format="reference" />
+        <attr name="leadBg" format="reference" />
+        <attr name="postBg" format="reference" />
+        <attr name="undoBg" format="reference" />
+        <attr name="redoBg" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="Header">
+        <attr name="titleTextSize" format="dimension" />
+        <attr name="titleTextColor1" format="color" />
+        <attr name="titleText" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="MXProgressImageView">
+        <attr name="pgbType" >
+            <enum name="line" value="0"/>
+            <enum name="circle" value="1" />
+        </attr>
+        <attr name="bgImage" format="reference"/>
+        <attr name="radio" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="CheckableTag">
+        <attr name="isChecked" format="boolean"/>
+        <attr name="needClose" format="boolean" />
+        <attr name="text" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="MXFlowLayout">
+        <attr name="hint" format="string" />
+        <attr name="hintSize" format="dimension" />
+        <attr name="hintColor" format="color" />
+        <attr name="childMargin" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="MXFloatActButton">
+        <attr name="srcText" format="string"/>
+        <attr name="txtSize" format="dimension" />
+        <attr name="textMargin" format="dimension" />
+        <attr name="txtColor" format="color" />
+        <attr name="textGravity" >
+            <enum name="LEFT_TOP" value="0" />
+            <enum name="RIGHT_TOP" value="1" />
+            <enum name="LEFT_BOTTOM" value="2" />
+            <enum name="RIGHT_BOTTOM" value="3" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="PullToRefresh">
+
+        <!-- A drawable to use as the background of the Refreshable View -->
+        <attr name="ptrRefreshableViewBackground" format="reference|color" />
+
+        <!-- A drawable to use as the background of the Header and Footer Loading Views -->
+        <attr name="ptrHeaderBackground" format="reference|color" />
+
+        <!-- Text Color of the Header and Footer Loading Views -->
+        <attr name="ptrHeaderTextColor" format="reference|color" />
+
+        <!-- Text Color of the Header and Footer Loading Views Sub Header -->
+        <attr name="ptrHeaderSubTextColor" format="reference|color" />
+
+        <!-- Mode of Pull-to-Refresh that should be used -->
+        <attr name="ptrMode">
+            <flag name="disabled" value="0x0" />
+            <flag name="pullFromStart" value="0x1" />
+            <flag name="pullFromEnd" value="0x2" />
+            <flag name="both" value="0x3" />
+            <flag name="manualOnly" value="0x4" />
+
+            <!-- These last two are depreacted -->
+            <flag name="pullDownFromTop" value="0x1" />
+            <flag name="pullUpFromBottom" value="0x2" />
+        </attr>
+
+        <!-- Whether the Indicator overlay(s) should be used -->
+        <attr name="ptrShowIndicator" format="reference|boolean" />
+
+        <!-- Drawable to use as Loading Indicator. Changes both Header and Footer. -->
+        <attr name="ptrDrawable" format="reference" />
+
+        <!-- Drawable to use as Loading Indicator in the Header View. Overrides value set in ptrDrawable. -->
+        <attr name="ptrDrawableStart" format="reference" />
+
+        <!-- Drawable to use as Loading Indicator in the Footer View. Overrides value set in ptrDrawable. -->
+        <attr name="ptrDrawableEnd" format="reference" />
+
+        <!-- Whether Android's built-in Over Scroll should be utilised for Pull-to-Refresh. -->
+        <attr name="ptrOverScroll" format="reference|boolean" />
+
+        <!-- Base text color, typeface, size, and style for Header and Footer Loading Views -->
+        <attr name="ptrHeaderTextAppearance" format="reference" />
+
+        <!-- Base text color, typeface, size, and style for Header and Footer Loading Views Sub Header -->
+        <attr name="ptrSubHeaderTextAppearance" format="reference" />
+
+        <!-- Style of Animation should be used displayed when pulling. -->
+        <attr name="ptrAnimationStyle">
+            <flag name="rotate" value="0x0" />
+            <flag name="flip" value="0x1" />
+        </attr>
+
+        <!-- Whether the user can scroll while the View is Refreshing -->
+        <attr name="ptrScrollingWhileRefreshingEnabled" format="reference|boolean" />
+
+        <!--
+        	Whether PullToRefreshListView has it's extras enabled. This allows the user to be
+        	able to scroll while refreshing, and behaves better. It acheives this by adding
+        	Header and/or Footer Views to the ListView.
+        -->
+        <attr name="ptrListViewExtrasEnabled" format="reference|boolean" />
+
+        <!--
+        	Whether the Drawable should be continually rotated as you pull. This only
+        	takes effect when using the 'Rotate' Animation Style.
+        -->
+        <attr name="ptrRotateDrawableWhilePulling" format="reference|boolean" />
+
+        <!-- BELOW HERE ARE DEPRECEATED. DO NOT USE. -->
+        <attr name="ptrAdapterViewBackground" format="reference|color" />
+        <attr name="ptrDrawableTop" format="reference" />
+        <attr name="ptrDrawableBottom" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="SwipeToLoadLayout">
+        <attr name="refresh_enabled" format="boolean" />
+        <attr name="load_more_enabled" format="boolean" />
+
+        <attr name="swipe_style" format="enum">
+            <enum name="classic" value="0" />
+            <enum name="above" value="1" />
+            <enum name="blew" value="2" />
+            <enum name="scale" value="3" />
+        </attr>
+
+        <attr name="drag_ratio" format="float" />
+
+        <attr name="refresh_trigger_offset" format="dimension" />
+        <attr name="load_more_trigger_offset" format="dimension" />
+        <attr name="refresh_final_drag_offset" format="dimension" />
+        <attr name="load_more_final_drag_offset" format="dimension" />
+
+        <attr name="swiping_to_refresh_to_default_scrolling_duration" format="integer" />
+        <attr name="release_to_refreshing_scrolling_duration" format="integer" />
+        <attr name="refresh_complete_delay_duration" format="integer" />
+        <attr name="refresh_complete_to_default_scrolling_duration" format="integer" />
+        <attr name="default_to_refreshing_scrolling_duration" format="integer" />
+        <attr name="swiping_to_load_more_to_default_scrolling_duration" format="integer" />
+        <attr name="release_to_loading_more_scrolling_duration" format="integer" />
+        <attr name="load_more_complete_delay_duration" format="integer" />
+        <attr name="load_more_complete_to_default_scrolling_duration" format="integer" />
+        <attr name="default_to_loading_more_scrolling_duration" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="GoogleCircleProgressView">
+        <attr name="gcp_inner_radius" format="dimension"/>
+        <attr name="gcp_background_color" format="color"/>
+        <attr name="gcp_progress_color" format="color"/>
+        <attr name="gcp_progress_stoke_width" format="dimension"/>
+        <attr name="gcp_show_arrow" format="boolean"/>
+        <attr name="gcp_enable_circle_background" format="boolean"/>
+        <attr name="gcp_arrow_width" format="dimension"/>
+        <attr name="gcp_arrow_height" format="dimension"/>
+
+        <attr name="gcp_progress" format="integer"/>
+        <attr name="gcp_max" format="integer"/>
+
+
+        <attr name="gcp_progress_text_size" format="dimension"/>
+        <attr name="gcp_progress_text_color" format="color"/>
+
+        <!--<attr name="gcp_progress_text_offset" format="dimension"/>-->
+
+        <attr name="gcp_progress_text_visibility" format="enum">
+            <enum name="visible" value="0"/>
+            <enum name="invisible" value="1"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="ExpandableTextView">
+        <attr name="maxCollapsedLines" format="integer"/>
+        <attr name="animDuration" format="integer"/>
+        <attr name="animAlphaStart" format="float"/>
+        <attr name="expandDrawable" format="reference"/>
+        <attr name="collapseDrawable" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="SelectableRoundedImageView">
+        <attr name="sriv_left_top_corner_radius" format="dimension" />
+        <attr name="sriv_right_top_corner_radius" format="dimension" />
+        <attr name="sriv_left_bottom_corner_radius" format="dimension" />
+        <attr name="sriv_right_bottom_corner_radius" format="dimension" />
+        <attr name="sriv_border_width" format="dimension" />
+        <attr name="sriv_border_color" format="color" />
+        <attr name="sriv_oval" format="boolean" />
+        <attr name="android:scaleType" />
+    </declare-styleable>
+
+    <attr name="minTrimMs" format="integer"/>
+    <attr name="sliderWidth" format="dimension" />
+    <attr name="leftSlider" format="reference" />
+    <attr name="rightSlider" format="reference" />
+    <attr name="borderColor" format="color|reference" />
+
+    <declare-styleable name="RangeSeekBar">
+        <attr name="minTrimMs"/>
+        <attr name="sliderWidth"/>
+        <attr name="leftSlider"/>
+        <attr name="rightSlider"/>
+        <attr name="borderColor"/>
+    </declare-styleable>
+
+    <declare-styleable name="VideoEditor">
+        <attr name="minTrimMs"/>
+        <attr name="sliderWidth"/>
+        <attr name="leftSlider"/>
+        <attr name="rightSlider"/>
+        <attr name="borderColor" />
+        <attr name="maxThumbCount" format="integer" />
+    </declare-styleable>
+    <declare-styleable name="MXGallery">
+        <attr name="needEdge" format="boolean" />
+        <attr name="columnNum" format="integer" />
+        <attr name="itemMargin" format="integer" />
+        <attr name="maxSltCount" format="integer|enum" >
+            <enum name="ALL" value="-1" />
+        </attr>
+        <attr name="isMultiple" format="boolean" />
+        <attr name="needCapture" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="BottomBar">
+        <attr name="leftTxt" format="string|reference" />
+        <attr name="rightTxt" format="string|reference" />
+        <attr name="needNum" format="boolean" />
+    </declare-styleable>
+</resources>

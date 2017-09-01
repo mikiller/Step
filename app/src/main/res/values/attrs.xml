@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MyMenuItem">
+        <attr name="menuIcon" format="reference"/>
+        <attr name="menuTitle" format="reference|string" />
+        <attr name="needLine" format="boolean" />
+        <attr name="bgColor" format="reference|color" />
+        <attr name="needSubText" format="boolean" />
+        <attr name="needNext" format="boolean" />
+    </declare-styleable>
+</resources>

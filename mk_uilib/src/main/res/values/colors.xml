@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="edit_color">#000000</color>
+    <color name="toolbarColor">#f0faff</color>
+    <color name="mask">#b4333333</color>
+    <color name="tagTextBlue">#00befa</color>
+    <color name="tagBgBlue">#2600bcf7</color>
+    <color name="tagBgGray">#c8c8c8</color>
+    <color name="rbtnSelectGray">#585858</color>
+    <color name="sliptLine">#dcdcdc</color>
+    <color name="hintTxt">#8c8c8c</color>
+
+    <color name="google_blue">#4285F4</color>
+    <color name="google_red">#EA4335</color>
+    <color name="google_green">#34A853</color>
+    <color name="google_yellow">#FBBC05</color>
+
+    <color name="item_time_bg_center">#33000000</color>
+    <color name="item_time_bg_end">#cc000000</color>
+    <color name="gallery_bottom_bg">#bff7f7f7</color>
+    <color name="text_color_black">#353535</color>
+</resources>

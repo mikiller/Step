@@ -1,0 +1,28 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="icon_height">34dp</dimen>
+    <dimen name="icon_margin">10dp</dimen>
+
+    <dimen name="indicator_right_padding">10.0dip</dimen>
+    <dimen name="indicator_corner_radius">12.0dip</dimen>
+    <dimen name="indicator_internal_padding">4.0dip</dimen>
+    <dimen name="header_footer_left_right_padding">30.0dip</dimen>
+    <dimen name="header_footer_top_bottom_padding">12.0dip</dimen>
+
+    <dimen name="load_more_footer_height_classic">60dp</dimen>
+
+    <dimen name="refresh_header_height_twitter">80dp</dimen>
+    <dimen name="load_more_footer_height_twitter">60dp</dimen>
+
+    <dimen name="refresh_header_height_google">100dp</dimen>
+    <dimen name="refresh_trigger_offset_google">100dp</dimen>
+    <dimen name="refresh_final_offset_google">150dp</dimen>
+    <dimen name="refresh_drawable_size_google">40dp</dimen>
+
+    <dimen name="load_more_footer_height_google">72dp</dimen>
+    <dimen name="load_more_trigger_offset_google">88dp</dimen>
+    <dimen name="load_more_final_offset_google">120dp</dimen>
+    <dimen name="load_more_drawable_size_google">36dp</dimen>
+</resources>

@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Step</string>
+
+    <string name="file_provider">com.smg.mkframe.fileprovider</string>
+    <string name="notifyTitle">提示</string>
+    <string name="notifyMsg">当前应用缺少必要权限。\n\n请点击\"设置\"-\"权限\"-打开所需权限。</string>
+    <string name="setting">设置</string>
+    <string name="cancel">取消</string>
+
+    <string name="dialog_title_tip">提示</string>
+
+    <string name="menu_mood">心情</string>
+    <string name="menu_go">约行</string>
+    <string name="menu_discovery">发现</string>
+    <string name="menu_acheive">成就</string>
+    <string name="menu_setting">设置</string>
+</resources>
