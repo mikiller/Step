@@ -76,7 +76,7 @@
                     android:layout_marginBottom="30dp"/>
             </RelativeLayout>
 
-            <com.mkframe.step.customViews.MyMenuItem
+            <com.westepper.step.customViews.MyMenuItem
                 android:id="@+id/menu_mood"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -87,25 +87,25 @@
                 <!--android:layout_width="match_parent"-->
                 <!--android:layout_height="10dp"-->
                 <!--android:background="@color/bg_gray" />-->
-            <com.mkframe.step.customViews.MyMenuItem
+            <com.westepper.step.customViews.MyMenuItem
                 android:id="@+id/menu_go"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 menu:menuIcon="@mipmap/ic_launcher"
                 menu:menuTitle="@string/menu_go"/>
-            <com.mkframe.step.customViews.MyMenuItem
+            <com.westepper.step.customViews.MyMenuItem
                 android:id="@+id/menu_discovery"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 menu:menuIcon="@mipmap/ic_launcher"
                 menu:menuTitle="@string/menu_discovery"/>
-            <com.mkframe.step.customViews.MyMenuItem
+            <com.westepper.step.customViews.MyMenuItem
                 android:id="@+id/menu_acheive"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 menu:menuIcon="@mipmap/ic_launcher"
                 menu:menuTitle="@string/menu_acheive"/>
-            <com.mkframe.step.customViews.MyMenuItem
+            <com.westepper.step.customViews.MyMenuItem
                 android:id="@+id/menu_setting"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
