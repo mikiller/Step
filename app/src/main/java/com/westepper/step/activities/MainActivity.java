@@ -44,7 +44,8 @@ public class MainActivity extends SuperActivity {
                         break;
                     default:
                         vp_content.setCurrentItem(1);
-                        ((MapFragment)adapter.getItem(1)).setIsTrack(checkedId == R.id.rdb_track);
+                        adapter.getItem(1).fragmentCallback(checkedId, null);
+//                        ((MapFragment)adapter.getItem(1)).setIsTrack(checkedId == R.id.rdb_track);
                         break;
                 }
             }

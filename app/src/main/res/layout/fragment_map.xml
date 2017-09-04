@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false">
+
+    <com.amap.api.maps.TextureMapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/ll_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="25dp">
+
+        <com.westepper.step.customViews.SearchView
+            android:id="@+id/search"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:translationZ="4dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"/>
+        
+        <ImageButton
+            android:id="@+id/btn_acheivement"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@color/colorPrimary"
+            android:layout_marginRight="10dp"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_head"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="@color/colorPrimary"
+        android:translationY="-64dp"
+        android:padding="10dp">
+
+        <RadioGroup
+            android:id="@+id/rdg_kind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true">
+
+            <RadioButton
+                android:id="@+id/rdb_friend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:textSize="16sp"
+                android:textColor="@color/selector_discovery_kind"
+                android:text="朋友圈"
+                android:checked="true"
+                android:layout_marginRight="30dp"/>
+
+            <RadioButton
+                android:id="@+id/rdb_near"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:textSize="16sp"
+                android:textColor="@color/selector_discovery_kind"
+                android:text="附近的人" />
+        </RadioGroup>
+
+        <ImageButton
+            android:id="@+id/btn_new"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_plus"
+            android:background="@drawable/selector_btn_regist"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_discoveryList"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:clipChildren="false"
+        android:layout_marginRight="34dp"
+        android:layout_marginLeft="20dp"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

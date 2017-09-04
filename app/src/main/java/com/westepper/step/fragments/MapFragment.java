@@ -5,17 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
 import com.amap.api.fence.GeoFence;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.model.LatLng;
 import com.google.gson.Gson;
-import com.uilib.mxgallery.widgets.GalleryTabGroup;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
 import com.westepper.step.adapters.DiscoveryAdapter;
@@ -40,13 +39,15 @@ import butterknife.BindView;
 
 public class MapFragment extends BaseFragment {
     @BindView(R.id.map)
-    MapView mapView;
+    TextureMapView mapView;
     @BindView(R.id.ll_search)
     LinearLayout ll_search;
     @BindView(R.id.search)
     SearchView search;
     @BindView(R.id.rl_head)
     RelativeLayout rl_head;
+    @BindView(R.id.rdg_kind)
+    RadioGroup rdg_kind;
     @BindView(R.id.vp_discoveryList)
     ViewPager vp_discoveryList;
 
@@ -104,7 +105,7 @@ public class MapFragment extends BaseFragment {
 
     @Override
     protected void setLayoutRes() {
-        layoutRes = R.layout.fragment_track;
+        layoutRes = R.layout.fragment_map;
     }
 
     @Override
@@ -142,18 +143,17 @@ public class MapFragment extends BaseFragment {
             return;
         searchHeight = ll_search.getMeasuredHeight();
         headHeight = rl_head.getMeasuredHeight();
-        vpHeight = getActivity().getWindow().getDecorView().getMeasuredHeight() + vp_discoveryList.getMeasuredHeight();
         vpPos = mapView.getMeasuredHeight() - vp_discoveryList.getMeasuredHeight();
         Log.e(TAG, "window h: " + mapView.getMeasuredHeight() + ", vp: " + vp_discoveryList.getMeasuredHeight());
         if(isTrack){
             AnimUtils.startObjectAnim(ll_search, "translationY", -searchHeight, 0, 300);
             AnimUtils.startObjectAnim(rl_head, "translationY", 0, -headHeight, 300);
-            AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vpPos, vpHeight, 300);
+            AnimUtils.startObjectAnim(vp_discoveryList, "translationY", 0, vpPos, 300);
         }else{
             AnimUtils.startObjectAnim(ll_search, "translationY", 0, -searchHeight, 300);
             AnimUtils.startObjectAnim(rl_head, "translationY", -headHeight, 0, 300);
             getDiscoveryList();
-            AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vpHeight, vpPos, 300);
+            AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vpPos, 0, 300);
         }
 
     }
@@ -217,6 +217,7 @@ public class MapFragment extends BaseFragment {
 
     @Override
     public void fragmentCallback(int type, Intent data) {
-
+        setIsTrack(type == R.id.rdb_track);
+        //mapUtils.
     }
 }
