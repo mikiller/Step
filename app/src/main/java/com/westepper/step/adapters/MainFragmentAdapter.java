@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import com.westepper.step.base.BaseFragment;
 import com.westepper.step.fragments.MineFragment;
 import com.westepper.step.fragments.MsgFragment;
-import com.westepper.step.fragments.TrackFragment;
+import com.westepper.step.fragments.MapFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class MainFragmentAdapter extends FragmentStatePagerAdapter {
         super(fm);
         fragments = new ArrayList<>();
         fragments.add(new MsgFragment());
-        fragments.add(new TrackFragment());
+        fragments.add(new MapFragment());
         //fragments.add(new DiscoveryFragment());
         fragments.add(new MineFragment());
     }

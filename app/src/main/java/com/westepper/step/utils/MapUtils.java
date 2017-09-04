@@ -103,21 +103,6 @@ public class MapUtils {
         return MapFactory.instance;
     }
 
-    public static MapUtils getInstance(Context context) {
-        if (MapFactory.instance == null)
-            MapFactory.instance = new MapUtils();
-//        if(MapFactory.instance.mapNavi == null){
-//            MapFactory.instance.mapNavi = AMapNavi.getInstance(context.getApplicationContext());
-//            MapFactory.instance.mapNavi.addAMapNaviListener((AMapNaviListener) context);
-//        }
-//        if(MapFactory.instance.mTtsManager == null) {
-//            MapFactory.instance.mTtsManager = TTSController.getInstance(context);
-//            MapFactory.instance.mTtsManager.init();
-//            MapFactory.instance.mapNavi.addAMapNaviListener(MapFactory.instance.mTtsManager);
-//        }
-        return MapFactory.instance;
-    }
-
     public static MapUtils getInstance() {
         if (MapFactory.instance == null)
             MapFactory.instance = new MapUtils();
@@ -153,7 +138,7 @@ public class MapUtils {
     public void initLocationStyle(long interval) {
         setCustomStyle();
         createLocalStyle(interval);
-        aMap.getUiSettings().setMyLocationButtonEnabled(true);
+//        aMap.getUiSettings().setMyLocationButtonEnabled(true);
         aMap.getUiSettings().setScaleControlsEnabled(true);
         aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
 

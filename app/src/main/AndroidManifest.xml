@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!--允许程序访问WiFi网络信息-->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <!--允许程序读写手机状态和身份-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!--允许程序访问CellID或WiFi热点来获取粗略的位置-->
@@ -35,17 +36,28 @@
             //开发者申请的key
         </meta-data>
 
-        <activity android:name=".activities.WelcomeActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="@string/file_provider"
+            android:grantUriPermissions="true"
+            android:exported="false"
+            >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_path" />
+        </provider>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <!-- ====================高德=================== -->
+        <service android:name="com.amap.api.location.APSService"/>
+
+        <activity android:name=".activities.WelcomeActivity" >
+
         </activity>
 
         <activity android:name=".activities.RegisterActivity"/>
 
-        <activity android:name=".activities.MainActivity" >
+        <activity android:name=".activities.MainActivity"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

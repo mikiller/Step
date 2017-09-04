@@ -16,6 +16,7 @@ import butterknife.Unbinder;
  */
 
 public abstract class BaseFragment extends Fragment {
+    protected final String TAG = this.getClass().getSimpleName();
     protected Unbinder unbinder;
     protected int layoutRes;
     protected Bundle saveBundle;
