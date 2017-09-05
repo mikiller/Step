@@ -32,6 +32,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     ImageView iv_user_edit;
     @BindView(R.id.tv_user_name)
     TextView tv_user_name;
+    @BindView(R.id.menu_paihang)
+    MyMenuItem menu_paihang;
     @BindView(R.id.menu_mood)
     MyMenuItem menu_mood;
     @BindView(R.id.menu_go)
@@ -76,6 +78,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
         tv_user_name.setOnClickListener(this);
 
+        menu_paihang.setOnClickListener(this);
+        menu_paihang.setSubText("NO.");
         menu_mood.setOnClickListener(this);
         menu_go.setOnClickListener(this);
         menu_discovery.setOnClickListener(this);

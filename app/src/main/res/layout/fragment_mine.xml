@@ -45,7 +45,8 @@
                     android:layout_marginTop="17dp"
                     android:layout_centerInParent="true">
 
-                    <com.uilib.joooonho.SelectableRoundedImageView xmlns:riv="http://schemas.android.com/apk/res-auto"
+                    <com.uilib.joooonho.SelectableRoundedImageView
+                        xmlns:riv="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/iv_header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -77,40 +78,49 @@
             </RelativeLayout>
 
             <com.westepper.step.customViews.MyMenuItem
+                android:id="@+id/menu_paihang"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                menu:menuIcon="@mipmap/ic_paihang"
+                menu:menuTitle="@string/menu_paihang"
+                menu:needSubText="true"
+                menu:needNext="true"/>
+
+            <com.westepper.step.customViews.MyMenuItem
                 android:id="@+id/menu_mood"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                menu:menuIcon="@mipmap/ic_launcher"
-                menu:menuTitle="@string/menu_mood"/>
-
-            <!--<View-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="10dp"-->
-                <!--android:background="@color/bg_gray" />-->
+                menu:menuIcon="@mipmap/icon_smile"
+                menu:menuTitle="@string/menu_mood"
+                menu:needNext="true"/>
             <com.westepper.step.customViews.MyMenuItem
                 android:id="@+id/menu_go"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                menu:menuIcon="@mipmap/ic_launcher"
-                menu:menuTitle="@string/menu_go"/>
+                menu:menuIcon="@mipmap/icon_outgo"
+                menu:menuTitle="@string/menu_go"
+                menu:needNext="true"/>
             <com.westepper.step.customViews.MyMenuItem
                 android:id="@+id/menu_discovery"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                menu:menuIcon="@mipmap/ic_launcher"
-                menu:menuTitle="@string/menu_discovery"/>
+                menu:menuIcon="@mipmap/icon_discovery_selected"
+                menu:menuTitle="@string/menu_discovery"
+                menu:needNext="true"/>
             <com.westepper.step.customViews.MyMenuItem
                 android:id="@+id/menu_acheive"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                menu:menuIcon="@mipmap/ic_launcher"
-                menu:menuTitle="@string/menu_acheive"/>
+                menu:menuIcon="@mipmap/ic_acheive_selected"
+                menu:menuTitle="@string/menu_acheive"
+                menu:needNext="true"/>
             <com.westepper.step.customViews.MyMenuItem
                 android:id="@+id/menu_setting"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                menu:menuIcon="@mipmap/ic_launcher"
+                menu:menuIcon="@mipmap/icon_setting"
                 menu:menuTitle="@string/menu_setting"
+                menu:needNext="true"
                 menu:needLine="false"/>
         </LinearLayout>
     </ScrollView>

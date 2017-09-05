@@ -3,36 +3,33 @@
     android:id="@+id/menu_bg"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/selector_ticket_num">
+    android:paddingTop="15dp"
+    android:paddingLeft="15dp"
+    android:background="@drawable/selector_menuitem">
 
     <ImageView
         android:id="@+id/iv_menu_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="6dp"
-        android:layout_marginTop="18dp"
-        android:layout_marginBottom="18dp"/>
+        android:layout_marginRight="9dp"/>
 
     <TextView
         android:id="@+id/tv_menu_name"
         style="@style/nomal_text_style"
         android:layout_toRightOf="@+id/iv_menu_icon"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="14dp"
+        android:layout_centerVertical="true" />
 
     <ImageView
         android:id="@+id/iv_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@mipmap/next"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="10dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="13dp"
-        android:layout_marginLeft="8dp"
         android:visibility="invisible"/>
 
     <TextView
@@ -48,7 +45,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/line_gray"
-        android:layout_marginTop="16dp"
         android:layout_below="@+id/tv_menu_name"
-        android:layout_alignLeft="@+id/tv_menu_name"/>
+        android:layout_alignLeft="@+id/iv_menu_icon"/>
 </RelativeLayout>
