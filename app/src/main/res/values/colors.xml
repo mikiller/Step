@@ -17,4 +17,8 @@
     <color name="text_hint_color">#8c8c8c</color>
     <color name="discovery_time">#b2b2b2</color>
     <color name="discovery_kind_unchecked">#a0bed2</color>
+
+    <color name="first_bg">#FFFFBB28</color>
+    <color name="second_bg">#a7a7a7</color>
+    <color name="third_bg">#cc8f70</color>
 </resources>

@@ -46,17 +46,15 @@
                     android:layout_centerInParent="true">
 
                     <com.uilib.joooonho.SelectableRoundedImageView
-                        xmlns:riv="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/iv_header"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:scaleType="centerCrop"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
                         android:src="@mipmap/ic_default_head"
                         android:layout_margin="4dp"
                         android:layout_centerHorizontal="true"
-                        riv:sriv_border_color="@android:color/white"
-                        riv:sriv_border_width="4dp"
-                        riv:sriv_oval="true" />
+                        menu:sriv_border_color="@android:color/white"
+                        menu:sriv_border_width="1dp"
+                        menu:sriv_oval="true" />
 
                     <ImageView
                         android:id="@+id/iv_user_edit"
@@ -66,15 +64,39 @@
                         android:layout_alignRight="@+id/iv_header"
                         android:src="@mipmap/icon_edit"/>
 
+                    <TextView
+                        android:id="@+id/tv_user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:text="点击登录"
+                        android:layout_below="@+id/iv_header"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="15dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_userId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/discovery_time"
+                        android:text="ID:"
+                        android:textSize="12sp"
+                        android:layout_below="@+id/tv_user_name"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5dp"/>
                 </RelativeLayout>
 
                 <TextView
-                    android:id="@+id/tv_user_name"
-                    style="@style/nomal_text_style"
-                    android:text="点击登录"
-                    android:layout_alignBottom="@+id/iv_header_bg"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="30dp"/>
+                    android:id="@+id/tv_city"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/ic_city1"
+                    android:drawablePadding="5dp"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginLeft="15dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:text="上海"/>
             </RelativeLayout>
 
             <com.westepper.step.customViews.MyMenuItem
@@ -85,6 +107,70 @@
                 menu:menuTitle="@string/menu_paihang"
                 menu:needSubText="true"
                 menu:needNext="true"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:orientation="horizontal"
+                android:background="@android:color/white">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+
+                    <com.uilib.joooonho.SelectableRoundedImageView
+                        android:id="@+id/iv_first"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/ic_default_head"
+                        android:layout_margin="10dp"
+                        menu:sriv_oval="true" />
+                    
+                    <TextView
+                        style="@style/paihang_txt_no"
+                        android:background="@drawable/shape_first"
+                        android:text="NO.1" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+
+                    <com.uilib.joooonho.SelectableRoundedImageView
+                        android:id="@+id/iv_second"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/ic_default_head"
+                        android:layout_margin="10dp"
+                        menu:sriv_oval="true" />
+
+                    <TextView
+                        style="@style/paihang_txt_no"
+                        android:background="@drawable/shape_second"
+                        android:text="NO.2" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+
+                    <com.uilib.joooonho.SelectableRoundedImageView
+                        android:id="@+id/iv_third"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/ic_default_head"
+                        android:layout_margin="10dp"
+                        menu:sriv_oval="true" />
+
+                    <TextView
+                        style="@style/paihang_txt_no"
+                        android:background="@drawable/shape_third"
+                        android:text="NO.3" />
+                </RelativeLayout>
+            </LinearLayout>
 
             <com.westepper.step.customViews.MyMenuItem
                 android:id="@+id/menu_mood"
