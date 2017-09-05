@@ -6,12 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
 import com.amap.api.fence.GeoFence;
-import com.amap.api.maps.MapView;
 import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -37,15 +38,27 @@ import butterknife.BindView;
  * Created by Mikiller on 2017/9/1.
  */
 
-public class MapFragment extends BaseFragment {
+public class MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnCheckedChangeListener{
     @BindView(R.id.map)
     TextureMapView mapView;
     @BindView(R.id.ll_search)
     LinearLayout ll_search;
     @BindView(R.id.search)
     SearchView search;
+    @BindView(R.id.btn_acheivement)
+    ImageButton btn_acheivement;
     @BindView(R.id.rl_head)
     RelativeLayout rl_head;
+    @BindView(R.id.rdg_scope)
+    RadioGroup rdg_scope;
+    @BindView(R.id.btn_new)
+    ImageButton btn_new;
+    @BindView(R.id.ll_discovery_opt)
+    LinearLayout ll_discovery_opt;
+    @BindView(R.id.btn_selection)
+    ImageButton btn_selection;
+    @BindView(R.id.btn_refresh)
+    ImageButton btn_refresh;
     @BindView(R.id.rdg_kind)
     RadioGroup rdg_kind;
     @BindView(R.id.vp_discoveryList)
@@ -57,6 +70,7 @@ public class MapFragment extends BaseFragment {
     BroadcastReceiver geoReceiver;
     String path;
     private boolean isTrack = true;
+    float searchHeight, headTransY, vpTransY, optTransY;
 
     private void createTestData() {
         AreaList areaList = new AreaList();
@@ -112,12 +126,13 @@ public class MapFragment extends BaseFragment {
     protected void initView() {
         path = getActivity().getFilesDir() + File.separator + "area.data";
         mapView.onCreate(saveBundle);
-        mapUtils = MapUtils.getInstance(getActivity(), mapView.getMap());
-        mapUtils.initLocationStyle(20000);
-        mapUtils.initLocationClient();
+        initMapUtil();
+
         geoReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                if(!isTrack)
+                    return;
                 Bundle bundle = intent.getExtras();
                 int status = bundle.getInt(GeoFence.BUNDLE_KEY_FENCESTATUS);
                 String id = bundle.getString(GeoFence.BUNDLE_KEY_CUSTOMID);
@@ -127,10 +142,56 @@ public class MapFragment extends BaseFragment {
             }
         };
 
+        btn_acheivement.setOnClickListener(this);
+        rdg_scope.setOnCheckedChangeListener(this);
+        rdg_kind.setOnCheckedChangeListener(this);
+        btn_new.setOnClickListener(this);
+        btn_selection.setOnClickListener(this);
+        btn_refresh.setOnClickListener(this);
+
         adapter = new DiscoveryAdapter(null, getActivity());
         vp_discoveryList.setAdapter(adapter);
         vp_discoveryList.setOffscreenPageLimit(3);
         vp_discoveryList.setPageMargin(DisplayUtil.dip2px(getActivity(), 15));
+        vp_discoveryList.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Discovery disc = adapter.getItem(position);
+                mapUtils.addMarker(disc.getLatlng());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        getDiscoveryList(1, 1);
+    }
+
+    private void initMapUtil(){
+        mapUtils = MapUtils.getInstance(getActivity(), mapView.getMap());
+        mapUtils.initLocationStyle(20000);
+        mapUtils.initLocationClient();
+
+        AreaList areaList = FileUtils.getDataFromLocal(path, AreaList.class);
+        if(areaList == null) {
+            createTestData();
+            areaList = FileUtils.getDataFromLocal(path, AreaList.class);
+        }
+
+        for(Area area : areaList.getAreaList()){
+            if(area.isHasChecked())
+                mapUtils.addCheckedArea(area);
+            else
+                mapUtils.addArea(area);
+            Log.e(TAG, "add area");
+            mapUtils.createGeoFenceClient(area.getId(), area.getBorderCoords());
+        }
     }
 
     public void setIsTrack(boolean isTrack){
@@ -138,40 +199,69 @@ public class MapFragment extends BaseFragment {
             return;
         else
             this.isTrack = isTrack;
-        int searchHeight, headHeight, vpHeight, vpPos;
+
         if(ll_search == null || rl_head  == null || vp_discoveryList == null)
             return;
-        searchHeight = ll_search.getMeasuredHeight();
-        headHeight = rl_head.getMeasuredHeight();
-        vpPos = mapView.getMeasuredHeight() - vp_discoveryList.getMeasuredHeight();
-        Log.e(TAG, "window h: " + mapView.getMeasuredHeight() + ", vp: " + vp_discoveryList.getMeasuredHeight());
+
+        if(searchHeight <= 0) {
+            searchHeight = ll_search.getMeasuredHeight();
+            headTransY = rl_head.getTranslationY();
+            vpTransY = vp_discoveryList.getTranslationY();
+            optTransY = (int) ll_discovery_opt.getTranslationY();
+            Log.e(TAG, "ty: " + vpTransY);
+        }
         if(isTrack){
             AnimUtils.startObjectAnim(ll_search, "translationY", -searchHeight, 0, 300);
-            AnimUtils.startObjectAnim(rl_head, "translationY", 0, -headHeight, 300);
-            AnimUtils.startObjectAnim(vp_discoveryList, "translationY", 0, vpPos, 300);
+            AnimUtils.startObjectAnim(rl_head, "translationY", 0, headTransY, 300);
+            AnimUtils.startObjectAnim(ll_discovery_opt, "translationY", 0, optTransY, 400);
+            AnimUtils.startObjectAnim(vp_discoveryList, "translationY", 0, vpTransY, 800);
+            mapUtils.removeMarker();
+            mapUtils.setIsNeedArea(true);
         }else{
             AnimUtils.startObjectAnim(ll_search, "translationY", 0, -searchHeight, 300);
-            AnimUtils.startObjectAnim(rl_head, "translationY", -headHeight, 0, 300);
-            getDiscoveryList();
-            AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vpPos, 0, 300);
+            AnimUtils.startObjectAnim(rl_head, "translationY", headTransY, 0, 300);
+            AnimUtils.startObjectAnim(ll_discovery_opt, "translationY", optTransY, 0, 400);
+            AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vpTransY, 0, 500);
+            mapUtils.addMarker(adapter.getItem(vp_discoveryList.getCurrentItem()).getLatlng());
+            mapUtils.setIsNeedArea(false);
         }
 
     }
 
-    private void getDiscoveryList(){
+    private void getDiscoveryList(final int scope, final int kind){
+        if(!isTrack) {
+            AnimUtils.startObjectAnim(vp_discoveryList, "translationY", 0, vpTransY, 800);
+            mapUtils.removeMarker();
+        }
         //test
-        List<Discovery> discoveryList = new ArrayList<>();
-        Discovery dis = new Discovery();
-        dis.setNickName("小飞");
-        dis.setGender(1);
-        dis.setInfo("小飞送鸡排");
-        discoveryList.add(dis);
-        dis = new Discovery();
-        dis.setNickName("鸡排侠");
-        dis.setGender(2);
-        dis.setInfo("鸡排不用飞哥送");
-        discoveryList.add(dis);
-        adapter.setDataList(discoveryList);
+        vp_discoveryList.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                List<Discovery> discoveryList = new ArrayList<>();
+                Discovery dis = new Discovery();
+                dis.setNickName("小飞");
+                dis.setGender(1);
+                dis.setInfo("小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排");
+                dis.setLatlng(new LatLng(31.2304, 121.462489));
+                dis.setDiscoveryKind(kind);
+                discoveryList.add(dis);
+                dis = new Discovery();
+                dis.setNickName("鸡排侠");
+                dis.setGender(2);
+                dis.setInfo("鸡排不用飞哥送");
+                dis.setLatlng(new LatLng(31.229189, 121.468207));
+                dis.setDiscoveryKind(kind);
+                discoveryList.add(dis);
+                adapter.setScope(scope);
+                adapter.setDataList(discoveryList);
+                vp_discoveryList.setCurrentItem(0);
+                if(!isTrack) {
+                    AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vpTransY, 0, 500);
+                    mapUtils.addMarker(discoveryList.get(vp_discoveryList.getCurrentItem()).getLatlng());
+                }
+            }
+        }, 1000);
+
     }
 
     @Override
@@ -185,27 +275,13 @@ public class MapFragment extends BaseFragment {
         super.onResume();
         mapView.onResume();
         mapUtils.registGeoListener(geoReceiver);
-
-        AreaList areaList = FileUtils.getDataFromLocal(path, AreaList.class);
-        if(areaList == null) {
-            createTestData();
-            areaList = FileUtils.getDataFromLocal(path, AreaList.class);
-        }
-
-        for(Area area : areaList.getAreaList()){
-            if(area.isHasChecked())
-                mapUtils.addCheckedArea(area);
-            else
-                mapUtils.addArea(area);
-            mapUtils.createGeoFenceClient(area.getId(), area.getBorderCoords());
-        }
     }
 
     @Override
     public void onPause() {
-        super.onPause();
         mapView.onPause();
         mapUtils.unregistGeoListener(geoReceiver);
+        super.onPause();
     }
 
     @Override
@@ -218,6 +294,45 @@ public class MapFragment extends BaseFragment {
     @Override
     public void fragmentCallback(int type, Intent data) {
         setIsTrack(type == R.id.rdb_track);
-        //mapUtils.
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_acheivement:
+                break;
+            case R.id.btn_new:
+                break;
+            case R.id.btn_selection:
+                break;
+            case R.id.btn_refresh:
+                refreshDiscoveryList();
+                break;
+        }
+    }
+
+    private void refreshDiscoveryList(){
+        AnimUtils.startRotateAnim(btn_refresh, 360, 0, 1000);
+        getDiscoveryList(rdg_scope.getCheckedRadioButtonId() == R.id.rdb_friend ? 1 : 2, rdg_kind.getCheckedRadioButtonId() == R.id.rdb_mood ? 1 : 2);
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        switch (checkedId){
+            case R.id.rdb_friend:
+                btn_selection.setVisibility(View.GONE);
+                getDiscoveryList(1, rdg_kind.getCheckedRadioButtonId() == R.id.rdb_mood ? 1 : 2);
+                break;
+            case R.id.rdb_near:
+                btn_selection.setVisibility(View.VISIBLE);
+                getDiscoveryList(2, rdg_kind.getCheckedRadioButtonId() == R.id.rdb_mood ? 1 : 2);
+                break;
+            case R.id.rdb_mood:
+                getDiscoveryList(rdg_scope.getCheckedRadioButtonId() == R.id.rdb_friend ? 1 : 2, 1);
+                break;
+            case R.id.rdb_join:
+                getDiscoveryList(rdg_scope.getCheckedRadioButtonId() == R.id.rdb_friend ? 1 : 2, 2);
+                break;
+        }
     }
 }

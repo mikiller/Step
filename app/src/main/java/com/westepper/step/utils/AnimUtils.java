@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.RotateAnimation;
 
 /**
  * Created by Mikiller on 2017/7/18.
@@ -52,5 +53,12 @@ public class AnimUtils {
             }
         });
         view.startAnimation(alphaAnim);
+    }
+
+    public static void startRotateAnim(final View view, float startD, float endD, int duration){
+        RotateAnimation rotateAnim = new RotateAnimation(startD, endD, view.getPivotX(), view.getPivotY());
+        rotateAnim.setDuration(duration);
+        rotateAnim.setInterpolator(new DecelerateInterpolator());
+        view.startAnimation(rotateAnim);
     }
 }

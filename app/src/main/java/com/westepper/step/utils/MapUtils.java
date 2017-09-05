@@ -17,10 +17,14 @@ import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.DPoint;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.model.BitmapDescriptor;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Polygon;
 import com.amap.api.services.nearby.NearbySearch;
@@ -50,56 +54,36 @@ public class MapUtils {
     private AMapLocationClient locationClient;
     private GeoFenceClient geoFenceClient;
     private Inner_3dMap_location mapLocation;
-    private NearbySearch nearbySearch;
 
     Map<String, Area> areas = new HashMap<>();
-    //    AMapNavi mapNavi;
-//    protected TTSController mTtsManager;
-
-
-    //    private double userLat, userLon;
-    private boolean hasInit = false;
-    private boolean hasMarkerChecked = false;
-    //    private Timer locationTimer = null;
-//    private BitmapDescriptor pos, pos_selected;
-//    private Marker lastMarker;
-    private Map<String, String> isMatched;
-    private OnMarkerCheckListener markerCheckListener;
-    private OnMarkerClickedListener markerClickListener;
+    boolean needArea = true;
+    float currentZoom = 15;
+    private BitmapDescriptor markerImg;
+    private Marker lastMarker;
     private OnGetLocationListener getLocationListener;
-    private LatLng endPos;
 
     private MapUtils() {
-//        pos = BitmapDescriptorFactory.fromResource(R.mipmap.icon_pos);
+        markerImg = BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker);
 //        pos_selected = BitmapDescriptorFactory.fromResource(R.mipmap.icon_pos_selected);
-        isMatched = new HashMap<>();
+//        isMatched = new HashMap<>();
     }
 
     private static class MapFactory {
         private static MapUtils instance = new MapUtils();
     }
 
-    public static MapUtils getInstance(AMap aMap) {
-        if (MapFactory.instance == null)
-            MapFactory.instance = new MapUtils();
-        if (MapFactory.instance.aMap == null)
-            MapFactory.instance.aMap = aMap;
-        return MapFactory.instance;
-    }
-
     public static MapUtils getInstance(Context context, AMap aMap) {
         if (MapFactory.instance == null)
             MapFactory.instance = new MapUtils();
-        if (MapFactory.instance.aMap == null) {
+
+        if (MapFactory.instance.aMap == null)
             MapFactory.instance.aMap = aMap;
-        }
         if (MapFactory.instance.mContext == null)
             MapFactory.instance.mContext = context;
+
         if(MapFactory.instance.geoFenceClient == null)
             MapFactory.instance.geoFenceClient = new GeoFenceClient(context);
 
-        if(MapFactory.instance.nearbySearch == null)
-            MapFactory.instance.nearbySearch = NearbySearch.getInstance(context);
         return MapFactory.instance;
     }
 
@@ -117,39 +101,27 @@ public class MapUtils {
         this.getLocationListener = getLocationListener;
     }
 
-    public void setMarkerClickListener(OnMarkerClickedListener markerClickedListener) {
-        this.markerClickListener = markerClickedListener;
-    }
-
-    public void setMarkerCheckListener(OnMarkerCheckListener markerCheckListener) {
-        this.markerCheckListener = markerCheckListener;
-    }
-
-    public void startLocation() {
-        aMap.setMyLocationEnabled(false);
-//        initLocationStyle(CommonConstanse.TIMER_TASK_DELAY);
-        moveCamera();
-    }
-
-    public void moveCamera() {
-        aMap.animateCamera(new CameraUpdateFactory().newCameraPosition(new CameraPosition(new LatLng(mapLocation.getLatitude(), mapLocation.getLongitude()), 13, 0, 0)));
+    public void moveCamera(LatLng latLng) {
+        aMap.animateCamera(new CameraUpdateFactory().newCameraPosition(new CameraPosition(latLng, currentZoom, 0, 0)));
     }
 
     public void initLocationStyle(long interval) {
         setCustomStyle();
         createLocalStyle(interval);
-//        aMap.getUiSettings().setMyLocationButtonEnabled(true);
-        aMap.getUiSettings().setScaleControlsEnabled(true);
-        aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+        aMap.getUiSettings().setZoomControlsEnabled(false);
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(currentZoom));
 
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
+                currentZoom = cameraPosition.zoom;
             }
 
             @Override
             public void onCameraChangeFinish(CameraPosition cameraPosition) {
-                if(cameraPosition.zoom < 13){
+                if(!needArea)
+                    return;
+                if(currentZoom < 13){
                     hideBorder();
                 }else{
                     showBorder();
@@ -219,11 +191,14 @@ public class MapUtils {
         }
     }
 
-    public void uploadNearbyData(){
-        UploadInfo nearInfo = new UploadInfo();
-        nearInfo.setCoordType(NearbySearch.AMAP);
-        nearInfo.setUserID("101");
-//        nearInfo.setPoint(new LatLonPoint());
+    public void setIsNeedArea(boolean isNeed){
+        needArea = isNeed;
+        if(needArea) {
+            showBorder();
+            aMap.setMyLocationStyle(locationStyle);
+        }else
+            hideBorder();
+        aMap.setMyLocationEnabled(needArea);
     }
 
     public void setAMapListeners() {
@@ -305,67 +280,23 @@ public class MapUtils {
         //save to local
     }
 
-//    public void addMarker(String id, String title, String snippet, /*Lbs lbs, */String isMatch) {
-//        MarkerOptions markerOptions = new MarkerOptions();
-//        markerOptions.position(new LatLng(lbs.getLatitude(), lbs.getLongitude()))
-//                .title(id + "." + title).snippet(snippet).draggable(true).anchor(0.5f, 1.0f)
-//                .icon("1".equals(isMatch) ? pos_selected : pos);
-//        aMap.addMarker(markerOptions);
-//        isMatched.put(id + "." + title, isMatch);
-//    }
+    public void addMarker(LatLng lbs) {
+        removeMarker();
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(lbs)
+                .draggable(true).anchor(0.5f, 1.0f)
+                .icon(markerImg);
 
-//    public void setMarkerListener() {
-//        aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
-//            @Override
-//            public boolean onMarkerClick(Marker marker) {
-//                Log.e(TAG, "click marker");
-//                if (lastMarker == null || !lastMarker.getId().equals(marker.getId())) {
-//                    onMarkerChecked(marker);
-//                    return false;
-//                } else {
-//                    Log.e(TAG, "unchecked marker");
-//                    onMarkerUnchecked();
-//                    return true;
-//                }
-//
-//            }
-//        });
-//
-//    }
+        lastMarker = aMap.addMarker(markerOptions);
+        moveCamera(lbs);
+    }
 
-//    public void onMarkerChecked(Marker marker) {
-//        hasMarkerChecked = true;
-////        if(locationTimer != null) {
-////            locationTimer.cancel();
-////            locationTimer = null;
-////        }
-//        String title = marker.getTitle();// + ",";
-//        //aMap.setMyLocationEnabled(false);
-////        if(lastMarker != null && "0".equals(isMatched.get(lastMarker.getTitle()))) {
-////            lastMarker.setIcon(pos);
-////        }
-////        marker.setIcon(pos_selected);
-//        lastMarker = marker;
-//        if (markerClickListener != null)
-//            markerClickListener.onMarkerClicked(title, marker);
-//        if (markerCheckListener != null)
-//            markerCheckListener.onMarkerChecked(true);
-//    }
-
-//    public void onMarkerUnchecked() {
-//        hasMarkerChecked = false;
-////        if("0".equals(isMatched.get(lastMarker.getTitle())))
-////            lastMarker.setIcon(pos);
-//        lastMarker.hideInfoWindow();
-//        lastMarker = null;
-//        if (markerCheckListener != null)
-//            markerCheckListener.onMarkerChecked(false);
-//    }
-
-//    public void startNavi(LatLng pos) {
-//        endPos = pos;
-//        initLocationClient();
-//    }
+    public void removeMarker(){
+        if(lastMarker != null){
+            lastMarker.remove();
+            lastMarker = null;
+        }
+    }
 
     public void initLocationClient() {
         if(locationClient == null)
@@ -382,17 +313,9 @@ public class MapUtils {
                     mapLocation.setLatitude(aMapLocation.getLatitude());
                     mapLocation.setLongitude(aMapLocation.getLongitude());
                     mapLocation.setAddress(aMapLocation.getAddress());
-
-//                    aMap.animateCamera(new CameraUpdateFactory().newCameraPosition(new CameraPosition(new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude()), 16, 0, 0)));
-//                    try {
-//                        startAMapNavi(endPos);
-//                    } catch (AMapException e){
-//                        startInnerNavi(new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude()), endPos);
-//                    }
                 }
             }
         });
-//        locationClient.startLocation();
     }
 
     public void startLoaction(){
@@ -430,33 +353,9 @@ public class MapUtils {
         mContext.unregisterReceiver(receiver);
     }
 
-//    public void startAMapNavi(LatLng pos) throws AMapException{
-//        // 构造导航参数
-//        NaviPara naviPara = new NaviPara();
-//        // 设置终点位置
-//        naviPara.setTargetPoint(pos);
-//        // 设置导航策略，这里是避免拥堵
-//        naviPara.setNaviStyle(NaviPara.DRIVING_AVOID_CONGESTION);
-//
-//        // 调起高德地图导航
-//        AMapUtils.openAMapNavi(naviPara, mContext.getApplicationContext());
-//
-//    }
-
-//    public void startInnerNavi(LatLng start, LatLng end){
-//        Intent intent = new Intent(mContext, (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) ? NaviActivityL.class : NaviActivity.class);
-//        intent.putExtra("startLbs", start);
-//        intent.putExtra("endLbs", end);
-//        mContext.startActivity(intent);
-//    }
-
     public float getDistance(LatLng start, LatLng end) {
         return AMapUtils.calculateLineDistance(start, end);
     }
-
-//    public void onStopSpeaking(){
-//        mTtsManager.stopSpeaking();
-//    }
 
     public void destory() {
         if (locationClient != null) {
@@ -464,6 +363,7 @@ public class MapUtils {
             locationClient.onDestroy();
             locationClient = null;
         }
+        locationStyle = null;
         if (aMap != null) {
             aMap.clear();
             aMap = null;
@@ -472,20 +372,13 @@ public class MapUtils {
             geoFenceClient.removeGeoFence();
             geoFenceClient = null;
         }
-//        if(mTtsManager != null) {
-//            mTtsManager.destroy();
-//            mTtsManager = null;
-//        }
+        removeMarker();
+        if(areas != null){
+            areas.clear();
+            areas = null;
+        }
         mContext = null;
         MapFactory.instance = null;
-    }
-
-    public interface OnMarkerCheckListener {
-        void onMarkerChecked(boolean isCheck);
-    }
-
-    public interface OnMarkerClickedListener {
-        void onMarkerClicked(String key, Marker marker);
     }
 
     public interface OnGetLocationListener {

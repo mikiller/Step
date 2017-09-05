@@ -26,6 +26,7 @@ import java.util.List;
 public class DiscoveryAdapter extends PagerAdapter {
     private List<Discovery> dataList;
     private Context mContext;
+    private int scope;
 
     public DiscoveryAdapter(List<Discovery> dataList, Context mContext) {
         this.dataList = dataList;
@@ -41,7 +42,8 @@ public class DiscoveryAdapter extends PagerAdapter {
         holder.setNickName(discover.getNickName());
         holder.setMsg(discover.getInfo());
         holder.setGender(discover.getGender());
-
+        holder.setKind(discover.getDiscoveryKind());
+        holder.setScope(scope);
         return view;
     }
 
@@ -50,9 +52,22 @@ public class DiscoveryAdapter extends PagerAdapter {
         this.notifyDataSetChanged();
     }
 
+    public void setScope(int scope){
+        this.scope = scope;
+    }
+
+    public Discovery getItem(int pos){
+        return dataList.get(pos);
+    }
+
     @Override
     public int getCount() {
         return dataList == null ? 0 : dataList.size();
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
     }
 
     @Override
@@ -66,7 +81,7 @@ public class DiscoveryAdapter extends PagerAdapter {
     }
 
     public class ViewHolder{
-        private TextView tv_nickName, tv_msg, tv_time, tv_endTime;
+        private TextView tv_nickName, tv_msg, tv_time;
         private ImageView iv_gender;
         private SelectableRoundedImageView iv_img1, iv_img2, iv_img3;
         private CheckBox ckb_good;
@@ -77,7 +92,6 @@ public class DiscoveryAdapter extends PagerAdapter {
             tv_nickName = (TextView) root.findViewById(R.id.tv_nickName);
             tv_msg = (TextView) root.findViewById(R.id.tv_msg);
             tv_time = (TextView) root.findViewById(R.id.tv_time);
-            tv_endTime = (TextView) root.findViewById(R.id.tv_endTime);
             iv_gender = (ImageView) root.findViewById(R.id.iv_gender);
             iv_img1 = (SelectableRoundedImageView) root.findViewById(R.id.iv_img1);
             iv_img2 = (SelectableRoundedImageView) root.findViewById(R.id.iv_img2);
@@ -102,10 +116,6 @@ public class DiscoveryAdapter extends PagerAdapter {
         }
 
         public void setTime(long time){
-
-        }
-
-        public void setEndTime(long endTime){
 
         }
 

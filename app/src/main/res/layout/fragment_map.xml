@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clipChildren="false">
+    android:clipChildren="false"
+    android:orientation="vertical">
 
     <com.amap.api.maps.TextureMapView
         android:id="@+id/map"
@@ -13,24 +14,100 @@
         android:id="@+id/ll_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="bottom"
         android:orientation="horizontal"
         android:paddingTop="25dp">
 
         <com.westepper.step.customViews.SearchView
             android:id="@+id/search"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="45dp"
-            android:translationZ="4dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"/>
-        
+            android:layout_weight="1" />
+
         <ImageButton
             android:id="@+id/btn_acheivement"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:background="@color/colorPrimary"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginBottom="4dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/selector_track_more"
+            android:src="@mipmap/ic_more"
+            android:translationZ="4dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_discovery_opt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/rl_head"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="9dp"
+        android:orientation="vertical"
+        android:translationY="-260dp">
+
+        <RelativeLayout
+            android:layout_width="41dp"
+            android:layout_height="81dp">
+
+            <RadioGroup
+                android:id="@+id/rdg_kind"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_dis_btn_bg"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <RadioButton
+                    android:id="@+id/rdb_mood"
+                    style="@style/discovery_rdb_kind"
+                    android:layout_marginBottom="8dp"
+                    android:checked="true"
+                    android:drawableTop="@drawable/selector_dis_kind_mood"
+                    android:text="心情" />
+
+                <RadioButton
+                    android:id="@+id/rdb_join"
+                    style="@style/discovery_rdb_kind"
+                    android:drawableTop="@drawable/selector_dis_kind_outgo"
+                    android:text="约行" />
+            </RadioGroup>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="4dp"
+                android:background="@color/line_gray" />
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/btn_selection"
+            android:layout_width="41dp"
+            android:layout_height="41dp"
+            android:layout_marginTop="9dp"
+            android:background="@drawable/selector_dis_selection"
+            android:src="@mipmap/ic_selection"/>
+
+        <LinearLayout
+            android:layout_width="41dp"
+            android:layout_height="41dp"
+            android:layout_marginTop="9dp"
+            android:background="@drawable/shape_dis_btn_bg"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/btn_refresh"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:src="@mipmap/ic_refresh" />
+        </LinearLayout>
     </LinearLayout>
 
     <RelativeLayout
@@ -38,36 +115,27 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:background="@color/colorPrimary"
-        android:translationY="-64dp"
-        android:padding="10dp">
+        android:translationY="-64dp">
 
         <RadioGroup
-            android:id="@+id/rdg_kind"
+            android:id="@+id/rdg_scope"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true">
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/rdb_friend"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:textSize="16sp"
-                android:textColor="@color/selector_discovery_kind"
-                android:text="朋友圈"
+                style="@style/discovery_rdb_scope"
+                android:layout_marginRight="9dp"
                 android:checked="true"
-                android:layout_marginRight="30dp"/>
+                android:text="朋友圈" />
 
             <RadioButton
                 android:id="@+id/rdb_near"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:textSize="16sp"
-                android:textColor="@color/selector_discovery_kind"
+                style="@style/discovery_rdb_scope"
                 android:text="附近的人" />
         </RadioGroup>
 
@@ -75,18 +143,21 @@
             android:id="@+id/btn_new"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_plus"
-            android:background="@drawable/selector_btn_regist"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"/>
+            android:background="@drawable/selector_btn_regist"
+            android:padding="15dp"
+            android:src="@mipmap/ic_plus" />
     </RelativeLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_discoveryList"
         android:layout_width="match_parent"
         android:layout_height="220dp"
-        android:clipChildren="false"
-        android:layout_marginRight="34dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
         android:layout_marginLeft="20dp"
-        android:layout_alignParentBottom="true"/>
+        android:layout_marginRight="34dp"
+        android:clipChildren="false"
+        android:translationY="660dp" />
 </RelativeLayout>

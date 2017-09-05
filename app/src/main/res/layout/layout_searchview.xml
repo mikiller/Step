@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/shape_discovery_item_bg"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:layout_margin="4dp"
+    android:translationZ="4dp">
 
     <com.uilib.joooonho.SelectableRoundedImageView
         xmlns:img="http://schemas.android.com/apk/res-auto"
