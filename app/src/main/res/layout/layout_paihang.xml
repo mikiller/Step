@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="昵称"
+        android:layout_centerHorizontal="true"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_above="@+id/ll_ach"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="11dp">
+
+        <TextView
+            android:id="@+id/tv_dis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/discovery_kind_unchecked"
+            android:textSize="12sp"
+            android:text="探索" />
+
+        <TextView
+            android:id="@+id/tv_dis_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:text="000000"
+            android:layout_marginLeft="10dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_ach"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="11dp"
+        android:layout_alignParentBottom="true">
+
+    <TextView
+        android:id="@+id/tv_ach"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/discovery_kind_unchecked"
+        android:textSize="12sp"
+        android:text="成就"/>
+
+        <TextView
+            android:id="@+id/tv_ach_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/mainTabTxt"
+            android:text="2225555"
+            android:layout_marginLeft="10dp"/>
+    </LinearLayout>
+</RelativeLayout>

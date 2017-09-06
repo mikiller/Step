@@ -168,7 +168,7 @@ public class MapUtils {
     private MyLocationStyle createLocalStyle(long interval) {
         locationStyle = new MyLocationStyle();
         locationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW);
-//        locationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.mipmap.map_self));
+        locationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_loaction));
         locationStyle.anchor(0.5f, 0.5f);
         locationStyle.radiusFillColor(Color.TRANSPARENT);
         locationStyle.strokeWidth(0f);

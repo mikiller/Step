@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:riv="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="30dp"
+        android:paddingBottom="14dp"
+        android:paddingLeft="15dp"
+        android:text="排行榜"
+        android:textColor="@android:color/white"
+        android:textSize="17sp"
+        android:drawableLeft="@mipmap/ic_back"
+        android:background="@color/colorPrimary"/>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="234dp"
+        android:background="@color/colorPrimary">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@mipmap/ic_paihang_bg"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="9dp"/>
+
+        <LinearLayout
+            android:id="@+id/ll_champion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="bottom"
+            android:layout_marginTop="36dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="65dp">
+
+                <com.uilib.joooonho.SelectableRoundedImageView
+                    android:id="@+id/iv_second"
+                    android:layout_width="match_parent"
+                    android:layout_height="61dp"
+                    android:src="@mipmap/ic_default_head"
+                    riv:sriv_oval="true" />
+
+                <TextView
+                    android:text="NO.2"
+                    style="@style/paihang_txt_no"
+                    android:background="@mipmap/ic_second"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="0dp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="86dp">
+
+                <com.uilib.joooonho.SelectableRoundedImageView
+                    android:id="@+id/iv_first"
+                    android:layout_width="match_parent"
+                    android:layout_height="81dp"
+                    android:src="@mipmap/ic_default_head"
+                    riv:sriv_oval="true" />
+
+                <TextView
+                    android:text="NO.1"
+                    style="@style/paihang_txt_no"
+                    android:background="@mipmap/ic_first"
+                    android:paddingLeft="25dp"
+                    android:paddingRight="25dp"
+                    android:paddingBottom="0dp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="65dp">
+
+                <com.uilib.joooonho.SelectableRoundedImageView
+                    android:id="@+id/iv_third"
+                    android:layout_width="match_parent"
+                    android:layout_height="61dp"
+                    android:src="@mipmap/ic_default_head"
+                    riv:sriv_oval="true" />
+
+                <TextView
+                    android:text="NO.3"
+                    style="@style/paihang_txt_no"
+                    android:background="@mipmap/ic_third"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="0dp"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/ll_champion"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:paddingBottom="15dp"
+            android:paddingTop="10dp">
+
+            <com.westepper.step.customViews.PaihangTextView
+                android:id="@+id/tv_second"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"/>
+            <com.westepper.step.customViews.PaihangTextView
+                android:id="@+id/tv_first"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"/>
+            <com.westepper.step.customViews.PaihangTextView
+                android:id="@+id/tv_third"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rcv_paihang"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"/>
+</LinearLayout>

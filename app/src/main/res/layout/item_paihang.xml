@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/ll_item"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:gravity="center_vertical">
+    <TextView
+        android:id="@+id/tv_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:textColor="@color/discovery_kind_unchecked"/>
+
+    <com.uilib.joooonho.SelectableRoundedImageView
+        xmlns:riv="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/iv_header"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@mipmap/ic_default_head"
+        android:layout_marginRight="10dp"
+        riv:sriv_oval="true" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_nickName"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="nickname"/>
+
+        <TextView
+            android:id="@+id/tv_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:textColor="@color/text_hint_color"
+            android:textSize="12sp"
+            android:layout_marginTop="4dp"
+            android:text="hint"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_dis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/icon_discovery"
+        android:layout_marginRight="10dp"/>
+
+    <TextView
+        android:id="@+id/tv_disNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="111"
+        android:layout_marginRight="25dp"/>
+
+    <ImageView
+        android:id="@+id/iv_ach"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_acheive"
+        android:layout_marginRight="10dp"/>
+
+    <TextView
+        android:id="@+id/tv_achNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="20"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="15dp"
+        android:background="@color/line_gray"
+        android:layout_below="@+id/ll_item"/>
+</RelativeLayout>

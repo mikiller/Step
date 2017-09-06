@@ -1,6 +1,9 @@
 package com.westepper.step.fragments;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -8,11 +11,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.uilib.utils.BitmapUtils;
 import com.westepper.step.R;
+import com.westepper.step.activities.PaihangActivity;
 import com.westepper.step.base.BaseFragment;
 import com.westepper.step.customViews.MyMenuItem;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.uilib.utils.DisplayUtil;
+import com.westepper.step.utils.ActivityManager;
 
 
 import butterknife.BindView;
@@ -67,13 +73,13 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     protected void initView() {
         RelativeLayout.LayoutParams lp;
         lp = (RelativeLayout.LayoutParams) iv_header_bg.getLayoutParams();
-        lp.height = DisplayUtil.getScreenHeight(getActivity()) / 3;
+        lp.height = DisplayUtil.getScreenWidth(getActivity()) *9 / 16;
         iv_header_bg.setLayoutParams(lp);
 
         tv_user_name.setOnClickListener(this);
-        lp = (RelativeLayout.LayoutParams) iv_header.getLayoutParams();
-        lp.width = lp.height = DisplayUtil.getScreenWidth(getActivity()) / 5;
-        iv_header.setLayoutParams(lp);
+//        lp = (RelativeLayout.LayoutParams) iv_header.getLayoutParams();
+//        lp.width = lp.height = DisplayUtil.getScreenWidth(getActivity()) / 5;
+//        iv_header.setLayoutParams(lp);
         iv_header.setOnClickListener(this);
 
         tv_user_name.setOnClickListener(this);
@@ -96,6 +102,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_default_head);
+        BitmapUtils.blur(getActivity(), bmp, iv_header_bg);
 //        user = ((BaseActivity) getActivity()).fetchUser();
 //        if (!((BaseActivity) getActivity()).isLogin() || TextUtils.isEmpty(user.getAccesstoken())) {
 //            iv_user_edit.setVisibility(View.GONE);
@@ -141,7 +149,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-//        switch (v.getId()) {
+        switch (v.getId()) {
+            case R.id.menu_paihang:
+                ActivityManager.startActivity(getActivity(), PaihangActivity.class);
+                break;
 //            case R.id.iv_header:
 //                ((BaseActivity) getActivity()).startToActivity(SettingActivity.class, "fragmentName", UserInfoFragment.class.getName());
 //                break;
@@ -161,7 +172,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 //            case R.id.menu_setting:
 //                ((BaseActivity) getActivity()).startToActivity(SettingActivity.class, "fragmentName", SettingFragment.class.getName());
 //                break;
-//        }
+        }
     }
 
 //    @Subscribe(threadMode = ThreadMode.MAIN)

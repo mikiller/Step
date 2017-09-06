@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    >
+    android:background="@color/colorHint">
 
     <FrameLayout
         android:id="@+id/fl_container"
@@ -47,8 +47,8 @@
 
                     <com.uilib.joooonho.SelectableRoundedImageView
                         android:id="@+id/iv_header"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_width="74dp"
+                        android:layout_height="74dp"
                         android:src="@mipmap/ic_default_head"
                         android:layout_margin="4dp"
                         android:layout_centerHorizontal="true"
@@ -72,7 +72,7 @@
                         android:text="点击登录"
                         android:layout_below="@+id/iv_header"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="15dp"/>
+                        android:layout_marginTop="8dp"/>
 
                     <TextView
                         android:id="@+id/tv_userId"
@@ -83,7 +83,7 @@
                         android:textSize="12sp"
                         android:layout_below="@+id/tv_user_name"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="5dp"/>
+                        android:layout_marginTop="10dp"/>
                 </RelativeLayout>
 
                 <TextView
@@ -110,21 +110,24 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
+                android:layout_height="93dp"
                 android:orientation="horizontal"
-                android:background="@android:color/white">
+                android:background="@android:color/white"
+                android:layout_marginBottom="10dp">
 
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="13dp">
 
                     <com.uilib.joooonho.SelectableRoundedImageView
                         android:id="@+id/iv_first"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@mipmap/ic_default_head"
-                        android:layout_margin="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="5dp"
                         menu:sriv_oval="true" />
                     
                     <TextView
@@ -136,14 +139,16 @@
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="13dp">
 
                     <com.uilib.joooonho.SelectableRoundedImageView
                         android:id="@+id/iv_second"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@mipmap/ic_default_head"
-                        android:layout_margin="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="5dp"
                         menu:sriv_oval="true" />
 
                     <TextView
@@ -155,14 +160,16 @@
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="13dp">
 
                     <com.uilib.joooonho.SelectableRoundedImageView
                         android:id="@+id/iv_third"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@mipmap/ic_default_head"
-                        android:layout_margin="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="5dp"
                         menu:sriv_oval="true" />
 
                     <TextView
