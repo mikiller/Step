@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -11,15 +12,23 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
+import com.mikiller.mkglidelib.imageloader.ImageLoader;
 import com.uilib.utils.BitmapUtils;
 import com.westepper.step.R;
+import com.westepper.step.activities.GalleryActivity;
 import com.westepper.step.activities.PaihangActivity;
 import com.westepper.step.base.BaseFragment;
+import com.westepper.step.base.Constants;
 import com.westepper.step.customViews.MyMenuItem;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.utils.ActivityManager;
+import com.westepper.step.utils.CameraGalleryUtils;
 
+
+import java.io.File;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -73,7 +82,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     protected void initView() {
         RelativeLayout.LayoutParams lp;
         lp = (RelativeLayout.LayoutParams) iv_header_bg.getLayoutParams();
-        lp.height = DisplayUtil.getScreenWidth(getActivity()) *9 / 16;
+        lp.height = DisplayUtil.getScreenWidth(getActivity()) *2 / 3;
         iv_header_bg.setLayoutParams(lp);
 
         tv_user_name.setOnClickListener(this);
@@ -96,7 +105,21 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void fragmentCallback(int type, Intent data) {
+        if(type == Constants.CHEANGE_HEADER){
+            List<File> files = (List<File>) data.getSerializableExtra(CameraGalleryUtils.THUMB_FILE);
+            GlideImageLoader.getInstance().loadLocalImage(getActivity(), Uri.fromFile(files.get(0)), new int[]{iv_header.getWidth(), iv_header.getHeight()}, R.mipmap.ic_default_head, iv_header);
+            GlideImageLoader.getInstance().loadImage(getActivity(), Uri.fromFile(files.get(0)).getPath(), iv_header, 0, new ImageLoader.ImageLoadListener() {
+                @Override
+                public void onLoadSuccess(Bitmap drawable, ImageView imageView) {
+                    BitmapUtils.blur(getActivity(), drawable, iv_header_bg);
+                }
 
+                @Override
+                public void onLoadFailed(ImageView imageView) {
+
+                }
+            });
+        }
     }
 
     @Override
@@ -153,9 +176,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             case R.id.menu_paihang:
                 ActivityManager.startActivity(getActivity(), PaihangActivity.class);
                 break;
-//            case R.id.iv_header:
+            case R.id.iv_header:
+                ActivityManager.startActivityforResult(getActivity(), GalleryActivity.class, Constants.CHEANGE_HEADER, null);
 //                ((BaseActivity) getActivity()).startToActivity(SettingActivity.class, "fragmentName", UserInfoFragment.class.getName());
-//                break;
+                break;
 //            case R.id.tv_user_name:
 //                ((BaseActivity) getActivity()).startToActivity(UserRegisterActivity.class);
 //                break;

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="bottom">
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="18dp"
+        android:paddingRight="18dp"
+        android:paddingTop="30dp"
+        android:paddingBottom="30dp"
+        android:background="@android:color/white" >
+
+        <RadioButton
+            android:id="@+id/rdb_man"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:button="@null"
+            android:drawableTop="@drawable/selector_man"
+            android:drawablePadding="10dp"
+            android:textColor="@color/selector_discovery_kind"
+            android:textSize="12sp"
+            android:text="只看男生"/>
+
+        <RadioButton
+            android:id="@+id/rdb_woman"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:button="@null"
+            android:drawableTop="@drawable/selector_woman"
+            android:drawablePadding="10dp"
+            android:textColor="@color/selector_discovery_kind"
+            android:textSize="12sp"
+            android:text="只看女生"/>
+
+        <RadioButton
+            android:id="@+id/rdb_people"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:button="@null"
+            android:drawableTop="@drawable/selector_people"
+            android:drawablePadding="10dp"
+            android:textColor="@color/selector_discovery_kind"
+            android:textSize="12sp"
+            android:text="查看所有"/>
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btn_dlg_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="取消"
+        android:textColor="@color/selector_discovery_kind"
+        android:textSize="18sp"
+        android:padding="15dp"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/selector_dlg_cancelbtn"/>
+</LinearLayout>

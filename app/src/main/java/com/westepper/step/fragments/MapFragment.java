@@ -16,6 +16,7 @@ import com.amap.api.fence.GeoFence;
 import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.uilib.customdialog.CustomDialog;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
 import com.westepper.step.adapters.DiscoveryAdapter;
@@ -304,11 +305,22 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
             case R.id.btn_new:
                 break;
             case R.id.btn_selection:
+                showSelectionDlg();
                 break;
             case R.id.btn_refresh:
                 refreshDiscoveryList();
                 break;
         }
+    }
+
+    private void showSelectionDlg(){
+        final CustomDialog dlg = new CustomDialog(getActivity());
+        dlg.setLayoutRes(R.layout.layout_selection_dlg).setOnCustomBtnClickListener(new CustomDialog.onCustomBtnsClickListener() {
+            @Override
+            public void onBtnClick(int id) {
+                dlg.dismiss();
+            }
+        }, R.id.rdb_man, R.id.rdb_woman, R.id.rdb_people).show();
     }
 
     private void refreshDiscoveryList(){

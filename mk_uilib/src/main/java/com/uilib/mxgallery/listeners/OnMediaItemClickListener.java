@@ -8,5 +8,4 @@ import com.uilib.mxgallery.models.ItemModel;
 
 public interface OnMediaItemClickListener {
     void onItemChecked(ItemModel item, boolean isChecked);
-    void onItemClicked(ItemModel item, boolean isChecked);
 }

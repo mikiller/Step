@@ -1,11 +1,13 @@
 package com.westepper.step.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.RadioGroup;
 
 import com.westepper.step.R;
 import com.westepper.step.adapters.MainFragmentAdapter;
+import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.UntouchableViewPager;
 import com.westepper.step.fragments.MapFragment;
@@ -59,5 +61,17 @@ public class MainActivity extends SuperActivity {
     @Override
     protected void initData() {
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode != RESULT_OK)
+            return;
+        switch (requestCode){
+            case Constants.CHEANGE_HEADER:
+                adapter.getItem(2).fragmentCallback(requestCode, data);
+                break;
+        }
     }
 }

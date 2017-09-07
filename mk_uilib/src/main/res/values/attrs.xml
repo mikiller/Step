@@ -241,6 +241,7 @@
         </attr>
         <attr name="isMultiple" format="boolean" />
         <attr name="needCapture" format="boolean" />
+        <attr name="needTab" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="BottomBar">

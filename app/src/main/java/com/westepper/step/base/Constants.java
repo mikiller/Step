@@ -6,4 +6,5 @@ package com.westepper.step.base;
 
 public class Constants {
     public static final String MAP_DATA = "AREA.data";
+    public static final int CHEANGE_HEADER = 0x101;
 }

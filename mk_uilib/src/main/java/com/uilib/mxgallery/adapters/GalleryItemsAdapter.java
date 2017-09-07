@@ -25,6 +25,7 @@ import com.uilib.mxgallery.models.MimeType;
 import com.uilib.mxgallery.widgets.MediaCollection;
 import com.uilib.R;
 import com.uilib.mxgallery.listeners.OnMediaItemClickListener;
+import com.uilib.utils.DisplayUtil;
 
 import java.io.File;
 import java.net.URI;
@@ -66,9 +67,8 @@ public class GalleryItemsAdapter extends RecyclerViewCursorAdapter<GalleryItemsA
             GlideImageLoader.getInstance().loadLocalImage(mContext, model.getContentUri(), new int[]{itemSize, itemSize}, R.mipmap.placeholder, holder.iv_img);
         }
         holder.tv_time.setText(DateUtils.formatElapsedTime(model.duration / 1000));
-        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) holder.ckb_isCheck.getLayoutParams();
-        lp.height = lp.width = itemSize / 3;
-        holder.ckb_isCheck.setLayoutParams(lp);
+//        int pdleft = DisplayUtil.px2dip(mContext, itemSize / 2), pdTop = DisplayUtil.dip2px(mContext, 5);
+//        holder.ckb_isCheck.setPadding(pdleft, pdTop, pdTop, pdleft);
         holder.setMediaType(MimeType.isPic(model.mimeType));
         setItemStatus(holder, model);
 
@@ -89,7 +89,8 @@ public class GalleryItemsAdapter extends RecyclerViewCursorAdapter<GalleryItemsA
             holder.iv_img.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listnener.onItemClicked(model, holder.ckb_isCheck.isChecked());
+                    //listnener.onItemClicked(model, holder.ckb_isCheck.isChecked());
+                    holder.ckb_isCheck.setChecked(!holder.ckb_isCheck.isChecked());
                 }
             });
         }

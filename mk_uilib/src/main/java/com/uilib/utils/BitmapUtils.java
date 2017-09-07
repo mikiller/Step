@@ -96,8 +96,8 @@ public class BitmapUtils {
      * bitmap 高斯模糊算法
      * */
     public static void blur(Context context, Bitmap bmp, ImageView view){
-        float radius = 3;
-        float scale = 8.0f;
+        float radius = 8;
+        float scale = 16.0f;
         Bitmap overlay = Bitmap.createBitmap((int) (bmp.getWidth()/ scale), (int) (bmp.getHeight() / scale), Bitmap.Config.ARGB_4444);
         Canvas canvas = new Canvas(overlay);
         canvas.translate(-view.getLeft() / scale, -view.getTop() / scale);
@@ -105,6 +105,7 @@ public class BitmapUtils {
         Paint paint = new Paint();
         paint.setFlags(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
         canvas.drawBitmap(bmp, 0, 0, paint);
+        canvas.drawARGB(153, 50, 60, 70);
 
         RenderScript rs = RenderScript.create(context);
         Allocation overlayAlloc = Allocation.createFromBitmap(rs, overlay);

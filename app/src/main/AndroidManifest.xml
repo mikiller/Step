@@ -65,6 +65,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.PaihangActivity" />
+        <activity android:name=".activities.GalleryActivity" />
     </application>
 
 </manifest>

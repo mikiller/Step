@@ -45,6 +45,13 @@
                     android:layout_marginTop="17dp"
                     android:layout_centerInParent="true">
 
+
+                    <TextView
+                        android:id="@+id/margin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="18dp"/>
+
                     <com.uilib.joooonho.SelectableRoundedImageView
                         android:id="@+id/iv_header"
                         android:layout_width="74dp"
@@ -52,6 +59,7 @@
                         android:src="@mipmap/ic_default_head"
                         android:layout_margin="4dp"
                         android:layout_centerHorizontal="true"
+                        android:layout_below="@+id/margin"
                         menu:sriv_border_color="@android:color/white"
                         menu:sriv_border_width="1dp"
                         menu:sriv_oval="true" />
@@ -129,7 +137,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="5dp"
                         menu:sriv_oval="true" />
-                    
+
                     <TextView
                         style="@style/paihang_txt_no"
                         android:background="@drawable/shape_first"

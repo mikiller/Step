@@ -22,4 +22,5 @@
     <color name="item_time_bg_end">#cc000000</color>
     <color name="gallery_bottom_bg">#bff7f7f7</color>
     <color name="text_color_black">#353535</color>
+    <color name="btn_unenabled">#93a7bf</color>
 </resources>

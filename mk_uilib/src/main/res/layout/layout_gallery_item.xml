@@ -7,7 +7,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:src="@mipmap/default_icon"/>
 
     <CheckBox
         android:id="@+id/ckb_isCheck"
@@ -15,10 +16,8 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/iv_img"
         android:layout_alignRight="@+id/iv_img"
-        android:scaleX="0.8"
-        android:scaleY="0.8"
         android:button="@null"
-        android:background="@drawable/selector_img_check" />
+        android:drawableTop="@drawable/selector_img_check" />
 
     <LinearLayout
         android:id="@+id/ll_time"

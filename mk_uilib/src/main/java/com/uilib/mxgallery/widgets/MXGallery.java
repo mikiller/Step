@@ -80,6 +80,7 @@ public class MXGallery extends RelativeLayout implements LoaderManager.LoaderCal
             needEdge = ta.getBoolean(R.styleable.MXGallery_needEdge, true);
             isMultiple = ta.getBoolean(R.styleable.MXGallery_isMultiple, true);
             needCapture = ta.getBoolean(R.styleable.MXGallery_needCapture, false);
+            tabGroup.setVisibility(ta.getBoolean(R.styleable.MXGallery_needTab, true) ? VISIBLE : GONE);
             ta.recycle();
         }
         rcv_gallery.setLayoutManager(new GridLayoutManager(getContext(), columnNum));
@@ -103,11 +104,6 @@ public class MXGallery extends RelativeLayout implements LoaderManager.LoaderCal
                 else
                     unCheckItem(item);
                 updateCollectionNum(mediaCollection.getSelectedCount());
-            }
-
-            @Override
-            public void onItemClicked(final ItemModel item, boolean isCheck) {
-                openPreviewPage(item, isCheck);
             }
         });
         rcv_gallery.setAdapter(itemsAdapter);
