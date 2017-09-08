@@ -82,7 +82,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     protected void initView() {
         RelativeLayout.LayoutParams lp;
         lp = (RelativeLayout.LayoutParams) iv_header_bg.getLayoutParams();
-        lp.height = DisplayUtil.getScreenWidth(getActivity()) *2 / 3;
+        lp.height = DisplayUtil.getScreenWidth(getActivity()) *9 / 16;
         iv_header_bg.setLayoutParams(lp);
 
         tv_user_name.setOnClickListener(this);

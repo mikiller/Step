@@ -10,10 +10,53 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
         <!--title:left_style="BACK"/>-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="69dp"
+        android:background="@color/colorPrimary">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_close1"
+            android:padding="15dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/selector_btn_regist"/>
+
+        <LinearLayout
+            android:id="@+id/ll_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="13dp"
+            android:layout_alignBottom="@+id/btn_back"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:text="相册"
+                android:layout_marginRight="10dp"/>
+
+            <ImageView
+                android:id="@+id/iv_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_arrow_down"/>
+        </LinearLayout>
+    </RelativeLayout>
 
     <com.uilib.mxgallery.widgets.MXGallery
         android:id="@+id/gallery"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        gal:needTab="false"/>
+        android:background="@android:color/white"
+        gal:needTab="false"
+        gal:columnNum="3"
+        gal:itemMargin="6dp" />
 </LinearLayout>

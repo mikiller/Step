@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimary">#00a8ff</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="edit_color">#000000</color>
@@ -23,4 +23,5 @@
     <color name="gallery_bottom_bg">#bff7f7f7</color>
     <color name="text_color_black">#353535</color>
     <color name="btn_unenabled">#93a7bf</color>
+    <color name="ckb_unchecked">#4d000000</color>
 </resources>

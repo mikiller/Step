@@ -58,6 +58,7 @@ public class AnimUtils {
     public static void startRotateAnim(final View view, float startD, float endD, int duration){
         RotateAnimation rotateAnim = new RotateAnimation(startD, endD, view.getPivotX(), view.getPivotY());
         rotateAnim.setDuration(duration);
+        rotateAnim.setFillAfter(true);
         rotateAnim.setInterpolator(new DecelerateInterpolator());
         view.startAnimation(rotateAnim);
     }

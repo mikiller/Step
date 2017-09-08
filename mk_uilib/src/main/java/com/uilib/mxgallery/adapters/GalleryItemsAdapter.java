@@ -41,11 +41,11 @@ public class GalleryItemsAdapter extends RecyclerViewCursorAdapter<GalleryItemsA
     private OnMediaItemClickListener listnener;
     private MediaCollection mediaCollection;
 
-    public GalleryItemsAdapter(Context context, MediaCollection mediaCollection, int itemCount, int margin) {
+    public GalleryItemsAdapter(Context context, MediaCollection mediaCollection, int itemCount, float margin) {
         super(null);
         mContext = context;
         this.mediaCollection = mediaCollection;
-        itemSize = (context.getResources().getDisplayMetrics().widthPixels - (itemCount+1) * margin) / 4;
+        itemSize = (int) ((context.getResources().getDisplayMetrics().widthPixels - (itemCount+1) * margin) / itemCount);
     }
 
     public void setItemClickeListener(OnMediaItemClickListener listnener){

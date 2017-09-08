@@ -235,7 +235,7 @@
     <declare-styleable name="MXGallery">
         <attr name="needEdge" format="boolean" />
         <attr name="columnNum" format="integer" />
-        <attr name="itemMargin" format="integer" />
+        <attr name="itemMargin" format="dimension" />
         <attr name="maxSltCount" format="integer|enum" >
             <enum name="ALL" value="-1" />
         </attr>

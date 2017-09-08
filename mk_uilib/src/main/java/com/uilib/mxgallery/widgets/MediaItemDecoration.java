@@ -23,10 +23,10 @@ import android.view.View;
 public class MediaItemDecoration extends RecyclerView.ItemDecoration {
 
     private int mSpanCount;
-    private int mSpacing;
+    private float mSpacing;
     private boolean mIncludeEdge;
 
-    public MediaItemDecoration(int spanCount, int spacing, boolean includeEdge) {
+    public MediaItemDecoration(int spanCount, float spacing, boolean includeEdge) {
         this.mSpanCount = spanCount;
         this.mSpacing = spacing;
         this.mIncludeEdge = includeEdge;
@@ -39,22 +39,22 @@ public class MediaItemDecoration extends RecyclerView.ItemDecoration {
         int column = position % mSpanCount; // item column
         if (mIncludeEdge) {
             // spacing - column * ((1f / spanCount) * spacing)
-            outRect.left = mSpacing - column * mSpacing / mSpanCount;
+            outRect.left = (int) (mSpacing - column * mSpacing / mSpanCount);
             // (column + 1) * ((1f / spanCount) * spacing)
-            outRect.right = (column + 1) * mSpacing / mSpanCount;
+            outRect.right = (int) ((column + 1) * mSpacing / mSpanCount);
 
             if (position < mSpanCount) { // top edge
-                outRect.top = mSpacing;
+                outRect.top = (int) mSpacing;
             }
-            outRect.bottom = mSpacing;
+            outRect.bottom = (int) mSpacing;
 //            outRect.bottom = position < mSpanCount ? mSpacing : mSpacing + 90; // item bottom
         } else {
             // column * ((1f / spanCount) * spacing)
-            outRect.left = column * mSpacing / mSpanCount;
+            outRect.left = (int) (column * mSpacing / mSpanCount);
             // spacing - (column + 1) * ((1f / spanCount) * spacing)
-            outRect.right = mSpacing - (column + 1) * mSpacing / mSpanCount;
+            outRect.right = (int) (mSpacing - (column + 1) * mSpacing / mSpanCount);
             if (position >= mSpanCount) {
-                outRect.top = mSpacing; // item top
+                outRect.top = (int) mSpacing; // item top
                 outRect.bottom = 90;
             }
         }

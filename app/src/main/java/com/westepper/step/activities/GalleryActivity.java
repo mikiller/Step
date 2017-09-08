@@ -5,7 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.TextView;
+
 import com.uilib.mxgallery.listeners.GalleryTabListener;
 import com.uilib.mxgallery.listeners.OnSelectItemListener;
 import com.uilib.mxgallery.models.MimeType;
@@ -14,6 +19,7 @@ import com.uilib.mxgallery.widgets.MXGallery;
 import com.westepper.step.R;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.models.ReportResModel;
+import com.westepper.step.utils.AnimUtils;
 import com.westepper.step.utils.CameraGalleryUtils;
 
 import java.io.File;
@@ -28,8 +34,14 @@ import butterknife.BindView;
  */
 
 public class GalleryActivity extends SuperActivity {
-//    @BindView(R.id.titleBar)
-//    TitleBar titleBar;
+    @BindView(R.id.btn_back)
+    ImageButton btn_back;
+    @BindView(R.id.ll_menu)
+    LinearLayout ll_menu;
+    @BindView(R.id.tv_menu)
+    TextView tv_menu;
+    @BindView(R.id.iv_menu)
+    ImageView iv_menu;
     @BindView(R.id.gallery)
     MXGallery gallery;
 
@@ -49,6 +61,19 @@ public class GalleryActivity extends SuperActivity {
 
     @Override
     protected void initView() {
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                back();
+            }
+        });
+
+        ll_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AnimUtils.startObjectAnim(iv_menu, "rotation", iv_menu.getRotation(), (iv_menu.getRotation() + 180) % 360, 500);
+            }
+        });
 //        titleBar.setTitle(title);
 //        titleBar.setOnLeftListener(new TitleBar.onLeftBtnClickListener() {
 //            @Override

@@ -25,6 +25,7 @@ import com.uilib.mxgallery.defaultloaders.MediaLoader;
 import com.uilib.mxgallery.listeners.GalleryTabListener;
 import com.uilib.mxgallery.listeners.OnBottomBtnClickListener;
 import com.uilib.mxgallery.listeners.OnMediaItemClickListener;
+import com.uilib.mxgallery.utils.GalleryUtils;
 
 import java.io.File;
 import java.util.List;
@@ -49,7 +50,8 @@ public class MXGallery extends RelativeLayout implements LoaderManager.LoaderCal
     private Loader<Cursor> contentLoader;
 
     private int mimeType = 0;
-    private int columnNum = 4, itemMargin = 8, maxSelectionCount = 9;
+    private int columnNum = 4, maxSelectionCount = 9;
+    private float itemMargin = 8;
     private boolean needEdge = true, isMultiple = true, needCapture = false;
 
     public MXGallery(Context context) {
@@ -75,7 +77,7 @@ public class MXGallery extends RelativeLayout implements LoaderManager.LoaderCal
         if (attrs != null) {
             TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.MXGallery);
             columnNum = ta.getInt(R.styleable.MXGallery_columnNum, 4);
-            itemMargin = ta.getInt(R.styleable.MXGallery_itemMargin, 8);
+            itemMargin = ta.getDimension(R.styleable.MXGallery_itemMargin, 16);
             maxSelectionCount = ta.getInt(R.styleable.MXGallery_maxSltCount, 9);
             needEdge = ta.getBoolean(R.styleable.MXGallery_needEdge, true);
             isMultiple = ta.getBoolean(R.styleable.MXGallery_isMultiple, true);
@@ -222,7 +224,7 @@ public class MXGallery extends RelativeLayout implements LoaderManager.LoaderCal
 
     public void updateItems(boolean isNeedShowSelected) {
         mediaCollection.isNeedShowSelected = isNeedShowSelected;
-        tabGroup.initLoaderManager(this);
+        GalleryUtils.initLoaderManager(getContext(), this);
     }
 
     public int getSelectedItemCount() {
@@ -237,7 +239,7 @@ public class MXGallery extends RelativeLayout implements LoaderManager.LoaderCal
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        tabGroup.initLoaderManager(this);
+        GalleryUtils.initLoaderManager(getContext(), this);
     }
 
     @Override
@@ -247,10 +249,12 @@ public class MXGallery extends RelativeLayout implements LoaderManager.LoaderCal
             type = MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
         else if (MimeType.isVideo(mimeType))
             type = MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
-        return contentLoader == null ? MediaLoader.newInstance(getContext(),
-                type,
-                needCapture,
-                mediaCollection.isNeedShowSelected ? null : mediaCollection.getSelectedModelPath()) : contentLoader;
+        if(contentLoader == null)
+            contentLoader = MediaLoader.newInstance(getContext(),
+                    type,
+                    needCapture,
+                    mediaCollection.isNeedShowSelected ? null : mediaCollection.getSelectedModelPath());
+        return contentLoader;
     }
 
     @Override
@@ -264,5 +268,11 @@ public class MXGallery extends RelativeLayout implements LoaderManager.LoaderCal
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         itemsAdapter.swapCursor(null);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        GalleryUtils.destoryLoaderManager();
     }
 }

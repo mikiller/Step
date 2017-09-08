@@ -29,7 +29,6 @@ public class GalleryTabGroup extends RelativeLayout {
     private ArrayList<String> tabNames;
     private int screenWidth, lastId = 0;
 
-    private LoaderManager mLoaderManager;
     private GalleryTabListener tabListener;
 
     public GalleryTabGroup(Context context) {
@@ -59,7 +58,6 @@ public class GalleryTabGroup extends RelativeLayout {
             }
         });
         tabLine = findViewById(R.id.view_tabline);
-        mLoaderManager = ((FragmentActivity) context).getSupportLoaderManager();
     }
 
     public void setTabNames(GalleryTabListener listener, String... names){
@@ -102,11 +100,6 @@ public class GalleryTabGroup extends RelativeLayout {
         ((RadioButton)rdg_tab.findViewById(id)).setText(name);
     }
 
-    public void initLoaderManager(LoaderManager.LoaderCallbacks<Cursor> callback){
-        if(mLoaderManager != null)
-            mLoaderManager.restartLoader(1, null, callback);
-    }
-
     public void updateTab(int itemCount){
         if(tabListener != null)
             tabListener.onTabUpdated(this, rdg_tab.getCheckedRadioButtonId(), itemCount);
@@ -135,9 +128,4 @@ public class GalleryTabGroup extends RelativeLayout {
         marginAnim.start();
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        mLoaderManager.destroyLoader(1);
-        super.onDetachedFromWindow();
-    }
 }

@@ -2,22 +2,31 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content" android:layout_height="wrap_content">
 
-    <ImageView
+    <com.uilib.joooonho.SelectableRoundedImageView
+        xmlns:riv="http://schemas.android.com/apk/res-auto"
         android:id="@+id/iv_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:scaleType="centerCrop"
-        android:src="@mipmap/default_icon"/>
+        android:src="@mipmap/default_icon"
+        riv:sriv_left_bottom_corner_radius="4dp"
+        riv:sriv_left_top_corner_radius="4dp"
+        riv:sriv_right_bottom_corner_radius="4dp"
+        riv:sriv_right_top_corner_radius="4dp"/>
 
     <CheckBox
         android:id="@+id/ckb_isCheck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="21dp"
+        android:layout_height="21dp"
         android:layout_alignTop="@+id/iv_img"
         android:layout_alignRight="@+id/iv_img"
+        android:layout_margin="5dp"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:gravity="center"
         android:button="@null"
-        android:drawableTop="@drawable/selector_img_check" />
+        android:background="@drawable/selector_img_check" />
 
     <LinearLayout
         android:id="@+id/ll_time"
