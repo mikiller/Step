@@ -22,4 +22,5 @@
     <color name="first_bg">#FFF5BE23</color>
     <color name="second_bg">#a4b6c3</color>
     <color name="third_bg">#ddb284</color>
+    <color name="dir_list_bg">#77000000</color>
 </resources>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="69dp">
+
+    <RelativeLayout
+        android:id="@+id/rl_bg"
+        android:layout_width="match_parent"
+        android:layout_height="69dp"
+        android:background="@color/colorPrimary">
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@null"
+        android:padding="15dp" />
+
+    <LinearLayout
+        android:id="@+id/ll_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/btn_back"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="13dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:text="相册"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/iv_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_arrow_down" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/btn_back"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <com.uilib.joooonho.SelectableRoundedImageView xmlns:riv="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/iv_header"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            riv:sriv_oval="true"
+            android:visibility="gone"
+            android:layout_marginRight="7dp"/>
+
+        <TextView
+            android:id="@+id/tv_act_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:padding="3dp"/>
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btn_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignBottom="@+id/btn_back"
+        android:background="@null"
+        android:src="@mipmap/ic_menu"
+        android:layout_marginBottom="5dp"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tv_act_sure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignBottom="@+id/btn_back"
+        android:textColor="@color/selector_title_txt_sure"
+        android:textSize="14sp"
+        android:text="提交"
+        android:enabled="false"
+        android:visibility="gone"/>
+    </RelativeLayout>
+</RelativeLayout>

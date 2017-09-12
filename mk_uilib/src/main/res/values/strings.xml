@@ -13,6 +13,6 @@
     <string name="lead_model">导语: %1$d 字 %2$d 秒</string>
 
     <string name="tab_unselected">未选择(1%$d)</string>
-    <string name="tab_all">全部(1%$d)</string>
+    <string name="tab_all">全部</string>
     <string name="file_provider">com.reporterclue.fileprovider</string>
 </resources>

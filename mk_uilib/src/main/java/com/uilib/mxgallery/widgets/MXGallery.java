@@ -13,6 +13,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
@@ -53,6 +54,7 @@ public class MXGallery extends RelativeLayout implements LoaderManager.LoaderCal
     private int columnNum = 4, maxSelectionCount = 9;
     private float itemMargin = 8;
     private boolean needEdge = true, isMultiple = true, needCapture = false;
+    private String bucketId = null;
 
     public MXGallery(Context context) {
         super(context);
@@ -224,7 +226,7 @@ public class MXGallery extends RelativeLayout implements LoaderManager.LoaderCal
 
     public void updateItems(boolean isNeedShowSelected) {
         mediaCollection.isNeedShowSelected = isNeedShowSelected;
-        GalleryUtils.initLoaderManager(getContext(), this);
+        GalleryUtils.initLoaderManager(getContext(), MediaLoader.LOADER_ID, this);
     }
 
     public int getSelectedItemCount() {
@@ -235,11 +237,18 @@ public class MXGallery extends RelativeLayout implements LoaderManager.LoaderCal
         return fgmtMgr == null ? true : !(fgmtMgr.getFragments().size() > 0);
     }
 
+    public void setBucketId(String id){
+        bucketId = id;
+        contentLoader = null;
+        GalleryUtils.destoryLoaderManager(MediaLoader.LOADER_ID);
+        GalleryUtils.initLoaderManager(getContext(), MediaLoader.LOADER_ID, this);
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        GalleryUtils.initLoaderManager(getContext(), this);
+        GalleryUtils.initLoaderManager(getContext(), MediaLoader.LOADER_ID, this);
     }
 
     @Override
@@ -253,7 +262,7 @@ public class MXGallery extends RelativeLayout implements LoaderManager.LoaderCal
             contentLoader = MediaLoader.newInstance(getContext(),
                     type,
                     needCapture,
-                    mediaCollection.isNeedShowSelected ? null : mediaCollection.getSelectedModelPath());
+                    mediaCollection.isNeedShowSelected ? null : mediaCollection.getSelectedModelPath(), bucketId);
         return contentLoader;
     }
 
@@ -270,9 +279,9 @@ public class MXGallery extends RelativeLayout implements LoaderManager.LoaderCal
         itemsAdapter.swapCursor(null);
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        GalleryUtils.destoryLoaderManager();
-    }
+//    @Override
+//    protected void onDetachedFromWindow() {
+//        super.onDetachedFromWindow();
+//        GalleryUtils.destoryLoaderManager(1);
+//    }
 }

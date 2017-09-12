@@ -24,4 +24,5 @@
     <color name="text_color_black">#353535</color>
     <color name="btn_unenabled">#93a7bf</color>
     <color name="ckb_unchecked">#4d000000</color>
+    <color name="dir_img_count">#a0a0a0</color>
 </resources>

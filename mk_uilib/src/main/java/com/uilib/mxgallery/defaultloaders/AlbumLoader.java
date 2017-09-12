@@ -17,45 +17,48 @@
 package com.uilib.mxgallery.defaultloaders;
 
 import android.content.Context;
-import android.content.CursorLoader;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.MergeCursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v4.content.CursorLoader;
 
 import com.uilib.mxgallery.models.Album;
 
 
 public class AlbumLoader extends CursorLoader {
+    public final static int LOADER_ID = 2;
+    private static Uri QUERY_URI = MediaStore.Files.getContentUri("external");
 
-    private static final Uri QUERY_URI = MediaStore.Files.getContentUri("external");
+
+    private static String[] PROJECTION = new String[]{
+                MediaStore.Files.FileColumns._ID,
+                MediaStore.Images.Media.BUCKET_ID,
+                MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+                MediaStore.MediaColumns.DATA,
+                "COUNT(*) AS " + Album.COLUMN_COUNT};
+    private static String  ORDER_BY = "datetaken DESC";
+
     private static final String[] COLUMNS = {
             MediaStore.Files.FileColumns._ID,
-            "bucket_id",
-            "bucket_display_name",
+            MediaStore.Images.Media.BUCKET_ID,
+            MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
             MediaStore.MediaColumns.DATA,
             Album.COLUMN_COUNT};
-    private static final String[] PROJECTION = {
-            MediaStore.Files.FileColumns._ID,
-            "bucket_id",
-            "bucket_display_name",
-            MediaStore.MediaColumns.DATA,
-            "COUNT(*) AS " + Album.COLUMN_COUNT};
     private static final String SELECTION =
             "(" + MediaStore.Files.FileColumns.MEDIA_TYPE + "=?"
-            + " OR "
-            + MediaStore.Files.FileColumns.MEDIA_TYPE + "=?)"
-            + " AND " + MediaStore.MediaColumns.SIZE + ">0"
-            + ") GROUP BY (bucket_id";
+                    + " OR "
+                    + MediaStore.Files.FileColumns.MEDIA_TYPE + "=?)"
+                    + " AND " + MediaStore.MediaColumns.SIZE + ">0"
+                    + ") GROUP BY (bucket_id";
     private static final String[] SELECTION_ARGS = {
-            String.valueOf(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE),
-            String.valueOf(MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO),
+            String.valueOf(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE)//,
+            //String.valueOf(MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO),
     };
-    private static final String BUCKET_ORDER_BY = "datetaken DESC";
 
     public AlbumLoader(Context context) {
-        super(context, QUERY_URI, PROJECTION, SELECTION, SELECTION_ARGS, BUCKET_ORDER_BY);
+        super(context, QUERY_URI, PROJECTION, SELECTION, SELECTION_ARGS, ORDER_BY);
     }
 
     @Override

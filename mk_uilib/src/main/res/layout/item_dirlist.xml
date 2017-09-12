@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
+
+    <com.uilib.joooonho.SelectableRoundedImageView xmlns:riv="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/iv_img"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_margin="15dp"
+        riv:sriv_left_bottom_corner_radius="4dp"
+        riv:sriv_left_top_corner_radius="4dp"
+        riv:sriv_right_bottom_corner_radius="4dp"
+        riv:sriv_right_top_corner_radius="4dp"
+        android:src="@mipmap/default_icon"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/iv_img"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_dirName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/dir_img_count"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/sliptLine"
+        android:layout_marginLeft="15dp"
+        android:layout_below="@+id/iv_img" />
+</RelativeLayout>

@@ -8,4 +8,24 @@
         <attr name="needSubText" format="boolean" />
         <attr name="needNext" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="TitleBar">
+        <attr name="titleBgColor" format="color"/>
+        <attr name="titleTxt" format="string|reference"/>
+        <attr name="subTxt" format="string|reference"/>
+        <attr name="backStyle">
+            <enum name="FORK" value="0" />
+            <enum name="ARROW" value="1" />
+        </attr>
+        <attr name="titleStyle">
+            <enum name="NORMAL" value="0" />
+            <enum name="MENU" value="1" />
+            <enum name="HEADER" value="2" />
+        </attr>
+        <attr name="subStyle">
+            <enum name="NONE" value="0" />
+            <enum name="IMG" value="1" />
+            <enum name="TXT" value="2" />
+        </attr>
+    </declare-styleable>
 </resources>

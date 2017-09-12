@@ -4,19 +4,13 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_title"
+    <com.westepper.step.customViews.TitleBar
+        xmlns:title="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingTop="30dp"
-        android:paddingBottom="14dp"
-        android:paddingLeft="15dp"
-        android:text="排行榜"
-        android:textColor="@android:color/white"
-        android:textSize="17sp"
-        android:drawableLeft="@mipmap/ic_back"
-        android:background="@color/colorPrimary"/>
+        title:backStyle="ARROW"
+        title:titleTxt="排行榜" />
     
     <RelativeLayout
         android:layout_width="match_parent"

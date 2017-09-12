@@ -1,23 +1,37 @@
 package com.westepper.step.activities;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CheckBox;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.uilib.mxgallery.listeners.GalleryTabListener;
+import com.uilib.mxgallery.defaultloaders.AlbumLoader;
+import com.uilib.mxgallery.defaultloaders.MediaLoader;
 import com.uilib.mxgallery.listeners.OnSelectItemListener;
+import com.uilib.mxgallery.models.Album;
 import com.uilib.mxgallery.models.MimeType;
-import com.uilib.mxgallery.widgets.GalleryTabGroup;
+import com.uilib.mxgallery.utils.GalleryUtils;
 import com.uilib.mxgallery.widgets.MXGallery;
+import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
+import com.uilib.mxgallery.adapters.DirRcvAdapter;
 import com.westepper.step.base.SuperActivity;
+import com.westepper.step.customViews.TitleBar;
 import com.westepper.step.models.ReportResModel;
 import com.westepper.step.utils.AnimUtils;
 import com.westepper.step.utils.CameraGalleryUtils;
@@ -25,6 +39,7 @@ import com.westepper.step.utils.CameraGalleryUtils;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -34,25 +49,23 @@ import butterknife.BindView;
  */
 
 public class GalleryActivity extends SuperActivity {
-    @BindView(R.id.btn_back)
-    ImageButton btn_back;
-    @BindView(R.id.ll_menu)
-    LinearLayout ll_menu;
-    @BindView(R.id.tv_menu)
-    TextView tv_menu;
-    @BindView(R.id.iv_menu)
-    ImageView iv_menu;
+    @BindView(R.id.titleBar)
+    TitleBar titleBar;
     @BindView(R.id.gallery)
     MXGallery gallery;
+    @BindView(R.id.fl_pop)
+    FrameLayout fl_pop;
+    @BindView(R.id.rcv_dirList)
+    RecyclerView rcv_dirList;
 
-    private String title;
     private boolean isMultiple = false;
     private Bundle savedBundle;
     private List<String> selectedPath = new ArrayList<>();
+    private DirRcvAdapter adapter;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        //title = getIntent().getStringExtra("listType");
         isMultiple = getIntent().getBooleanExtra("isMultiple", false);
         savedBundle = savedInstanceState;
         super.onCreate(savedInstanceState);
@@ -61,43 +74,25 @@ public class GalleryActivity extends SuperActivity {
 
     @Override
     protected void initView() {
-        btn_back.setOnClickListener(new View.OnClickListener() {
+        titleBar.setTitleListener(new TitleBar.TitleListener(){
             @Override
-            public void onClick(View v) {
+            protected void onBackClicked() {
                 back();
             }
-        });
 
-        ll_menu.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                AnimUtils.startObjectAnim(iv_menu, "rotation", iv_menu.getRotation(), (iv_menu.getRotation() + 180) % 360, 500);
+            public void onMenuChecked(boolean isChecked){
+                if(isChecked)
+                    showDirList();
+                else
+                    hideDirList();
             }
         });
-//        titleBar.setTitle(title);
-//        titleBar.setOnLeftListener(new TitleBar.onLeftBtnClickListener() {
-//            @Override
-//            public void onBack() {
-//                setResult(RESULT_CANCELED);
-//                back();
-//            }
-//
-//            @Override
-//            public void onCreate() {
-//
-//            }
-//
-//            @Override
-//            public void onChooseUser(CheckBox username) {
-//
-//            }
-//        });
         gallery.setIsMultiple(isMultiple);
         gallery.setMimeType(MimeType.ofImage());
         gallery.setSelectListener(new OnSelectItemListener() {
             @Override
             public void onPreView(boolean isPreview) {
-//                titleBar.setVisibility(isPreview ? View.GONE : View.VISIBLE);
             }
 
             @Override
@@ -118,18 +113,42 @@ public class GalleryActivity extends SuperActivity {
         });
         gallery.onCreate(savedBundle);
         gallery.setSelectedPaths(getSelectPath(true));
-//        gallery.setTabNames(new GalleryTabListener() {
-//            @Override
-//            public void onTabChecked(RadioButton tab, int id) {
-//                gallery.updateItems(id == 1);
-//            }
-//
-//            @Override
-//            public void onTabUpdated(GalleryTabGroup galleryTab, int tabId, int itemCount) {
-//                galleryTab.setTabName(tabId == 0 ? tabId : 0, String.format("未选择(%1$d)", itemCount - gallery.getSelectedItemCount() - selectedPath.size()));
-//                galleryTab.setTabName(tabId == 0 ? tabId + 1 : tabId, String.format("全部(%1$d)", itemCount));
-//            }
-//        }, String.format("未选择(%1$d)", 0), String.format("全部(%1$d)", 0));
+        rcv_dirList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        adapter = new DirRcvAdapter(this);
+        adapter.setListener(new DirRcvAdapter.onItemClickListener() {
+            @Override
+            public void onItemClicked(String bucketId) {
+                titleBar.callMenuCheck();
+                gallery.setBucketId(bucketId);
+
+            }
+        });
+        rcv_dirList.setAdapter(adapter);
+    }
+
+    private void showDirList(){
+        GalleryUtils.initLoaderManager(this, AlbumLoader.LOADER_ID, new LoaderManager.LoaderCallbacks<Cursor>() {
+            @Override
+            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+                return new AlbumLoader(GalleryActivity.this);
+            }
+
+            @Override
+            public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                adapter.swapCursor(data);
+                fl_pop.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onLoaderReset(Loader<Cursor> loader) {
+                adapter.swapCursor(null);
+            }
+        });
+    }
+
+    private void hideDirList(){
+        adapter.swapCursor(null);
+        fl_pop.setVisibility(View.GONE);
     }
 
     private List<String> getSelectPath(boolean isPic) {
@@ -158,5 +177,9 @@ public class GalleryActivity extends SuperActivity {
         }, 100l);
     }
 
-
+    @Override
+    protected void onDestroy() {
+        GalleryUtils.destoryLoaderManager(MediaLoader.LOADER_ID,AlbumLoader.LOADER_ID);
+        super.onDestroy();
+    }
 }

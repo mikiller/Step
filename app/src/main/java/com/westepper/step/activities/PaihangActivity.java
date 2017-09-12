@@ -12,6 +12,7 @@ import com.westepper.step.R;
 import com.westepper.step.adapters.PaihangRcvAdapter;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.PaihangTextView;
+import com.westepper.step.customViews.TitleBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +25,8 @@ import butterknife.BindViews;
  */
 
 public class PaihangActivity extends SuperActivity {
-    @BindView(R.id.tv_title)
-    TextView tv_title;
+    @BindView(R.id.titleBar)
+    TitleBar titleBar;
     @BindViews({R.id.iv_second, R.id.iv_first, R.id.iv_third})
     SelectableRoundedImageView[] iv_headers;
     @BindViews({R.id.tv_second, R.id.tv_first, R.id.tv_third})
@@ -42,12 +43,12 @@ public class PaihangActivity extends SuperActivity {
 
     @Override
     protected void initView() {
-        tv_title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                back();
-            }
-        });
+    titleBar.setTitleListener(new TitleBar.TitleListener() {
+        @Override
+        protected void onBackClicked() {
+            back();
+        }
+    });
 
         tv_headers[0].setName("一只猫");
         tv_headers[0].setDisNum(1002030);
