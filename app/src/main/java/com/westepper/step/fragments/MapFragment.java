@@ -19,19 +19,24 @@ import com.google.gson.Gson;
 import com.uilib.customdialog.CustomDialog;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
+import com.westepper.step.activities.NewDiscoveryActivity;
 import com.westepper.step.adapters.DiscoveryAdapter;
 import com.westepper.step.base.BaseFragment;
+import com.westepper.step.base.Constants;
 import com.westepper.step.customViews.SearchView;
 import com.westepper.step.responses.Area;
 import com.westepper.step.responses.AreaList;
 import com.westepper.step.responses.Discovery;
+import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.AnimUtils;
 import com.westepper.step.utils.FileUtils;
 import com.westepper.step.utils.MapUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 
@@ -303,9 +308,10 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
             case R.id.btn_acheivement:
                 break;
             case R.id.btn_new:
+                showNewDisDlg();
                 break;
             case R.id.btn_selection:
-                showSelectionDlg();
+                showGenderDlg();
                 break;
             case R.id.btn_refresh:
                 refreshDiscoveryList();
@@ -313,9 +319,22 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
         }
     }
 
-    private void showSelectionDlg(){
+    private void showNewDisDlg(){
         final CustomDialog dlg = new CustomDialog(getActivity());
-        dlg.setLayoutRes(R.layout.layout_selection_dlg).setOnCustomBtnClickListener(new CustomDialog.onCustomBtnsClickListener() {
+        dlg.setLayoutRes(R.layout.layout_newdis_dlg).setOnCustomBtnClickListener(new CustomDialog.onCustomBtnsClickListener() {
+            @Override
+            public void onBtnClick(int id) {
+                Map<String, Object> args = new HashMap<>();
+                args.put(Constants.DIS_KIND, id == R.id.btn_mood ? Constants.MOOD : Constants.OUTGO);
+                ActivityManager.startActivity(getActivity(), NewDiscoveryActivity.class, args);
+                dlg.dismiss();
+            }
+        }, R.id.btn_mood, R.id.btn_outgo).show();
+    }
+
+    private void showGenderDlg(){
+        final CustomDialog dlg = new CustomDialog(getActivity());
+        dlg.setLayoutRes(R.layout.layout_gender_dlg).setOnCustomBtnClickListener(new CustomDialog.onCustomBtnsClickListener() {
             @Override
             public void onBtnClick(int id) {
                 dlg.dismiss();
@@ -325,7 +344,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
 
     private void refreshDiscoveryList(){
         AnimUtils.startRotateAnim(btn_refresh, 360, 0, 1000);
-        getDiscoveryList(rdg_scope.getCheckedRadioButtonId() == R.id.rdb_friend ? 1 : 2, rdg_kind.getCheckedRadioButtonId() == R.id.rdb_mood ? 1 : 2);
+        getDiscoveryList(getDisScope(), getDisKind());
     }
 
     @Override
@@ -333,18 +352,26 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
         switch (checkedId){
             case R.id.rdb_friend:
                 btn_selection.setVisibility(View.GONE);
-                getDiscoveryList(1, rdg_kind.getCheckedRadioButtonId() == R.id.rdb_mood ? 1 : 2);
+                getDiscoveryList(Constants.FRIEND, getDisKind());
                 break;
             case R.id.rdb_near:
                 btn_selection.setVisibility(View.VISIBLE);
-                getDiscoveryList(2, rdg_kind.getCheckedRadioButtonId() == R.id.rdb_mood ? 1 : 2);
+                getDiscoveryList(Constants.NEARBY, getDisKind());
                 break;
             case R.id.rdb_mood:
-                getDiscoveryList(rdg_scope.getCheckedRadioButtonId() == R.id.rdb_friend ? 1 : 2, 1);
+                getDiscoveryList(getDisScope(), Constants.MOOD);
                 break;
             case R.id.rdb_join:
-                getDiscoveryList(rdg_scope.getCheckedRadioButtonId() == R.id.rdb_friend ? 1 : 2, 2);
+                getDiscoveryList(getDisScope(), Constants.OUTGO);
                 break;
         }
+    }
+
+    private int getDisKind(){
+        return rdg_kind.getCheckedRadioButtonId() == R.id.rdb_mood ? Constants.MOOD : Constants.OUTGO;
+    }
+
+    private int getDisScope(){
+        return rdg_scope.getCheckedRadioButtonId() == R.id.rdb_friend ? Constants.FRIEND : Constants.NEARBY;
     }
 }

@@ -2,44 +2,31 @@ package com.westepper.step.activities;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.uilib.mxgallery.defaultloaders.AlbumLoader;
 import com.uilib.mxgallery.defaultloaders.MediaLoader;
 import com.uilib.mxgallery.listeners.OnSelectItemListener;
-import com.uilib.mxgallery.models.Album;
 import com.uilib.mxgallery.models.MimeType;
 import com.uilib.mxgallery.utils.GalleryUtils;
 import com.uilib.mxgallery.widgets.MXGallery;
-import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
 import com.uilib.mxgallery.adapters.DirRcvAdapter;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.TitleBar;
-import com.westepper.step.models.ReportResModel;
-import com.westepper.step.utils.AnimUtils;
-import com.westepper.step.utils.CameraGalleryUtils;
+import com.uilib.mxgallery.models.ReportResModel;
+import com.uilib.mxgallery.utils.CameraGalleryUtils;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -175,6 +162,13 @@ public class GalleryActivity extends SuperActivity {
                 gallery.checkTab(0);
             }
         }, 100l);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        setResult(resultCode, data);
+        back();
     }
 
     @Override

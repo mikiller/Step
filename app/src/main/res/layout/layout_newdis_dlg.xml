@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="bottom">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@android:color/white" >
+
+        <Button
+            android:id="@+id/btn_mood"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:background="@drawable/selector_menuitem"
+            android:textColor="@color/mainTabTxt"
+            android:padding="15dp"
+            android:textSize="15sp"
+            android:text="发布心情"/>
+
+        <Button
+            android:id="@+id/btn_outgo"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:background="@drawable/selector_menuitem"
+            android:padding="15dp"
+            android:textColor="@color/mainTabTxt"
+            android:textSize="15sp"
+            android:text="发布约行"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_dlg_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="取消"
+        android:textColor="@color/selector_discovery_kind"
+        android:textSize="18sp"
+        android:padding="15dp"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/selector_dlg_cancelbtn"/>
+</LinearLayout>

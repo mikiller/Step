@@ -3,7 +3,6 @@ package com.westepper.step.fragments;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,7 +23,7 @@ import com.westepper.step.customViews.MyMenuItem;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.utils.ActivityManager;
-import com.westepper.step.utils.CameraGalleryUtils;
+import com.uilib.mxgallery.utils.CameraGalleryUtils;
 
 
 import java.io.File;

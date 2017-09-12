@@ -1,18 +1,18 @@
-package com.westepper.step.models;
+package com.uilib.mxgallery.models;
 
 import android.util.Log;
 
 import com.netlib.mkokhttp.uploader.UploadInfo;
 import com.uilib.mxgallery.models.MimeType;
-import com.westepper.step.base.BaseModel;
 
 import java.io.File;
+import java.io.Serializable;
 
 /**
  * Created by Mikiller on 2017/5/25.
  */
 
-public class ReportResModel extends BaseModel {
+public class ReportResModel implements Serializable {
     private static final long serialVersionUID = -7654326998116848154L;
     private String id;
     private String reportId;

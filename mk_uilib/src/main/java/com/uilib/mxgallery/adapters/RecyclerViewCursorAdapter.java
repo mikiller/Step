@@ -24,33 +24,42 @@ public abstract class RecyclerViewCursorAdapter<VH extends RecyclerView.ViewHold
 
     private Cursor mCursor;
     private int mRowIDColumn;
+    protected boolean needFirstItem = false;
 
     RecyclerViewCursorAdapter(Cursor c) {
         setHasStableIds(true);
         swapCursor(c);
     }
 
+    public void setNeedFirstItem(boolean isNeed){
+        needFirstItem = isNeed;
+    }
+
     protected abstract void onBindViewHolder(VH holder, Cursor cursor);
 
     @Override
     public void onBindViewHolder(VH holder, int position) {
-        if (!isDataValid(mCursor)) {
-            throw new IllegalStateException("Cannot bind view holder when cursor is in invalid state.");
-        }
-        if (!mCursor.moveToPosition(position)) {
-            throw new IllegalStateException("Could not move cursor to position " + position
-                    + " when trying to bind view holder");
-        }
+        if(!needFirstItem)
+            checkCursor(position);
+//        if (!isDataValid(mCursor)) {
+//            throw new IllegalStateException("Cannot bind view holder when cursor is in invalid state.");
+//        }
+//        if (!mCursor.moveToPosition(position)) {
+//            throw new IllegalStateException("Could not move cursor to position " + position
+//                    + " when trying to bind view holder");
+//        }
 
         onBindViewHolder(holder, mCursor);
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (!mCursor.moveToPosition(position)) {
-            throw new IllegalStateException("Could not move cursor to position " + position
-                    + " when trying to get item view type.");
-        }
+//        if (!mCursor.moveToPosition(position)) {
+//            throw new IllegalStateException("Could not move cursor to position " + position
+//                    + " when trying to get item view type.");
+//        }
+        if(!needFirstItem || position != 0)
+            checkCursor(position);
         return getItemViewType(position, mCursor);
     }
 
@@ -58,24 +67,32 @@ public abstract class RecyclerViewCursorAdapter<VH extends RecyclerView.ViewHold
 
     @Override
     public int getItemCount() {
+        int count = needFirstItem ? 1 : 0;
         if (isDataValid(mCursor)) {
-            return mCursor.getCount();
+            return mCursor.getCount() + count;
         } else {
-            return 0;
+            return count;
         }
     }
 
     @Override
     public long getItemId(int position) {
+        if(needFirstItem && position == 0)
+            return -1;
+        checkCursor(position);
+
+        return mCursor.getLong(mRowIDColumn);
+    }
+
+    private void checkCursor(int position){
+        int pos = needFirstItem ? 1 : 0;
         if (!isDataValid(mCursor)) {
             throw new IllegalStateException("Cannot lookup item id when cursor is in invalid state.");
         }
-        if (!mCursor.moveToPosition(position)) {
+        if (!mCursor.moveToPosition(position - pos)) {
             throw new IllegalStateException("Could not move cursor to position " + position
                     + " when trying to get an item id");
         }
-
-        return mCursor.getLong(mRowIDColumn);
     }
 
     public void swapCursor(Cursor newCursor) {

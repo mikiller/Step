@@ -1,4 +1,4 @@
-package com.westepper.step.utils;
+package com.uilib.mxgallery.utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,9 +16,9 @@ import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
+import com.uilib.R;
 import com.uilib.mxgallery.models.MimeType;
-import com.westepper.step.R;
-import com.westepper.step.models.ReportResModel;
+import com.uilib.mxgallery.models.ReportResModel;
 
 import java.io.File;
 import java.io.FileNotFoundException;

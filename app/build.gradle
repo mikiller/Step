@@ -42,7 +42,6 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.7.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
-    compile project(':mkokhttp')
     compile project(':mk_uilib')
     compile project(':indexlib')
 }

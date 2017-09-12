@@ -100,6 +100,7 @@ public class MXGallery extends RelativeLayout implements LoaderManager.LoaderCal
         else
             mediaCollection = new MediaCollection(isMultiple, maxSelectionCount);
         itemsAdapter = new GalleryItemsAdapter(getContext(), mediaCollection, columnNum, itemMargin);
+        itemsAdapter.setNeedFirstItem(true);
         itemsAdapter.setItemClickeListener(new OnMediaItemClickListener() {
             @Override
             public void onItemChecked(ItemModel item, boolean isChecked) {

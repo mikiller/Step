@@ -40,4 +40,5 @@ dependencies {
     compile 'com.lsjwzh:materialloadingprogressbar:0.5.8-RELEASE'
     compile 'com.googlecode.mp4parser:isoparser:1.1.22'
     compile project(':mkglidelib')
+    compile project(':mkokhttp')
 }
