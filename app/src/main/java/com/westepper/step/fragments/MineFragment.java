@@ -3,7 +3,6 @@ package com.westepper.step.fragments;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -27,7 +26,9 @@ import com.uilib.mxgallery.utils.CameraGalleryUtils;
 
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 
@@ -104,12 +105,19 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void fragmentCallback(int type, Intent data) {
-        if(type == Constants.CHEANGE_HEADER){
-            List<File> files = (List<File>) data.getSerializableExtra(CameraGalleryUtils.THUMB_FILE);
-            GlideImageLoader.getInstance().loadLocalImage(getActivity(), Uri.fromFile(files.get(0)), new int[]{iv_header.getWidth(), iv_header.getHeight()}, R.mipmap.ic_default_head, iv_header);
-            GlideImageLoader.getInstance().loadImage(getActivity(), Uri.fromFile(files.get(0)).getPath(), iv_header, 0, new ImageLoader.ImageLoadListener() {
+        if(type == Constants.CHANGE_HEADER){
+            String filePath = "";
+            if(data.getSerializableExtra(CameraGalleryUtils.TMP_FILE) != null)
+                filePath = (String) data.getSerializableExtra(CameraGalleryUtils.TMP_FILE);
+            else if( data.getSerializableExtra(CameraGalleryUtils.THUMB_FILE) != null) {
+                List<File> files = (List<File>) data.getSerializableExtra(CameraGalleryUtils.THUMB_FILE);
+                filePath = files.get(0).getPath();
+            }
+
+            GlideImageLoader.getInstance().loadImage(getActivity(), filePath, iv_header, 0, new ImageLoader.ImageLoadListener() {
                 @Override
                 public void onLoadSuccess(Bitmap drawable, ImageView imageView) {
+                    imageView.setImageBitmap(drawable);
                     BitmapUtils.blur(getActivity(), drawable, iv_header_bg);
                 }
 
@@ -176,7 +184,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 ActivityManager.startActivity(getActivity(), PaihangActivity.class);
                 break;
             case R.id.iv_header:
-                ActivityManager.startActivityforResult(getActivity(), GalleryActivity.class, Constants.CHEANGE_HEADER, null);
+                Map<String, Object> args = new HashMap<>();
+                args.put(Constants.GALLERY_TYPE, Constants.CHANGE_HEADER);
+                ActivityManager.startActivityforResult(getActivity(), GalleryActivity.class, Constants.CHANGE_HEADER, args);
 //                ((BaseActivity) getActivity()).startToActivity(SettingActivity.class, "fragmentName", UserInfoFragment.class.getName());
                 break;
 //            case R.id.tv_user_name:

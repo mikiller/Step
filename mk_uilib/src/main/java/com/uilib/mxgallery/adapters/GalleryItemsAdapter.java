@@ -68,7 +68,7 @@ public class GalleryItemsAdapter extends RecyclerViewCursorAdapter<GalleryItemsA
     @Override
     protected void onBindViewHolder(MediaViewHolder holder, final Cursor cursor) {
         if(needFirstItem && holder.getAdapterPosition() == 0){
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(itemSize, itemSize - 15);
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(itemSize, itemSize);
             holder.ll_camera.setLayoutParams(lp);
             holder.ll_camera.setVisibility(View.VISIBLE);
             holder.ll_camera.setOnClickListener(new View.OnClickListener() {

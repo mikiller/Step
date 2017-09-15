@@ -8,6 +8,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -19,15 +20,19 @@ import com.uilib.mxgallery.utils.GalleryUtils;
 import com.uilib.mxgallery.widgets.MXGallery;
 import com.westepper.step.R;
 import com.uilib.mxgallery.adapters.DirRcvAdapter;
+import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.TitleBar;
 import com.uilib.mxgallery.models.ReportResModel;
 import com.uilib.mxgallery.utils.CameraGalleryUtils;
+import com.westepper.step.utils.ActivityManager;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 
@@ -49,27 +54,31 @@ public class GalleryActivity extends SuperActivity {
     private Bundle savedBundle;
     private List<String> selectedPath = new ArrayList<>();
     private DirRcvAdapter adapter;
-
+    private CameraGalleryUtils cgUtils;
+    private int galleryKind, galleryType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        isMultiple = getIntent().getBooleanExtra("isMultiple", false);
+        isMultiple = getIntent().getBooleanExtra(Constants.ISMULTIPLE, false);
+        galleryType = getIntent().getIntExtra(Constants.GALLERY_TYPE, Constants.NEW_DISCOVERY);
+        galleryKind = getIntent().getIntExtra(Constants.DIS_KIND, Constants.MOOD);
         savedBundle = savedInstanceState;
         super.onCreate(savedInstanceState);
+        cgUtils = CameraGalleryUtils.getInstance(this);
         setContentView(R.layout.activity_gallery);
     }
 
     @Override
     protected void initView() {
-        titleBar.setTitleListener(new TitleBar.TitleListener(){
+        titleBar.setTitleListener(new TitleBar.TitleListener() {
             @Override
             protected void onBackClicked() {
                 back();
             }
 
             @Override
-            public void onMenuChecked(boolean isChecked){
-                if(isChecked)
+            public void onMenuChecked(boolean isChecked) {
+                if (isChecked)
                     showDirList();
                 else
                     hideDirList();
@@ -84,18 +93,18 @@ public class GalleryActivity extends SuperActivity {
 
             @Override
             public void onConfirm(List<File> fileList) {
-
-//                if (title.equals("图片")) {
-                    Intent intent = new Intent();
-                    intent.putExtra(CameraGalleryUtils.THUMB_FILE, (Serializable) fileList);
-                    //intent.putExtra("listType", title);
-                    setResult(RESULT_OK, intent);
-//                } else {
-//                    CameraGalleryUtils.getInstance().openVideoEditor(fileList.get(0));
-//                    CameraGalleryUtils.getInstance().openVideoEditor(CameraGalleryUtils.getInstance().createReportResModel(fileList.get(0)));
-
+                onGetImgFiles(CameraGalleryUtils.THUMB_FILE, fileList);
+//                if(galleryType == Constants.CHANGE_HEADER) {
+//                    Intent intent = new Intent();
+//                    intent.putExtra(CameraGalleryUtils.THUMB_FILE, (Serializable) fileList);
+//                    setResult(RESULT_OK, intent);
+//                    back();
+//                }else{
+//                    Map<String, Object> args = new HashMap<String, Object>();
+//                    args.put(CameraGalleryUtils.THUMB_FILE, (Serializable) fileList);
+//                    args.put(Constants.DIS_KIND, galleryKind);
+//                    ActivityManager.startActivity(GalleryActivity.this, NewDiscoveryActivity.class, args);
 //                }
-                back();
             }
         });
         gallery.onCreate(savedBundle);
@@ -113,7 +122,7 @@ public class GalleryActivity extends SuperActivity {
         rcv_dirList.setAdapter(adapter);
     }
 
-    private void showDirList(){
+    private void showDirList() {
         GalleryUtils.initLoaderManager(this, AlbumLoader.LOADER_ID, new LoaderManager.LoaderCallbacks<Cursor>() {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -133,13 +142,30 @@ public class GalleryActivity extends SuperActivity {
         });
     }
 
-    private void hideDirList(){
+    private void hideDirList() {
         adapter.swapCursor(null);
         fl_pop.setVisibility(View.GONE);
     }
 
+    private void onGetImgFiles(String key, Object value){
+        if(galleryType == Constants.CHANGE_HEADER) {
+            Intent intent = new Intent();
+            if(value instanceof String)
+                intent.putExtra(key, (String)value);
+            else
+                intent.putExtra(key, (Serializable)value);
+            setResult(RESULT_OK, intent);
+        }else{
+            Map<String, Object> args = new HashMap<String, Object>();
+            args.put(key, value);
+            args.put(Constants.DIS_KIND, galleryKind);
+            ActivityManager.startActivity(GalleryActivity.this, NewDiscoveryActivity.class, args);
+        }
+        back();
+    }
+
     private List<String> getSelectPath(boolean isPic) {
-        CameraGalleryUtils cgUtils = CameraGalleryUtils.getInstance();
+//        CameraGalleryUtils cgUtils = CameraGalleryUtils.getInstance();
         for (ReportResModel file : cgUtils.getThumbList()) {
             if (selectedPath.contains(file.getResFile().getAbsolutePath()))
                 continue;
@@ -167,13 +193,14 @@ public class GalleryActivity extends SuperActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        setResult(resultCode, data);
-        back();
+        if (resultCode != RESULT_OK)
+            return;
+        onGetImgFiles(CameraGalleryUtils.TMP_FILE, cgUtils.tmpFile.getResFile().getPath());
     }
 
     @Override
     protected void onDestroy() {
-        GalleryUtils.destoryLoaderManager(MediaLoader.LOADER_ID,AlbumLoader.LOADER_ID);
+        GalleryUtils.destoryLoaderManager(MediaLoader.LOADER_ID, AlbumLoader.LOADER_ID);
         super.onDestroy();
     }
 }

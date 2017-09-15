@@ -46,17 +46,21 @@ public class MediaItemDecoration extends RecyclerView.ItemDecoration {
             if (position < mSpanCount) { // top edge
                 outRect.top = (int) mSpacing;
             }
-            outRect.bottom = (int) mSpacing;
+            if(position > parent.getAdapter().getItemCount() - mSpanCount)
+                outRect.bottom = (int) mSpacing;
 //            outRect.bottom = position < mSpanCount ? mSpacing : mSpacing + 90; // item bottom
         } else {
             // column * ((1f / spanCount) * spacing)
             outRect.left = (int) (column * mSpacing / mSpanCount);
             // spacing - (column + 1) * ((1f / spanCount) * spacing)
             outRect.right = (int) (mSpacing - (column + 1) * mSpacing / mSpanCount);
-            if (position >= mSpanCount) {
-                outRect.top = (int) mSpacing; // item top
-                outRect.bottom = 90;
-            }
+//            if (position >= mSpanCount) {
+
+//            outRect.top = (int) mSpacing; // item top
+//            outRect.bottom = 0;
+//           }
+
         }
+        outRect.top = (int) mSpacing;
     }
 }

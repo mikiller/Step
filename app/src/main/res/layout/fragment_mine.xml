@@ -60,6 +60,7 @@
                         android:layout_margin="4dp"
                         android:layout_centerHorizontal="true"
                         android:layout_below="@+id/margin"
+                        android:scaleType="centerCrop"
                         menu:sriv_border_color="@android:color/white"
                         menu:sriv_border_width="1dp"
                         menu:sriv_oval="true" />

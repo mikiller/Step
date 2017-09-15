@@ -10,7 +10,6 @@ import com.westepper.step.adapters.MainFragmentAdapter;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.UntouchableViewPager;
-import com.westepper.step.fragments.MapFragment;
 
 import butterknife.BindView;
 
@@ -69,7 +68,7 @@ public class MainActivity extends SuperActivity {
         if(resultCode != RESULT_OK)
             return;
         switch (requestCode){
-            case Constants.CHEANGE_HEADER:
+            case Constants.CHANGE_HEADER:
                 adapter.getItem(2).fragmentCallback(requestCode, data);
                 break;
         }

@@ -89,7 +89,7 @@ public class MXGallery extends RelativeLayout implements LoaderManager.LoaderCal
         }
         rcv_gallery.setLayoutManager(new GridLayoutManager(getContext(), columnNum));
         rcv_gallery.setHasFixedSize(true);
-        rcv_gallery.addItemDecoration(new MediaItemDecoration(columnNum, itemMargin, needEdge));
+//        rcv_gallery.addItemDecoration(new MediaItemDecoration(columnNum, itemMargin, needEdge));
 
         fgmtMgr = ((FragmentActivity) getContext()).getSupportFragmentManager();
     }

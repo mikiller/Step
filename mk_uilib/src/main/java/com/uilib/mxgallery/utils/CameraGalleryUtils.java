@@ -36,7 +36,7 @@ import java.util.UUID;
 public class CameraGalleryUtils {
     private final static String TAG = CameraGalleryUtils.class.getSimpleName();
     public final static int CAMERA_CAPTURE = 1, CROP_PIC = 2, VIDEO = 3, FILES = 4, CROP_VIDEO = 5;
-    public final static String THUMB_FILE = "thumbfile";
+    public final static String THUMB_FILE = "thumbfile", TMP_FILE = "tmpfile";
     private Context mContext;
     public static String thumbDir = Environment.getExternalStorageDirectory().getPath().concat(File.separator).concat("DCIM/Camera/");
     private List<ReportResModel> thumbList;
@@ -103,7 +103,7 @@ public class CameraGalleryUtils {
 
     private void startSysActivity(String action) {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            String fileName = "xnews_" + System.currentTimeMillis();
+            String fileName = "iditor_" + System.currentTimeMillis();
             int requestCode = 0;
             if (action.equals(MediaStore.ACTION_IMAGE_CAPTURE)) {
                 fileName = fileName.concat(".jpg");

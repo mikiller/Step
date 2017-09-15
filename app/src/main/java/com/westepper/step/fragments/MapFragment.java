@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.uilib.customdialog.CustomDialog;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
+import com.westepper.step.activities.GalleryActivity;
 import com.westepper.step.activities.NewDiscoveryActivity;
 import com.westepper.step.adapters.DiscoveryAdapter;
 import com.westepper.step.base.BaseFragment;
@@ -206,8 +207,9 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
         else
             this.isTrack = isTrack;
 
-        if(ll_search == null || rl_head  == null || vp_discoveryList == null)
+        if(ll_search == null || rl_head  == null || vp_discoveryList == null) {
             return;
+        }
 
         if(searchHeight <= 0) {
             searchHeight = ll_search.getMeasuredHeight();
@@ -326,7 +328,9 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
             public void onBtnClick(int id) {
                 Map<String, Object> args = new HashMap<>();
                 args.put(Constants.DIS_KIND, id == R.id.btn_mood ? Constants.MOOD : Constants.OUTGO);
-                ActivityManager.startActivity(getActivity(), NewDiscoveryActivity.class, args);
+                args.put(Constants.ISMULTIPLE, true);
+//                ActivityManager.startActivity(getActivity(), NewDiscoveryActivity.class, args);
+                ActivityManager.startActivity(getActivity(), GalleryActivity.class, args);
                 dlg.dismiss();
             }
         }, R.id.btn_mood, R.id.btn_outgo).show();

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_pos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp"
+        android:drawableLeft="@mipmap/ic_city2"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:text="shanghai"
+        android:textColor="@color/discovery_kind_unchecked"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:id="@+id/ll_goParam"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:background="@color/cancel_btn_bg"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <com.westepper.step.customViews.MyMenuItem xmlns:menu="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/menu_people"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            menu:menuIcon="@mipmap/ic_go_people"
+            menu:menuTitle="邀约人数"
+            menu:needNext="true"
+            menu:needSubText="true" />
+
+        <com.westepper.step.customViews.MyMenuItem xmlns:menu="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/menu_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            menu:menuIcon="@mipmap/ic_go_date"
+            menu:menuTitle="邀约时间"
+            menu:needNext="true"
+            menu:needSubText="true" />
+    </LinearLayout>
+</LinearLayout>

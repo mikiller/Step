@@ -77,7 +77,7 @@ public class MediaCollection implements Parcelable {
         if (maxSelectionCount == -1)
             return false;
         else {
-            return modelSet.size() == maxSelectionCount;
+            return modelSet.size() >= maxSelectionCount;
         }
     }
 
@@ -92,7 +92,7 @@ public class MediaCollection implements Parcelable {
     }
 
     public void addMedia(ItemModel model) {
-        if (!isContainMedia(model)) {
+        if (canSelectModel(model) && !isContainMedia(model)) {
             modelSet.add(model);
             if (!isMultiple)
                 lastModel = model;

@@ -49,7 +49,7 @@ public class GlideImageLoader implements ImageLoader {
 //        });
 //    }
 
-    public void loadImage(final Context context, String path, final int defaultImg, final ImageView imageView, final long delay, final ImageLoadListener listener){
+    public void loadImage(final Context context, String path, final int defaultImg, final ImageView imageView, int[] reSize, final long delay, final ImageLoadListener listener){
         RequestListener reqListener = new RequestListener() {
 
             @Override
@@ -89,20 +89,28 @@ public class GlideImageLoader implements ImageLoader {
             }
         };
 
-        BitmapRequestBuilder request = Glide.with(context).load(path).asBitmap().skipMemoryCache(true).listener(reqListener);
+        BitmapRequestBuilder request = Glide.with(context).load(path).asBitmap().skipMemoryCache(true).centerCrop().listener(reqListener);
+
         if(defaultImg != View.NO_ID){
-            request.error(defaultImg).placeholder(defaultImg).into(target);
-        }else{
+            request.error(defaultImg).placeholder(defaultImg);
+        }
+        if(reSize != null && reSize[0] > 0 && reSize[1] > 0)
+            request.override(reSize[0], reSize[1]).into(target);
+        else{
             request.into(target);
         }
     }
 
+    public void loadImage(final Context context, String path, final ImageView imageView, int[] reSize, final ImageLoadListener listener){
+        loadImage(context, path, View.NO_ID, imageView, reSize, 0, listener);
+    }
+
     public void loadImage(final Context context, String path, final ImageView imageView, final long delay, final ImageLoadListener listener) {
-        loadImage(context, path, View.NO_ID, imageView, delay, listener);
+        loadImage(context, path, View.NO_ID, imageView, null, delay, listener);
     }
 
     public void loadImage(final Context context, String path, int defaultImg, final ImageView imageView, final long delay) {
-        loadImage(context, path, defaultImg, imageView, delay, null);
+        loadImage(context, path, defaultImg, imageView, null, delay, null);
     }
 
     public void loadImageWithBitmap(Context context, String path, int defaultRes, ImageView imageView) {
@@ -127,8 +135,8 @@ public class GlideImageLoader implements ImageLoader {
 //        Glide.with(context).load(path).skipMemoryCache(true).listener(listener).into(target);
     }
 
-    public void loadImageWithBitmap(Context context, String path, ImageView imageView) {
-        Glide.with(context).load(path).asBitmap().skipMemoryCache(true).into(imageView);
+    public void loadImageWithoutBitmap(Context context, String path, ImageView imageView) {
+        Glide.with(context).load(path).skipMemoryCache(true).centerCrop().into(imageView);
     }
 
 
