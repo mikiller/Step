@@ -15,9 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amap.api.maps.model.PolygonOptions;
 import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
 import com.uilib.mxgallery.utils.CameraGalleryUtils;
+import com.uilib.utils.DisplayUtil;
+import com.uilib.videoeditor.utils.ExtractVideoInfoUtil;
 import com.westepper.step.R;
+import com.westepper.step.base.Constants;
 import com.westepper.step.customViews.MyMenuItem;
 import com.westepper.step.utils.AnimUtils;
 
@@ -32,17 +36,20 @@ import java.util.List;
 
 public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public static final int HEADER = 0, ITEM = 1, FOOTER = 2;
-    public int headCount = 1, footCount = 1, itemCount;
+    public static final int HEADER = 0, ITEM = 1, FOOTER = 2, FOOTER2 = 3;
+    public int headCount = 1, footCount = 2, itemCount;
     private Context mContext;
     private List<String> pathList;
     private boolean needCamera = true;
-    private int itemSize;
+    private int itemSize, margin;
+    private int disKind;
+    private onItemMovedListener listener;
 
     public DisPhotoRcvAdapter(Context context, boolean needCamera, int column, int margin) {
         mContext = context;
         this.needCamera = needCamera;
         itemSize = (int) ((context.getResources().getDisplayMetrics().widthPixels - (column+1) * margin) / column);
+        this.margin = margin;
     }
 
     public DisPhotoRcvAdapter(Context context, boolean needCamera, List<String> pathList, int column, int margin) {
@@ -54,10 +61,22 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public int getItemViewType(int position) {
         if(isHeadView(position))
             return HEADER;
-        else if(isFootView(position))
-            return FOOTER;
+        else if(isFootView(position)) {
+            if(position == getItemCount() - 1)
+                return FOOTER2;
+            else
+                return FOOTER;
+        }
         else
             return ITEM;
+    }
+
+    public void setDisKind(int disKind) {
+        this.disKind = disKind;
+    }
+
+    public void setItemMovedListener(onItemMovedListener listener){
+        this.listener = listener;
     }
 
     public boolean isHeadView(int pos){
@@ -75,6 +94,8 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             viewHolder = new HeadHolder(LayoutInflater.from(mContext).inflate(R.layout.layout_newdis_rcvhead, parent, false));
         else if(viewType == FOOTER)
             viewHolder = new FootHolder(LayoutInflater.from(mContext).inflate(R.layout.layout_newdis_rcvfoot, parent, false));
+        else if(viewType == FOOTER2)
+            viewHolder = new Foot2Holder(LayoutInflater.from(mContext).inflate(R.layout.layout_newdis_rcvfoot2, parent, false));
         else
             viewHolder = new ItemHolder(LayoutInflater.from(mContext).inflate(R.layout.layout_gallery_item, parent, false));
         return viewHolder;
@@ -82,16 +103,23 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        if(holder instanceof ItemHolder)
+        if(holder instanceof HeadHolder)
+            bindHeadHolder((HeadHolder) holder);
+        else if(holder instanceof ItemHolder)
             bindItemHolder((ItemHolder) holder, holder.getAdapterPosition() - headCount);
+        else if(holder instanceof FootHolder)
+            bindFootHolder((FootHolder) holder);
+        else
+            bindFootHolder2((Foot2Holder) holder);
+    }
 
+    private void bindHeadHolder(HeadHolder holder){
+        holder.edt_msg.setHint(disKind == Constants.MOOD ? "记录你的心情..." : "描述你的约行...");
     }
 
     private void bindItemHolder(ItemHolder holder, int position){
         if(needCamera && position == pathList.size()){
-            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) holder.ll_camera.getLayoutParams();
-            lp.width = lp.height = itemSize;
-            holder.ll_camera.setLayoutParams(lp);
+            setLayoutParams(holder.ll_camera, margin);
             holder.ll_camera.setVisibility(View.VISIBLE);
             holder.ll_camera.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -101,22 +129,32 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             });
             holder.cv_img.setVisibility(View.GONE);
         }else{
+
             holder.ll_camera.setVisibility(View.GONE);
             holder.cv_img.setVisibility(View.VISIBLE);
-            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) holder.iv_img.getLayoutParams();
-            lp.width = lp.height = itemSize;
-            holder.iv_img.setLayoutParams(lp);
-//            GlideImageLoader.getInstance().loadImage(mContext, pathList.get(position - pos), R.mipmap.placeholder, holder.iv_img, 0);
+            setLayoutParams(holder.cv_img, margin);
             GlideImageLoader.getInstance().loadImageWithoutBitmap(mContext, pathList.get(position), holder.iv_img);
-//            holder.tv_time.setText(DateUtils.formatElapsedTime(model.duration / 1000));
-//        int pdleft = DisplayUtil.px2dip(mContext, itemSize / 2), pdTop = DisplayUtil.dip2px(mContext, 5);
-//        holder.ckb_isCheck.setPadding(pdleft, pdTop, pdTop, pdleft);
+
             holder.setMediaType(true);
             holder.ckb_isCheck.setVisibility(View.GONE);
-//            setItemStatus(holder, model);
         }
     }
 
+    private void bindFootHolder(FootHolder holder){
+
+    }
+
+    private void bindFootHolder2(Foot2Holder holder){
+
+    }
+
+    private void setLayoutParams(View view, int margins){
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) view.getLayoutParams();
+        lp.width = lp.height = itemSize;
+        lp.leftMargin = margins;
+        lp.bottomMargin = margins;
+        view.setLayoutParams(lp);
+    }
 
     public void addItem(String newPath){
         if(pathList == null)
@@ -131,23 +169,40 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    public void removeItem(int pos){
+        notifyItemRemoved(pos);
+        pathList.remove(pos - headCount);
+
+    }
+
     public List getData(){
         return pathList;
     }
 
     public ItemTouchHelper createTouchHelper(){
         return new ItemTouchHelper(new ItemTouchHelper.Callback() {
-
+            int fPos, tPos;
             @Override
             public boolean isItemViewSwipeEnabled() {
                 return false;
             }
 
             @Override
+            public float getMoveThreshold(RecyclerView.ViewHolder viewHolder) {
+                return 1;
+            }
+
+            @Override
             public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
                 super.onSelectedChanged(viewHolder, actionState);
-                if(viewHolder != null)
-                    AnimUtils.startObjectAnim(((ItemHolder)viewHolder).cv_img, "translationZ", 0, 10, 400);
+                if(actionState == ItemTouchHelper.ACTION_STATE_DRAG && listener != null) {
+                    fPos = viewHolder.getAdapterPosition();
+                    listener.onPressed(fPos);
+                } else if(actionState == ItemTouchHelper.ACTION_STATE_IDLE && listener != null) {
+                    listener.onReleased(fPos, tPos);
+                    tPos = fPos;
+                }
+               // Collections.swap(pathList, getItemPos(fPos), getItemPos(tPos));
             }
 
             @Override
@@ -164,15 +219,20 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                if(getItemPos(target.getAdapterPosition()) >= pathList.size() || target.getAdapterPosition() < headCount)
-                    return false;
-                Collections.swap(pathList, getItemPos(viewHolder.getAdapterPosition()), getItemPos(target.getAdapterPosition()));
                 return true;
             }
 
             @Override
             public void onMoved(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, int fromPos, RecyclerView.ViewHolder target, int toPos, int x, int y) {
+                if(listener != null)
+                    listener.onMoved(fromPos, x, y);
                 super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y);
+                if(getItemPos(toPos) >= pathList.size() || toPos < headCount) {
+                    return;
+                }
+
+                fPos = viewHolder.getAdapterPosition();
+                tPos = target.getAdapterPosition();
                 notifyItemMoved(fromPos, toPos);
             }
 
@@ -192,7 +252,7 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return rst;
     }
 
-    private int getItemPos(int pos){
+    public int getItemPos(int pos){
         return pos - headCount;
     }
 
@@ -246,14 +306,28 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public static class FootHolder extends RecyclerView.ViewHolder{
 
         private TextView tv_pos;
-        private LinearLayout ll_goParam;
-        private MyMenuItem menu_people, menu_date;
+
         public FootHolder(View itemView) {
             super(itemView);
             tv_pos = (TextView) itemView.findViewById(R.id.tv_pos);
+        }
+    }
+
+    public static class Foot2Holder extends RecyclerView.ViewHolder{
+        private LinearLayout ll_goParam;
+        private MyMenuItem menu_people, menu_date;
+
+        public Foot2Holder(View itemView) {
+            super(itemView);
             ll_goParam = (LinearLayout) itemView.findViewById(R.id.ll_goParam);
             menu_people = (MyMenuItem) itemView.findViewById(R.id.menu_people);
             menu_date = (MyMenuItem) itemView.findViewById(R.id.menu_date);
         }
+    }
+
+    public interface onItemMovedListener{
+        void onMoved(int pos, int x, int y);
+        void onReleased(int fPos, int tPos);
+        void onPressed(int pos);
     }
 }

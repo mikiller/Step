@@ -16,32 +16,4 @@
         android:text="shanghai"
         android:textColor="@color/discovery_kind_unchecked"
         android:textSize="12sp" />
-
-    <LinearLayout
-        android:id="@+id/ll_goParam"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:background="@color/cancel_btn_bg"
-        android:orientation="vertical"
-        android:visibility="visible">
-
-        <com.westepper.step.customViews.MyMenuItem xmlns:menu="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/menu_people"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            menu:menuIcon="@mipmap/ic_go_people"
-            menu:menuTitle="邀约人数"
-            menu:needNext="true"
-            menu:needSubText="true" />
-
-        <com.westepper.step.customViews.MyMenuItem xmlns:menu="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/menu_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            menu:menuIcon="@mipmap/ic_go_date"
-            menu:menuTitle="邀约时间"
-            menu:needNext="true"
-            menu:needSubText="true" />
-    </LinearLayout>
 </LinearLayout>

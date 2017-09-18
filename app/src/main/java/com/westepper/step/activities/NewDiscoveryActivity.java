@@ -1,10 +1,15 @@
 package com.westepper.step.activities;
 
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.uilib.mxgallery.utils.CameraGalleryUtils;
 import com.uilib.utils.DisplayUtil;
@@ -15,6 +20,7 @@ import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.TitleBar;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -26,12 +32,10 @@ import butterknife.BindView;
 public class NewDiscoveryActivity extends SuperActivity {
     @BindView(R.id.titleBar)
     TitleBar titleBar;
-//    @BindView(R.id.edt_msg)
-//    EditText edt_msg;
     @BindView(R.id.rcv_photo)
     RecyclerView rcv_photo;
-//    @BindView(R.id.ll_goParam)
-//    LinearLayout ll_goParam;
+    @BindView(R.id.ll_del)
+    LinearLayout ll_del;
 
     int disKind;
     String tmpFile;
@@ -71,9 +75,39 @@ public class NewDiscoveryActivity extends SuperActivity {
             }
         });
         titleBar.setTitle(disKind == Constants.MOOD ? "新心情" : "新约行");
-//        edt_msg.setHint(disKind == Constants.MOOD ? "记录你的心情..." : "描述你的约行...");
-        adapter = new DisPhotoRcvAdapter(this, true, 3, DisplayUtil.dip2px(this, 5));
+//
+        adapter = new DisPhotoRcvAdapter(this, true, 3, DisplayUtil.dip2px(this, 7));
+        adapter.setDisKind(disKind);
+        adapter.setItemMovedListener(new DisPhotoRcvAdapter.onItemMovedListener() {
+            boolean needDel = false;
+
+            @Override
+            public void onPressed(int pos) {
+                ll_del.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onMoved(int pos, int x, int y) {
+                int dy = DisplayUtil.getScreenHeight(NewDiscoveryActivity.this) - 360 - titleBar.getHeight();
+                needDel = y > dy;
+            }
+
+            @Override
+            public void onReleased(int fPos, int tPos) {
+                Log.e(TAG, "fpos: " + fPos + ", tPos: " + tPos);
+                if(needDel) {
+                    adapter.removeItem(fPos);
+                    needDel = false;
+                }else{
+
+                    Collections.swap(adapter.getData(), adapter.getItemPos(fPos), adapter.getItemPos(tPos));
+                }
+                ll_del.setVisibility(View.GONE);
+            }
+        });
+
         rcv_photo.setAdapter(adapter);
+
         final GridLayoutManager glMgr = new GridLayoutManager(this, 3){
             @Override
             public boolean canScrollVertically() {
@@ -88,7 +122,7 @@ public class NewDiscoveryActivity extends SuperActivity {
         });
         rcv_photo.setLayoutManager(glMgr);
         rcv_photo.setHasFixedSize(true);
-//        rcv_photo.addItemDecoration(new DisPhotoDecoration(3, 1,1,DisplayUtil.dip2px(this, 5),DisplayUtil.dip2px(this, 15)));
+//        rcv_photo.addItemDecoration(new DisPhotoDecoration(3, 1, 1, DisplayUtil.dip2px(this, 4)));
         adapter.createTouchHelper().attachToRecyclerView(rcv_photo);
 
 //        ll_goParam.setVisibility(disKind == Constants.MOOD ? View.GONE : View.VISIBLE);

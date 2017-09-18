@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.ImageFormat;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -68,7 +69,8 @@ public class GalleryItemsAdapter extends RecyclerViewCursorAdapter<GalleryItemsA
     @Override
     protected void onBindViewHolder(MediaViewHolder holder, final Cursor cursor) {
         if(needFirstItem && holder.getAdapterPosition() == 0){
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(itemSize, itemSize);
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) holder.ll_camera.getLayoutParams();
+            lp.width = itemSize;
             holder.ll_camera.setLayoutParams(lp);
             holder.ll_camera.setVisibility(View.VISIBLE);
             holder.ll_camera.setOnClickListener(new View.OnClickListener() {
@@ -77,16 +79,22 @@ public class GalleryItemsAdapter extends RecyclerViewCursorAdapter<GalleryItemsA
                     CameraGalleryUtils.getInstance(mContext).openSysCamera();
                 }
             });
-            holder.rl_img.setVisibility(View.GONE);
+//            holder.rl_img.setVisibility(View.GONE);
+            holder.cv_img.setVisibility(View.GONE);
         }else {
             holder.ll_camera.setVisibility(View.GONE);
-            holder.rl_img.setVisibility(View.VISIBLE);
+//            holder.rl_img.setVisibility(View.VISIBLE);
+            holder.cv_img.setVisibility(View.VISIBLE);
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) holder.cv_img.getLayoutParams();
+            lp.width = itemSize;
+            holder.cv_img.setLayoutParams(lp);
             ItemModel model = ItemModel.valueOf(cursor);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 GlideImageLoader.getInstance().loadLocalImage(mContext, model.getContentUri(), R.mipmap.placeholder, new Size(itemSize, itemSize), holder.iv_img);
             } else {
                 GlideImageLoader.getInstance().loadLocalImage(mContext, model.getContentUri(), new int[]{itemSize, itemSize}, R.mipmap.placeholder, holder.iv_img);
             }
+
             holder.tv_time.setText(DateUtils.formatElapsedTime(model.duration / 1000));
 //        int pdleft = DisplayUtil.px2dip(mContext, itemSize / 2), pdTop = DisplayUtil.dip2px(mContext, 5);
 //        holder.ckb_isCheck.setPadding(pdleft, pdTop, pdTop, pdleft);
@@ -128,7 +136,8 @@ public class GalleryItemsAdapter extends RecyclerViewCursorAdapter<GalleryItemsA
 
     public static class MediaViewHolder extends RecyclerView.ViewHolder{
         private LinearLayout ll_camera;
-        private RelativeLayout rl_img;
+//        private RelativeLayout rl_img;
+        private CardView cv_img;
         private ImageView iv_img;
         private CheckBox ckb_isCheck;
         private LinearLayout ll_time;
@@ -137,7 +146,8 @@ public class GalleryItemsAdapter extends RecyclerViewCursorAdapter<GalleryItemsA
         public MediaViewHolder(View itemView) {
             super(itemView);
             ll_camera = (LinearLayout) itemView.findViewById(R.id.ll_camera);
-            rl_img = (RelativeLayout) itemView.findViewById(R.id.rl_img);
+//            rl_img = (RelativeLayout) itemView.findViewById(R.id.rl_img);
+            cv_img = (CardView) itemView.findViewById(R.id.cv_img);
             iv_img = (ImageView) itemView.findViewById(R.id.iv_img);
             iv_img.setAdjustViewBounds(true);
             ckb_isCheck = (CheckBox) itemView.findViewById(R.id.ckb_isCheck);
