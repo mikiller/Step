@@ -51,6 +51,7 @@ public class GalleryActivity extends SuperActivity {
     RecyclerView rcv_dirList;
 
     private boolean isMultiple = false;
+    private int maxSelect = 9;
     private Bundle savedBundle;
     private List<String> selectedPath = new ArrayList<>();
     private DirRcvAdapter adapter;
@@ -62,6 +63,7 @@ public class GalleryActivity extends SuperActivity {
         isMultiple = getIntent().getBooleanExtra(Constants.ISMULTIPLE, false);
         galleryType = getIntent().getIntExtra(Constants.GALLERY_TYPE, Constants.NEW_DISCOVERY);
         galleryKind = getIntent().getIntExtra(Constants.DIS_KIND, Constants.MOOD);
+        maxSelect = getIntent().getIntExtra(Constants.MAX_SELECT, 9);
         savedBundle = savedInstanceState;
         super.onCreate(savedInstanceState);
         cgUtils = CameraGalleryUtils.getInstance(this);
@@ -108,6 +110,7 @@ public class GalleryActivity extends SuperActivity {
             }
         });
         gallery.onCreate(savedBundle);
+        gallery.setMaxSelectionCount(maxSelect);
         gallery.setSelectedPaths(getSelectPath(true));
         rcv_dirList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new DirRcvAdapter(this);
@@ -148,18 +151,19 @@ public class GalleryActivity extends SuperActivity {
     }
 
     private void onGetImgFiles(String key, Object value){
-        if(galleryType == Constants.CHANGE_HEADER) {
+        if(galleryType == Constants.NEW_DISCOVERY) {
+            Map<String, Object> args = new HashMap<String, Object>();
+            args.put(key, value);
+            args.put(Constants.DIS_KIND, galleryKind);
+            ActivityManager.startActivity(GalleryActivity.this, NewDiscoveryActivity.class, args);
+
+        }else{
             Intent intent = new Intent();
             if(value instanceof String)
                 intent.putExtra(key, (String)value);
             else
                 intent.putExtra(key, (Serializable)value);
             setResult(RESULT_OK, intent);
-        }else{
-            Map<String, Object> args = new HashMap<String, Object>();
-            args.put(key, value);
-            args.put(Constants.DIS_KIND, galleryKind);
-            ActivityManager.startActivity(GalleryActivity.this, NewDiscoveryActivity.class, args);
         }
         back();
     }

@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/dis_photo_del"
+        android:background="@drawable/selector_dis_del_bg"
         android:gravity="center"
         android:visibility="gone">
 
@@ -45,5 +45,21 @@
             android:text="拖动到此处删除"
             android:textColor="@android:color/white"
             android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_pick"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        android:background="@android:color/white"
+        android:padding="35dp">
+
+        <NumberPicker
+            android:id="@+id/picker"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"/>
     </LinearLayout>
 </RelativeLayout>

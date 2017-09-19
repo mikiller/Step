@@ -68,6 +68,8 @@
         <activity android:name=".activities.GalleryActivity" />
         <activity android:name=".activities.NewDiscoveryActivity"
             android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activities.SearchPoiActivity"
+            android:windowSoftInputMode="stateHidden"/>
     </application>
 
 </manifest>

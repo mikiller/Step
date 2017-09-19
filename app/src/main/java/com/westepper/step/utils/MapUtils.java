@@ -27,10 +27,13 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Polygon;
+import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.nearby.NearbySearch;
 import com.amap.api.services.nearby.UploadInfo;
+import com.amap.api.services.poisearch.PoiSearch;
 import com.autonavi.amap.mapcore.Inner_3dMap_location;
 import com.westepper.step.R;
+import com.westepper.step.fragments.MapFragment;
 import com.westepper.step.responses.Area;
 
 import java.io.File;
@@ -80,7 +83,8 @@ public class MapUtils {
             MapFactory.instance.aMap = aMap;
         if (MapFactory.instance.mContext == null)
             MapFactory.instance.mContext = context;
-
+        if(MapFactory.instance.mapLocation == null)
+            MapFactory.instance.mapLocation = new Inner_3dMap_location("");
         if(MapFactory.instance.geoFenceClient == null)
             MapFactory.instance.geoFenceClient = new GeoFenceClient(context);
 
@@ -316,6 +320,7 @@ public class MapUtils {
                 }
             }
         });
+        startLoaction();
     }
 
     public void startLoaction(){
@@ -355,6 +360,15 @@ public class MapUtils {
 
     public float getDistance(LatLng start, LatLng end) {
         return AMapUtils.calculateLineDistance(start, end);
+    }
+
+    public void searchPoi(PoiSearch.OnPoiSearchListener listener){
+        PoiSearch.Query query = new PoiSearch.Query("", "", "上海市");
+        query.setPageSize(20);
+        PoiSearch poiSearch = new PoiSearch(mContext, query);
+        poiSearch.setOnPoiSearchListener(listener);
+        poiSearch.setBound(new PoiSearch.SearchBound(new LatLonPoint(mapLocation.getLatitude(), mapLocation.getLongitude()), 1000));
+        poiSearch.searchPOIAsyn();
     }
 
     public void destory() {
