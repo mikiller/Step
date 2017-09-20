@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.core.PoiItem;
 import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
 import com.uilib.customdialog.CustomDialog;
 import com.uilib.mxgallery.utils.CameraGalleryUtils;
@@ -24,6 +27,7 @@ import com.westepper.step.activities.GalleryActivity;
 import com.westepper.step.base.Constants;
 import com.westepper.step.customViews.MyMenuItem;
 import com.westepper.step.utils.ActivityManager;
+import com.westepper.step.utils.MapUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -48,11 +52,15 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private onItemMovedListener listener;
     private View.OnClickListener footClickListener;
 
+    private PoiItem poiItem;
+
     public DisPhotoRcvAdapter(Context context, boolean needCamera, int column, int margin) {
         mContext = context;
         this.needCamera = needCamera;
         itemSize = (int) ((context.getResources().getDisplayMetrics().widthPixels - (column+1) * margin) / column);
         this.margin = margin;
+        LatLonPoint point = new LatLonPoint(MapUtils.getInstance().getMapLocation().getLatitude(), MapUtils.getInstance().getMapLocation().getLongitude());
+        poiItem = new PoiItem("default", point, "上海市", "");
     }
 
     public DisPhotoRcvAdapter(Context context, boolean needCamera, List<String> pathList, int column, int margin) {
@@ -152,6 +160,8 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private void bindFootHolder(FootHolder holder){
+        String city = TextUtils.isEmpty(poiItem.getCityName()) ? poiItem.getTitle() : poiItem.getCityName() + ", " + poiItem.getTitle();
+        holder.tv_pos.setText(city);
         if(footClickListener != null)
             holder.tv_pos.setOnClickListener(footClickListener);
     }
@@ -193,6 +203,15 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public List getData(){
         return pathList;
+    }
+
+    public PoiItem getPoiItem(){
+        return poiItem;
+    }
+
+    public void setPoiItem(PoiItem item){
+        poiItem = item;
+        notifyItemChanged(getItemCount() - footCount);
     }
 
     public ItemTouchHelper createTouchHelper(){

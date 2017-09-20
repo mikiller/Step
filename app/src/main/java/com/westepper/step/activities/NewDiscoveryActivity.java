@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 
+import com.amap.api.services.core.PoiItem;
 import com.uilib.mxgallery.utils.CameraGalleryUtils;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
@@ -27,7 +28,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import butterknife.BindView;
 
@@ -126,7 +130,9 @@ public class NewDiscoveryActivity extends SuperActivity {
             public void onClick(View v) {
                 switch (v.getId()){
                     case R.id.tv_pos:
-                        ActivityManager.startActivityforResult(NewDiscoveryActivity.this, SearchPoiActivity.class, Constants.SEARCH_POI, null);
+                        Map<String, Object> args = new HashMap<String, Object>();
+                        args.put(Constants.POIITEM, adapter.getPoiItem());
+                        ActivityManager.startActivityforResult(NewDiscoveryActivity.this, SearchPoiActivity.class, Constants.SEARCH_POI, args);
                     break;
                     case R.id.menu_date:
                         ll_pick.setVisibility(View.VISIBLE);
@@ -205,6 +211,8 @@ public class NewDiscoveryActivity extends SuperActivity {
         else if( data.getSerializableExtra(CameraGalleryUtils.THUMB_FILE) != null) {
             List<File> files = (List<File>) data.getSerializableExtra(CameraGalleryUtils.THUMB_FILE);
             adapter.addItems(files);
+        }else if(requestCode == Constants.SEARCH_POI){
+            adapter.setPoiItem((PoiItem) data.getParcelableExtra(Constants.POIITEM));
         }
 
     }

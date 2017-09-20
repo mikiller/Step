@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.PermissionUtils;
 
 import butterknife.ButterKnife;
@@ -97,6 +98,7 @@ public abstract class SuperActivity extends AppCompatActivity {
     }
 
     protected void back(){
+        ActivityManager.hideInputMethod(this);
         this.finish();
     }
 

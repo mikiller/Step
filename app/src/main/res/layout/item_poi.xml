@@ -8,14 +8,26 @@
         android:id="@+id/tv_poi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp" />
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"/>
+
+    <TextView
+        android:id="@+id/tv_adr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_poi"
+        android:textSize="11sp"
+        android:textColor="@color/dir_img_count"
+        android:layout_marginLeft="15dp"
+        android:visibility="gone"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/line_gray"
-        android:layout_below="@+id/tv_poi"
-        android:layout_marginLeft="15dp"/>
+        android:layout_below="@+id/tv_adr"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"/>
 
     <ImageView
         android:id="@+id/iv_choose"
@@ -24,5 +36,6 @@
         android:src="@mipmap/ic_choose"
         android:layout_margin="15dp"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:visibility="gone"/>
 </RelativeLayout>

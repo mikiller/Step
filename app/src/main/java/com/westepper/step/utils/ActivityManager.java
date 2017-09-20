@@ -1,7 +1,10 @@
 package com.westepper.step.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
+import android.view.inputmethod.InputMethodManager;
 
 
 import com.westepper.step.base.SuperActivity;
@@ -31,6 +34,8 @@ public class ActivityManager {
             for(String key : args.keySet()){
                 if(args.get(key) instanceof Serializable){
                     intent.putExtra(key, (Serializable)args.get(key));
+                }else if(args.get(key) instanceof Parcelable){
+                    intent.putExtra(key, (Parcelable) args.get(key));
                 }else{
                     intent.putExtra(key, String.valueOf(args.get(key)));
                 }
@@ -48,7 +53,9 @@ public class ActivityManager {
             for(String key : args.keySet()){
                 if(args.get(key) instanceof Serializable){
                     intent.putExtra(key, (Serializable)args.get(key));
-                }else{
+                }else if(args.get(key) instanceof Parcelable){
+                    intent.putExtra(key, (Parcelable) args.get(key));
+                } else{
                     intent.putExtra(key, String.valueOf(args.get(key)));
                 }
             }
@@ -56,6 +63,11 @@ public class ActivityManager {
         act.startActivityForResult(intent, requestCode);
         lastActivity = act;
         currentActivity = act1;
+    }
+
+    public static void hideInputMethod(Activity context){
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(context.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
 }

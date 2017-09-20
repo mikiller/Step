@@ -28,6 +28,8 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Polygon;
 import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.help.Inputtips;
+import com.amap.api.services.help.InputtipsQuery;
 import com.amap.api.services.nearby.NearbySearch;
 import com.amap.api.services.nearby.UploadInfo;
 import com.amap.api.services.poisearch.PoiSearch;
@@ -362,12 +364,12 @@ public class MapUtils {
         return AMapUtils.calculateLineDistance(start, end);
     }
 
-    public void searchPoi(PoiSearch.OnPoiSearchListener listener){
-        PoiSearch.Query query = new PoiSearch.Query("", "", "上海市");
+    public void searchPoi(String keyWord, String city, PoiSearch.OnPoiSearchListener listener){
+        PoiSearch.Query query = new PoiSearch.Query(keyWord, "", city);
         query.setPageSize(20);
         PoiSearch poiSearch = new PoiSearch(mContext, query);
         poiSearch.setOnPoiSearchListener(listener);
-        poiSearch.setBound(new PoiSearch.SearchBound(new LatLonPoint(mapLocation.getLatitude(), mapLocation.getLongitude()), 1000));
+        poiSearch.setBound(new PoiSearch.SearchBound(new LatLonPoint(mapLocation.getLatitude(), mapLocation.getLongitude()), 3000));
         poiSearch.searchPOIAsyn();
     }
 
