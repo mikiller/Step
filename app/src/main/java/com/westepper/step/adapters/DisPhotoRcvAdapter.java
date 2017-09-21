@@ -60,7 +60,7 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         itemSize = (int) ((context.getResources().getDisplayMetrics().widthPixels - (column+1) * margin) / column);
         this.margin = margin;
         LatLonPoint point = new LatLonPoint(MapUtils.getInstance().getMapLocation().getLatitude(), MapUtils.getInstance().getMapLocation().getLongitude());
-        poiItem = new PoiItem("default", point, "上海市", "");
+        //poiItem = new PoiItem("default", point, "上海市", "");
     }
 
     public DisPhotoRcvAdapter(Context context, boolean needCamera, List<String> pathList, int column, int margin) {
@@ -160,8 +160,12 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private void bindFootHolder(FootHolder holder){
-        String city = TextUtils.isEmpty(poiItem.getCityName()) ? poiItem.getTitle() : poiItem.getCityName() + ", " + poiItem.getTitle();
-        holder.tv_pos.setText(city);
+        if(poiItem == null)
+            holder.tv_pos.setText("未选择");
+        else {
+            String city = TextUtils.isEmpty(poiItem.getCityName()) ? poiItem.getTitle() : poiItem.getCityName() + ", " + poiItem.getTitle();
+            holder.tv_pos.setText(city);
+        }
         if(footClickListener != null)
             holder.tv_pos.setOnClickListener(footClickListener);
     }

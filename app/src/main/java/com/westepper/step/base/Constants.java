@@ -19,4 +19,5 @@ public class Constants {
     public static final int NEARBY = 2;
     public static final String GALLERY_TYPE = "gallery_type";
     public static final String ISMULTIPLE = "sMultiple";
+    public static final String DISCOVERY_DETAIL = "discovery_detail";
 }

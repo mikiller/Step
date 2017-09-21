@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.amap.api.services.core.PoiItem;
@@ -56,13 +55,15 @@ public class PoiRcvAdapter extends RecyclerView.Adapter<PoiRcvAdapter.Holder> {
         datas.clear();
         datas.add(newData.get(0));
         newData.remove(0);
-        if(!choosedItem.getPoiId().equals("default")){
-            datas.add(choosedItem);
-        }
-        for(PoiItem item : newData){
-            if(item.getPoiId().equals(choosedItem.getPoiId())){
-                newData.remove(item);
-                break;
+        if(choosedItem != null){
+            if(!choosedItem.getPoiId().equals("default")){
+                datas.add(choosedItem);
+            }
+            for(PoiItem item : newData){
+                if(item.getPoiId().equals(choosedItem.getPoiId())){
+                    newData.remove(item);
+                    break;
+                }
             }
         }
         datas.addAll(newData);

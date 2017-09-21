@@ -1,5 +1,8 @@
 package com.westepper.step.responses;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.amap.api.maps.model.LatLng;
 
 import java.io.Serializable;
@@ -9,7 +12,7 @@ import java.util.List;
  * Created by Mikiller on 2017/9/4.
  */
 
-public class Discovery implements Serializable {
+public class Discovery implements Parcelable {
     private static final long serialVersionUID = -4853212901442372136L;
 
     private String discoveryId;
@@ -23,6 +26,34 @@ public class Discovery implements Serializable {
     private long pushTime;
     private long endTime;
     private int joinCount;
+
+    public Discovery(){}
+
+    protected Discovery(Parcel in) {
+        discoveryId = in.readString();
+        discoveryKind = in.readInt();
+        nickName = in.readString();
+        gender = in.readInt();
+        headUrl = in.readString();
+        info = in.readString();
+        latlng = in.readParcelable(LatLng.class.getClassLoader());
+        imgList = in.createStringArrayList();
+        pushTime = in.readLong();
+        endTime = in.readLong();
+        joinCount = in.readInt();
+    }
+
+    public static final Creator<Discovery> CREATOR = new Creator<Discovery>() {
+        @Override
+        public Discovery createFromParcel(Parcel in) {
+            return new Discovery(in);
+        }
+
+        @Override
+        public Discovery[] newArray(int size) {
+            return new Discovery[size];
+        }
+    };
 
     public String getDiscoveryId() {
         return discoveryId;
@@ -110,5 +141,25 @@ public class Discovery implements Serializable {
 
     public void setPushTime(long pushTime) {
         this.pushTime = pushTime;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(discoveryId);
+        dest.writeInt(discoveryKind);
+        dest.writeString(nickName);
+        dest.writeInt(gender);
+        dest.writeString(headUrl);
+        dest.writeString(info);
+        dest.writeParcelable(latlng, flags);
+        dest.writeStringList(imgList);
+        dest.writeLong(pushTime);
+        dest.writeLong(endTime);
+        dest.writeInt(joinCount);
     }
 }

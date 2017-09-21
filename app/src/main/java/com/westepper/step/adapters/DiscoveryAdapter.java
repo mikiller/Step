@@ -1,5 +1,6 @@
 package com.westepper.step.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.RecyclerView;
@@ -11,13 +12,19 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.westepper.step.R;
+import com.westepper.step.activities.DiscoveryDetailActivity;
+import com.westepper.step.base.Constants;
 import com.westepper.step.responses.Discovery;
+import com.westepper.step.utils.ActivityManager;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Mikiller on 2017/9/4.
@@ -34,7 +41,7 @@ public class DiscoveryAdapter extends PagerAdapter {
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
+    public Object instantiateItem(ViewGroup container, final int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_discovery, null);
         container.addView(view);
         ViewHolder holder = new ViewHolder(view);
@@ -44,6 +51,14 @@ public class DiscoveryAdapter extends PagerAdapter {
         holder.setGender(discover.getGender());
         holder.setKind(discover.getDiscoveryKind());
         holder.setScope(scope);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, Object> args = new HashMap<String, Object>();
+                args.put(Constants.DISCOVERY_DETAIL, dataList.get(position));
+                ActivityManager.startActivity((Activity) mContext, DiscoveryDetailActivity.class, args);
+            }
+        });
         return view;
     }
 
@@ -120,7 +135,7 @@ public class DiscoveryAdapter extends PagerAdapter {
         }
 
         public void setKind(int discoveryKind){
-            ll_join.setVisibility(discoveryKind == 1 ? View.VISIBLE : View.GONE);
+            ll_join.setVisibility(discoveryKind == 1 ? View.GONE : View.VISIBLE);
         }
 
         public void setScope(int scope){
