@@ -37,11 +37,13 @@ public class DiscoveryDetailActivity extends SuperActivity {
     RecyclerView rcv_detail;
 
     DisDetailRcvAdapter adapter;
+    LinearLayoutManager rcvMgr;
 
     private float ActDownX, ActDownY, DY;
-    float imgHeight;
+    float maxTransY;
     float rcvTransY;
     boolean isAnimRunning = false;
+    int rcvFirstPos;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,14 +54,24 @@ public class DiscoveryDetailActivity extends SuperActivity {
     @Override
     protected void initView() {
         adapter = new DisDetailRcvAdapter();
-        rcv_detail.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        rcvMgr = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        rcv_detail.setLayoutManager(rcvMgr);
         rcv_detail.setAdapter(adapter);
+        rcv_detail.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE)
+                    rcvFirstPos = rcvMgr.findFirstVisibleItemPosition();
+            }
+        });
     }
 
     @Override
     protected void initData() {
         List<String> commits = new ArrayList<>();
-        for(int i = 0; i < 50; i++){
+        for (int i = 0; i < 50; i++) {
             commits.add(String.valueOf(i));
         }
         adapter.setCommits(commits);
@@ -67,7 +79,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
         vp_img.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                imgHeight = vp_img.getMeasuredHeight() - titleBar.getHeight();
+                maxTransY = vp_img.getMeasuredHeight() - titleBar.getHeight();
             }
         });
     }
@@ -79,74 +91,79 @@ public class DiscoveryDetailActivity extends SuperActivity {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        boolean rst = super.dispatchTouchEvent(ev);
-        switch (ev.getAction()){
+        switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                ActDownX = ev.getX();
-                ActDownY = ev.getY();
                 rcvTransY = rcv_detail.getTranslationY();
-                rst = false;
+                ActDownX = ev.getX();
+                ActDownY = isAnimRunning ? -1 : ev.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                if(Math.abs(ev.getX() - ActDownX) > 200) {
-                    //Log.e(TAG, "move x: " + Math.abs(ev.getX() - ActDownX));
+                if (Math.abs(ev.getX() - ActDownX) > 200) {
                     break;
                 }
                 DY = ev.getY() - ActDownY;
-                if(DY > 0 && rcvTransY == imgHeight)
-                    break;
-                else if(DY < 0 && rcvTransY == 0)
-                    break;
-                rcv_detail.setTranslationY((rcvTransY + DY) >= imgHeight ? imgHeight : ((rcvTransY + DY) <= 0 ? 0 : (rcvTransY + DY)));
-                Log.e(TAG, "dy: " + DY);
-                rst = false;
-                break;
-            case MotionEvent.ACTION_UP:
-                if(!isAnimRunning) {
-                    if (DY < -200) {
-                        AnimUtils.startObjectAnim(rcv_detail, "translationY", rcv_detail.getTranslationY(), 0f, 500, new ValueAnimator.AnimatorUpdateListener() {
-                            @Override
-                            public void onAnimationUpdate(ValueAnimator animation) {
-                                if(((float)animation.getAnimatedValue()) == 0){
-                                    isAnimRunning = false;
-                                    animation.cancel();
-                                }
-                            }
-                        });
-                    } else if(DY > 200) {
-                        AnimUtils.startObjectAnim(rcv_detail, "translationY", rcv_detail.getTranslationY(), imgHeight, 500, new ValueAnimator.AnimatorUpdateListener() {
-                            @Override
-                            public void onAnimationUpdate(ValueAnimator animation) {
-                                if (((float) animation.getAnimatedValue()) == imgHeight) {
-                                    isAnimRunning = false;
-                                    animation.cancel();
-                                }
-                            }
-                        });
-                    }
-                    else{
-                        AnimUtils.startObjectAnim(rcv_detail, "translationY", rcvTransY + DY, rcvTransY, 300, new ValueAnimator.AnimatorUpdateListener() {
-                            @Override
-                            public void onAnimationUpdate(ValueAnimator animation) {
-                                if (((float) animation.getAnimatedValue()) == rcvTransY) {
-                                    isAnimRunning = false;
-                                    animation.cancel();
-                                }
-                            }
-                        });
-                    }
+                if (canMove()) {
+                    rcv_detail.setTranslationY(getDeltaY(rcvTransY, DY));
                 }
                 break;
+            case MotionEvent.ACTION_UP:
+                if (!isAnimRunning && rcvFirstPos == 0 && ActDownY > 0) {
+                    if (DY < -150) {
+                        startScrollAnim(rcv_detail.getTranslationY(), 0f);
+                    } else if (DY > 150) {
+                        startScrollAnim(rcv_detail.getTranslationY(), maxTransY);
+                    } else {
+                        startScrollAnim(rcvTransY + DY, rcvTransY);
+                    }
+
+                }
+                break;
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    private boolean isMaxY() {
+        return DY >= 0 && (rcvTransY >= maxTransY);
+    }
+
+    private boolean isMinY() {
+        return DY <= 0 && (rcvTransY <= 0);
+    }
+
+    private boolean canMove() {
+        boolean rst = true;
+        if (isAnimRunning || rcvFirstPos != 0 || ActDownY < 0) {
+            DY = 0;
+            rst = false;
+        } else if (isMaxY() || isMinY()) {
+            rst = false;
         }
         return rst;
     }
 
+    private void startScrollAnim(float fromY, final float toY) {
+        AnimUtils.startObjectAnim(rcv_detail, "translationY", fromY, toY, 300, new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                if (((float) animation.getAnimatedValue()) == toY) {
+                    isAnimRunning = false;
+                    animation.cancel();
+                } else {
+                    isAnimRunning = true;
+                    rcv_detail.scrollToPosition(0);
+                }
+            }
+        });
+    }
 
+    private float getDeltaY(float srcY, float dY) {
+        return (srcY + dY) >= maxTransY ? maxTransY : ((srcY + dY) <= 0 ? 0 : (srcY + dY));
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         boolean rst = true;
-        switch (event.getAction()){
+        switch (event.getAction()) {
             case MotionEvent.ACTION_MOVE:
                 float x = event.getX();
                 float y = event.getY();
