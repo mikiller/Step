@@ -8,10 +8,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 
 import com.westepper.step.R;
+import com.westepper.step.adapters.DetailImgVpAdapter;
 import com.westepper.step.adapters.DisDetailRcvAdapter;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.TitleBar;
@@ -36,14 +38,17 @@ public class DiscoveryDetailActivity extends SuperActivity {
     @BindView(R.id.rcv_detail)
     RecyclerView rcv_detail;
 
+    DetailImgVpAdapter vpAdapter;
+
     DisDetailRcvAdapter adapter;
     LinearLayoutManager rcvMgr;
 
-    private float ActDownX, ActDownY, DY;
-    float maxTransY;
-    float rcvTransY;
+    private float ActDownX, ActDownY, rcvDY, imgDy, titleDA;
+    float maxRcvTransY, maxImgTransY;
+    float rcvTransY, rlImgTransY;
     boolean isAnimRunning = false;
     int rcvFirstPos;
+    float titleAlpha = 0.01f;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +58,10 @@ public class DiscoveryDetailActivity extends SuperActivity {
 
     @Override
     protected void initView() {
+        titleBar.setBgAlpha(titleAlpha);
+        vpAdapter = new DetailImgVpAdapter(this, new String[]{"http://images2015.cnblogs.com/blog/652828/201509/652828-20150901135305419-1201699534.jpg"});
+        vp_img.setAdapter(vpAdapter);
+
         adapter = new DisDetailRcvAdapter();
         rcvMgr = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rcv_detail.setLayoutManager(rcvMgr);
@@ -79,7 +88,8 @@ public class DiscoveryDetailActivity extends SuperActivity {
         vp_img.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                maxTransY = vp_img.getMeasuredHeight() - titleBar.getHeight();
+                maxRcvTransY = vp_img.getMeasuredHeight() - titleBar.getHeight();
+                maxImgTransY = (titleBar.getHeight() - rl_img.getHeight()) * 0.4f;
             }
         });
     }
@@ -94,6 +104,8 @@ public class DiscoveryDetailActivity extends SuperActivity {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 rcvTransY = rcv_detail.getTranslationY();
+                rlImgTransY = rl_img.getTranslationY();
+                titleAlpha = titleBar.getAlpha();
                 ActDownX = ev.getX();
                 ActDownY = isAnimRunning ? -1 : ev.getY();
                 break;
@@ -101,19 +113,29 @@ public class DiscoveryDetailActivity extends SuperActivity {
                 if (Math.abs(ev.getX() - ActDownX) > 200) {
                     break;
                 }
-                DY = ev.getY() - ActDownY;
+                rcvDY = ev.getY() - ActDownY;
+                imgDy = rcvDY * 0.4f;
                 if (canMove()) {
-                    rcv_detail.setTranslationY(getDeltaY(rcvTransY, DY));
+                    rl_img.setTranslationY(getImgDeltaY(rlImgTransY, imgDy));
+                    rcv_detail.setTranslationY(getDeltaY(rcvTransY, rcvDY));
+                    titleBar.setBgAlpha(getTitleAlpha());
+                    Log.e(TAG, "titlealpha: " + titleAlpha);
                 }
                 break;
             case MotionEvent.ACTION_UP:
                 if (!isAnimRunning && rcvFirstPos == 0 && ActDownY > 0) {
-                    if (DY < -150) {
-                        startScrollAnim(rcv_detail.getTranslationY(), 0f);
-                    } else if (DY > 150) {
-                        startScrollAnim(rcv_detail.getTranslationY(), maxTransY);
+                    if (rcvDY < -150) {
+                        startAlpha(titleDA, 1f);
+                        startScroll(rl_img, rl_img.getTranslationY(), maxImgTransY);
+                        startScroll(rcv_detail, rcv_detail.getTranslationY(), 0f);
+                    } else if (rcvDY > 150) {
+                        startAlpha(titleDA, 0.01f);
+                        startScroll(rl_img, rl_img.getTranslationY(), 0);
+                        startScroll(rcv_detail, rcv_detail.getTranslationY(), maxRcvTransY);
                     } else {
-                        startScrollAnim(rcvTransY + DY, rcvTransY);
+                        startAlpha(titleDA, titleAlpha);
+                        startScroll(rl_img, rlImgTransY + imgDy, rlImgTransY);
+                        startScroll(rcv_detail, rcvTransY + rcvDY, rcvTransY);
                     }
 
                 }
@@ -123,17 +145,17 @@ public class DiscoveryDetailActivity extends SuperActivity {
     }
 
     private boolean isMaxY() {
-        return DY >= 0 && (rcvTransY >= maxTransY);
+        return rcvDY >= 0 && (rcvTransY >= maxRcvTransY);
     }
 
     private boolean isMinY() {
-        return DY <= 0 && (rcvTransY <= 0);
+        return rcvDY <= 0 && (rcvTransY <= 0);
     }
 
     private boolean canMove() {
         boolean rst = true;
         if (isAnimRunning || rcvFirstPos != 0 || ActDownY < 0) {
-            DY = 0;
+            rcvDY = 0;
             rst = false;
         } else if (isMaxY() || isMinY()) {
             rst = false;
@@ -141,8 +163,16 @@ public class DiscoveryDetailActivity extends SuperActivity {
         return rst;
     }
 
-    private void startScrollAnim(float fromY, final float toY) {
-        AnimUtils.startObjectAnim(rcv_detail, "translationY", fromY, toY, 300, new ValueAnimator.AnimatorUpdateListener() {
+    private float getTitleAlpha(){
+        titleDA = getDeltaY(rcvTransY, rcvDY);
+        titleDA /= maxRcvTransY;
+        titleDA = 1 - titleDA + 0.01f;
+        Log.e(TAG, "titleda: " + titleDA);
+        return titleDA;
+    }
+
+    private void startScroll(final View view, float fromY, final float toY) {
+        AnimUtils.startObjectAnim(view, "translationY", fromY, toY, 300, new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 if (((float) animation.getAnimatedValue()) == toY) {
@@ -150,14 +180,23 @@ public class DiscoveryDetailActivity extends SuperActivity {
                     animation.cancel();
                 } else {
                     isAnimRunning = true;
-                    rcv_detail.scrollToPosition(0);
+                    if(view instanceof RecyclerView)
+                        ((RecyclerView)view).scrollToPosition(0);
                 }
             }
         });
     }
 
+    private void startAlpha(float fromA, float toA){
+        AnimUtils.startObjectAnim(titleBar.getRlBg(), "alpha", fromA, toA, 300);
+    }
+
     private float getDeltaY(float srcY, float dY) {
-        return (srcY + dY) >= maxTransY ? maxTransY : ((srcY + dY) <= 0 ? 0 : (srcY + dY));
+        return (srcY + dY) >= maxRcvTransY ? maxRcvTransY : ((srcY + dY) <= 0 ? 0 : (srcY + dY));
+    }
+
+    private float getImgDeltaY(float srcY, float dY){
+        return (srcY + dY) >= 0 ? 0 : ((srcY + dY) <= maxImgTransY ? maxImgTransY : (srcY + dY));
     }
 
     @Override

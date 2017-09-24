@@ -72,7 +72,7 @@ public class DiscoveryAdapter extends PagerAdapter {
     }
 
     public Discovery getItem(int pos){
-        return dataList.get(pos);
+        return dataList == null ? null : dataList.get(pos);
     }
 
     @Override

@@ -125,6 +125,14 @@ public class TitleBar extends RelativeLayout {
         GlideImageLoader.getInstance().loadImage(getContext(), path, R.mipmap.ic_default_head, iv_header, 0);
     }
 
+    public void setBgAlpha(float alpha){
+        rl_bg.setAlpha(alpha);
+    }
+
+    public View getRlBg(){
+        return rl_bg;
+    }
+
     public void setTitleListener(TitleListener listener) {
         this.listener = listener;
     }
