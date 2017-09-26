@@ -8,6 +8,9 @@ import android.widget.ImageView;
 
 import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
 import com.westepper.step.R;
+import com.westepper.step.responses.DisDetailImg;
+
+import java.util.List;
 
 /**
  * Created by Mikiller on 2017/9/24.
@@ -15,31 +18,36 @@ import com.westepper.step.R;
 
 public class DetailImgVpAdapter extends PagerAdapter {
     Context mContext;
-    String[] imgPath;
-    ImageView iv_img;
+    List<DisDetailImg> imgs;
 
-    public DetailImgVpAdapter(Context context, String[]imgPath) {
+
+    public DetailImgVpAdapter(Context context, List<DisDetailImg> imgList) {
         mContext = context;
-        this.imgPath = imgPath;
-        iv_img = new ImageView(mContext);
-        iv_img.setScaleType(ImageView.ScaleType.FIT_XY);
+        imgs = imgList;
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        GlideImageLoader.getInstance().loadImage(mContext, imgPath[position], R.mipmap.default_icon, iv_img, 0);
+
+        ImageView iv_img = new ImageView(mContext);
+        iv_img.setScaleType(ImageView.ScaleType.FIT_XY);
+        GlideImageLoader.getInstance().loadImage(mContext, imgs.get(position).getUrl(), R.mipmap.default_icon, iv_img, 0);
         container.addView(iv_img);
         return iv_img;
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView(iv_img);
+        container.removeView((View) object);
+    }
+
+    public List<DisDetailImg> getImgs(){
+        return imgs;
     }
 
     @Override
     public int getCount() {
-        return imgPath == null ? 0 : imgPath.length;
+        return imgs == null ? 0 : imgs.size();
     }
 
     @Override

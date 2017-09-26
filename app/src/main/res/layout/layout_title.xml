@@ -3,11 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="69dp">
 
-    <RelativeLayout
-        android:id="@+id/rl_bg"
+    <View
+        android:id="@+id/view_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary">
+        android:background="@color/colorPrimary" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent">
     <ImageButton
         android:id="@+id/btn_back"
         android:layout_width="wrap_content"

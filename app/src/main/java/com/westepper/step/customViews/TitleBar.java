@@ -24,7 +24,7 @@ import com.westepper.step.utils.AnimUtils;
 
 public class TitleBar extends RelativeLayout {
     private final static int FORK = 0, ARROW = 1, NORMAL = 0, MENU = 1, HEADER = 2, NONE = 0, IMG = 1, TXT = 2;
-    private RelativeLayout rl_bg;
+    private View view_bg;
     private ImageButton btn_back, btn_more;
     private TextView tv_menu, tv_act_title, tv_act_sure;
     private LinearLayout ll_menu, ll_title;
@@ -50,7 +50,7 @@ public class TitleBar extends RelativeLayout {
 
     private void initView(Context context, AttributeSet attrs, int defStyleAttr){
         LayoutInflater.from(context).inflate(R.layout.layout_title, this, true);
-        rl_bg = (RelativeLayout) findViewById(R.id.rl_bg);
+        view_bg = findViewById(R.id.view_bg);
         btn_back = (ImageButton) findViewById(R.id.btn_back);
         btn_more = (ImageButton) findViewById(R.id.btn_more);
         tv_menu = (TextView) findViewById(R.id.tv_menu);
@@ -63,7 +63,7 @@ public class TitleBar extends RelativeLayout {
 
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.TitleBar);
         if(ta != null){
-            rl_bg.setBackgroundColor(ta.getColor(R.styleable.TitleBar_titleBgColor, getResources().getColor(R.color.colorPrimary)));
+            view_bg.setBackgroundColor(ta.getColor(R.styleable.TitleBar_titleBgColor, getResources().getColor(R.color.colorPrimary)));
             backStyle = ta.getInt(R.styleable.TitleBar_backStyle, ARROW);
             btn_back.setImageResource(backStyle == ARROW ? R.mipmap.ic_back : R.mipmap.ic_close1);
             subStyle = ta.getInt(R.styleable.TitleBar_subStyle, NONE);
@@ -126,11 +126,15 @@ public class TitleBar extends RelativeLayout {
     }
 
     public void setBgAlpha(float alpha){
-        rl_bg.setAlpha(alpha);
+        view_bg.setAlpha(alpha);
     }
 
-    public View getRlBg(){
-        return rl_bg;
+    public float getBgAlpha(){
+        return view_bg.getAlpha();
+    }
+
+    public View getTitleBg(){
+        return view_bg;
     }
 
     public void setTitleListener(TitleListener listener) {

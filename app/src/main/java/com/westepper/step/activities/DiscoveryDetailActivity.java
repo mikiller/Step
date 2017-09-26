@@ -17,6 +17,7 @@ import com.westepper.step.adapters.DetailImgVpAdapter;
 import com.westepper.step.adapters.DisDetailRcvAdapter;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.TitleBar;
+import com.westepper.step.responses.DisDetailImg;
 import com.westepper.step.utils.AnimUtils;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
     float maxRcvTransY, maxImgTransY;
     float rcvTransY, rlImgTransY;
     boolean isAnimRunning = false;
-    int rcvFirstPos;
+    //    int rcvFirstPos;
     float titleAlpha = 0.01f;
 
     @Override
@@ -59,22 +60,46 @@ public class DiscoveryDetailActivity extends SuperActivity {
     @Override
     protected void initView() {
         titleBar.setBgAlpha(titleAlpha);
-        vpAdapter = new DetailImgVpAdapter(this, new String[]{"http://images2015.cnblogs.com/blog/652828/201509/652828-20150901135305419-1201699534.jpg"});
+
+        //for test
+
+        vpAdapter = new DetailImgVpAdapter(this, createImgs());
         vp_img.setAdapter(vpAdapter);
+        vp_img.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                List<DisDetailImg> imgs = vpAdapter.getImgs();
+                int height = (int) (imgs.get(position).getHeight() * (1 - positionOffset) + imgs.get(position + 1).getHeight() * positionOffset);
+                vp_img.getLayoutParams().height = height;
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         adapter = new DisDetailRcvAdapter();
         rcvMgr = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rcv_detail.setLayoutManager(rcvMgr);
         rcv_detail.setAdapter(adapter);
-        rcv_detail.addOnScrollListener(new RecyclerView.OnScrollListener() {
+    }
 
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE)
-                    rcvFirstPos = rcvMgr.findFirstVisibleItemPosition();
-            }
-        });
+    private List<DisDetailImg> createImgs(){
+        List<DisDetailImg> imgs = new ArrayList<>();
+        DisDetailImg img1 = new DisDetailImg("http://gj.yuanlin.com/UploadFiles/201404/2014413143943688.jpg", 180*3, 250*3);
+        imgs.add(img1);
+        DisDetailImg img2 = new DisDetailImg("http://images2015.cnblogs.com/blog/652828/201509/652828-20150901135305419-1201699534.jpg", 720, 1280);
+        imgs.add(img2);
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) vp_img.getLayoutParams();
+        lp.height = img1.getHeight();
+        vp_img.setLayoutParams(lp);
+        return imgs;
     }
 
     @Override
@@ -85,11 +110,12 @@ public class DiscoveryDetailActivity extends SuperActivity {
         }
         adapter.setCommits(commits);
         adapter.setName("Mike");
-        vp_img.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        vp_img.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
-            public void onGlobalLayout() {
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 maxRcvTransY = vp_img.getMeasuredHeight() - titleBar.getHeight();
                 maxImgTransY = (titleBar.getHeight() - rl_img.getHeight()) * 0.4f;
+                rcv_detail.setTranslationY(vp_img.getHeight() - titleBar.getHeight());
             }
         });
     }
@@ -101,29 +127,33 @@ public class DiscoveryDetailActivity extends SuperActivity {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 rcvTransY = rcv_detail.getTranslationY();
                 rlImgTransY = rl_img.getTranslationY();
-                titleAlpha = titleBar.getAlpha();
+                titleAlpha = titleBar.getBgAlpha();
                 ActDownX = ev.getX();
                 ActDownY = isAnimRunning ? -1 : ev.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (Math.abs(ev.getX() - ActDownX) > 200) {
-                    break;
+                if (Math.abs(ev.getY()) > 150) {
+                    rcvDY = ev.getY() - ActDownY;
+                    imgDy = rcvDY * 0.4f;
                 }
-                rcvDY = ev.getY() - ActDownY;
-                imgDy = rcvDY * 0.4f;
-                if (canMove()) {
+                if ((ActDownY < rcvTransY + titleBar.getHeight())) {
+                    if (Math.abs(ActDownX - ev.getX()) > 150) {
+                        ActDownY = -1;
+                        rcvDY = imgDy = 0;
+                    }
+                } else if (canMove()) {
                     rl_img.setTranslationY(getImgDeltaY(rlImgTransY, imgDy));
                     rcv_detail.setTranslationY(getDeltaY(rcvTransY, rcvDY));
                     titleBar.setBgAlpha(getTitleAlpha());
-                    Log.e(TAG, "titlealpha: " + titleAlpha);
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                if (!isAnimRunning && rcvFirstPos == 0 && ActDownY > 0) {
+                if (canMove()) {
                     if (rcvDY < -150) {
                         startAlpha(titleDA, 1f);
                         startScroll(rl_img, rl_img.getTranslationY(), maxImgTransY);
@@ -154,20 +184,18 @@ public class DiscoveryDetailActivity extends SuperActivity {
 
     private boolean canMove() {
         boolean rst = true;
-        if (isAnimRunning || rcvFirstPos != 0 || ActDownY < 0) {
+        if (isAnimRunning || rcvMgr.findFirstCompletelyVisibleItemPosition() != 0 || ActDownY < 0) {
             rcvDY = 0;
             rst = false;
         } else if (isMaxY() || isMinY()) {
+            rcvDY = 0;
             rst = false;
         }
         return rst;
     }
 
-    private float getTitleAlpha(){
-        titleDA = getDeltaY(rcvTransY, rcvDY);
-        titleDA /= maxRcvTransY;
-        titleDA = 1 - titleDA + 0.01f;
-        Log.e(TAG, "titleda: " + titleDA);
+    private float getTitleAlpha() {
+        titleDA = 1 - getDeltaY(rcvTransY, rcvDY) / maxRcvTransY + 0.01f;
         return titleDA;
     }
 
@@ -180,35 +208,23 @@ public class DiscoveryDetailActivity extends SuperActivity {
                     animation.cancel();
                 } else {
                     isAnimRunning = true;
-                    if(view instanceof RecyclerView)
-                        ((RecyclerView)view).scrollToPosition(0);
+                    if (view instanceof RecyclerView)
+                        ((RecyclerView) view).scrollToPosition(0);
                 }
             }
         });
     }
 
-    private void startAlpha(float fromA, float toA){
-        AnimUtils.startObjectAnim(titleBar.getRlBg(), "alpha", fromA, toA, 300);
+    private void startAlpha(float fromA, float toA) {
+        AnimUtils.startObjectAnim(titleBar.getTitleBg(), "alpha", fromA, toA, 300);
     }
 
     private float getDeltaY(float srcY, float dY) {
         return (srcY + dY) >= maxRcvTransY ? maxRcvTransY : ((srcY + dY) <= 0 ? 0 : (srcY + dY));
     }
 
-    private float getImgDeltaY(float srcY, float dY){
+    private float getImgDeltaY(float srcY, float dY) {
         return (srcY + dY) >= 0 ? 0 : ((srcY + dY) <= maxImgTransY ? maxImgTransY : (srcY + dY));
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        boolean rst = true;
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_MOVE:
-                float x = event.getX();
-                float y = event.getY();
-                break;
-        }
-        return super.onTouchEvent(event);
     }
 
 
