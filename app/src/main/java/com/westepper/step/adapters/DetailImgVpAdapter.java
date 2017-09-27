@@ -8,7 +8,7 @@ import android.widget.ImageView;
 
 import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
 import com.westepper.step.R;
-import com.westepper.step.responses.DisDetailImg;
+import com.westepper.step.responses.ImgDetail;
 
 import java.util.List;
 
@@ -18,10 +18,10 @@ import java.util.List;
 
 public class DetailImgVpAdapter extends PagerAdapter {
     Context mContext;
-    List<DisDetailImg> imgs;
+    List<ImgDetail> imgs;
 
 
-    public DetailImgVpAdapter(Context context, List<DisDetailImg> imgList) {
+    public DetailImgVpAdapter(Context context, List<ImgDetail> imgList) {
         mContext = context;
         imgs = imgList;
     }
@@ -31,7 +31,7 @@ public class DetailImgVpAdapter extends PagerAdapter {
 
         ImageView iv_img = new ImageView(mContext);
         iv_img.setScaleType(ImageView.ScaleType.FIT_XY);
-        GlideImageLoader.getInstance().loadImage(mContext, imgs.get(position).getUrl(), R.mipmap.default_icon, iv_img, 0);
+        GlideImageLoader.getInstance().loadImage(mContext, imgs.get(position).getUrl(), R.mipmap.placeholder, iv_img, 0);
         container.addView(iv_img);
         return iv_img;
     }
@@ -41,7 +41,7 @@ public class DetailImgVpAdapter extends PagerAdapter {
         container.removeView((View) object);
     }
 
-    public List<DisDetailImg> getImgs(){
+    public List<ImgDetail> getImgs(){
         return imgs;
     }
 

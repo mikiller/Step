@@ -28,6 +28,7 @@ import com.westepper.step.customViews.SearchView;
 import com.westepper.step.responses.Area;
 import com.westepper.step.responses.AreaList;
 import com.westepper.step.responses.Discovery;
+import com.westepper.step.responses.UserPos;
 import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.AnimUtils;
 import com.westepper.step.utils.FileUtils;
@@ -169,7 +170,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
             @Override
             public void onPageSelected(int position) {
                 Discovery disc = adapter.getItem(position);
-                mapUtils.addMarker(disc.getLatlng());
+                mapUtils.addMarker(disc.getUserPos().getLatlng());
             }
 
             @Override
@@ -230,7 +231,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
             AnimUtils.startObjectAnim(rl_head, "translationY", headTransY, 0, 300);
             AnimUtils.startObjectAnim(ll_discovery_opt, "translationY", optTransY, 0, 400);
             AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vpTransY, 0, 500);
-            mapUtils.addMarker(adapter.getItem(vp_discoveryList.getCurrentItem()).getLatlng());
+            mapUtils.addMarker(adapter.getItem(vp_discoveryList.getCurrentItem()).getUserPos().getLatlng());
             mapUtils.setIsNeedArea(false);
         }
 
@@ -250,14 +251,16 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
                 dis.setNickName("小飞");
                 dis.setGender(1);
                 dis.setInfo("小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排");
-                dis.setLatlng(new LatLng(31.2304, 121.462489));
+                UserPos userPos = new UserPos(new LatLng(31.2304, 121.462489), "上海市，上海电视台");
+                dis.setUserPos(userPos);
                 dis.setDiscoveryKind(kind);
                 discoveryList.add(dis);
                 dis = new Discovery();
                 dis.setNickName("鸡排侠");
                 dis.setGender(2);
                 dis.setInfo("鸡排不用飞哥送");
-                dis.setLatlng(new LatLng(31.229189, 121.468207));
+                UserPos userPos1 = new UserPos(new LatLng(31.229189, 121.468207), "上海市，和平影院");
+                dis.setUserPos(userPos1);
                 dis.setDiscoveryKind(kind);
                 discoveryList.add(dis);
                 adapter.setScope(scope);
@@ -265,7 +268,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
                 vp_discoveryList.setCurrentItem(0);
                 if(!isTrack) {
                     AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vpTransY, 0, 500);
-                    mapUtils.addMarker(discoveryList.get(vp_discoveryList.getCurrentItem()).getLatlng());
+                    mapUtils.addMarker(discoveryList.get(vp_discoveryList.getCurrentItem()).getUserPos().getLatlng());
                 }
             }
         }, 1000);

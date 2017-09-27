@@ -6,11 +6,11 @@ import java.io.Serializable;
  * Created by Mikiller on 2017/9/26.
  */
 
-public class DisDetailImg implements Serializable {
+public class ImgDetail implements Serializable {
     String url;
     int width, height;
 
-    public DisDetailImg(String url, int height, int width) {
+    public ImgDetail(String url, int height, int width) {
         this.height = height;
         this.url = url;
         this.width = width;

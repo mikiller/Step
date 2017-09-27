@@ -13,7 +13,6 @@ import java.util.List;
  */
 
 public class Discovery implements Parcelable {
-    private static final long serialVersionUID = -4853212901442372136L;
 
     private String discoveryId;
     private int discoveryKind;
@@ -21,7 +20,7 @@ public class Discovery implements Parcelable {
     private int gender;
     private String headUrl;
     private String info;
-    private LatLng latlng;
+    private UserPos userPos;
     private List<String> imgList;
     private long pushTime;
     private long endTime;
@@ -36,7 +35,7 @@ public class Discovery implements Parcelable {
         gender = in.readInt();
         headUrl = in.readString();
         info = in.readString();
-        latlng = in.readParcelable(LatLng.class.getClassLoader());
+        userPos = in.readParcelable(LatLng.class.getClassLoader());
         imgList = in.createStringArrayList();
         pushTime = in.readLong();
         endTime = in.readLong();
@@ -119,12 +118,12 @@ public class Discovery implements Parcelable {
         this.joinCount = joinCount;
     }
 
-    public LatLng getLatlng() {
-        return latlng;
+    public UserPos getUserPos() {
+        return userPos;
     }
 
-    public void setLatlng(LatLng latlng) {
-        this.latlng = latlng;
+    public void setUserPos(UserPos userPos) {
+        this.userPos = userPos;
     }
 
     public String getNickName() {
@@ -156,7 +155,7 @@ public class Discovery implements Parcelable {
         dest.writeInt(gender);
         dest.writeString(headUrl);
         dest.writeString(info);
-        dest.writeParcelable(latlng, flags);
+        dest.writeParcelable(userPos, flags);
         dest.writeStringList(imgList);
         dest.writeLong(pushTime);
         dest.writeLong(endTime);

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
+
+    <View
+        android:id="@+id/margin"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/cancel_btn_bg" />
+
+    <TextView
+        android:id="@+id/tv_liuyan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="留言"
+        android:textSize="15sp"
+        android:textColor="@color/text_color_black"
+        android:layout_below="@+id/margin"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="15dp"/>
+
+    <TextView
+        android:id="@+id/tv_commitNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textSize="13sp"
+        android:textColor="@color/discovery_kind_unchecked"
+        android:layout_toRightOf="@+id/tv_liuyan"
+        android:layout_alignBaseline="@+id/tv_liuyan"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line_gray"
+        android:layout_below="@+id/tv_liuyan"
+        android:layout_marginLeft="15dp" />
+</RelativeLayout>
