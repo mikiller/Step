@@ -28,6 +28,7 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private Context mContext;
     private Discovery discovery;
     private List<Commit> commits;
+    private OnCommitListener commitListener;
 
 
     public DisDetailRcvAdapter(Context mContext) {
@@ -67,7 +68,7 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(holder instanceof DetailHolder)
             updateDetailHolder((DetailHolder) holder);
         else if(holder instanceof CommitTitleHolder)
-            ((CommitTitleHolder) holder).tv_commitNum.setText(String.valueOf(commits.size()));
+            ((CommitTitleHolder) holder).tv_commitNum.setText(String.valueOf(getCommitSize()));
         else
             updateCommitHolder((CommitHolder) holder, commits.get(holder.getAdapterPosition() - 2));
     }
@@ -80,12 +81,26 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         holder.tv_detailPos.setText(discovery.getUserPos().getPoiTitle());
         holder.rl_join.setVisibility(discovery.getDiscoveryKind() == 1 ? View.GONE : View.VISIBLE);
         holder.tv_time.setText("2017/4/5");
+        holder.btn_commit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(commitListener != null)
+                    commitListener.onCommit(discovery.getDiscoveryId());
+            }
+        });
     }
 
-    private void updateCommitHolder(CommitHolder holder, Commit commit){
+    private void updateCommitHolder(CommitHolder holder, final Commit commit){
         GlideImageLoader.getInstance().loadImage(mContext, commit.getHeaderUrl(), R.mipmap.ic_default_head, holder.iv_header, 0);
         holder.tv_nickName.setText(commit.getNickName());
         holder.tv_commit.setText(commit.getCommit());
+        holder.btn_recommit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(commitListener != null)
+                    commitListener.onCommit(commit.getId());
+            }
+        });
     }
 
     public void setCommits(List commits){
@@ -93,14 +108,22 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         notifyDataSetChanged();
     }
 
+    public int getCommitSize(){
+        return commits == null ? 0 : commits.size();
+    }
+
     public void setDiscovery(Discovery dis){
         this.discovery = dis;
         notifyItemChanged(0);
     }
 
+    public void setCommitListener(OnCommitListener listener){
+        commitListener = listener;
+    }
+
     @Override
     public int getItemCount() {
-        return commits == null ? 1 : commits.size() + 1;
+        return commits == null ? 1 : commits.size() + 2;
     }
 
     public class DetailHolder extends RecyclerView.ViewHolder{
@@ -146,5 +169,9 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             tv_commitTime = (TextView) itemView.findViewById(R.id.tv_commitTime);
             btn_recommit = (ImageButton) itemView.findViewById(R.id.btn_recommit);
         }
+    }
+
+    public interface OnCommitListener{
+        void onCommit(String id);
     }
 }

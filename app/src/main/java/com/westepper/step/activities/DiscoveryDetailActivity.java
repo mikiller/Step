@@ -1,6 +1,9 @@
 package com.westepper.step.activities;
 
 import android.animation.ValueAnimator;
+import android.content.Context;
+import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -9,11 +12,15 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.CompletionInfo;
+import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.amap.api.maps.model.Marker;
+import com.googlecode.mp4parser.authoring.Edit;
+import com.uilib.customdialog.CustomDialog;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
 import com.westepper.step.adapters.DetailImgVpAdapter;
@@ -24,12 +31,14 @@ import com.westepper.step.customViews.TitleBar;
 import com.westepper.step.responses.Commit;
 import com.westepper.step.responses.Discovery;
 import com.westepper.step.responses.ImgDetail;
+import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.AnimUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.BindViews;
 
 /**
  * Created by Mikiller on 2017/9/21.
@@ -46,31 +55,41 @@ public class DiscoveryDetailActivity extends SuperActivity {
     TextView tv_imgNum;
     @BindView(R.id.rcv_detail)
     RecyclerView rcv_detail;
-    @BindView(R.id.commit_title)
-    RelativeLayout commit_title;
-    @BindView(R.id.margin)
-    View margin;
+    @BindView(R.id.ll_joinOpt)
+    LinearLayout ll_joinOtp;
+    @BindView(R.id.tv_joinOpt)
+    TextView tv_joinOpt;
+    @BindView(R.id.rl_commitInput)
+    RelativeLayout rl_commitInput;
+    @BindView(R.id.edt_commit)
+    EditText edt_commit;
 
     DetailImgVpAdapter vpAdapter;
 
-    DisDetailRcvAdapter adapter;
-    LinearLayoutManager rcvMgr;
+    DisDetailRcvAdapter rcvAdapter;
+    MyLinearLayoutManager rcvMgr;
 
     Discovery discovery;
+    int scope;
+
+    ViewTreeObserver.OnGlobalLayoutListener glListener;
 
     private float ActDownX, ActDownY, rcvDY, imgDy, titleDA;
     float maxRcvTransY, maxImgTransY;
     float rcvTransY, rlImgTransY;
-    boolean isAnimRunning = false;
+    boolean isAnimRunning = false, needTransY = true;
     //    int rcvFirstPos;
     float titleAlpha = 0.01f;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        if(savedInstanceState != null)
+        if (savedInstanceState != null) {
             discovery = savedInstanceState.getParcelable(Constants.DISCOVERY_DETAIL);
-        else if(getIntent() != null)
+            scope = savedInstanceState.getInt(Constants.DIS_SCOPE);
+        } else if (getIntent() != null) {
             discovery = getIntent().getParcelableExtra(Constants.DISCOVERY_DETAIL);
+            scope = getIntent().getIntExtra(Constants.DIS_SCOPE, Constants.NEARBY);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_discovery_detail);
     }
@@ -78,13 +97,35 @@ public class DiscoveryDetailActivity extends SuperActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(Constants.DISCOVERY_DETAIL, discovery);
+        outState.putInt(Constants.DIS_SCOPE, scope);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void initView() {
         titleBar.setBgAlpha(titleAlpha);
+        titleBar.setTitleListener(new TitleBar.TitleListener() {
+            @Override
+            protected void onBackClicked() {
+                back();
+            }
 
+            @Override
+            protected void onMoreClicked() {
+                final CustomDialog dlg = new CustomDialog(DiscoveryDetailActivity.this);
+                dlg.setLayoutRes(R.layout.layout_newdis_dlg).setOnCustomBtnClickListener(new CustomDialog.onCustomBtnsClickListener() {
+                    @Override
+                    public void onBtnClick(int id) {
+                        if(id == R.id.btn_mood){
+                            ActivityManager.startActivity(DiscoveryDetailActivity.this, ReportAdviceActivity.class);
+                        }else if(id == R.id.btn_outgo){
+
+                        }
+                        dlg.dismiss();
+                    }
+                }, R.id.btn_mood, R.id.btn_outgo).setCustomBtnText("举报", "报错").show();
+            }
+        });
         //for test
 
         vpAdapter = new DetailImgVpAdapter(this, createImgs());
@@ -92,24 +133,24 @@ public class DiscoveryDetailActivity extends SuperActivity {
         vp_img.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             int minHeight = DisplayUtil.getScreenWidth(DiscoveryDetailActivity.this) / 4 * 3;
             int maxHeight = DisplayUtil.getScreenHeight(DiscoveryDetailActivity.this) / 3 * 4;
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 ImgDetail img = vpAdapter.getImgs().get(position);
                 int fromHeight = getHeight(img.getHeight());
                 int nextHeight = fromHeight;
-                if(position < vpAdapter.getCount() - 1) {
+                if (position < vpAdapter.getCount() - 1) {
                     ImgDetail img1 = vpAdapter.getImgs().get(position + 1);
                     nextHeight = getHeight(img1.getHeight());
                 }
-                Log.e(TAG, "fromHeight: " + fromHeight + ", nextHeigh: " + nextHeight);
-                int height = (int) (fromHeight * (1 -positionOffset) + nextHeight * positionOffset);
+                int height = (int) (fromHeight * (1 - positionOffset) + nextHeight * positionOffset);
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) vp_img.getLayoutParams();
                 lp.height = height;
                 vp_img.setLayoutParams(lp);
             }
 
-            private int getHeight(int src){
-               return src < minHeight ? minHeight : (src > maxHeight ? maxHeight : src);
+            private int getHeight(int src) {
+                return src < minHeight ? minHeight : (src > maxHeight ? maxHeight : src);
             }
 
             @Override
@@ -124,23 +165,52 @@ public class DiscoveryDetailActivity extends SuperActivity {
         });
         setImgNum(0);
 
-        adapter = new DisDetailRcvAdapter(this);
-        rcvMgr = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        rcvMgr = new MyLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rcv_detail.setLayoutManager(rcvMgr);
-        rcv_detail.setAdapter(adapter);
-        rcv_detail.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        rcvAdapter = new DisDetailRcvAdapter(this);
+        rcvAdapter.setCommitListener(new DisDetailRcvAdapter.OnCommitListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                Log.e(TAG, "current pos: " + rcvMgr.findFirstCompletelyVisibleItemPosition());
-                commit_title.setVisibility(rcvMgr.findFirstCompletelyVisibleItemPosition() >= 2 ? View.VISIBLE : View.GONE);
-                commit_title.setTranslationY(rcv_detail.getTranslationY() + titleBar.getHeight());
-                margin.setVisibility(View.GONE);
-                ((TextView)commit_title.findViewById(R.id.tv_commitNum)).setText(String.valueOf(adapter.getItemCount()));
+            public void onCommit(String id) {
+                if(rl_commitInput.getVisibility() == View.GONE) {
+                    needTransY = false;
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_NOT_ALWAYS);
+                }
+            }
+        });
+        rcv_detail.setAdapter(rcvAdapter);
+
+        ll_joinOtp.setVisibility(discovery.getDiscoveryKind() == Constants.MOOD ? View.GONE : View.VISIBLE);
+        tv_joinOpt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setEnabled(false);
+            }
+        });
+
+        getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(glListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+            int sbHeight, keyboardHeight, screenHeight = DisplayUtil.getScreenHeight(DiscoveryDetailActivity.this);
+            Rect window = new Rect();
+
+            @Override
+            public void onGlobalLayout() {
+                getWindow().getDecorView().getWindowVisibleDisplayFrame(window);
+                keyboardHeight = screenHeight - window.height();
+                if(keyboardHeight > screenHeight / 3){
+                    rl_commitInput.setVisibility(View.VISIBLE);
+                    edt_commit.requestFocus();
+                    rl_commitInput.setTranslationY(sbHeight - keyboardHeight);
+                }else{
+                    sbHeight = keyboardHeight;
+                    rl_commitInput.setVisibility(View.GONE);
+                    edt_commit.setText("");
+                    needTransY = true;
+                }
             }
         });
     }
 
-    private List<ImgDetail> createImgs(){
+    private List<ImgDetail> createImgs() {
         List<ImgDetail> imgs = new ArrayList<>();
         ImgDetail img1 = new ImgDetail("http://gj.yuanlin.com/UploadFiles/201404/2014413143943688.jpg", 240, 750);
         imgs.add(img1);
@@ -149,7 +219,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
         return imgs;
     }
 
-    private void setImgNum(int position){
+    private void setImgNum(int position) {
         String imgCount = String.format("%1$d / %2$d", position + 1, vpAdapter.getCount());
         tv_imgNum.setText(imgCount);
     }
@@ -219,15 +289,18 @@ public class DiscoveryDetailActivity extends SuperActivity {
         commits.add(commit33);
 
 
-        adapter.setCommits(commits);
-        adapter.setDiscovery(discovery);
+        if (scope == Constants.FRIEND)
+            rcvAdapter.setCommits(commits);
+        rcvAdapter.setDiscovery(discovery);
         vp_img.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if(!needTransY)
+                    return;
                 maxRcvTransY = vp_img.getMeasuredHeight() - titleBar.getHeight();
                 maxImgTransY = (titleBar.getHeight() - rl_img.getHeight()) * 0.4f;
                 rcv_detail.setTranslationY(vp_img.getHeight() - titleBar.getHeight());
-                commit_title.setTranslationY(rcv_detail.getTranslationY() + titleBar.getHeight());
+
             }
         });
     }
@@ -263,6 +336,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
                     rcv_detail.setTranslationY(getDeltaY(rcvTransY, rcvDY));
                     titleBar.setBgAlpha(getTitleAlpha());
                 }
+                rcvMgr.setCanScroll(rcv_detail.getTranslationY() == 0);
                 break;
             case MotionEvent.ACTION_UP:
                 if (canMove()) {
@@ -296,7 +370,19 @@ public class DiscoveryDetailActivity extends SuperActivity {
 
     private boolean canMove() {
         boolean rst = true;
-        if (isAnimRunning || rcvMgr.findFirstCompletelyVisibleItemPosition() != 0 || ActDownY < 0) {
+
+        if(rl_commitInput.getVisibility() == View.VISIBLE){
+            Rect rect = new Rect();
+            rl_commitInput.getGlobalVisibleRect(rect);
+            if(ActDownY > rect.top) {
+                rcvDY = 0;
+                return false;
+            }
+        }
+        if (rcvMgr.findLastVisibleItemPosition() == rcvAdapter.getItemCount() - 1) {
+            rcvDY = 0;
+            rst = false;
+        } else if (isAnimRunning || rcvMgr.findFirstCompletelyVisibleItemPosition() != 0 || ActDownY < 0) {
             rcvDY = 0;
             rst = false;
         } else if (isMaxY() || isMinY()) {
@@ -339,5 +425,29 @@ public class DiscoveryDetailActivity extends SuperActivity {
         return (srcY + dY) >= 0 ? 0 : ((srcY + dY) <= maxImgTransY ? maxImgTransY : (srcY + dY));
     }
 
+    @Override
+    protected void onDestroy() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            getWindow().getDecorView().getViewTreeObserver().removeOnGlobalLayoutListener(glListener);
+        } else {
+            getWindow().getDecorView().getViewTreeObserver().removeGlobalOnLayoutListener(glListener);
+        }
+        super.onDestroy();
+    }
 
+    private class MyLinearLayoutManager extends LinearLayoutManager{
+        boolean canScroll = false;
+
+        public MyLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
+            super(context, orientation, reverseLayout);
+        }
+
+        public void setCanScroll(boolean canScroll){
+            this.canScroll = canScroll;
+        }
+        @Override
+        public boolean canScrollVertically() {
+            return canScroll;
+        }
+    }
 }

@@ -46,7 +46,7 @@ public class MainActivity extends SuperActivity {
                     default:
                         vp_content.setCurrentItem(1);
                         adapter.getItem(1).fragmentCallback(checkedId, null);
-//                        ((MapFragment)adapter.getItem(1)).setIsTrack(checkedId == R.id.rdb_track);
+//                        ((MapFragment)rcvAdapter.getItem(1)).setIsTrack(checkedId == R.id.rdb_track);
                         break;
                 }
             }

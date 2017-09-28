@@ -110,12 +110,26 @@
         </LinearLayout>
     </LinearLayout>
 
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_discoveryList"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="34dp"
+        android:clipChildren="false"
+        android:translationY="660dp" />
+
     <RelativeLayout
         android:id="@+id/rl_head"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:background="@color/colorPrimary"
-        android:translationY="-64dp">
+        android:translationY="-64dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <RadioGroup
             android:id="@+id/rdg_scope"
@@ -149,15 +163,4 @@
             android:padding="15dp"
             android:src="@mipmap/ic_plus" />
     </RelativeLayout>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/vp_discoveryList"
-        android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="34dp"
-        android:clipChildren="false"
-        android:translationY="660dp" />
 </RelativeLayout>

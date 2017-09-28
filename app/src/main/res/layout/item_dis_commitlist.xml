@@ -3,7 +3,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="20dp"
-    android:paddingLeft="15dp">
+    android:paddingLeft="15dp"
+    android:background="@android:color/white">
 
     <com.uilib.joooonho.SelectableRoundedImageView
         xmlns:srv="http://schemas.android.com/apk/res-auto"
@@ -37,13 +38,13 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tv_commitTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:textColor="@color/discovery_kind_unchecked"
                 android:textSize="11sp"/>
 
@@ -52,8 +53,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/ic_commit"
-                android:background="@null"
+                android:background="@drawable/selector_menuitem"
+                android:paddingTop="15dp"
                 android:paddingRight="15dp"
+                android:paddingLeft="15dp"
                 android:paddingBottom="10dp"
                 android:layout_alignParentRight="true"/>
         </RelativeLayout>

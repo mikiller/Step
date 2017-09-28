@@ -89,6 +89,14 @@ public class TitleBar extends RelativeLayout {
             }
         });
 
+        btn_more.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listener != null)
+                    listener.onMoreClicked();
+            }
+        });
+
         tv_act_sure.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,6 +156,7 @@ public class TitleBar extends RelativeLayout {
     public static abstract class TitleListener{
         protected void onBackClicked(){}
         protected void onSubClicked(){}
+        protected void onMoreClicked(){}
         protected void onMenuChecked(boolean isChecked){}
     }
 }

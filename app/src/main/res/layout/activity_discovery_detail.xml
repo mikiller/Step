@@ -41,12 +41,122 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/titleBar"
-        android:background="@android:color/white" />
-
-    <include android:id="@+id/commit_title"
-        layout="@layout/item_dis_commit_title"
-        android:layout_height="wrap_content"
+        android:layout_above="@+id/ll_joinOpt"
+        android:background="@color/cancel_btn_bg" />
+    
+    <LinearLayout
+        android:id="@+id/ll_joinOpt"
         android:layout_width="match_parent"
-        android:layout_alignTop="@+id/rl_detail"
-        android:visibility="gone"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_joinNum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:background="@color/cancel_btn_bg"
+            android:gravity="center"
+            android:textSize="13sp"
+            android:textColor="@color/join_txt_color"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:background="@color/blackPrimary">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+            <TextView
+                style="@style/join_txt"
+                android:text="距离结束还剩"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="10dp"/>
+
+            <TextView
+                android:id="@+id/tv_hour"
+                style="@style/join_time_txt"
+                android:text="0"/>
+
+            <TextView
+                style="@style/join_txt"
+                android:text="时"/>
+
+            <TextView
+                android:id="@+id/tv_min"
+                style="@style/join_time_txt"
+                android:text="0"/>
+
+            <TextView
+                style="@style/join_txt"
+                android:text="分"/>
+
+            <TextView
+                android:id="@+id/tv_sec"
+                style="@style/join_time_txt"
+                android:text="0"/>
+
+            <TextView
+                style="@style/join_txt"
+                android:text="秒"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_joinOpt"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:background="@drawable/selector_join_btn"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:text="参加约行"/>
+        </LinearLayout>
+    </LinearLayout>
+    
+    <RelativeLayout
+        android:id="@+id/rl_commitInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/line_gray"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
+
+        <EditText
+            android:id="@+id/edt_commit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/btn_send"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:paddingTop="7dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="7dp"
+            android:maxLines="5"
+            android:background="@drawable/shape_radiu_white_bg"
+            android:hint="我也评论一句 (500字)"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btn_send"
+            android:layout_width="60dp"
+            android:layout_height="33dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/edt_commit"
+            android:layout_marginRight="15dp"
+            android:text="提交"
+            android:textColor="@android:color/white"
+            android:background="@drawable/selector_track_more" />
+    </RelativeLayout>
 </RelativeLayout>

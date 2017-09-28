@@ -71,6 +71,7 @@
         <activity android:name=".activities.SearchPoiActivity"
             android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".activities.DiscoveryDetailActivity" />
+        <activity android:name=".activities.ReportAdviceActivity" />
     </application>
 
 </manifest>

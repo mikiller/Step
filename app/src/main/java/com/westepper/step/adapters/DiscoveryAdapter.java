@@ -41,7 +41,7 @@ public class DiscoveryAdapter extends PagerAdapter {
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, final int position) {
+    public Object instantiateItem(final ViewGroup container, final int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_discovery, null);
         container.addView(view);
         ViewHolder holder = new ViewHolder(view);
@@ -55,6 +55,7 @@ public class DiscoveryAdapter extends PagerAdapter {
             @Override
             public void onClick(View v) {
                 Map<String, Object> args = new HashMap<String, Object>();
+                args.put(Constants.DIS_SCOPE, scope);
                 args.put(Constants.DISCOVERY_DETAIL, dataList.get(position));
                 ActivityManager.startActivity((Activity) mContext, DiscoveryDetailActivity.class, args);
             }

@@ -4,12 +4,6 @@
     android:layout_height="wrap_content"
     android:background="@android:color/white">
 
-    <View
-        android:id="@+id/margin"
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="@color/cancel_btn_bg" />
-
     <TextView
         android:id="@+id/tv_liuyan"
         android:layout_width="wrap_content"

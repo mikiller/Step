@@ -7,10 +7,19 @@ import java.io.Serializable;
  */
 
 public class Commit implements Serializable {
+    private String id;
     private String headerUrl;
     private String nickName;
     private String commit;
     private long commitTime;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCommit() {
         return commit;
