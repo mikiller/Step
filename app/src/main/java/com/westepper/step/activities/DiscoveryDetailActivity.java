@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -19,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.googlecode.mp4parser.authoring.Edit;
 import com.uilib.customdialog.CustomDialog;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
@@ -35,10 +33,11 @@ import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.AnimUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
-import butterknife.BindViews;
 
 /**
  * Created by Mikiller on 2017/9/21.
@@ -116,11 +115,9 @@ public class DiscoveryDetailActivity extends SuperActivity {
                 dlg.setLayoutRes(R.layout.layout_newdis_dlg).setOnCustomBtnClickListener(new CustomDialog.onCustomBtnsClickListener() {
                     @Override
                     public void onBtnClick(int id) {
-                        if(id == R.id.btn_mood){
-                            ActivityManager.startActivity(DiscoveryDetailActivity.this, ReportAdviceActivity.class);
-                        }else if(id == R.id.btn_outgo){
-
-                        }
+                        Map<String, Object> args = new HashMap<String, Object>();
+                        args.put(Constants.ISREPORT, id == R.id.btn_mood ? ReportAdviceActivity.REPORT : ReportAdviceActivity.ADVICE);
+                        ActivityManager.startActivity(DiscoveryDetailActivity.this, ReportAdviceActivity.class, args);
                         dlg.dismiss();
                     }
                 }, R.id.btn_mood, R.id.btn_outgo).setCustomBtnText("举报", "报错").show();
@@ -228,63 +225,63 @@ public class DiscoveryDetailActivity extends SuperActivity {
     protected void initData() {
         List<Commit> commits = new ArrayList<>();
         Commit commit = new Commit();
-        commit.setHeaderUrl("http://tse2.mm.bing.net/th?id=OIP.q53c9FWOXGvw00Xr-a162wD6D6&w=198&h=198&c=7&qlt=90&o=4&dpr=1.25&pid=1.7");
-        commit.setCommit("哈哈哈哈哈或");
+        commit.setHeadUrl("http://tse2.mm.bing.net/th?id=OIP.q53c9FWOXGvw00Xr-a162wD6D6&w=198&h=198&c=7&qlt=90&o=4&dpr=1.25&pid=1.7");
+        commit.setMsg("哈哈哈哈哈或");
         commit.setNickName("donghua");
         commits.add(commit);
         Commit commit1 = new Commit();
-        commit1.setHeaderUrl("http://tse2.mm.bing.net/th?id=OIP.kwrzMA37JwCYw9jlfN1QEgEsEa&w=229&h=204&c=7&qlt=90&o=4&dpr=1.25&pid=1.7");
-        commit1.setCommit("巴巴爸爸不不不不不不");
+        commit1.setHeadUrl("http://tse2.mm.bing.net/th?id=OIP.kwrzMA37JwCYw9jlfN1QEgEsEa&w=229&h=204&c=7&qlt=90&o=4&dpr=1.25&pid=1.7");
+        commit1.setMsg("巴巴爸爸不不不不不不");
         commit1.setNickName("按到");
         commits.add(commit1);
         Commit commit2 = new Commit();
-        commit2.setHeaderUrl("http://tse2.mm.bing.net/th?id=OIP.scCB3oW9MAoZj84PRRrAAgEsEs&pid=15.1");
-        commit2.setCommit("飞机撒了几分几分");
+        commit2.setHeadUrl("http://tse2.mm.bing.net/th?id=OIP.scCB3oW9MAoZj84PRRrAAgEsEs&pid=15.1");
+        commit2.setMsg("飞机撒了几分几分");
         commit2.setNickName("大打发斯蒂芬");
         commits.add(commit2);
         Commit commit3 = new Commit();
-        commit3.setHeaderUrl("http://img1.3lian.com/img2012/12/49/d/54.jpg");
-        commit3.setCommit("范德萨附近咖啡了");
+        commit3.setHeadUrl("http://img1.3lian.com/img2012/12/49/d/54.jpg");
+        commit3.setMsg("范德萨附近咖啡了");
         commit3.setNickName("大耳环");
         commits.add(commit3);
         Commit commit4 = new Commit();
-        commit4.setHeaderUrl("http://tse2.mm.bing.net/th?id=OIP.q53c9FWOXGvw00Xr-a162wD6D6&w=198&h=198&c=7&qlt=90&o=4&dpr=1.25&pid=1.7");
-        commit4.setCommit("哈哈哈哈哈或");
+        commit4.setHeadUrl("http://tse2.mm.bing.net/th?id=OIP.q53c9FWOXGvw00Xr-a162wD6D6&w=198&h=198&c=7&qlt=90&o=4&dpr=1.25&pid=1.7");
+        commit4.setMsg("哈哈哈哈哈或");
         commit4.setNickName("donghua");
         commits.add(commit4);
         Commit commit11 = new Commit();
-        commit11.setHeaderUrl("http://tse2.mm.bing.net/th?id=OIP.kwrzMA37JwCYw9jlfN1QEgEsEa&w=229&h=204&c=7&qlt=90&o=4&dpr=1.25&pid=1.7");
-        commit11.setCommit("巴巴爸爸不不不不不不");
+        commit11.setHeadUrl("http://tse2.mm.bing.net/th?id=OIP.kwrzMA37JwCYw9jlfN1QEgEsEa&w=229&h=204&c=7&qlt=90&o=4&dpr=1.25&pid=1.7");
+        commit11.setMsg("巴巴爸爸不不不不不不");
         commit11.setNickName("按到");
         commits.add(commit11);
         Commit commit21 = new Commit();
-        commit21.setHeaderUrl("http://tse2.mm.bing.net/th?id=OIP.scCB3oW9MAoZj84PRRrAAgEsEs&pid=15.1");
-        commit21.setCommit("飞机撒了几分几分");
+        commit21.setHeadUrl("http://tse2.mm.bing.net/th?id=OIP.scCB3oW9MAoZj84PRRrAAgEsEs&pid=15.1");
+        commit21.setMsg("飞机撒了几分几分");
         commit21.setNickName("大打发斯蒂芬");
         commits.add(commit21);
         Commit commit31 = new Commit();
-        commit31.setHeaderUrl("http://img1.3lian.com/img2012/12/49/d/54.jpg");
-        commit31.setCommit("范德萨附近咖啡了");
+        commit31.setHeadUrl("http://img1.3lian.com/img2012/12/49/d/54.jpg");
+        commit31.setMsg("范德萨附近咖啡了");
         commit31.setNickName("大耳环");
         commits.add(commit31);
         Commit commit22 = new Commit();
-        commit22.setHeaderUrl("http://tse2.mm.bing.net/th?id=OIP.q53c9FWOXGvw00Xr-a162wD6D6&w=198&h=198&c=7&qlt=90&o=4&dpr=1.25&pid=1.7");
-        commit22.setCommit("哈哈哈哈哈或");
+        commit22.setHeadUrl("http://tse2.mm.bing.net/th?id=OIP.q53c9FWOXGvw00Xr-a162wD6D6&w=198&h=198&c=7&qlt=90&o=4&dpr=1.25&pid=1.7");
+        commit22.setMsg("哈哈哈哈哈或");
         commit22.setNickName("donghua");
         commits.add(commit22);
         Commit commit13 = new Commit();
-        commit13.setHeaderUrl("http://tse2.mm.bing.net/th?id=OIP.kwrzMA37JwCYw9jlfN1QEgEsEa&w=229&h=204&c=7&qlt=90&o=4&dpr=1.25&pid=1.7");
-        commit13.setCommit("巴巴爸爸不不不不不不");
+        commit13.setHeadUrl("http://tse2.mm.bing.net/th?id=OIP.kwrzMA37JwCYw9jlfN1QEgEsEa&w=229&h=204&c=7&qlt=90&o=4&dpr=1.25&pid=1.7");
+        commit13.setMsg("巴巴爸爸不不不不不不");
         commit13.setNickName("按到");
         commits.add(commit13);
         Commit commit23 = new Commit();
-        commit23.setHeaderUrl("http://tse2.mm.bing.net/th?id=OIP.scCB3oW9MAoZj84PRRrAAgEsEs&pid=15.1");
-        commit23.setCommit("飞机撒了几分几分");
+        commit23.setHeadUrl("http://tse2.mm.bing.net/th?id=OIP.scCB3oW9MAoZj84PRRrAAgEsEs&pid=15.1");
+        commit23.setMsg("飞机撒了几分几分");
         commit23.setNickName("大打发斯蒂芬");
         commits.add(commit23);
         Commit commit33 = new Commit();
-        commit33.setHeaderUrl("http://img1.3lian.com/img2012/12/49/d/54.jpg");
-        commit33.setCommit("范德萨附近咖啡了");
+        commit33.setHeadUrl("http://img1.3lian.com/img2012/12/49/d/54.jpg");
+        commit33.setMsg("范德萨附近咖啡了");
         commit33.setNickName("大耳环");
         commits.add(commit33);
 

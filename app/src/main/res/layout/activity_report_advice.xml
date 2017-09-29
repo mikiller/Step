@@ -62,37 +62,78 @@
             android:background="@android:color/white">
 
             <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:text="广告营销"
-                android:textSize="15sp"
-                android:textColor="@color/text_color_black"
-                android:button="@null"
-                android:padding="15dp"
-                android:drawableRight="@drawable/selector_rdb_reason" />
+                android:id="@+id/rdb1"
+                style="@style/rdb_report"
+                android:text="广告营销" />
 
             <RadioButton
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:text="淫秽色情"
-                android:textSize="15sp"
-                android:textColor="@color/text_color_black"
+                android:layout_height="1dp"
+                android:background="@color/line_gray"
                 android:button="@null"
-                android:padding="15dp"
-                android:drawableRight="@drawable/selector_rdb_reason"/>
+                android:enabled="false"/>
+
+            <RadioButton
+                android:id="@+id/rdb2"
+                style="@style/rdb_report"
+                android:text="淫秽色情" />
 
             <RadioButton
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:text="不友善行为"
-                android:textSize="15sp"
-                android:textColor="@color/text_color_black"
+                android:layout_height="1dp"
+                android:background="@color/line_gray"
                 android:button="@null"
-                android:padding="15dp"
-                android:drawableRight="@drawable/selector_rdb_reason"/>
+                android:enabled="false"/>
+
+            <RadioButton
+                android:id="@+id/rdb3"
+                style="@style/rdb_report"
+                android:text="不友善行为" />
         </RadioGroup>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/line_gray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="1dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="其他"
+                    android:layout_margin="15dp"
+                    android:textColor="@color/text_color_black"
+                    android:textSize="15sp"/>
+
+                <EditText
+                    android:id="@+id/edt_reason"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:hint="请输入理由"
+                    android:textSize="15sp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_commit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="@drawable/selector_track_more"
+            android:textColor="@android:color/white"
+            android:text="提交" />
     </LinearLayout>
 </RelativeLayout>

@@ -96,4 +96,16 @@
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:layout_margin">5dp</item>
     </style>
+
+    <style name="rdb_report">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">left</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/text_color_black</item>
+        <item name="android:drawableRight">@drawable/selector_rdb_reason</item>
+        <item name="android:button">@null</item>
+        <item name="android:padding">15dp</item>
+        <item name="android:background">@drawable/selector_menuitem</item>
+    </style>
 </resources>

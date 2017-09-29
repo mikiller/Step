@@ -7,42 +7,51 @@ import java.io.Serializable;
  */
 
 public class Commit implements Serializable {
-    private String id;
-    private String headerUrl;
+    private String discoveryId;
+    private String commitId;
+    private String headUrl;
     private String nickName;
-    private String commit;
-    private long commitTime;
+    private String msg;
+    private long time;
 
-    public String getId() {
-        return id;
+    public String getDiscoveryId() {
+        return discoveryId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setDiscoveryId(String discoveryId) {
+        this.discoveryId = discoveryId;
     }
 
-    public String getCommit() {
-        return commit;
+    public String getCommitId() {
+        return commitId;
     }
 
-    public void setCommit(String commit) {
-        this.commit = commit;
+    public void setCommitId(String id) {
+        this.commitId = id;
     }
 
-    public long getCommitTime() {
-        return commitTime;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setCommitTime(long commitTime) {
-        this.commitTime = commitTime;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
-    public String getHeaderUrl() {
-        return headerUrl;
+    public long getTime() {
+        return time;
     }
 
-    public void setHeaderUrl(String headerUrl) {
-        this.headerUrl = headerUrl;
+    public void setTime(long time) {
+        this.time = time;
+    }
+
+    public String getHeadUrl() {
+        return headUrl;
+    }
+
+    public void setHeadUrl(String headUrl) {
+        this.headUrl = headUrl;
     }
 
     public String getNickName() {
