@@ -17,7 +17,6 @@ import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.DPoint;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapUtils;
-import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
@@ -26,16 +25,10 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
-import com.amap.api.maps.model.Polygon;
 import com.amap.api.services.core.LatLonPoint;
-import com.amap.api.services.help.Inputtips;
-import com.amap.api.services.help.InputtipsQuery;
-import com.amap.api.services.nearby.NearbySearch;
-import com.amap.api.services.nearby.UploadInfo;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.autonavi.amap.mapcore.Inner_3dMap_location;
 import com.westepper.step.R;
-import com.westepper.step.fragments.MapFragment;
 import com.westepper.step.responses.Area;
 
 import java.io.File;
@@ -128,9 +121,9 @@ public class MapUtils {
                 if(!needArea)
                     return;
                 if(currentZoom < 13){
-                    hideBorder();
+                    hideArea();
                 }else{
-                    showBorder();
+                    showArea();
                 }
             }
         });
@@ -185,13 +178,13 @@ public class MapUtils {
         return locationStyle;
     }
 
-    private void hideBorder(){
+    private void hideArea(){
         for(Area area : areas.values()){
             area.hide();
         }
     }
 
-    private void showBorder(){
+    private void showArea(){
         for(Area area : areas.values()){
             area.show();
         }
@@ -200,10 +193,10 @@ public class MapUtils {
     public void setIsNeedArea(boolean isNeed){
         needArea = isNeed;
         if(needArea) {
-            showBorder();
+            showArea();
             aMap.setMyLocationStyle(locationStyle);
         }else
-            hideBorder();
+            hideArea();
         aMap.setMyLocationEnabled(needArea);
     }
 
@@ -262,28 +255,23 @@ public class MapUtils {
     }
 
     public void addArea(Area area){
-        area.createPolygon(aMap);
-        if(areas.get(area.getId()) == null){
-            areas.put(area.getId(), area);
-        }
-    }
-
-    public void addCheckedArea(Area area){
-        area.setHasChecked(true);
-        area.createPolygon(aMap);
-        if(areas.get(area.getId()) == null){
-            areas.put(area.getId(), area);
+        area.createGraphics(aMap);
+        if(areas.get(area.getAreaId()) == null){
+            areas.put(area.getAreaId(), area);
         }
     }
 
     public void setAreaChecked(String id){
         if(areas.get(id) == null)
             return;
-        areas.get(id).setHasChecked(true);
-        Polygon polygon = areas.get(id).getPolygon();
-        polygon.setStrokeWidth(0);
-        polygon.setFillColor(mContext.getResources().getColor(R.color.bolder_sold));
+        areas.get(id).setReached(true);
         //save to local
+    }
+
+    public void setAreaType(int type){
+        for(Area area : areas.values()){
+            area.setGraphicsType(type);
+        }
     }
 
     public void addMarker(LatLng lbs) {
@@ -338,13 +326,17 @@ public class MapUtils {
         return clientOption;
     }
 
-    public void createGeoFenceClient(String id, List<LatLng> pos){
+    public void createGeoFence(String id, List<LatLng> pos){
         List<DPoint> points = new ArrayList<>();
         for(LatLng p : pos){
             points.add(new DPoint(p.latitude, p.longitude));
         }
         geoFenceClient.addGeoFence(points, id);
 
+    }
+
+    public void createGeoFence(String id, LatLng center, int radius){
+        geoFenceClient.addGeoFence(new DPoint(center.latitude, center.longitude), radius, id);
     }
 
     public void registGeoListener(BroadcastReceiver receiver){

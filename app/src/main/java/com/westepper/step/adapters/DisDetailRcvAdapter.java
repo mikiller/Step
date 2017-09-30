@@ -98,7 +98,7 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             @Override
             public void onClick(View v) {
                 if(commitListener != null)
-                    commitListener.onCommit(commit.getId());
+                    commitListener.onCommit(commit.getCommitId());
             }
         });
     }

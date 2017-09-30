@@ -218,7 +218,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 //    @Subscribe(threadMode = ThreadMode.MAIN)
 //    public void onGetCodeEvent(User event) {
 //        /* Do something */
-//        //Toast.makeText(getContext(),event.getTel(),Toast.LENGTH_LONG).show();
+//        //Toast.makeText(getContext(),event.getTel(),Toast.LENGTH_LONG).showPolygon();
 //        tv_user_name.setText(event.getTel());
 //    }
 

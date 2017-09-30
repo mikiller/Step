@@ -20,7 +20,6 @@ import com.uilib.customdialog.CustomDialog;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
 import com.westepper.step.activities.GalleryActivity;
-import com.westepper.step.activities.NewDiscoveryActivity;
 import com.westepper.step.adapters.DiscoveryAdapter;
 import com.westepper.step.base.BaseFragment;
 import com.westepper.step.base.Constants;
@@ -28,6 +27,7 @@ import com.westepper.step.customViews.SearchView;
 import com.westepper.step.responses.Area;
 import com.westepper.step.responses.AreaList;
 import com.westepper.step.responses.Discovery;
+import com.westepper.step.responses.Graphics;
 import com.westepper.step.responses.UserPos;
 import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.AnimUtils;
@@ -83,43 +83,53 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
     private void createTestData() {
         AreaList areaList = new AreaList();
         Area area1 = new Area("1");
+        area1.setAreaType(Area.POLYGON);
         List<LatLng> coords = new ArrayList<>();
         coords.add(new LatLng(31.230957, 121.462133));
         coords.add(new LatLng(31.230911, 121.464043));
         coords.add(new LatLng(31.227425, 121.465052));
         coords.add(new LatLng(31.226847, 121.463078));
         coords.add(new LatLng(31.229856, 121.462005));
-        area1.setBorderCoords(coords);
+        area1.setBorderList(coords);
         areaList.setArea(area1);
 
         Area area2 = new Area("2");
+        area2.setAreaType(Area.POLYGON);
         List<LatLng> coords2 = new ArrayList<>();
         coords2.add(new LatLng(31.230122, 121.459419));
         coords2.add(new LatLng(31.230957, 121.462133));
         coords2.add(new LatLng(31.229856, 121.462005));
         coords2.add(new LatLng(31.228085, 121.462638));
         coords2.add(new LatLng(31.226681, 121.459885));
-        area2.setBorderCoords(coords2);
+        area2.setBorderList(coords2);
         areaList.setArea(area2);
 
         Area area3 = new Area("3");
+        area3.setAreaType(Area.POLYGON);
         List<LatLng> coords3 = new ArrayList<>();
         coords3.add(new LatLng(31.230911, 121.464043));
         coords3.add(new LatLng(31.230819, 121.465792));
         coords3.add(new LatLng(31.227489, 121.466908));
         coords3.add(new LatLng(31.227425, 121.465052));
-        area3.setBorderCoords(coords3);
+        area3.setBorderList(coords3);
         areaList.setArea(area3);
 
         Area area4 = new Area("4");
+        area4.setAreaType(Area.POLYGON);
         List<LatLng> coords4 = new ArrayList<>();
         coords4.add(new LatLng(31.226847, 121.463078));
         coords4.add(new LatLng(31.227425, 121.465052));
         coords4.add(new LatLng(31.227489, 121.466908));
         coords4.add(new LatLng(31.225617, 121.467541));
         coords4.add(new LatLng(31.225241, 121.463249));
-        area4.setBorderCoords(coords4);
+        area4.setBorderList(coords4);
         areaList.setArea(area4);
+
+        Area area5 = new Area("5");
+        area5.setAreaType(Area.CIRCLE);
+        Area.CirlclArea ca = new Area.CirlclArea(new LatLng(31.230779, 121.472071), 800);
+        area5.setCircle(ca);
+        areaList.setArea(area5);
 
         String areaStr = new Gson().toJson(areaList);
         FileUtils.saveToLocal(areaStr, path);
@@ -193,13 +203,15 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
         }
 
         for(Area area : areaList.getAreaList()){
-            if(area.isHasChecked())
-                mapUtils.addCheckedArea(area);
-            else
-                mapUtils.addArea(area);
+            mapUtils.addArea(area);
             Log.e(TAG, "add area");
-            mapUtils.createGeoFenceClient(area.getId(), area.getBorderCoords());
+            if(area.getAreaType() == Area.POLYGON)
+                mapUtils.createGeoFence(area.getAreaId(), area.getBorderList());
+            else if(area.getAreaType() == Area.CIRCLE)
+                mapUtils.createGeoFence(area.getAreaId(), area.getCircle().getLatng(), area.getCircle().getRadius());
         }
+
+        mapUtils.setAreaType(Graphics.ACHEIVE);
     }
 
     public void setIsTrack(boolean isTrack){

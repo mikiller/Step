@@ -122,7 +122,7 @@ public class WeiboWrapper extends UserWrapper {
 //            // TODO Auto-generated method stub
 //            if (isShare) {
 //                isShare = false;
-//                Toast.makeText(mContext, "取消分享", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "取消分享", Toast.LENGTH_SHORT).showPolygon();
 //            }
 ////            authThirdPlatformFailed(null);
 //        }
@@ -187,7 +187,7 @@ public class WeiboWrapper extends UserWrapper {
 ////                if (response.contains("uid")) {
 ////                    WeiboGetUid weiboGetUid = mObjectMapper.readValue(response, new TypeReference<WeiboGetUid>() {
 ////                    });
-////                    new UsersAPI(mContext, Constants.WEIBO_APP_ID, weiboOauth2AccessToken).show(weiboGetUid.getUid(), this);
+////                    new UsersAPI(mContext, Constants.WEIBO_APP_ID, weiboOauth2AccessToken).showPolygon(weiboGetUid.getUid(), this);
 //////                } else if (isShare) {
 //////                    ((AbsActivity) mContext).setHasFinishAnimation(true);
 //////                    isShare = false;

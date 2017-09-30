@@ -225,7 +225,7 @@ public class WeixinWrapper extends UserWrapper {
 //                payResultListener.onPayFailed(WXOrderNo);
 //                break;
 //            case BaseResp.ErrCode.ERR_USER_CANCEL:
-//                Toast.makeText(mContext, WXOrderNo, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, WXOrderNo, Toast.LENGTH_SHORT).showPolygon();
 //                payResultListener.onPayCanceled(WXOrderNo);
 //                break;
 //        }
