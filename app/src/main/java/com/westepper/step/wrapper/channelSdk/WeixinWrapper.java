@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.widget.Toast;
 
+import com.westepper.step.R;
 import com.westepper.step.wrapper.SdkWrapper;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
@@ -41,7 +42,7 @@ public class WeixinWrapper extends UserWrapper {
     }
 
     public boolean init(Context context) {
-        return init(context, ""/*Constants.WEBXIN_APP_ID*/);
+        return init(context, context.getString(R.string.wxappid));
     }
 
     public boolean init(Context context, String appId){
@@ -88,7 +89,7 @@ public class WeixinWrapper extends UserWrapper {
         if (checkSDKIsReady()) {
             final SendAuth.Req req = new SendAuth.Req();
             req.scope = "snsapi_userinfo";
-            req.state = "kaqu";
+            req.state = "step";
             weixinApi.sendReq(req);
         }
     }
@@ -102,6 +103,11 @@ public class WeixinWrapper extends UserWrapper {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+    }
+
+    @Override
+    public void onNewIntent(Intent intent, Context context) {
+        weixinApi.handleIntent(intent, (IWXAPIEventHandler) context);
     }
 
     @Override

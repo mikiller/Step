@@ -142,6 +142,8 @@ public abstract class UserWrapper {
 
     public abstract void onNewIntent(Intent intent);
 
+    public abstract void onNewIntent(Intent intent, Context context);
+
     public abstract void onResume();
 
     public abstract void onPause();

@@ -104,8 +104,9 @@ public class SdkWrapper {
     }
 
     public void login(PLATFORM platform) {
-        if (isUserWrappersEmpty(platform))
+        if (isUserWrappersEmpty(platform)) {
             return;
+        }
         userWrappers.get(platform.getType()).login();
     }
 
@@ -148,9 +149,13 @@ public class SdkWrapper {
             userWrappers.get(PLATFORM.WEIBO.getType()).onActivityResult(requestCode, resultCode, data);
     }
 
-    public void onNewIntent(Intent intent) {
-        if (userWrappers != null)
+    public void onNewIntent(Intent intent, Context context) {
+        if (userWrappers == null)
+            return;
+        if(userWrappers.get(PLATFORM.WEIBO.getType())!=null)
             userWrappers.get(PLATFORM.WEIBO.getType()).onNewIntent(intent);
+        else if(userWrappers.get(PLATFORM.WEIXIN.getType()) != null)
+            userWrappers.get(PLATFORM.WEIXIN.getType()).onNewIntent(intent, context);
     }
 
     public UserWrapper getWrapper(PLATFORM platform) {

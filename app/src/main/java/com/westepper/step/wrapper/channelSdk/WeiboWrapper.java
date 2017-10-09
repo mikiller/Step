@@ -100,6 +100,11 @@ public class WeiboWrapper extends UserWrapper {
     }
 
     @Override
+    public void onNewIntent(Intent intent, Context context) {
+
+    }
+
+    @Override
     public void onResume() {}
 
     @Override

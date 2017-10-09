@@ -1,5 +1,6 @@
 package com.westepper.step.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +22,10 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mcxtzhang.indexlib.IndexBar.widget.IndexBar;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.RequestCallback;
+import com.netease.nimlib.sdk.auth.AuthService;
+import com.netease.nimlib.sdk.auth.LoginInfo;
 import com.westepper.step.R;
 import com.westepper.step.adapters.CityAdapter;
 import com.westepper.step.base.SuperActivity;
@@ -150,7 +155,8 @@ public class RegisterActivity extends SuperActivity implements View.OnClickListe
                 break;
             case R.id.btn_signup:
                 if(checkArgs())
-                    startSignUpLogic();
+                    loginIM();
+//                    startSignUpLogic();
                 else
                     Toast.makeText(RegisterActivity.this, "注册信息填写不完整！", Toast.LENGTH_SHORT).show();
                 break;
@@ -177,6 +183,30 @@ public class RegisterActivity extends SuperActivity implements View.OnClickListe
             rst = false;
         return rst;
     }
+
+    private void loginIM(){
+        LoginInfo loginInfo = new LoginInfo("or4h41h0quiyc0il8-pwawbjyq4g", "20a699b323fc2b56e5c0f3b260cf0895");
+        RequestCallback<LoginInfo> callback = new RequestCallback<LoginInfo>() {
+            @Override
+            public void onSuccess(LoginInfo param) {
+                Log.e(TAG, param.getAccount());
+                ActivityManager.startActivity(RegisterActivity.this, MainActivity.class);
+                finish();
+            }
+
+            @Override
+            public void onFailed(int code) {
+                Log.e(TAG, "code: " + code);
+            }
+
+            @Override
+            public void onException(Throwable exception) {
+                exception.printStackTrace();
+            }
+        };
+        NIMClient.getService(AuthService.class).login(loginInfo).setCallback(callback);
+    }
+
 
     private void startSignUpLogic(){
         SignModel model = new SignModel(edt_nickName.getText().toString(),
