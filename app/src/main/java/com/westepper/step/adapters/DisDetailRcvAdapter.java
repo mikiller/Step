@@ -1,5 +1,6 @@
 package com.westepper.step.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,14 +10,21 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.westepper.step.R;
+import com.westepper.step.activities.AllCommitsActivity;
+import com.westepper.step.base.Constants;
+import com.westepper.step.customViews.MyMenuItem;
 import com.westepper.step.responses.Commit;
 import com.westepper.step.responses.Discovery;
+import com.westepper.step.utils.ActivityManager;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Mikiller on 2017/9/21.
@@ -30,14 +38,23 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private List<Commit> commits;
     private OnCommitListener commitListener;
 
+    private boolean isDetail = true;
 
-    public DisDetailRcvAdapter(Context mContext) {
-        this.mContext = mContext;
+
+    public DisDetailRcvAdapter(Context context) {
+        this.mContext = context;
+    }
+
+    public DisDetailRcvAdapter(Context context, boolean isDetail) {
+        this(context);
+        this.isDetail = isDetail;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if(position == 0)
+        if(!isDetail)
+            return COMMITS;
+        else if(position == 0)
             return DETAIL;
         else if(position == 1)
             return COMMIT_TITLE;
@@ -48,16 +65,16 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder;
-        View view;
         if(viewType == DETAIL) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dis_detail, null);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dis_detail, null);
             viewHolder = new DetailHolder(view);
         }else if(viewType == COMMIT_TITLE){
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dis_commit_title, null);
+//            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dis_commit_title, null);
+            MyMenuItem view = new MyMenuItem(parent.getContext());
             viewHolder = new CommitTitleHolder(view);
         }
         else{
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dis_commitlist, null);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dis_commitlist, null);
             viewHolder = new CommitHolder(view);
         }
         return viewHolder;
@@ -67,10 +84,25 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof DetailHolder)
             updateDetailHolder((DetailHolder) holder);
-        else if(holder instanceof CommitTitleHolder)
-            ((CommitTitleHolder) holder).tv_commitNum.setText(String.valueOf(getCommitSize()));
-        else
-            updateCommitHolder((CommitHolder) holder, commits.get(holder.getAdapterPosition() - 2));
+        else if(holder instanceof CommitTitleHolder) {
+//            ((CommitTitleHolder) holder).tv_commitNum.setText(String.valueOf(getCommitSize()));
+            MyMenuItem view = (MyMenuItem) holder.itemView;
+            view.setMenuName("留言");
+            view.setSubText(String.format(mContext.getString(R.string.commit_title), commits.size()));
+            view.setNeedSubText(true);
+            view.setNeedNext(true);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Map<String, Object> args = new HashMap<>();
+                    args.put(Constants.COMMIT_LIST, commits);
+                    ActivityManager.startActivity((Activity) mContext, AllCommitsActivity.class, args);
+                }
+            });
+        } else if(getCommitSize() > 0) {
+            int pos = isDetail ? (holder.getAdapterPosition() - 2) : holder.getAdapterPosition();
+            updateCommitHolder((CommitHolder) holder, commits.get(pos));
+        }
     }
 
     private void updateDetailHolder(DetailHolder holder){
@@ -85,22 +117,25 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             @Override
             public void onClick(View v) {
                 if(commitListener != null)
-                    commitListener.onCommit(discovery.getDiscoveryId());
+                    commitListener.onCommit(discovery.getDiscoveryId(), discovery.getNickName());
             }
         });
     }
 
     private void updateCommitHolder(CommitHolder holder, final Commit commit){
-        GlideImageLoader.getInstance().loadImage(mContext, commit.getHeadUrl(), R.mipmap.ic_default_head, holder.iv_header, 0);
-        holder.tv_nickName.setText(commit.getNickName());
+        if(commit == null)
+            return;
+        holder.tv_nickName.setText(commit.getNickName().concat(":"));
         holder.tv_commit.setText(commit.getMsg());
-        holder.btn_recommit.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener itemListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(commitListener != null)
-                    commitListener.onCommit(commit.getCommitId());
+                    commitListener.onCommit(commit.getCommitId(), commit.getNickName());
             }
-        });
+        };
+        holder.tv_nickName.setOnClickListener(itemListener);
+        holder.tv_commit.setOnClickListener(itemListener);
     }
 
     public void setCommits(List commits){
@@ -123,7 +158,10 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        return commits == null ? 1 : commits.size() + 2;
+        if(isDetail)
+            return commits == null ? 1 : commits.size() + 2;
+        else
+            return commits == null ? 0 : commits.size();
     }
 
     public class DetailHolder extends RecyclerView.ViewHolder{
@@ -150,20 +188,16 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public class CommitTitleHolder extends RecyclerView.ViewHolder{
 
-        private TextView tv_commitNum;
         public CommitTitleHolder(View itemView) {
             super(itemView);
-            tv_commitNum = (TextView) itemView.findViewById(R.id.tv_commitNum);
         }
     }
 
     public class CommitHolder extends RecyclerView.ViewHolder{
-        private SelectableRoundedImageView iv_header;
         private TextView tv_nickName, tv_commit, tv_commitTime;
         private ImageButton btn_recommit;
         public CommitHolder(View itemView) {
             super(itemView);
-            iv_header = (SelectableRoundedImageView) itemView.findViewById(R.id.iv_header);
             tv_commit = (TextView) itemView.findViewById(R.id.tv_commit);
             tv_nickName = (TextView) itemView.findViewById(R.id.tv_nickName);
             tv_commitTime = (TextView) itemView.findViewById(R.id.tv_commitTime);
@@ -172,6 +206,6 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public interface OnCommitListener{
-        void onCommit(String id);
+        void onCommit(String id, String nickName);
     }
 }

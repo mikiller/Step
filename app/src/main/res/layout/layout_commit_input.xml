@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/rl_commitInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/line_gray"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
+
+        <EditText
+            android:id="@+id/edt_commit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/btn_send"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:paddingTop="7dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="7dp"
+            android:maxLines="5"
+            android:background="@drawable/shape_radiu_white_bg"
+            android:hint="我也评论一句 (500字)"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btn_send"
+            android:layout_width="60dp"
+            android:layout_height="33dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/edt_commit"
+            android:layout_marginRight="15dp"
+            android:text="提交"
+            android:textColor="@android:color/white"
+            android:background="@drawable/selector_track_more" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 
 import com.amap.api.services.core.PoiItem;
 import com.uilib.mxgallery.utils.CameraGalleryUtils;
@@ -114,6 +115,7 @@ public class NewDiscoveryActivity extends SuperActivity {
             public void onMove(int pos, int y) {
                 int dy = DisplayUtil.getScreenHeight(NewDiscoveryActivity.this) - 360 - titleBar.getHeight();
                 ll_del.setPressed(needDel = y > dy);
+                ((TextView)ll_del.getChildAt(0)).setText(needDel ? "松手即可删除" : "拖动到此处删除");
             }
 
             @Override
@@ -135,14 +137,16 @@ public class NewDiscoveryActivity extends SuperActivity {
                         ActivityManager.startActivityforResult(NewDiscoveryActivity.this, SearchPoiActivity.class, Constants.SEARCH_POI, args);
                     break;
                     case R.id.menu_date:
-                        ll_pick.setVisibility(View.VISIBLE);
                         createDatePicker((MyMenuItem) v);
                         break;
                     case R.id.menu_people:
-                        ll_pick.setVisibility(View.VISIBLE);
                         createPeoplePicker((MyMenuItem) v);
                         break;
+                    case R.id.menu_publish:
+                        createPrivacyPicker((MyMenuItem) v);
+                        break;
                 }
+                ll_pick.setVisibility(v.getId() == R.id.tv_pos ? View.GONE : View.VISIBLE);
             }
         });
         rcv_photo.setAdapter(adapter);
@@ -165,6 +169,11 @@ public class NewDiscoveryActivity extends SuperActivity {
             dates[i] = sdf.format(calendar.getTime());
         }
         createPicker(dates, menu, 7, true);
+    }
+
+    private void createPrivacyPicker(final MyMenuItem menu){
+        final String[] values = new String[]{"公开", "好友可见", "", "", "", "", "", ""};
+        createPicker(values, menu, 2, false);
     }
 
     private void createPicker(final String[] values, final MyMenuItem menu, int maxValue, final boolean isDate){

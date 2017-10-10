@@ -36,12 +36,13 @@
         android:visibility="gone">
 
         <TextView
+            android:id="@+id/tv_del"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@mipmap/ic_del"
+            android:drawableLeft="@drawable/selector_drawable_del"
             android:drawablePadding="10dp"
-            android:gravity="center"
-            android:padding="15dp"
+            android:gravity="center|"
+            android:padding="20dp"
             android:text="拖动到此处删除"
             android:textColor="@android:color/white"
             android:textSize="12sp" />

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -23,9 +24,10 @@ public class CustomDialog extends Dialog {
     private TextView msg;
     private Button btnCancel, btnSure;
     private String titleStr, msgStr;
+    private View customView;
     private onButtonClickListener btnListener;
     private onCustomBtnsClickListener customListener;
-    private int layoutRes = View.NO_ID;
+//    private int layoutRes = View.NO_ID;
     private int[] btnLayoutId = new int[]{};
     private String[] btnTxts;
 
@@ -45,8 +47,13 @@ public class CustomDialog extends Dialog {
     }
 
     public CustomDialog setLayoutRes(int layoutRes) {
-        this.layoutRes = layoutRes;
+//        this.layoutRes = layoutRes;
+        customView = LayoutInflater.from(mContext).inflate(layoutRes == View.NO_ID ? R.layout.layout_custom_dlg : layoutRes, null);
         return this;
+    }
+
+    public View getCustomView(){
+        return customView;
     }
 
     public CustomDialog setTitle(String str) {
@@ -100,7 +107,8 @@ public class CustomDialog extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(layoutRes == View.NO_ID ? R.layout.layout_custom_dlg : layoutRes);
+        //setContentView(layoutRes == View.NO_ID ? R.layout.layout_custom_dlg : layoutRes);
+        setContentView(customView);
         getWindow().setGravity(Gravity.CENTER);
         WindowManager.LayoutParams dlgLp = getWindow().getAttributes();
         dlgLp.width = DisplayUtil.getScreenWidth(mContext);

@@ -173,9 +173,11 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private void bindFootHolder2(Foot2Holder holder){
         holder.menu_date.setSubText("不限");
         holder.menu_people.setSubText("不限");
+        holder.menu_publish.setSubText("公开");
         if(footClickListener != null){
             holder.menu_date.setOnClickListener(footClickListener);
             holder.menu_people.setOnClickListener(footClickListener);
+            holder.menu_publish.setOnClickListener(footClickListener);
         }
     }
 
@@ -354,13 +356,14 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public static class Foot2Holder extends RecyclerView.ViewHolder{
         private LinearLayout ll_goParam;
-        private MyMenuItem menu_people, menu_date;
+        private MyMenuItem menu_people, menu_date, menu_publish;
 
         public Foot2Holder(View itemView) {
             super(itemView);
             ll_goParam = (LinearLayout) itemView.findViewById(R.id.ll_goParam);
             menu_people = (MyMenuItem) itemView.findViewById(R.id.menu_people);
             menu_date = (MyMenuItem) itemView.findViewById(R.id.menu_date);
+            menu_publish = (MyMenuItem) itemView.findViewById(R.id.menu_publish);
         }
     }
 

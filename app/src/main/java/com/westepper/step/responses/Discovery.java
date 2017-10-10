@@ -24,6 +24,7 @@ public class Discovery implements Parcelable {
     private List<String> imgList;
     private long pushTime;
     private long endTime;
+    private int totalCount;
     private int joinCount;
 
     public Discovery(){}
@@ -39,6 +40,7 @@ public class Discovery implements Parcelable {
         imgList = in.createStringArrayList();
         pushTime = in.readLong();
         endTime = in.readLong();
+        totalCount = in.readInt();
         joinCount = in.readInt();
     }
 
@@ -110,6 +112,14 @@ public class Discovery implements Parcelable {
         this.info = info;
     }
 
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
+    }
+
     public int getJoinCount() {
         return joinCount;
     }
@@ -159,6 +169,7 @@ public class Discovery implements Parcelable {
         dest.writeStringList(imgList);
         dest.writeLong(pushTime);
         dest.writeLong(endTime);
+        dest.writeInt(totalCount);
         dest.writeInt(joinCount);
     }
 }

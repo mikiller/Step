@@ -125,20 +125,22 @@
             android:name="com.netease.cosine.target.receiver"
             android:value="com.netease.nimlib.service.NimReceiver"/>
 
+        <!-- ==================step================== -->
         <activity android:name=".activities.WelcomeActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity android:name=".activities.RegisterActivity"/>
 
         <activity android:name=".activities.MainActivity"
             android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+        
         <activity android:name=".activities.PaihangActivity" />
         <activity android:name=".activities.GalleryActivity" />
         <activity android:name=".activities.NewDiscoveryActivity"
@@ -147,6 +149,7 @@
             android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".activities.DiscoveryDetailActivity" />
         <activity android:name=".activities.ReportAdviceActivity" />
+        <activity android:name=".activities.AllCommitsActivity" />
     </application>
 
 </manifest>

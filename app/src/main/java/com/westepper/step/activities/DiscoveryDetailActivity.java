@@ -9,6 +9,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -26,6 +28,7 @@ import com.westepper.step.adapters.DisDetailRcvAdapter;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.TitleBar;
+import com.westepper.step.listeners.CommitGlobalLayoutListener;
 import com.westepper.step.responses.Commit;
 import com.westepper.step.responses.Discovery;
 import com.westepper.step.responses.ImgDetail;
@@ -56,6 +59,8 @@ public class DiscoveryDetailActivity extends SuperActivity {
     RecyclerView rcv_detail;
     @BindView(R.id.ll_joinOpt)
     LinearLayout ll_joinOtp;
+    @BindView(R.id.tv_joinNum)
+    TextView tv_joinNum;
     @BindView(R.id.tv_joinOpt)
     TextView tv_joinOpt;
     @BindView(R.id.rl_commitInput)
@@ -67,16 +72,17 @@ public class DiscoveryDetailActivity extends SuperActivity {
 
     DisDetailRcvAdapter rcvAdapter;
     MyLinearLayoutManager rcvMgr;
+    boolean isTouchImgVp = false;
 
     Discovery discovery;
     int scope;
 
-    ViewTreeObserver.OnGlobalLayoutListener glListener;
+    CommitGlobalLayoutListener glListener;
 
     private float ActDownX, ActDownY, rcvDY, imgDy, titleDA;
     float maxRcvTransY, maxImgTransY;
     float rcvTransY, rlImgTransY;
-    boolean isAnimRunning = false, needTransY = true;
+    boolean isAnimRunning = false;//, needTransY = true;
     //    int rcvFirstPos;
     float titleAlpha = 0.01f;
 
@@ -167,9 +173,11 @@ public class DiscoveryDetailActivity extends SuperActivity {
         rcvAdapter = new DisDetailRcvAdapter(this);
         rcvAdapter.setCommitListener(new DisDetailRcvAdapter.OnCommitListener() {
             @Override
-            public void onCommit(String id) {
-                if(rl_commitInput.getVisibility() == View.GONE) {
-                    needTransY = false;
+            public void onCommit(String id, String nickName) {
+                if (rl_commitInput.getVisibility() == View.GONE) {
+//                    needTransY = false;
+                    glListener.setNeedTransY(false);
+                    glListener.setCommitHint(nickName);
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_NOT_ALWAYS);
                 }
@@ -178,6 +186,9 @@ public class DiscoveryDetailActivity extends SuperActivity {
         rcv_detail.setAdapter(rcvAdapter);
 
         ll_joinOtp.setVisibility(discovery.getDiscoveryKind() == Constants.MOOD ? View.GONE : View.VISIBLE);
+        if (discovery.getDiscoveryKind() == Constants.OUTGO) {
+            tv_joinNum.setText(String.format(getString(R.string.join_num), discovery.getJoinCount(), discovery.getTotalCount()));
+        }
         tv_joinOpt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,26 +196,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
             }
         });
 
-        getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(glListener = new ViewTreeObserver.OnGlobalLayoutListener() {
-            int sbHeight, keyboardHeight, screenHeight = DisplayUtil.getScreenHeight(DiscoveryDetailActivity.this);
-            Rect window = new Rect();
-
-            @Override
-            public void onGlobalLayout() {
-                getWindow().getDecorView().getWindowVisibleDisplayFrame(window);
-                keyboardHeight = screenHeight - window.height();
-                if(keyboardHeight > screenHeight / 3){
-                    rl_commitInput.setVisibility(View.VISIBLE);
-                    edt_commit.requestFocus();
-                    rl_commitInput.setTranslationY(sbHeight - keyboardHeight);
-                }else{
-                    sbHeight = keyboardHeight;
-                    rl_commitInput.setVisibility(View.GONE);
-                    edt_commit.setText("");
-                    needTransY = true;
-                }
-            }
-        });
+        getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(glListener = new CommitGlobalLayoutListener(this, rl_commitInput, edt_commit));
     }
 
     private List<ImgDetail> createImgs() {
@@ -223,6 +215,24 @@ public class DiscoveryDetailActivity extends SuperActivity {
 
     @Override
     protected void initData() {
+        if (scope == Constants.FRIEND)
+            rcvAdapter.setCommits(createCommits());
+        rcvAdapter.setDiscovery(discovery);
+        vp_img.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if (!glListener.isNeedTransY())
+                    return;
+                maxRcvTransY = vp_img.getMeasuredHeight() - titleBar.getHeight();
+                maxImgTransY = (titleBar.getHeight() - rl_img.getHeight()) * 0.4f;
+                rcv_detail.setTranslationY(vp_img.getHeight() - titleBar.getHeight());
+
+            }
+        });
+    }
+
+    //test create commits
+    private List<Commit> createCommits() {
         List<Commit> commits = new ArrayList<>();
         Commit commit = new Commit();
         commit.setHeadUrl("http://tse2.mm.bing.net/th?id=OIP.q53c9FWOXGvw00Xr-a162wD6D6&w=198&h=198&c=7&qlt=90&o=4&dpr=1.25&pid=1.7");
@@ -284,22 +294,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
         commit33.setMsg("范德萨附近咖啡了");
         commit33.setNickName("大耳环");
         commits.add(commit33);
-
-
-        if (scope == Constants.FRIEND)
-            rcvAdapter.setCommits(commits);
-        rcvAdapter.setDiscovery(discovery);
-        vp_img.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                if(!needTransY)
-                    return;
-                maxRcvTransY = vp_img.getMeasuredHeight() - titleBar.getHeight();
-                maxImgTransY = (titleBar.getHeight() - rl_img.getHeight()) * 0.4f;
-                rcv_detail.setTranslationY(vp_img.getHeight() - titleBar.getHeight());
-
-            }
-        });
+        return commits;
     }
 
     @Override
@@ -317,13 +312,14 @@ public class DiscoveryDetailActivity extends SuperActivity {
                 titleAlpha = titleBar.getBgAlpha();
                 ActDownX = ev.getX();
                 ActDownY = isAnimRunning ? -1 : ev.getY();
+                isTouchImgVp = ActDownY < rcvTransY + titleBar.getHeight();
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (Math.abs(ev.getY()) > 150) {
                     rcvDY = ev.getY() - ActDownY;
                     imgDy = rcvDY * 0.4f;
                 }
-                if ((ActDownY < rcvTransY + titleBar.getHeight())) {
+                if (isTouchImgVp) {
                     if (Math.abs(ActDownX - ev.getX()) > 150) {
                         ActDownY = -1;
                         rcvDY = imgDy = 0;
@@ -332,6 +328,8 @@ public class DiscoveryDetailActivity extends SuperActivity {
                     rl_img.setTranslationY(getImgDeltaY(rlImgTransY, imgDy));
                     rcv_detail.setTranslationY(getDeltaY(rcvTransY, rcvDY));
                     titleBar.setBgAlpha(getTitleAlpha());
+                } else {
+                    ActDownY = ev.getY();
                 }
                 rcvMgr.setCanScroll(rcv_detail.getTranslationY() == 0);
                 break;
@@ -368,10 +366,10 @@ public class DiscoveryDetailActivity extends SuperActivity {
     private boolean canMove() {
         boolean rst = true;
 
-        if(rl_commitInput.getVisibility() == View.VISIBLE){
+        if (rl_commitInput.getVisibility() == View.VISIBLE) {
             Rect rect = new Rect();
             rl_commitInput.getGlobalVisibleRect(rect);
-            if(ActDownY > rect.top) {
+            if (ActDownY > rect.top) {
                 rcvDY = 0;
                 return false;
             }
@@ -432,16 +430,17 @@ public class DiscoveryDetailActivity extends SuperActivity {
         super.onDestroy();
     }
 
-    private class MyLinearLayoutManager extends LinearLayoutManager{
+    private class MyLinearLayoutManager extends LinearLayoutManager {
         boolean canScroll = false;
 
         public MyLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
             super(context, orientation, reverseLayout);
         }
 
-        public void setCanScroll(boolean canScroll){
+        public void setCanScroll(boolean canScroll) {
             this.canScroll = canScroll;
         }
+
         @Override
         public boolean canScrollVertically() {
             return canScroll;

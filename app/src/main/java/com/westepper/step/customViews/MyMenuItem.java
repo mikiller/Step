@@ -69,6 +69,7 @@ public class MyMenuItem extends RelativeLayout {
 
     public void setNeedNext(boolean needNext) {
         this.needNext = needNext;
+        iv_next.setVisibility(needNext ? VISIBLE : INVISIBLE);
     }
 
     public boolean isNeedSubText() {
@@ -77,6 +78,7 @@ public class MyMenuItem extends RelativeLayout {
 
     public void setNeedSubText(boolean needSubText) {
         this.needSubText = needSubText;
+        tv_info.setVisibility(needSubText ? VISIBLE : GONE);
     }
 
     public MyMenuItem(Context context) {
@@ -96,8 +98,10 @@ public class MyMenuItem extends RelativeLayout {
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr){
         LayoutInflater.from(context).inflate(R.layout.item_my_menu, this, true);
+        tv_info = (TextView) findViewById(R.id.tv_info);
         iv_menu_icon = (ImageView) findViewById(R.id.iv_menu_icon);
         tv_menu_name = (TextView) findViewById(R.id.tv_menu_name);
+        iv_next = (ImageView) findViewById(R.id.iv_next);
         menu_bg = (RelativeLayout) findViewById(R.id.menu_bg);
         bottom_line = findViewById(R.id.bottom_line);
 
@@ -124,9 +128,8 @@ public class MyMenuItem extends RelativeLayout {
         bottom_line.setVisibility(needLine ? VISIBLE : GONE);
         //this.setBackgroundResource(R.drawable.selector_menuitem);
 
-        tv_info = (TextView) findViewById(R.id.tv_info);
+
         tv_info.setVisibility(needSubText ? VISIBLE : GONE);
-        iv_next = (ImageView) findViewById(R.id.iv_next);
         iv_next.setVisibility(needNext ? VISIBLE : INVISIBLE);
     }
 

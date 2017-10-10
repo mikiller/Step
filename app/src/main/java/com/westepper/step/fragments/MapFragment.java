@@ -79,6 +79,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
     String path;
     private boolean isTrack = true;
     float searchHeight, headTransY, vpTransY, optTransY;
+    int gender = 0;
 
     private void createTestData() {
         AreaList areaList = new AreaList();
@@ -188,7 +189,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
 
             }
         });
-        getDiscoveryList(1, 1);
+        getDiscoveryList(1, 1, gender);
     }
 
     private void initMapUtil(){
@@ -249,12 +250,12 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
 
     }
 
-    private void getDiscoveryList(final int scope, final int kind){
+    private void getDiscoveryList(final int scope, final int kind, final int gender){
         if(!isTrack) {
             AnimUtils.startObjectAnim(vp_discoveryList, "translationY", 0, vpTransY, 800);
             mapUtils.removeMarker();
         }
-        //test
+        //test create discovery list
         vp_discoveryList.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -266,7 +267,12 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
                 UserPos userPos = new UserPos(new LatLng(31.2304, 121.462489), "上海市，上海电视台");
                 dis.setUserPos(userPos);
                 dis.setDiscoveryKind(kind);
-                discoveryList.add(dis);
+                if(kind == Constants.OUTGO){
+                    dis.setJoinCount(3);
+                    dis.setTotalCount(5);
+                }
+                if(gender != 2)
+                    discoveryList.add(dis);
                 dis = new Discovery();
                 dis.setNickName("鸡排侠");
                 dis.setGender(2);
@@ -274,7 +280,12 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
                 UserPos userPos1 = new UserPos(new LatLng(31.229189, 121.468207), "上海市，和平影院");
                 dis.setUserPos(userPos1);
                 dis.setDiscoveryKind(kind);
-                discoveryList.add(dis);
+                if(kind == Constants.OUTGO){
+                    dis.setJoinCount(2);
+                    dis.setTotalCount(6);
+                }
+                if(gender != 1)
+                    discoveryList.add(dis);
                 adapter.setScope(scope);
                 adapter.setDataList(discoveryList);
                 vp_discoveryList.setCurrentItem(0);
@@ -358,12 +369,29 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
             public void onBtnClick(int id) {
                 dlg.dismiss();
             }
-        }, R.id.rdb_man, R.id.rdb_woman, R.id.rdb_people).show();
+        }, R.id.rdb_man, R.id.rdb_woman, R.id.rdb_people);
+        final int[] selections = new int[]{R.id.rdb_people,R.id.rdb_man, R.id.rdb_woman};
+        RadioGroup rdg = (RadioGroup) dlg.getCustomView().findViewById(R.id.rdg_gender);
+        rdg.check(selections[gender]);
+        rdg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                for(int i = 0; i < selections.length; i++){
+                    if(checkedId == selections[i]){
+                        gender = i;
+                        break;
+                    }
+
+                }
+                getDiscoveryList(getDisScope(), getDisKind(), gender);
+            }
+        });
+        dlg.show();
     }
 
     private void refreshDiscoveryList(){
         AnimUtils.startRotateAnim(btn_refresh, 360, 0, 1000);
-        getDiscoveryList(getDisScope(), getDisKind());
+        getDiscoveryList(getDisScope(), getDisKind(), gender);
     }
 
     @Override
@@ -371,17 +399,17 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
         switch (checkedId){
             case R.id.rdb_friend:
                 btn_selection.setVisibility(View.GONE);
-                getDiscoveryList(Constants.FRIEND, getDisKind());
+                getDiscoveryList(Constants.FRIEND, getDisKind(), gender);
                 break;
             case R.id.rdb_near:
                 btn_selection.setVisibility(View.VISIBLE);
-                getDiscoveryList(Constants.NEARBY, getDisKind());
+                getDiscoveryList(Constants.NEARBY, getDisKind(), gender);
                 break;
             case R.id.rdb_mood:
-                getDiscoveryList(getDisScope(), Constants.MOOD);
+                getDiscoveryList(getDisScope(), Constants.MOOD, gender);
                 break;
             case R.id.rdb_join:
-                getDiscoveryList(getDisScope(), Constants.OUTGO);
+                getDiscoveryList(getDisScope(), Constants.OUTGO, gender);
                 break;
         }
     }

@@ -62,7 +62,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
                 result = "登录成功";
                 ActivityManager.startActivity(WelcomeActivity.instance, RegisterActivity.class);
                 WelcomeActivity.handler.sendEmptyMessage(Constants.WX_LOGIN);
-                finish();
                 break;
             case BaseResp.ErrCode.ERR_USER_CANCEL:
                 result = "用户取消";
@@ -80,6 +79,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
         if(!TextUtils.isEmpty(baseResp.errStr))
             result = result.concat(baseResp.errStr);
         Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+        finish();
     }
 
 }
