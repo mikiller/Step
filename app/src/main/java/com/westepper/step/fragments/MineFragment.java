@@ -17,11 +17,13 @@ import com.uilib.utils.BitmapUtils;
 import com.westepper.step.R;
 import com.westepper.step.activities.GalleryActivity;
 import com.westepper.step.activities.PaihangActivity;
+import com.westepper.step.activities.UserInfoActivity;
 import com.westepper.step.base.BaseFragment;
 import com.westepper.step.base.Constants;
 import com.westepper.step.customViews.MyMenuItem;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.uilib.utils.DisplayUtil;
+import com.westepper.step.responses.UserInfo;
 import com.westepper.step.utils.ActivityManager;
 import com.uilib.mxgallery.utils.CameraGalleryUtils;
 
@@ -65,6 +67,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @BindView(R.id.menu_acheive)
     MyMenuItem menu_acheive;
 
+    UserInfo userInfo;
+
     public MineFragment() {
         // Required empty public constructor
     }
@@ -104,6 +108,24 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         menu_discovery.setOnClickListener(this);
         menu_acheive.setOnClickListener(this);
 
+        createUserInfo();
+        tv_user_name.setText(userInfo.getNickName());
+        tv_userId.setText(userInfo.getUuid());
+        tv_signature.setText(userInfo.getSign());
+        GlideImageLoader.getInstance().loadImage(getActivity(), userInfo.getHeadImg(), R.mipmap.ic_default_head, iv_header, 0);
+    }
+
+    //test user info
+    private void createUserInfo(){
+        userInfo = new UserInfo();
+        userInfo.setNickName("小西瓜");
+        userInfo.setGender(1);
+        userInfo.setHeadImg("http://www.ld12.com/upimg358/20160130/17080388096933.jpg");
+        userInfo.setCity("上海");
+        userInfo.setNeedFriendVerifi(0);
+        userInfo.setSign("这是一段屁话");
+        userInfo.setMoodScope(0);
+        userInfo.setOutgoScope(2);
     }
 
     @Override
@@ -188,8 +210,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.iv_header:
                 Map<String, Object> args = new HashMap<>();
-                args.put(Constants.GALLERY_TYPE, Constants.CHANGE_HEADER);
-                ActivityManager.startActivityforResult(getActivity(), GalleryActivity.class, Constants.CHANGE_HEADER, args);
+                args.put(Constants.USERINFO, userInfo);
+                ActivityManager.startActivityforResult(getActivity(), UserInfoActivity.class, Constants.CHANGE_HEADER, args);
+//                args.put(Constants.GALLERY_TYPE, Constants.CHANGE_HEADER);
+//                ActivityManager.startActivityforResult(getActivity(), GalleryActivity.class, Constants.CHANGE_HEADER, args);
 //                ((BaseActivity) getActivity()).startToActivity(SettingActivity.class, "fragmentName", UserInfoFragment.class.getName());
                 break;
 //            case R.id.tv_user_name:

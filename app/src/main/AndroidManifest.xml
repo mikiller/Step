@@ -150,6 +150,7 @@
         <activity android:name=".activities.DiscoveryDetailActivity" />
         <activity android:name=".activities.ReportAdviceActivity" />
         <activity android:name=".activities.AllCommitsActivity" />
+        <activity android:name=".activities.UserInfoActivity" />
     </application>
 
 </manifest>

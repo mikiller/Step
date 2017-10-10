@@ -22,6 +22,7 @@ public class Constants {
     public static final String ISMULTIPLE = "sMultiple";
     public static final String DISCOVERY_DETAIL = "discovery_detail";
     public static final String COMMIT_LIST = "commit_list";
+    public static final String USERINFO = "userinfo";
     public static final String ISREPORT = "ISREPORT";
 
     private final String wxkey="9ab30dbefd4be514ffa7950d497438a3";

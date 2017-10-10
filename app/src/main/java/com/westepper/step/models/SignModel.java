@@ -11,13 +11,16 @@ import java.io.Serializable;
 public class SignModel extends BaseModel {
     private static final long serialVersionUID = 2988074485401161262L;
 
-    private String uuid;
-    private String nickName;
-    private String gender;
-    private String city;
-    private String headImg;
+    protected String uuid;
+    protected String nickName;
+    protected int gender;
+    protected String city;
+    protected String headImg;
 
-    public SignModel(String nickName, String gender, String city) {
+    public SignModel() {
+    }
+
+    public SignModel(String nickName, int gender, String city) {
         this.nickName = nickName;
         this.gender = gender;
         this.city = city;
@@ -47,11 +50,11 @@ public class SignModel extends BaseModel {
         this.headImg = headImg;
     }
 
-    public String getGender() {
+    public int getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(int gender) {
         this.gender = gender;
     }
 
