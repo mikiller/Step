@@ -26,4 +26,5 @@
     <color name="dis_photo_del">#e64646</color>
     <color name="dis_photo_del_pressed">#fa6e6e</color>
     <color name="join_txt_color">#647882</color>
+    <color name="user_signature">#323c46</color>
 </resources>

@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -37,16 +38,22 @@ import butterknife.BindView;
  * A simple {@link Fragment} subclass.
  */
 public class MineFragment extends BaseFragment implements View.OnClickListener {
-    @BindView(R.id.rl_header_icon)
-    RelativeLayout rl_header_icon;
     @BindView(R.id.iv_header)
     SelectableRoundedImageView iv_header;
     @BindView(R.id.iv_header_bg)
     ImageView iv_header_bg;
-    @BindView(R.id.iv_user_edit)
-    ImageView iv_user_edit;
+    @BindView(R.id.tv_city)
+    TextView tv_city;
+    @BindView(R.id.btn_setting)
+    ImageButton btn_setting;
     @BindView(R.id.tv_user_name)
     TextView tv_user_name;
+    @BindView(R.id.tv_userId)
+    TextView tv_userId;
+    @BindView(R.id.tv_signature)
+    TextView tv_signature;
+    @BindView(R.id.iv_gender)
+    ImageView iv_gender;
     @BindView(R.id.menu_paihang)
     MyMenuItem menu_paihang;
     @BindView(R.id.menu_mood)
@@ -57,8 +64,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     MyMenuItem menu_discovery;
     @BindView(R.id.menu_acheive)
     MyMenuItem menu_acheive;
-    @BindView(R.id.menu_setting)
-    MyMenuItem menu_setting;
 
     public MineFragment() {
         // Required empty public constructor
@@ -85,13 +90,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         lp.height = DisplayUtil.getScreenWidth(getActivity()) *9 / 16;
         iv_header_bg.setLayoutParams(lp);
 
-        tv_user_name.setOnClickListener(this);
 //        lp = (RelativeLayout.LayoutParams) iv_header.getLayoutParams();
 //        lp.width = lp.height = DisplayUtil.getScreenWidth(getActivity()) / 5;
 //        iv_header.setLayoutParams(lp);
+        iv_header_bg.setOnClickListener(this);
         iv_header.setOnClickListener(this);
-
-        tv_user_name.setOnClickListener(this);
+        btn_setting.setOnClickListener(this);
 
         menu_paihang.setOnClickListener(this);
         menu_paihang.setSubText("NO.");
@@ -99,7 +103,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         menu_go.setOnClickListener(this);
         menu_discovery.setOnClickListener(this);
         menu_acheive.setOnClickListener(this);
-        menu_setting.setOnClickListener(this);
 
     }
 
@@ -132,8 +135,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_default_head);
-        BitmapUtils.blur(getActivity(), bmp, iv_header_bg);
+//        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_default_head);
+//        BitmapUtils.blur(getActivity(), bmp, iv_header_bg);
 //        user = ((BaseActivity) getActivity()).fetchUser();
 //        if (!((BaseActivity) getActivity()).isLogin() || TextUtils.isEmpty(user.getAccesstoken())) {
 //            iv_user_edit.setVisibility(View.GONE);
