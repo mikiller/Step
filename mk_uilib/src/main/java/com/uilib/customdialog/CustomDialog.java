@@ -3,6 +3,7 @@ package com.uilib.customdialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +30,7 @@ public class CustomDialog extends Dialog {
     private onCustomBtnsClickListener customListener;
 //    private int layoutRes = View.NO_ID;
     private int[] btnLayoutId = new int[]{};
-    private String[] btnTxts;
+    private CharSequence[] btnTxts;
 
     public CustomDialog(Context context) {
         super(context, R.style.CustomDialog);
@@ -99,7 +100,7 @@ public class CustomDialog extends Dialog {
         return this;
     }
 
-    public CustomDialog setCustomBtnText(String...txts){
+    public CustomDialog setCustomBtnText(CharSequence...txts){
         btnTxts = txts;
         return this;
     }
@@ -152,7 +153,7 @@ public class CustomDialog extends Dialog {
                 }
             });
             if(btnTxts != null && i < btnTxts.length)
-                ((Button)btn).setText(btnTxts[i++]);
+                ((TextView)btn).setText(btnTxts[i++]);
             btn.setVisibility(View.VISIBLE);
         }
     }

@@ -210,7 +210,7 @@ public class RegisterActivity extends SuperActivity implements View.OnClickListe
 
     private void startSignUpLogic(){
         SignModel model = new SignModel(edt_nickName.getText().toString(),
-                rdg_gender.getCheckedRadioButtonId() == R.id.rdb_male ? "1" : "2",
+                rdg_gender.getCheckedRadioButtonId() == R.id.rdb_male ? 1 : 2,
                 tv_city.getText().toString());
         Log.e(TAG, new Gson().toJson(model));
         ActivityManager.startActivity(this, MainActivity.class);

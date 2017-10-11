@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:menu="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cancel_btn_bg"
+    android:clickable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@android:color/white"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_marginTop="24dp"/>
+
+        <TextView
+            android:id="@+id/tv_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Step"
+            android:textColor="@color/hintTxt"
+            android:textSize="12sp"
+            android:layout_marginBottom="35dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="15dp"
+            android:background="@color/line_gray"/>
+
+        <com.westepper.step.customViews.MyMenuItem
+            android:id="@+id/menu_grade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            menu:menuTitle="喜欢我们，打分鼓励"
+            menu:needNext="true"/>
+
+        <com.westepper.step.customViews.MyMenuItem
+            android:id="@+id/menu_service"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            menu:menuTitle="服务条款"
+            menu:needNext="true"/>
+
+        <com.westepper.step.customViews.MyMenuItem
+            android:id="@+id/menu_contact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            menu:menuTitle="联系我们"
+            menu:needNext="true"
+            menu:needLine="false"/>
+    </LinearLayout>
+</LinearLayout>

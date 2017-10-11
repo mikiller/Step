@@ -27,4 +27,5 @@
     <color name="dis_photo_del_pressed">#fa6e6e</color>
     <color name="join_txt_color">#647882</color>
     <color name="user_signature">#323c46</color>
+    <color name="togglebox_bg_checked">#4cd764</color>
 </resources>

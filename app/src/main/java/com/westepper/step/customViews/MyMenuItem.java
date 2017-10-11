@@ -114,11 +114,6 @@ public class MyMenuItem extends RelativeLayout {
         needLine = type.getBoolean(R.styleable.MyMenuItem_needLine, true);
         needNext = type.getBoolean(R.styleable.MyMenuItem_needNext, false);
         needSubText = type.getBoolean(R.styleable.MyMenuItem_needSubText, false);
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
 
         if(menuIcon!= null)
             iv_menu_icon.setImageDrawable(menuIcon);
@@ -126,12 +121,26 @@ public class MyMenuItem extends RelativeLayout {
             iv_menu_icon.setVisibility(GONE);
         setMenuName(menuName);
         bottom_line.setVisibility(needLine ? VISIBLE : GONE);
-        //this.setBackgroundResource(R.drawable.selector_menuitem);
-
-
         tv_info.setVisibility(needSubText ? VISIBLE : GONE);
         iv_next.setVisibility(needNext ? VISIBLE : INVISIBLE);
     }
+
+//    @Override
+//    protected void onFinishInflate() {
+//        super.onFinishInflate();
+//
+//        if(menuIcon!= null)
+//            iv_menu_icon.setImageDrawable(menuIcon);
+//        else
+//            iv_menu_icon.setVisibility(GONE);
+//        setMenuName(menuName);
+//        bottom_line.setVisibility(needLine ? VISIBLE : GONE);
+//        //this.setBackgroundResource(R.drawable.selector_menuitem);
+//
+//
+//        tv_info.setVisibility(needSubText ? VISIBLE : GONE);
+//        iv_next.setVisibility(needNext ? VISIBLE : INVISIBLE);
+//    }
 
 //    @Override
 //    public void setOnClickListener(OnClickListener l) {

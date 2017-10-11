@@ -69,6 +69,7 @@ public class MainActivity extends SuperActivity {
             return;
         switch (requestCode){
             case Constants.CHANGE_HEADER:
+            case Constants.CHANGE_USER_BG:
                 adapter.getItem(2).fragmentCallback(requestCode, data);
                 break;
         }

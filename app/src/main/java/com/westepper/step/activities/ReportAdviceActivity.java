@@ -2,6 +2,8 @@ package com.westepper.step.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,7 +25,7 @@ import butterknife.BindView;
  */
 
 public class ReportAdviceActivity extends SuperActivity {
-    public final static int REPORT = 1, ADVICE = 0;
+    public final static int REPORT = 1, ADVICE = 0, FEEDBACK = 2;
     @BindView(R.id.titleBar)
     TitleBar titleBar;
     @BindView(R.id.rl_advice)
@@ -41,8 +43,7 @@ public class ReportAdviceActivity extends SuperActivity {
     @BindView(R.id.btn_commit)
     Button btn_commit;
 
-    int kind;
-
+    int kind, txtNum = 140;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         if(savedInstanceState != null){
@@ -55,9 +56,9 @@ public class ReportAdviceActivity extends SuperActivity {
 
     @Override
     protected void initView() {
-        rl_advice.setVisibility(kind == ADVICE ? View.VISIBLE : View.GONE);
+        rl_advice.setVisibility(kind != REPORT ? View.VISIBLE : View.GONE);
         ll_report.setVisibility(kind == REPORT ? View.VISIBLE : View.GONE);
-        titleBar.setTitle(kind == REPORT ? "举报" : "报错反馈");
+        titleBar.setTitle(kind == REPORT ? "举报" : (kind == ADVICE ? "报错反馈" : "意见反馈"));
         titleBar.setSubStyle(kind == REPORT ? TitleBar.NONE : TitleBar.TXT);
         titleBar.setTitleListener(new TitleBar.TitleListener() {
             @Override
@@ -68,6 +69,23 @@ public class ReportAdviceActivity extends SuperActivity {
             @Override
             protected void onSubClicked() {
 
+            }
+        });
+
+        edt_advice.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                titleBar.setSubTxtEnabled(s.length() > 0);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                tv_adviceNum.setText(String.valueOf(txtNum - s.length()));
             }
         });
     }

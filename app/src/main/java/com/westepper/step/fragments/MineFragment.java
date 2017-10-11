@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ import com.uilib.utils.BitmapUtils;
 import com.westepper.step.R;
 import com.westepper.step.activities.GalleryActivity;
 import com.westepper.step.activities.PaihangActivity;
+import com.westepper.step.activities.SettingActivity;
 import com.westepper.step.activities.UserInfoActivity;
 import com.westepper.step.base.BaseFragment;
 import com.westepper.step.base.Constants;
@@ -109,10 +111,18 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         menu_acheive.setOnClickListener(this);
 
         createUserInfo();
+        updateUserInfo();
+    }
+
+    private void updateUserInfo(){
         tv_user_name.setText(userInfo.getNickName());
         tv_userId.setText(userInfo.getUuid());
         tv_signature.setText(userInfo.getSign());
         GlideImageLoader.getInstance().loadImage(getActivity(), userInfo.getHeadImg(), R.mipmap.ic_default_head, iv_header, 0);
+        if(!TextUtils.isEmpty(userInfo.getCover())){
+            iv_header_bg.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            GlideImageLoader.getInstance().loadImage(getActivity(), userInfo.getCover(), R.mipmap.ic_addcover, iv_header_bg, 0);
+        }
     }
 
     //test user info
@@ -121,6 +131,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         userInfo.setNickName("小西瓜");
         userInfo.setGender(1);
         userInfo.setHeadImg("http://www.ld12.com/upimg358/20160130/17080388096933.jpg");
+        userInfo.setCover("http://img1.3lian.com/img2013/1/33/d/61.jpg");
         userInfo.setCity("上海");
         userInfo.setNeedFriendVerifi(0);
         userInfo.setSign("这是一段屁话");
@@ -131,6 +142,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void fragmentCallback(int type, Intent data) {
         if(type == Constants.CHANGE_HEADER){
+            userInfo = (UserInfo) data.getSerializableExtra(Constants.USERINFO);
+            updateUserInfo();
+        }else if(type == Constants.CHANGE_USER_BG){
             String filePath = "";
             if(data.getSerializableExtra(CameraGalleryUtils.TMP_FILE) != null)
                 filePath = (String) data.getSerializableExtra(CameraGalleryUtils.TMP_FILE);
@@ -138,19 +152,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 List<File> files = (List<File>) data.getSerializableExtra(CameraGalleryUtils.THUMB_FILE);
                 filePath = files.get(0).getPath();
             }
-
-            GlideImageLoader.getInstance().loadImage(getActivity(), filePath, iv_header, 0, new ImageLoader.ImageLoadListener() {
-                @Override
-                public void onLoadSuccess(Bitmap drawable, ImageView imageView) {
-                    imageView.setImageBitmap(drawable);
-                    BitmapUtils.blur(getActivity(), drawable, iv_header_bg);
-                }
-
-                @Override
-                public void onLoadFailed(ImageView imageView) {
-
-                }
-            });
+            iv_header_bg.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            GlideImageLoader.getInstance().loadImage(getActivity(), filePath, R.mipmap.ic_addcover, iv_header_bg, 0);
         }
     }
 
@@ -204,17 +207,23 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        Map<String, Object> args;
         switch (v.getId()) {
-            case R.id.menu_paihang:
-                ActivityManager.startActivity(getActivity(), PaihangActivity.class);
+            case R.id.iv_header_bg:
+                args = new HashMap<>();
+                args.put(Constants.GALLERY_TYPE, Constants.CHANGE_USER_BG);
+                ActivityManager.startActivityforResult(getActivity(), GalleryActivity.class, Constants.CHANGE_USER_BG, args);
                 break;
             case R.id.iv_header:
-                Map<String, Object> args = new HashMap<>();
+                args = new HashMap<>();
                 args.put(Constants.USERINFO, userInfo);
                 ActivityManager.startActivityforResult(getActivity(), UserInfoActivity.class, Constants.CHANGE_HEADER, args);
-//                args.put(Constants.GALLERY_TYPE, Constants.CHANGE_HEADER);
-//                ActivityManager.startActivityforResult(getActivity(), GalleryActivity.class, Constants.CHANGE_HEADER, args);
-//                ((BaseActivity) getActivity()).startToActivity(SettingActivity.class, "fragmentName", UserInfoFragment.class.getName());
+                break;
+            case R.id.btn_setting:
+                ActivityManager.startActivity(getActivity(), SettingActivity.class);
+                break;
+            case R.id.menu_paihang:
+                ActivityManager.startActivity(getActivity(), PaihangActivity.class);
                 break;
 //            case R.id.tv_user_name:
 //                ((BaseActivity) getActivity()).startToActivity(UserRegisterActivity.class);

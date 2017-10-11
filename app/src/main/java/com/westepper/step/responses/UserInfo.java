@@ -11,6 +11,7 @@ import java.io.Serializable;
 public class UserInfo extends SignModel {
 
     private String token;
+    private String cover;
     private String sign;
     private int needFriendVerifi;
     private int moodScope;
@@ -22,6 +23,14 @@ public class UserInfo extends SignModel {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 
     public String getSign() {

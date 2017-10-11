@@ -133,6 +133,10 @@ public class TitleBar extends RelativeLayout {
             tv_act_sure.setText(subTxt);
     }
 
+    public void setSubTxtEnabled(boolean enabled){
+        tv_act_sure.setEnabled(enabled);
+    }
+
     public void setHeader(String path){
         GlideImageLoader.getInstance().loadImage(getContext(), path, R.mipmap.ic_default_head, iv_header, 0);
     }

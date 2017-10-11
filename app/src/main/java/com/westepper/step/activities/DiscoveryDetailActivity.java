@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -67,6 +68,8 @@ public class DiscoveryDetailActivity extends SuperActivity {
     RelativeLayout rl_commitInput;
     @BindView(R.id.edt_commit)
     EditText edt_commit;
+    @BindView(R.id.btn_send)
+    Button btn_send;
 
     DetailImgVpAdapter vpAdapter;
 
@@ -196,7 +199,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
             }
         });
 
-        getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(glListener = new CommitGlobalLayoutListener(this, rl_commitInput, edt_commit));
+        getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(glListener = new CommitGlobalLayoutListener(this, rl_commitInput, edt_commit, btn_send));
     }
 
     private List<ImgDetail> createImgs() {

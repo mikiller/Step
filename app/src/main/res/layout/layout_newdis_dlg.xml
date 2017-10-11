@@ -11,7 +11,7 @@
         android:orientation="vertical"
         android:background="@android:color/white" >
 
-        <Button
+        <TextView
             android:id="@+id/btn_mood"
             android:layout_width="match_parent"
             android:layout_weight="1"
@@ -23,7 +23,7 @@
             android:textSize="15sp"
             android:text="发布心情"/>
 
-        <Button
+        <TextView
             android:id="@+id/btn_outgo"
             android:layout_width="match_parent"
             android:layout_weight="1"

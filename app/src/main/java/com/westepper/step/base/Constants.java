@@ -9,6 +9,7 @@ public class Constants {
     public static final String POIITEM = "POIITEM";
     public static final int CHANGE_HEADER = 0x101;
     public static final int NEW_DISCOVERY = 0X102;
+    public static final int CHANGE_USER_BG = 0X103;
     public static final int ADD_PHOTO = 0X103;
     public static final int SEARCH_POI = 0x104;
     public static final String DIS_KIND = "DIS_KIND";
