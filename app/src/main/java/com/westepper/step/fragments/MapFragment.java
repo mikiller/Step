@@ -23,6 +23,8 @@ import com.westepper.step.activities.GalleryActivity;
 import com.westepper.step.adapters.DiscoveryAdapter;
 import com.westepper.step.base.BaseFragment;
 import com.westepper.step.base.Constants;
+import com.westepper.step.customViews.AcheivePackage;
+import com.westepper.step.customViews.AcheiveSettingLayout;
 import com.westepper.step.customViews.SearchView;
 import com.westepper.step.responses.Area;
 import com.westepper.step.responses.AreaList;
@@ -55,6 +57,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
     SearchView search;
     @BindView(R.id.btn_acheivement)
     ImageButton btn_acheivement;
+    @BindView(R.id.layout_achSetting)
+    AcheiveSettingLayout layout_achSetting;
     @BindView(R.id.rl_head)
     RelativeLayout rl_head;
     @BindView(R.id.rdg_scope)
@@ -334,6 +338,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_acheivement:
+                layout_achSetting.setVisibility(View.VISIBLE);
                 break;
             case R.id.btn_new:
                 showNewDisDlg();

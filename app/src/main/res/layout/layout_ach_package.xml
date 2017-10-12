@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_ach_package"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_menuitem"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="10dp">
+
+        <com.uilib.joooonho.SelectableRoundedImageView xmlns:sri="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/iv_ach"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginRight="14dp"
+            sri:sriv_oval="true" />
+
+        <TextView
+            android:id="@+id/tv_ach_title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@color/text_color_black"
+            android:textSize="13sp" />
+
+        <ImageView
+            android:id="@+id/iv_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/next" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_ach_items"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_menuitem"
+        android:orientation="vertical"
+        android:visibility="gone"/>
+</LinearLayout>

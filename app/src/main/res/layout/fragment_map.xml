@@ -163,4 +163,10 @@
             android:padding="15dp"
             android:src="@mipmap/ic_plus" />
     </RelativeLayout>
+
+    <com.westepper.step.customViews.AcheiveSettingLayout
+        android:id="@+id/layout_achSetting"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 </RelativeLayout>

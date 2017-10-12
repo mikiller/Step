@@ -28,4 +28,9 @@
             <enum name="TXT" value="2" />
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="AcheivePackage">
+        <attr name="icon" format="reference"/>
+        <attr name="achTitle" format="string|reference" />
+    </declare-styleable>
 </resources>

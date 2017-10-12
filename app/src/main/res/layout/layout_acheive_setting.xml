@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/item_time_bg_center">
+
+    <LinearLayout
+        android:id="@+id/ll_ach_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@android:color/white"
+        android:layout_alignParentRight="true"
+        android:paddingTop="5dp">
+
+        <RelativeLayout
+            android:id="@+id/rl_ach_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp">
+
+            <ImageButton
+                android:id="@+id/btn_ach_map"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_ach_map"
+                android:button="@null"
+                android:padding="1dp"
+                android:gravity="center"
+                android:background="@drawable/selector_ach_map"
+                android:checked="true"/>
+
+            <CheckBox
+                android:id="@+id/ckb_ach_map1"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_alignLeft="@+id/btn_ach_map"
+                android:layout_alignRight="@id/btn_ach_map"
+                android:layout_alignBottom="@+id/btn_ach_map"
+                android:background="@drawable/selector_ach_map_txt"
+                android:button="@null"
+                android:checked="true"/>
+
+            <TextView
+                style="@style/hint_text_style2"
+                android:textColor="@android:color/white"
+                android:layout_alignBottom="@+id/btn_ach_map"
+                android:layout_centerHorizontal="true"
+                android:text="探索地图"
+                android:drawableLeft="@mipmap/ic_unchoose"
+                android:drawablePadding="10dp"
+                android:layout_margin="2dp" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="成就地图"
+            android:textSize="12sp"
+            android:background="@color/cancel_btn_bg"
+            android:paddingLeft="15dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_marginTop="5dp"/>
+    </LinearLayout>
+</RelativeLayout>
