@@ -42,6 +42,10 @@
         <item name="android:textColor">@color/discovery_kind_unchecked</item>
     </style>
 
+    <style name="hint_text_style2" parent="hint_text_style">
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <style name="discovery_rdb_scope">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -51,12 +55,10 @@
         <item name="android:padding">13dp</item>
     </style>
 
-    <style name="discovery_rdb_kind">
+    <style name="discovery_rdb_kind" parent="hint_text_style2">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:textColor">@color/selector_discovery_kind</item>
-        <item name="android:textSize">12sp</item>
         <item name="android:button">@null</item>
         <item name="android:gravity">center</item>
     </style>
@@ -82,17 +84,11 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="join_txt">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">12sp</item>
+    <style name="join_txt" parent="hint_text_style2">
         <item name="android:textColor">@color/join_txt_color</item>
     </style>
 
-    <style name="join_time_txt">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">12sp</item>
+    <style name="join_time_txt" parent="hint_text_style2">
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:layout_margin">5dp</item>
     </style>

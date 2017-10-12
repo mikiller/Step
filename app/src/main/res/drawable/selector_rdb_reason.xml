@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@mipmap/ic_choose" android:state_checked="true" />
-    <!--<item android:drawable="@mipmap/ic_back" android:state_checked="false" />-->
-    <item>
-        <shape>
-            <solid android:color="@android:color/white"/>
-            <size android:width="32px"
-                android:height="24px" />
-        </shape>
-    </item>
+    <item android:drawable="@mipmap/ic_unchoose" android:state_checked="false" />
 </selector>

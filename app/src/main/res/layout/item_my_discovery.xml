@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sri="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:padding="15dp">
+
+    <TextView
+        android:id="@+id/tv_date1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textColor="@color/discovery_kind_unchecked"
+        android:text="今天"/>
+
+    <TextView
+        android:id="@+id/tv_date2"
+        style="@style/hint_text_style2"
+        android:layout_toRightOf="@+id/tv_date1"
+        android:layout_alignBaseline="@+id/tv_date1"
+        android:layout_marginRight="38dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toRightOf="@id/tv_date2">
+
+        <TextView
+            android:id="@+id/tv_msg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:textColor="@color/text_color_black"
+            android:textSize="14sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <com.uilib.joooonho.SelectableRoundedImageView
+                android:id="@+id/iv_img1"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="60dp"
+                android:scaleType="centerCrop"
+                sri:sriv_left_bottom_corner_radius="4dp"
+                sri:sriv_left_top_corner_radius="4dp"
+                sri:sriv_right_bottom_corner_radius="4dp"
+                sri:sriv_right_top_corner_radius="4dp"/>
+
+            <View
+                android:layout_width="10dp"
+                android:layout_height="60dp" />
+
+            <com.uilib.joooonho.SelectableRoundedImageView
+                android:id="@+id/iv_img2"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="60dp"
+                android:scaleType="centerCrop"
+                sri:sriv_left_bottom_corner_radius="4dp"
+                sri:sriv_left_top_corner_radius="4dp"
+                sri:sriv_right_bottom_corner_radius="4dp"
+                sri:sriv_right_top_corner_radius="4dp"/>
+
+            <View
+                android:layout_width="10dp"
+                android:layout_height="60dp" />
+
+            <com.uilib.joooonho.SelectableRoundedImageView
+                android:id="@+id/iv_img3"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="60dp"
+                android:scaleType="centerCrop"
+                sri:sriv_left_bottom_corner_radius="4dp"
+                sri:sriv_left_top_corner_radius="4dp"
+                sri:sriv_right_bottom_corner_radius="4dp"
+                sri:sriv_right_top_corner_radius="4dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tv_pos"
+                style="@style/hint_text_style2"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:drawableLeft="@mipmap/ic_city3"
+                android:text="上海市"/>
+
+            <TextView
+                android:id="@+id/btn_good"
+                style="@style/hint_text_style2"
+                android:text="0"
+                android:drawableLeft="@mipmap/ic_good2"
+                android:drawablePadding="5dp"
+                android:layout_marginRight="18dp"/>
+
+            <TextView
+                android:id="@+id/btn_commit"
+                style="@style/hint_text_style2"
+                android:drawableLeft="@mipmap/ic_commit1"
+                android:drawablePadding="5dp"
+                android:text="0"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_chat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/shape_mydis_join_bg"
+            android:layout_marginTop="15dp"
+            android:gravity="center_vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_joinNum"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="@color/colorPrimary"
+                android:gravity="center"
+                android:text="邀约0人，已报名0人"/>
+
+            <TextView
+                android:id="@+id/tv_chat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="@android:color/white"
+                android:paddingRight="18dp"
+                android:paddingLeft="18dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:background="@drawable/selector_call_chat"
+                android:text="发起群聊"/>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -133,6 +133,10 @@ public class TitleBar extends RelativeLayout {
             tv_act_sure.setText(subTxt);
     }
 
+    public void setSubImg(int resId){
+        btn_more.setImageResource(resId);
+    }
+
     public void setSubTxtEnabled(boolean enabled){
         tv_act_sure.setEnabled(enabled);
     }

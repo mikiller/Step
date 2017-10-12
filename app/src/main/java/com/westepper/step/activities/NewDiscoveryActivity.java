@@ -91,6 +91,7 @@ public class NewDiscoveryActivity extends SuperActivity {
             }
         });
         titleBar.setTitle(disKind == Constants.MOOD ? "新心情" : "新约行");
+        titleBar.setSubTxtEnabled(true);
 //
         final GridLayoutManager glMgr = new GridLayoutManager(this, 3);
         glMgr.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
