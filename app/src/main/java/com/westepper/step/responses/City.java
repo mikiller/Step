@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Mikiller on 2017/8/29.
+ * Created by Mikiller on 2017/10/13.
  */
 
-public class AreaList implements Serializable {
-    private static final long serialVersionUID = 1141207758735809623L;
+public class City implements Serializable {
+
+    private String cityName;
     private List<Area> areaList = new ArrayList<>();
 
     public List<Area> getAreaList() {
@@ -18,6 +19,14 @@ public class AreaList implements Serializable {
 
     public void setAreaList(List<Area> areaList) {
         this.areaList = areaList;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 
     public void setArea(Area area){

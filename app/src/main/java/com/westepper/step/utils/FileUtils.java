@@ -1,8 +1,6 @@
 package com.westepper.step.utils;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.westepper.step.responses.AreaList;
 
 import java.io.File;
 import java.io.FileInputStream;

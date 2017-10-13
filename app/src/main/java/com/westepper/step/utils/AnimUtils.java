@@ -44,7 +44,7 @@ public class AnimUtils {
             @Override
             public void onAnimationEnd(Animation animation) {
                 if(endV == 0.0f)
-                view.setVisibility(View.GONE);
+                    view.setVisibility(View.GONE);
             }
 
             @Override

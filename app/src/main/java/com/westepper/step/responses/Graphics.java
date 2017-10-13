@@ -1,5 +1,6 @@
 package com.westepper.step.responses;
 
+import android.app.Activity;
 import android.graphics.Color;
 
 import com.amap.api.maps.AMap;
@@ -33,12 +34,12 @@ public class Graphics {
 
     public Graphics(AMap aMap, boolean reached, List<LatLng>borderList){
         polygon = aMap.addPolygon(new PolygonOptions().addAll(borderList));
-        setPolygonReached(reached);
+        setGraphicsReached(reached);
     }
 
     public Graphics(AMap aMap, boolean reached, LatLng latLng, int radius){
         circle = aMap.addCircle(new CircleOptions().center(latLng).radius(radius));
-        setCircleReached(reached);
+        setGraphicsReached(reached);
     }
 
     public void setGraphicsReached(boolean reached){
@@ -70,10 +71,15 @@ public class Graphics {
         }
     }
 
-    public void setGraphicsType(int type, boolean reached){
-        if(type == MAP){
+    public void setGraphicsType(int type){
+        graphicsType = type;
+
+    }
+
+    public void setReached(boolean reached){
+        if(graphicsType == MAP){
             setGraphicsReached(reached);
-        }else if(type == ACHEIVE){
+        }else if(graphicsType == ACHEIVE){
             setGraphicsAcheiveReached(reached);
         }
     }
@@ -124,14 +130,24 @@ public class Graphics {
             polygon.setFillColor(Color.TRANSPARENT);
         }else{
             polygon.setStrokeWidth(0);
+            if(graphicsType == ACHEIVE)
+                polygon.setFillColor(Color.TRANSPARENT);
         }
     }
 
     private void showPolygon(boolean reached){
         if(reached){
-            polygon.setFillColor(NORMAL_FILL);
+            if(graphicsType == MAP)
+                polygon.setFillColor(NORMAL_FILL);
+            else if(graphicsType == ACHEIVE){
+                polygon.setFillColor(ACHEIVE_FILL_REACHED);
+            }
         }else{
-            polygon.setStrokeWidth(4);
+            if(graphicsType == MAP) {
+                polygon.setStrokeWidth(4);
+            }else if(graphicsType == ACHEIVE){
+                polygon.setFillColor(ACHEIVE_FILL);
+            }
         }
     }
 
@@ -140,14 +156,23 @@ public class Graphics {
             circle.setFillColor(Color.TRANSPARENT);
         }else{
             circle.setStrokeWidth(0);
+            if(graphicsType == ACHEIVE)
+                circle.setFillColor(Color.TRANSPARENT);
         }
     }
 
     private void showCircle(boolean reached){
         if(reached){
-            circle.setFillColor(NORMAL_FILL);
+            if(graphicsType == MAP)
+                circle.setFillColor(NORMAL_FILL);
+            else if(graphicsType == ACHEIVE)
+                circle.setFillColor(ACHEIVE_FILL_REACHED);
         }else{
-            circle.setStrokeWidth(4);
+            if(graphicsType == MAP) {
+                circle.setStrokeWidth(4);
+            }else if(graphicsType == ACHEIVE){
+                circle.setFillColor(ACHEIVE_FILL);
+            }
         }
     }
 }

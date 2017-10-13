@@ -1,31 +1,43 @@
 package com.westepper.step.customViews;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.westepper.step.R;
+import com.westepper.step.responses.Achieve;
+import com.westepper.step.responses.AchieveArea;
+import com.westepper.step.utils.AnimUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Mikiller on 2017/10/12.
  */
 
-public class AcheivePackage extends RelativeLayout {
+public class AcheivePackage extends LinearLayout {
     private LinearLayout ll_ach_package, ll_ach_items;
     private SelectableRoundedImageView iv_ach;
     private TextView tv_ach_title;
     private ImageView iv_next;
+
+    private Achieve achieve;
+    private AchieveClickListener achieveClickListener;
     public AcheivePackage(Context context) {
         this(context, null, 0);
     }
@@ -44,7 +56,7 @@ public class AcheivePackage extends RelativeLayout {
         ll_ach_package = (LinearLayout) findViewById(R.id.ll_ach_package);
         ll_ach_items = (LinearLayout) findViewById(R.id.ll_ach_items);
         iv_ach = (SelectableRoundedImageView) findViewById(R.id.iv_ach);
-        tv_ach_title = (TextView) findViewById(R.id.tv_act_title);
+        tv_ach_title = (TextView) findViewById(R.id.tv_ach_title);
         iv_next = (ImageView) findViewById(R.id.iv_next);
 
         if(attrs != null){
@@ -54,13 +66,34 @@ public class AcheivePackage extends RelativeLayout {
             ta.recycle();
         }
 
-        iv_next.setOnClickListener(new OnClickListener() {
+        ll_ach_package.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                ll_ach_items.setVisibility(ll_ach_items.getVisibility() == GONE ? VISIBLE : GONE);
+                if(achieveClickListener != null)
+                    achieveClickListener.onPackageClick(AcheivePackage.this);
+
             }
         });
 
+    }
+
+    public void toggleAchieveItems(){
+        if(ll_ach_items.getVisibility() == GONE) {
+            showAchieveItems();
+        }else{
+            hideAchieveItems();
+        }
+    }
+
+    public void showAchieveItems(){
+        ll_ach_items.setVisibility(VISIBLE);
+        AnimUtils.startAlphaAnim(ll_ach_items, 0f, 1f, 300);
+        AnimUtils.startRotateAnim(iv_next, 0, -90, 300);
+    }
+
+    public void hideAchieveItems(){
+        AnimUtils.startAlphaAnim(ll_ach_items, 1f, 0f, 300);
+        AnimUtils.startRotateAnim(iv_next, -90, 0, 300);
     }
 
     public  void setAchIcon(Drawable drawable){
@@ -72,15 +105,53 @@ public class AcheivePackage extends RelativeLayout {
             tv_ach_title.setText(title);
     }
 
-    public void addItems(List<String> items){
-        for(String item : items){
-            addItem(item);
+    public String getTitle(){
+        return achieve.getAchieveKind();
+    }
+
+    public void setAchieve(Achieve achieve){
+        this.achieve = achieve;
+        setAchTitle(achieve.getAchieveKind());
+        addAchieveAreas(achieve.getAchieveAreaList());
+    }
+
+    public void addAchieveAreas(List<AchieveArea> achieveAreas){
+        for(AchieveArea area: achieveAreas){
+            addAchieveArea(area);
         }
     }
 
-    public void addItem(String item){
-        TextView text = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.item_ach, null);
-        text.setText(item);
+    public void addAchieveArea(final AchieveArea achieveArea){
+        final RadioButton text = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.item_ach, null);
+        text.setText(achieveArea.getAchieveName());
+        text.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(achieveClickListener != null)
+                    achieveClickListener.onAchieveAreaClick(text, achieveArea.getAreaIds(), achieveArea.getAchieveName());
+            }
+        });
         ll_ach_items.addView(text);
+    }
+
+    public AchieveClickListener getAchieveClickListener() {
+        return achieveClickListener;
+    }
+
+    public void setAchieveClickListener(AchieveClickListener achieveClickListener) {
+        this.achieveClickListener = achieveClickListener;
+    }
+
+    public interface AchieveClickListener{
+        void onPackageClick(AcheivePackage pkg);
+        void onAchieveAreaClick(RadioButton item, String[] areaId, String achieveKind);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof AcheivePackage)
+            return getTitle().equals(((AcheivePackage)obj).getTitle());
+        else
+            return false;
     }
 }

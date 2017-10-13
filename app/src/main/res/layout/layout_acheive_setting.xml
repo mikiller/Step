@@ -18,37 +18,34 @@
             android:layout_height="wrap_content"
             android:layout_margin="15dp">
 
-            <ImageButton
+            <RadioButton
                 android:id="@+id/btn_ach_map"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_ach_map"
-                android:button="@null"
-                android:padding="1dp"
-                android:gravity="center"
+                android:layout_height="match_parent"
+                android:layout_alignLeft="@+id/iv_map"
+                android:layout_alignRight="@id/iv_map"
+                android:layout_alignBottom="@+id/tv_map"
                 android:background="@drawable/selector_ach_map"
+                android:button="@null"
                 android:checked="true"/>
 
-            <CheckBox
-                android:id="@+id/ckb_ach_map1"
+            <ImageView
+                android:id="@+id/iv_map"
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_alignLeft="@+id/btn_ach_map"
-                android:layout_alignRight="@id/btn_ach_map"
-                android:layout_alignBottom="@+id/btn_ach_map"
-                android:background="@drawable/selector_ach_map_txt"
-                android:button="@null"
-                android:checked="true"/>
+                android:layout_height="wrap_content"
+                android:padding="1dp"
+                android:src="@mipmap/ic_ach_map"/>
 
             <TextView
+                android:id="@+id/tv_map"
                 style="@style/hint_text_style2"
                 android:textColor="@android:color/white"
-                android:layout_alignBottom="@+id/btn_ach_map"
+                android:layout_below="@+id/iv_map"
                 android:layout_centerHorizontal="true"
                 android:text="探索地图"
                 android:drawableLeft="@mipmap/ic_unchoose"
                 android:drawablePadding="10dp"
-                android:layout_margin="2dp" />
+                android:padding="2dp" />
         </RelativeLayout>
 
         <TextView

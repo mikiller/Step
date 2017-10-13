@@ -77,12 +77,13 @@ public class Area implements Serializable{
 
     public Area setReached(boolean reached) {
         this.reached = reached;
-        graphics.setGraphicsReached(reached);
+        graphics.setReached(reached);
         return this;
     }
 
     public void setGraphicsType(int type){
-        graphics.setGraphicsType(type, reached);
+        graphics.setGraphicsType(type);
+        graphics.setReached(reached);
     }
 
     public void createGraphics(AMap aMap){

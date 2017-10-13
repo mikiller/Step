@@ -23,11 +23,13 @@ import com.westepper.step.activities.GalleryActivity;
 import com.westepper.step.adapters.DiscoveryAdapter;
 import com.westepper.step.base.BaseFragment;
 import com.westepper.step.base.Constants;
-import com.westepper.step.customViews.AcheivePackage;
 import com.westepper.step.customViews.AcheiveSettingLayout;
 import com.westepper.step.customViews.SearchView;
+import com.westepper.step.responses.Achieve;
+import com.westepper.step.responses.AchieveArea;
 import com.westepper.step.responses.Area;
-import com.westepper.step.responses.AreaList;
+import com.westepper.step.responses.City;
+import com.westepper.step.responses.MapData;
 import com.westepper.step.responses.Discovery;
 import com.westepper.step.responses.Graphics;
 import com.westepper.step.responses.UserPos;
@@ -77,7 +79,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
     ViewPager vp_discoveryList;
 
     DiscoveryAdapter adapter;
-
+    MapData mapData;
     MapUtils mapUtils;
     BroadcastReceiver geoReceiver;
     String path;
@@ -86,7 +88,9 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
     int gender = 0;
 
     private void createTestData() {
-        AreaList areaList = new AreaList();
+        MapData mapData = new MapData();
+        City city1 = new City();
+        city1.setCityName("上海");
         Area area1 = new Area("1");
         area1.setAreaType(Area.POLYGON);
         List<LatLng> coords = new ArrayList<>();
@@ -96,7 +100,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
         coords.add(new LatLng(31.226847, 121.463078));
         coords.add(new LatLng(31.229856, 121.462005));
         area1.setBorderList(coords);
-        areaList.setArea(area1);
+        city1.setArea(area1);
 
         Area area2 = new Area("2");
         area2.setAreaType(Area.POLYGON);
@@ -107,7 +111,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
         coords2.add(new LatLng(31.228085, 121.462638));
         coords2.add(new LatLng(31.226681, 121.459885));
         area2.setBorderList(coords2);
-        areaList.setArea(area2);
+        city1.setArea(area2);
 
         Area area3 = new Area("3");
         area3.setAreaType(Area.POLYGON);
@@ -117,7 +121,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
         coords3.add(new LatLng(31.227489, 121.466908));
         coords3.add(new LatLng(31.227425, 121.465052));
         area3.setBorderList(coords3);
-        areaList.setArea(area3);
+        city1.setArea(area3);
 
         Area area4 = new Area("4");
         area4.setAreaType(Area.POLYGON);
@@ -128,15 +132,59 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
         coords4.add(new LatLng(31.225617, 121.467541));
         coords4.add(new LatLng(31.225241, 121.463249));
         area4.setBorderList(coords4);
-        areaList.setArea(area4);
+        city1.setArea(area4);
 
         Area area5 = new Area("5");
         area5.setAreaType(Area.CIRCLE);
         Area.CirlclArea ca = new Area.CirlclArea(new LatLng(31.230779, 121.472071), 800);
         area5.setCircle(ca);
-        areaList.setArea(area5);
+        city1.setArea(area5);
 
-        String areaStr = new Gson().toJson(areaList);
+        mapData.setCity(city1);
+
+        Achieve achieve = new Achieve();
+        achieve.setAchieveKind("城市探索");
+        AchieveArea achieveArea = new AchieveArea();
+        achieveArea.setAchieveName("静安区");
+        achieveArea.setAchieveAreaId("13");
+        achieveArea.setAreaIds("3,4");
+        achieve.setAchieveArea(achieveArea);
+        AchieveArea achieveArea1 = new AchieveArea();
+        achieveArea1.setAchieveName("黄浦区");
+        achieveArea1.setAchieveAreaId("14");
+        achieveArea1.setAreaIds("1,2,5");
+        achieve.setAchieveArea(achieveArea1);
+        mapData.setAchieve(achieve);
+
+        Achieve achieve1 = new Achieve();
+        achieve1.setAchieveKind("发现世界");
+        AchieveArea achieveArea2 = new AchieveArea();
+        achieveArea2.setAchieveName("人民广场");
+        achieveArea2.setAchieveAreaId("16");
+        achieveArea2.setAreaIds("5");
+        achieve1.setAchieveArea(achieveArea2);
+        AchieveArea achieveArea3 = new AchieveArea();
+        achieveArea3.setAchieveName("上海电视台");
+        achieveArea3.setAchieveAreaId("17");
+        achieveArea3.setAreaIds("1,2");
+        achieve1.setAchieveArea(achieveArea3);
+        mapData.setAchieve(achieve1);
+
+        Achieve achieve2 = new Achieve();
+        achieve2.setAchieveKind("行者无疆");
+        AchieveArea achieveArea4 = new AchieveArea();
+        achieveArea4.setAchieveName("南京西路");
+        achieveArea4.setAchieveAreaId("20");
+        achieveArea4.setAreaIds("1,4");
+        achieve2.setAchieveArea(achieveArea4);
+        AchieveArea achieveArea5 = new AchieveArea();
+        achieveArea5.setAchieveName("威海路");
+        achieveArea5.setAchieveAreaId("21");
+        achieveArea5.setAreaIds("2,3");
+        achieve2.setAchieveArea(achieveArea5);
+        mapData.setAchieve(achieve2);
+
+        String areaStr = new Gson().toJson(mapData);
         FileUtils.saveToLocal(areaStr, path);
     }
 
@@ -150,7 +198,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
         path = getActivity().getFilesDir() + File.separator + "area.data";
         mapView.onCreate(saveBundle);
         initMapUtil();
-
+        initAcheiveSetting();
         geoReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -201,22 +249,38 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
         mapUtils.initLocationStyle(20000);
         mapUtils.initLocationClient();
 
-        AreaList areaList = FileUtils.getDataFromLocal(path, AreaList.class);
-        if(areaList == null) {
+        mapData = FileUtils.getDataFromLocal(path, MapData.class);
+        if(mapData == null) {
             createTestData();
-            areaList = FileUtils.getDataFromLocal(path, AreaList.class);
+            mapData = FileUtils.getDataFromLocal(path, MapData.class);
         }
-
-        for(Area area : areaList.getAreaList()){
-            mapUtils.addArea(area);
-            Log.e(TAG, "add area");
-            if(area.getAreaType() == Area.POLYGON)
-                mapUtils.createGeoFence(area.getAreaId(), area.getBorderList());
-            else if(area.getAreaType() == Area.CIRCLE)
-                mapUtils.createGeoFence(area.getAreaId(), area.getCircle().getLatng(), area.getCircle().getRadius());
+        for(City city : mapData.getCityList()) {
+            if(!city.getCityName().equals("上海"))
+                continue;
+            for (Area area : city.getAreaList()) {
+                mapUtils.addArea(area);
+                Log.e(TAG, "add area");
+                if (area.getAreaType() == Area.POLYGON)
+                    mapUtils.createGeoFence(area.getAreaId(), area.getBorderList());
+                else if (area.getAreaType() == Area.CIRCLE)
+                    mapUtils.createGeoFence(area.getAreaId(), area.getCircle().getLatng(), area.getCircle().getRadius());
+            }
         }
+        mapUtils.setAreaType(Graphics.MAP);
+    }
 
-        mapUtils.setAreaType(Graphics.ACHEIVE);
+    private void initAcheiveSetting(){
+        layout_achSetting.setAchievementList(mapData.getAchievementList());
+        layout_achSetting.setAchieveSettingListener(new AcheiveSettingLayout.onAchieveSettingListener() {
+            @Override
+            public void onAchieveSelected(String[] areaId, String achieveKind) {
+                if(achieveKind.equals("探索地图")){
+                    mapUtils.setAreaType(Graphics.MAP);
+                }else{
+                    mapUtils.setAreaType(Graphics.ACHEIVE);
+                }
+            }
+        });
     }
 
     public void setIsTrack(boolean isTrack){
@@ -234,7 +298,6 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
             headTransY = rl_head.getTranslationY();
             vpTransY = vp_discoveryList.getTranslationY();
             optTransY = (int) ll_discovery_opt.getTranslationY();
-            Log.e(TAG, "ty: " + vpTransY);
         }
         if(isTrack){
             AnimUtils.startObjectAnim(ll_search, "translationY", -searchHeight, 0, 300);
