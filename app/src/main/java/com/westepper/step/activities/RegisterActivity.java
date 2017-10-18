@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -22,10 +24,12 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mcxtzhang.indexlib.IndexBar.widget.IndexBar;
+import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.auth.AuthService;
 import com.netease.nimlib.sdk.auth.LoginInfo;
+import com.uilib.joooonho.SelectableRoundedImageView;
 import com.westepper.step.R;
 import com.westepper.step.adapters.CityAdapter;
 import com.westepper.step.base.SuperActivity;
@@ -45,6 +49,8 @@ import butterknife.BindView;
  */
 
 public class RegisterActivity extends SuperActivity implements View.OnClickListener {
+    @BindView(R.id.iv_header)
+    SelectableRoundedImageView iv_header;
     @BindView(R.id.edt_nickName)
     EditText edt_nickName;
     @BindView(R.id.tv_city)
@@ -52,7 +58,9 @@ public class RegisterActivity extends SuperActivity implements View.OnClickListe
     @BindView(R.id.rdg_gender)
     RadioGroup rdg_gender;
     @BindView(R.id.btn_signup)
-    Button btn_signup;
+    ImageButton btn_signup;
+    @BindView(R.id.ckb_protocol)
+    CheckBox ckb_protocol;
     @BindView(R.id.ll_regist)
     LinearLayout ll_regist;
     @BindView(R.id.layout_citylist)
@@ -80,6 +88,13 @@ public class RegisterActivity extends SuperActivity implements View.OnClickListe
     protected void initView() {
         tv_city.setOnClickListener(this);
         btn_close.setOnClickListener(this);
+
+        edt_nickName.setText(getIntent().getStringExtra("name"));
+        GlideImageLoader.getInstance().loadImage(this, getIntent().getStringExtra("iconurl"), R.mipmap.ic_default_head, iv_header, 0);
+        if(getIntent().getStringExtra("gender").equals("男")){
+            rdg_gender.check(R.id.rdb_male);
+        }else
+            rdg_gender.check(R.id.rdb_female);
         rdg_mainCity.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -100,6 +115,12 @@ public class RegisterActivity extends SuperActivity implements View.OnClickListe
             }
         });
         btn_signup.setOnClickListener(this);
+        ckb_protocol.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                btn_signup.setEnabled(isChecked);
+            }
+        });
         rcv_city.setLayoutManager(llMgr = new LinearLayoutManager(this));
     }
 

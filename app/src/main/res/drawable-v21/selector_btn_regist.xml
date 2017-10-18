@@ -2,4 +2,15 @@
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     android:color="@color/colorPrimaryLight">
     <item android:drawable="@drawable/shape_btn_regist" />
+    <item>
+        <selector>
+            <item android:state_enabled="true" android:drawable="@drawable/shape_btn_regist" />
+            <item android:state_enabled="false">
+                <shape >
+                    <corners android:radius="50dp"/>
+                    <solid android:color="@color/discovery_kind_unchecked" />
+                </shape>
+            </item>
+        </selector>
+    </item>
 </ripple>

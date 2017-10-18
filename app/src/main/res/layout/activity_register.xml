@@ -14,6 +14,7 @@
         android:orientation="vertical">
 
         <com.uilib.joooonho.SelectableRoundedImageView xmlns:round="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/iv_header"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginBottom="30dp"
@@ -95,18 +96,44 @@
                 android:button="@null" />
         </RadioGroup>
 
-        <Button
+        <ImageButton
             android:id="@+id/btn_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/selector_btn_regist"
-            android:paddingBottom="5dp"
+            android:paddingBottom="13dp"
             android:paddingLeft="60dp"
             android:paddingRight="60dp"
-            android:paddingTop="5dp"
-            android:text="Step up"
+            android:paddingTop="13dp"
+            android:src="@mipmap/ic_stepup"
+            android:scaleType="centerInside"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp">
+
+            <CheckBox
+                android:id="@+id/ckb_protocol"
+                style="@style/hint_text_style2"
+                android:textColor="@android:color/white"
+                android:text="已阅读并同意"
+                android:button="@null"
+                android:drawableLeft="@drawable/selector_ckb_protocol_bg"
+                android:drawablePadding="8dp"
+                android:checked="true"/>
+
+            <TextView
+                android:id="@+id/tv_protocol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/colorPrimary"
+                android:text="@string/protocol"/>
+        </LinearLayout>
     </LinearLayout>
 
     <include

@@ -6,8 +6,10 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
@@ -32,7 +34,7 @@ import okhttp3.Response;
 public abstract class BaseLogic<P> extends Callback<P> {
     private final String TAG = this.getClass().getSimpleName();
 //    public static final String serviceIp = "http://218.1.109.5";
-    private String webServiceIp = "";
+    private String webServiceIp = "http://10.0.3.169/api/";
     protected Context context;
 
     OkHttpManager httpMgr;
@@ -139,10 +141,10 @@ public abstract class BaseLogic<P> extends Callback<P> {
         }
         try {
             BaseResponse<P> logicResp = parse(respStr);
-            if (!logicResp.getCode().equals("")) {
-                throw new Exception(logicResp.getMessage());
+            if (!logicResp.getCode().equals("0")) {
+                throw new Exception(logicResp.getCode().concat(", ").concat(logicResp.getMessage()));
             } else if (logicResp.getData() == null) {
-                throw new JsonParseException(parseError);
+                throw new JsonParseException("-2".concat(parseError));
             } else {
                 result = logicResp.getData();
                 //save response to local for offline work
@@ -150,10 +152,10 @@ public abstract class BaseLogic<P> extends Callback<P> {
             }
         } catch (JsonParseException e) {
             e.printStackTrace();
-            throw new JsonParseException(parseError);
+            throw new JsonParseException("-2".concat(parseError));
         } catch (SocketException e) {
             e.printStackTrace();
-            throw new ConnectException(networkError);
+            throw new ConnectException("-3".concat(networkError));
         }
         return result;
 
@@ -164,27 +166,36 @@ public abstract class BaseLogic<P> extends Callback<P> {
         if (networkDlg != null && networkDlg.isShowing())
             networkDlg.dismiss();
         BaseResponse<P> localData = null;
-        if(e.getMessage().contains(networkError) || e.getMessage().contains(networkErrorNeedLogin)) {
-            try {
+        String[] err = e.getMessage().split(",");
+        String code = "-9", msg;
+        if(err.length == 2){
+            code = err[0];
+            msg = err[1];
+        }else{
+            msg = err[0];
+        }
+        if(msg.contains(networkError) || msg.contains(networkErrorNeedLogin)) {
+//            try {
                 //get local data for offline works
 //                localData = parse((String) SharePreferenceUtil.getInstance().getData(url, "{\"code\":\"-1\", \"message\":\"暂无最新数据\"}"));
-//                if(context != null){
+                if(context != null){
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
 //                    ToastUtils.netWorkErrToast(context, e.getMessage());
-//                }
-            }catch (JsonSyntaxException e1){
-//                ToastUtils.ErrorToast(context, e.getMessage());
-            }finally {
-                if(localData != null) {
-                    onFailed(e.getMessage(), localData.getData());
-                    if (callback != null)
-                        callback.onFailed(e.getMessage(), localData.getData());
                 }
+//            }catch (JsonSyntaxException e1){
+//                ToastUtils.ErrorToast(context, e.getMessage());
+//            }finally {
+                if(localData != null) {
+                    onFailed(code, msg, localData.getData());
+                    if (callback != null)
+                        callback.onFailed(code, msg, localData.getData());
+//                }
             }
         }else if(context != null){
 //            ToastUtils.ErrorToast(context, e.getMessage());
-            onFailed(e.getMessage(), null);
+            onFailed(code, msg, null);
             if (callback != null)
-                callback.onFailed(e.getMessage(), null);
+                callback.onFailed(code, msg, null);
         }
     }
 
@@ -202,23 +213,23 @@ public abstract class BaseLogic<P> extends Callback<P> {
         if (networkDlg != null && networkDlg.isShowing())
             networkDlg.dismiss();
         BaseResponse<P> localData = parse("{\"code\":\"-1\", \"message\":\"暂无可显示数据\"}");
-        onFailed("user canceled!", localData.getData());
+        onFailed("-1", "user canceled!", localData.getData());
         if (callback != null)
-            callback.onFailed("user canceled!", localData.getData());
+            callback.onFailed("-1", "user canceled!", localData.getData());
     }
 
     protected BaseResponse<P> parse(String json) throws JsonSyntaxException {
-        if (!json.contains("\"code\":") && !json.contains("\"message\":"))
-            json = "{\"code\":\"\",\"message\":\"\",\"data\":" + json + "}";
-        else if (json.equals("{\"code\":\"\",\"message\":\"\"}"))
-            json = json.replace("}", ",\"data\":\"\"}");
-        else if (json.contains("{\"data\":[") || json.contains("\"message\":\"\",\"data\":[")) {
-            json = json.replace("\"data\":[", "\"data\":{\"data\":[");
-            if (json.contains("],\"code\""))
-                json = json.replace("],\"code\":", "]},\"code\":");
-            else if (json.endsWith("]}"))
-                json = json.concat("}");
-        }
+//        if (!json.contains("\"code\":") && !json.contains("\"message\":"))
+//            json = "{\"code\":\"\",\"message\":\"\",\"data\":" + json + "}";
+//        else if (json.equals("{\"code\":\"\",\"message\":\"\"}"))
+//            json = json.replace("}", ",\"data\":\"\"}");
+//        else if (json.contains("{\"data\":[") || json.contains("\"message\":\"\",\"data\":[")) {
+//            json = json.replace("\"data\":[", "\"data\":{\"data\":[");
+//            if (json.contains("],\"code\""))
+//                json = json.replace("],\"code\":", "]},\"code\":");
+//            else if (json.endsWith("]}"))
+//                json = json.concat("}");
+//        }
 //        if (json.contains("null"))
 //            json = json.replace("null", "\"\"");
         return OkHttpManager.getInstance().getGson().fromJson(json, responseType);
@@ -226,7 +237,7 @@ public abstract class BaseLogic<P> extends Callback<P> {
 
     public abstract void onSuccess(P response);
 
-    public abstract void onFailed(String msg, P localData);
+    public abstract void onFailed(String code, String msg, P localData);
 
     @SuppressLint("NewApi")
     private void showProgressDialog() {
@@ -256,6 +267,6 @@ public abstract class BaseLogic<P> extends Callback<P> {
     public interface LogicCallback<P> {
         void onSuccess(P response);
 
-        void onFailed(String msg, P localData);
+        void onFailed(String code, String msg, P localData);
     }
 }

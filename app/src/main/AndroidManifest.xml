@@ -49,6 +49,10 @@
         android:supportsRtl="true"
         android:theme="@style/StepTheme">
 
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="59e70abdb27b0a6fb30011c0" >
+        </meta-data>
         <meta-data android:name="com.amap.api.v2.apikey" android:value="d63ac3eeeda75d8aede2469142f46d5f">
             //开发者申请的key
         </meta-data>
@@ -129,18 +133,18 @@
 
         <!-- ==================step================== -->
         <activity android:name=".activities.WelcomeActivity" >
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity android:name=".activities.RegisterActivity"/>
 
         <activity android:name=".activities.MainActivity"
             android:windowSoftInputMode="stateHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         
         <activity android:name=".activities.PaihangActivity" />

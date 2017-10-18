@@ -28,16 +28,16 @@ public class ActivityManager {
         currentActivity = act1;
     }
 
-    public static void startActivity(Activity act, Class<? extends SuperActivity> act1, Map<String, Object> args){
+    public static void startActivity(Activity act, Class<? extends SuperActivity> act1, Map args){
         Intent intent = new Intent(act, act1);
         if(args != null){
-            for(String key : args.keySet()){
+            for(Object key : args.keySet()){
                 if(args.get(key) instanceof Serializable){
-                    intent.putExtra(key, (Serializable)args.get(key));
+                    intent.putExtra((String) key, (Serializable)args.get(key));
                 }else if(args.get(key) instanceof Parcelable){
-                    intent.putExtra(key, (Parcelable) args.get(key));
+                    intent.putExtra((String) key, (Parcelable) args.get(key));
                 }else{
-                    intent.putExtra(key, String.valueOf(args.get(key)));
+                    intent.putExtra((String) key, String.valueOf(args.get(key)));
                 }
             }
         }

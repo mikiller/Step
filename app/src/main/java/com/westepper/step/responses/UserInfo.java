@@ -10,20 +10,11 @@ import java.io.Serializable;
 
 public class UserInfo extends SignModel {
 
-    private String token;
     private String cover;
     private String sign;
     private int needFriendVerifi;
     private int moodScope;
     private int outgoScope;
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
 
     public String getCover() {
         return cover;

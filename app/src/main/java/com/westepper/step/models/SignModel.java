@@ -20,6 +20,10 @@ public class SignModel extends BaseModel {
     public SignModel() {
     }
 
+    public SignModel(String uuid) {
+        this.uuid = uuid;
+    }
+
     public SignModel(String nickName, int gender, String city) {
         this.nickName = nickName;
         this.gender = gender;

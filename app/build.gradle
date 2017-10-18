@@ -28,6 +28,9 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
+    lintOptions{
+        abortOnError false
+    }
 }
 
 repositories {
@@ -45,10 +48,9 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.jakewharton:butterknife:8.7.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
-    compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
+//    compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
     compile project(':mk_uilib')
     compile project(':indexlib')
-    compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
     compile 'com.android.support:multidex:'
     // 基础功能 (必需)
         compile 'com.netease.nimlib:basesdk:4.2.0'
