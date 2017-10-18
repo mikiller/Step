@@ -1,5 +1,6 @@
 package com.westepper.step.customViews;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 
+import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
 import com.westepper.step.responses.Achieve;
 import com.westepper.step.utils.AnimUtils;
@@ -22,7 +24,7 @@ import java.util.List;
 
 public class AcheiveSettingLayout extends RelativeLayout {
     private LinearLayout ll_ach_setting;
-    private RelativeLayout rl_ach_map;
+//    private RelativeLayout rl_ach_map;
     private RadioButton btn_ach_map;
 
     private List<Achieve> achievementList;
@@ -48,23 +50,25 @@ public class AcheiveSettingLayout extends RelativeLayout {
     private void initView(Context context, AttributeSet attrs, int defStyleAttr){
         LayoutInflater.from(context).inflate(R.layout.layout_acheive_setting, this);
         ll_ach_setting = (LinearLayout) findViewById(R.id.ll_ach_setting);
-        rl_ach_map = (RelativeLayout) findViewById(R.id.rl_ach_map);
+//        rl_ach_map = (RelativeLayout) findViewById(R.id.rl_ach_map);
         btn_ach_map = (RadioButton) findViewById(R.id.btn_ach_map);
         lastItem = btn_ach_map;
 
         btn_ach_map.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                onItemChecked(btn_ach_map, null, "探索地图");
-                if(lastPkg != null && isChecked)
-                    lastPkg.hideAchieveItems();
+                if(isChecked) {
+                    onItemChecked(btn_ach_map, null, "探索地图");
+                    if (lastPkg != null)
+                        lastPkg.hideAchieveItems();
+                }
             }
         });
 
         getRootView().setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                setVisibility(GONE);
+                hide();
             }
         });
     }
@@ -105,8 +109,24 @@ public class AcheiveSettingLayout extends RelativeLayout {
             lastItem.setChecked(false);
             lastItem = item;
         }
+        hide();
         if(achieveSettingListener != null)
             achieveSettingListener.onAchieveSelected(areaId, achieveKind);
+    }
+
+    public void show(){
+        this.setVisibility(VISIBLE);
+        AnimUtils.startObjectAnim(ll_ach_setting, "translationX", DisplayUtil.getScreenWidth(getContext()), 0, 300);
+    }
+
+    public void hide(){
+        AnimUtils.startObjectAnim(ll_ach_setting, "translationX", 0, DisplayUtil.getScreenWidth(getContext()), 300, new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                if(((float)animation.getAnimatedValue()) == DisplayUtil.getScreenWidth(getContext()))
+                    setVisibility(GONE);
+            }
+        });
     }
 
     public void setAchieveSettingListener(onAchieveSettingListener listener){

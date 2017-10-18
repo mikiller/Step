@@ -2,6 +2,7 @@ package com.westepper.step.utils;
 
 import android.animation.FloatEvaluator;
 import android.animation.ObjectAnimator;
+import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -28,6 +29,15 @@ public class AnimUtils {
         if(listener != null)
             oa.addUpdateListener(listener);
         oa.start();
+    }
+
+    public static void startValueAnim(float startValue, float endValue, int duration, ValueAnimator.AnimatorUpdateListener listener){
+        ValueAnimator va = ValueAnimator.ofFloat(startValue, endValue);
+        va.setDuration(duration);
+        va.setInterpolator(new DecelerateInterpolator());
+        if(listener != null)
+            va.addUpdateListener(listener);
+        va.start();
     }
 
     public static void startAlphaAnim(final View view, final float startV, final float endV, int duration){

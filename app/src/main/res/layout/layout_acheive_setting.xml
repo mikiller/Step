@@ -13,7 +13,6 @@
         android:paddingTop="5dp">
 
         <RelativeLayout
-            android:id="@+id/rl_ach_map"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15dp">

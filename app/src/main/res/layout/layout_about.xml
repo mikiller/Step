@@ -13,11 +13,16 @@
         android:background="@android:color/white"
         android:gravity="center_horizontal">
 
-        <ImageView
+        <com.uilib.joooonho.SelectableRoundedImageView
+            xmlns:siv="http://schemas.android.com/apk/res-auto"
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:src="@mipmap/ic_launcher"
-            android:layout_marginTop="24dp"/>
+            android:layout_marginTop="24dp"
+            siv:sriv_left_bottom_corner_radius="10dp"
+            siv:sriv_left_top_corner_radius="10dp"
+            siv:sriv_right_bottom_corner_radius="10dp"
+            siv:sriv_right_top_corner_radius="10dp"/>
 
         <TextView
             android:id="@+id/tv_version"
@@ -26,6 +31,7 @@
             android:text="Step"
             android:textColor="@color/hintTxt"
             android:textSize="12sp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="35dp"/>
 
         <View

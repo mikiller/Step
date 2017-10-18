@@ -36,6 +36,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +56,7 @@ public class MapUtils {
     private Inner_3dMap_location mapLocation;
 
     Map<String, Area> areas = new HashMap<>();
+    List<String> showAreaIds = new ArrayList();
     boolean needArea = true;
     float currentZoom = 15;
     private BitmapDescriptor markerImg;
@@ -185,8 +188,15 @@ public class MapUtils {
     }
 
     private void showArea(){
-        for(Area area : areas.values()){
-            area.show();
+        if(showAreaIds.size() == 0) {
+            for (Area area : areas.values()) {
+                area.show();
+            }
+        }else{
+            hideArea();
+            for(String id : showAreaIds){
+                areas.get(id).show();
+            }
         }
     }
 
@@ -272,6 +282,15 @@ public class MapUtils {
         for(Area area : areas.values()){
             area.setGraphicsType(type);
         }
+    }
+
+    public void setShowAreaIds(String[] ids){
+        if(ids == null || ids.length == 0)
+            showAreaIds = new ArrayList<>();
+        else{
+            showAreaIds = Arrays.asList(ids);
+        }
+        showArea();
     }
 
     public void addMarker(LatLng lbs) {

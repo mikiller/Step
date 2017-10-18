@@ -35,7 +35,8 @@
             android:id="@+id/iv_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/next" />
+            android:src="@mipmap/next"
+            android:layout_marginRight="4dp"/>
     </LinearLayout>
 
     <LinearLayout

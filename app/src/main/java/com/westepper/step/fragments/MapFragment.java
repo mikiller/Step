@@ -276,9 +276,10 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
             public void onAchieveSelected(String[] areaId, String achieveKind) {
                 if(achieveKind.equals("探索地图")){
                     mapUtils.setAreaType(Graphics.MAP);
-                }else{
+                }else {
                     mapUtils.setAreaType(Graphics.ACHEIVE);
                 }
+                mapUtils.setShowAreaIds(areaId);
             }
         });
     }
@@ -401,7 +402,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_acheivement:
-                layout_achSetting.setVisibility(View.VISIBLE);
+//                layout_achSetting.setVisibility(View.VISIBLE);
+                layout_achSetting.show();
                 break;
             case R.id.btn_new:
                 showNewDisDlg();

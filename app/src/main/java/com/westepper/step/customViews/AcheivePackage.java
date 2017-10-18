@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -38,6 +39,7 @@ public class AcheivePackage extends LinearLayout {
 
     private Achieve achieve;
     private AchieveClickListener achieveClickListener;
+    private int itemsHeight = 0;
     public AcheivePackage(Context context) {
         this(context, null, 0);
     }
@@ -86,13 +88,35 @@ public class AcheivePackage extends LinearLayout {
     }
 
     public void showAchieveItems(){
+        if(ll_ach_items.getVisibility() == VISIBLE)
+            return;
         ll_ach_items.setVisibility(VISIBLE);
-        AnimUtils.startAlphaAnim(ll_ach_items, 0f, 1f, 300);
+        final LinearLayout.LayoutParams lp = (LayoutParams) getLayoutParams();
+        AnimUtils.startValueAnim(ll_ach_package.getMeasuredHeight(), ll_ach_package.getMeasuredHeight() + itemsHeight, 300, new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float) animation.getAnimatedValue();
+                lp.height = (int)value;
+                setLayoutParams(lp);
+            }
+        });
         AnimUtils.startRotateAnim(iv_next, 0, -90, 300);
     }
 
     public void hideAchieveItems(){
-        AnimUtils.startAlphaAnim(ll_ach_items, 1f, 0f, 300);
+        if(ll_ach_items.getVisibility() == GONE)
+            return;
+        final LinearLayout.LayoutParams lp = (LayoutParams) getLayoutParams();
+        AnimUtils.startValueAnim(ll_ach_package.getMeasuredHeight() + itemsHeight, ll_ach_package.getMeasuredHeight(), 300, new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float) animation.getAnimatedValue();
+                lp.height = (int)value;
+                setLayoutParams(lp);
+                if(value == ll_ach_package.getMeasuredHeight())
+                    ll_ach_items.setVisibility(GONE);
+            }
+        });
         AnimUtils.startRotateAnim(iv_next, -90, 0, 300);
     }
 
@@ -132,6 +156,16 @@ public class AcheivePackage extends LinearLayout {
             }
         });
         ll_ach_items.addView(text);
+        ll_ach_items.measure(0,0);
+        ll_ach_items.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                itemsHeight = ll_ach_items.getMeasuredHeight();
+                ll_ach_items.getViewTreeObserver().removeOnPreDrawListener(this);
+                return true;
+            }
+        });
+
     }
 
     public AchieveClickListener getAchieveClickListener() {
