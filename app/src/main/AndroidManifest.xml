@@ -20,6 +20,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!--用于申请调用A-GPS模块-->
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+
     <!--用于申请获取蓝牙信息进行室内定位-->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -69,7 +70,14 @@
         </provider>
 
         <!-- ====================高德=================== -->
-        <service android:name="com.amap.api.location.APSService"/>
+        <service android:name="com.amap.api.location.APSService" />
+        <!--<service android:name=".widgets.GeoService" />-->
+        <receiver android:name=".widgets.GeoReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="com.map.baidumapdemo.broadcast" />
+            </intent-filter>
+        </receiver>
 
         <!-- ====================微信=================== -->
         <activity android:name=".wxapi.WXEntryActivity"
@@ -133,18 +141,18 @@
 
         <!-- ==================step================== -->
         <activity android:name=".activities.WelcomeActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
         <activity android:name=".activities.RegisterActivity"/>
 
         <activity android:name=".activities.MainActivity"
             android:windowSoftInputMode="stateHidden">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         
         <activity android:name=".activities.PaihangActivity" />

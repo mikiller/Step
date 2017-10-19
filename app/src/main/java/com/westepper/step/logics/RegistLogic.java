@@ -19,23 +19,25 @@ import com.westepper.step.models.SignModel;
 import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.MXPreferenceUtils;
 
+import java.net.URLEncoder;
+
 /**
- * Created by Mikiller on 2017/10/18.
+ * Created by Mikiller on 2017/10/19.
  */
 
-public class LoginLogic extends BaseLogic<SignModel> {
-    public LoginLogic(Context context, BaseModel model) {
+public class RegistLogic extends BaseLogic<SignModel> {
+    public RegistLogic(Context context, BaseModel model) {
         super(context, model);
     }
 
     @Override
     protected void setResponseType() {
-        responseType = new TypeToken<BaseResponse<BaseModel>>(){}.getType();
+        responseType = new TypeToken<BaseResponse<SignModel>>(){}.getType();
     }
 
     @Override
     protected void setUrl() {
-        url = "user/login";
+        url = "user/regist";
     }
 
     @Override
@@ -55,13 +57,14 @@ public class LoginLogic extends BaseLogic<SignModel> {
 
     @Override
     public void onFailed(String code, String msg, SignModel localData) {
+
     }
 
     private void loginIM(SignModel response){
         MXPreferenceUtils.getInstance(context, MXPreferenceUtils.REPORTS).setString("account", response.getUserId());
         MXPreferenceUtils.getInstance().setString("token", response.getToken());
         LoginInfo loginInfo = new LoginInfo(response.getUserId(), response.getToken() /*"or4h41h0quiyc0il8-pwawbjyq4g", "20a699b323fc2b56e5c0f3b260cf0895"*/);
-        NIMClient.getService(AuthService.class).login(loginInfo).setCallback(new RequestCallback<LoginInfo>() {
+        NIMClient.getService(AuthService.class).login(loginInfo).setCallback( new RequestCallback<LoginInfo>() {
             @Override
             public void onSuccess(LoginInfo param) {
                 Log.e(TAG, param.getAccount());

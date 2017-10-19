@@ -34,12 +34,12 @@ public class Graphics {
 
     public Graphics(AMap aMap, boolean reached, List<LatLng>borderList){
         polygon = aMap.addPolygon(new PolygonOptions().addAll(borderList));
-        setGraphicsReached(reached);
+        //setGraphicsReached(reached);
     }
 
     public Graphics(AMap aMap, boolean reached, LatLng latLng, int radius){
         circle = aMap.addCircle(new CircleOptions().center(latLng).radius(radius));
-        setGraphicsReached(reached);
+        //setGraphicsReached(reached);
     }
 
     public void setGraphicsReached(boolean reached){

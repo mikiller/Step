@@ -1,15 +1,11 @@
 package com.westepper.step.activities;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -26,7 +22,7 @@ import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.MyMenuItem;
 import com.westepper.step.customViews.TitleBar;
-import com.westepper.step.listeners.CommitGlobalLayoutListener;
+import com.westepper.step.widgets.CommitGlobalLayoutListener;
 import com.westepper.step.responses.UserInfo;
 import com.westepper.step.utils.ActivityManager;
 

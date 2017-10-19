@@ -90,7 +90,7 @@ public class SearchPoiActivity extends SuperActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 tv_search_hint.setVisibility(TextUtils.isEmpty(s.toString()) ? View.VISIBLE : View.GONE);
-                mapUtils.searchPoi(s.toString(), poiItem.getCityName(), searchListener);
+                mapUtils.searchPoi(SearchPoiActivity.this, s.toString(), poiItem.getCityName(), searchListener);
             }
 
             @Override
@@ -131,6 +131,6 @@ public class SearchPoiActivity extends SuperActivity {
 
     @Override
     protected void initData() {
-        mapUtils.searchPoi("", poiItem == null ? "上海市" : poiItem.getCityName(), searchListener);
+        mapUtils.searchPoi(this, "", poiItem == null ? "上海市" : poiItem.getCityName(), searchListener);
     }
 }

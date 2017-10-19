@@ -9,6 +9,7 @@
     <color name="bg_mask">#cc323c46</color>
     <color name="colorHint">#f0f0f0</color>
     <color name="mainTabTxt">#647882</color>
+    <color name="splash_label">#567188</color>
 
     <color name="bolder_stoke">#D2D2D2</color>
     <color name="bolder_sold">#6600A8FF</color>

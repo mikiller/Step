@@ -32,9 +32,9 @@ import okhttp3.Response;
  * Created by Mikiller on 2016/7/21.
  */
 public abstract class BaseLogic<P> extends Callback<P> {
-    private final String TAG = this.getClass().getSimpleName();
+    protected final String TAG = this.getClass().getSimpleName();
 //    public static final String serviceIp = "http://218.1.109.5";
-    private String webServiceIp = "http://10.0.3.169/api/";
+    private String webServiceIp = "http://180.166.160.22/api/";
     protected Context context;
 
     OkHttpManager httpMgr;

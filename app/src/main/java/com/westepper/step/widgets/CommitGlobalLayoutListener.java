@@ -1,8 +1,6 @@
-package com.westepper.step.listeners;
+package com.westepper.step.widgets;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.text.TextUtils;
 import android.view.View;
@@ -10,7 +8,6 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.uilib.utils.DisplayUtil;
 

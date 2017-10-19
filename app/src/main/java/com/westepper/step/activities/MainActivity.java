@@ -59,7 +59,6 @@ public class MainActivity extends SuperActivity {
 
     @Override
     protected void initData() {
-
     }
 
     @Override

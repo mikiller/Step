@@ -29,6 +29,7 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.autonavi.amap.mapcore.Inner_3dMap_location;
 import com.westepper.step.R;
+import com.westepper.step.fragments.MapFragment;
 import com.westepper.step.responses.Area;
 
 import java.io.File;
@@ -48,7 +49,7 @@ import java.util.Map;
 
 public class MapUtils {
     private static final String TAG = MapUtils.class.getSimpleName();
-    private Context mContext;
+//    private Context mContext;
     private AMap aMap;
     private MyLocationStyle locationStyle;
     private AMapLocationClient locationClient;
@@ -65,6 +66,7 @@ public class MapUtils {
 
     private MapUtils() {
         markerImg = BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker);
+        mapLocation = new Inner_3dMap_location("");
 //        pos_selected = BitmapDescriptorFactory.fromResource(R.mipmap.icon_pos_selected);
 //        isMatched = new HashMap<>();
     }
@@ -73,21 +75,23 @@ public class MapUtils {
         private static MapUtils instance = new MapUtils();
     }
 
-    public static MapUtils getInstance(Context context, AMap aMap) {
-        if (MapFactory.instance == null)
-            MapFactory.instance = new MapUtils();
-
-        if (MapFactory.instance.aMap == null)
-            MapFactory.instance.aMap = aMap;
-        if (MapFactory.instance.mContext == null)
-            MapFactory.instance.mContext = context;
-        if(MapFactory.instance.mapLocation == null)
-            MapFactory.instance.mapLocation = new Inner_3dMap_location("");
-        if(MapFactory.instance.geoFenceClient == null)
-            MapFactory.instance.geoFenceClient = new GeoFenceClient(context);
-
-        return MapFactory.instance;
-    }
+//    public static MapUtils getInstance(Context context, AMap aMap) {
+//        if (MapFactory.instance == null)
+//            MapFactory.instance = new MapUtils();
+//
+//        //if (MapFactory.instance.aMap == null)
+//            MapFactory.instance.aMap = aMap;
+////        if (MapFactory.instance.mContext == null)
+////            MapFactory.instance.mContext = context;
+////        if(MapFactory.instance.mapLocation == null)
+////            MapFactory.instance.mapLocation = new Inner_3dMap_location("");
+//        //if(MapFactory.instance.geoFenceClient == null) {
+//            MapFactory.instance.geoFenceClient = new GeoFenceClient(context);
+//            MapFactory.instance.geoFenceClient.createPendingIntent("com.map.baidumapdemo.broadcast");
+//        //}
+//
+//        return MapFactory.instance;
+//    }
 
     public static MapUtils getInstance() {
         if (MapFactory.instance == null)
@@ -107,8 +111,15 @@ public class MapUtils {
         aMap.animateCamera(new CameraUpdateFactory().newCameraPosition(new CameraPosition(latLng, currentZoom, 0, 0)));
     }
 
-    public void initLocationStyle(long interval) {
-        setCustomStyle();
+    public void init(Context context, AMap aMap){
+        this.aMap = aMap;
+        initLocationStyle(context, 2000);
+        initLocationClient(context);
+        initGeoClient(context);
+    }
+
+    public void initLocationStyle(Context context, long interval) {
+        setCustomStyle(context);
         createLocalStyle(interval);
         aMap.getUiSettings().setZoomControlsEnabled(false);
         aMap.moveCamera(CameraUpdateFactory.zoomTo(currentZoom));
@@ -132,12 +143,12 @@ public class MapUtils {
         });
     }
 
-    private void setCustomStyle() {
+    private void setCustomStyle(Context context) {
         InputStream fis = null;
         FileOutputStream fos = null;
-        String path = mContext.getFilesDir().getAbsolutePath() + "/" + "mapStyle.data";
+        String path = context.getFilesDir().getAbsolutePath() + "/" + "mapStyle.data";
         try {
-            fis = mContext.getAssets().open("mystyle_sdk_1503901911_0100.data");
+            fis = context.getAssets().open("mystyle_sdk_1503901911_0100.data");
             byte[] bytes = new byte[fis.available()];
             fis.read(bytes);
             File file = new File(path);
@@ -264,10 +275,22 @@ public class MapUtils {
         aMap.clear();
     }
 
-    public void addArea(Area area){
-        area.createGraphics(aMap);
+    public int getAreasSize(){
+        return areas.size();
+    }
+
+    public void addArea(Area area, int graphicType){
+
         if(areas.get(area.getAreaId()) == null){
+            Log.e(TAG, "add area: " + area.getAreaId());
+            area.createGraphics(aMap, graphicType);
+            if (area.getAreaType() == Area.POLYGON)
+                createGeoFence(area.getAreaId(), area.getBorderList());
+            else if (area.getAreaType() == Area.CIRCLE)
+                createGeoFence(area.getAreaId(), area.getCircle().getLatng(), area.getCircle().getRadius());
             areas.put(area.getAreaId(), area);
+        }else{
+            areas.get(area.getAreaId()).createGraphics(aMap, graphicType);
         }
     }
 
@@ -311,24 +334,25 @@ public class MapUtils {
         }
     }
 
-    public void initLocationClient() {
-        if(locationClient == null)
-            locationClient = new AMapLocationClient(mContext);
-        locationClient.setLocationOption(createClientOption());
-        locationClient.setLocationListener(new AMapLocationListener() {
-            @Override
-            public void onLocationChanged(AMapLocation aMapLocation) {
-                Log.e(TAG, "call location");
-                if (aMapLocation == null)
-                    return;
-                if (aMapLocation.getErrorCode() == 0) {
-                    Log.e(TAG, "map location: " + aMapLocation.getLatitude() + ", " + aMapLocation.getLongitude());
-                    mapLocation.setLatitude(aMapLocation.getLatitude());
-                    mapLocation.setLongitude(aMapLocation.getLongitude());
-                    mapLocation.setAddress(aMapLocation.getAddress());
+    public void initLocationClient(Context context) {
+        if(locationClient == null) {
+            locationClient = new AMapLocationClient(context);
+            locationClient.setLocationOption(createClientOption());
+            locationClient.setLocationListener(new AMapLocationListener() {
+                @Override
+                public void onLocationChanged(AMapLocation aMapLocation) {
+                    Log.e(TAG, "call location " + this.toString() + ", " + locationClient.toString());
+                    if (aMapLocation == null)
+                        return;
+                    if (aMapLocation.getErrorCode() == 0) {
+                        Log.e(TAG, "map location: " + aMapLocation.getLatitude() + ", " + aMapLocation.getLongitude());
+                        mapLocation.setLatitude(aMapLocation.getLatitude());
+                        mapLocation.setLongitude(aMapLocation.getLongitude());
+                        mapLocation.setAddress(aMapLocation.getAddress());
+                    }
                 }
-            }
-        });
+            });
+        }
         startLoaction();
     }
 
@@ -345,6 +369,13 @@ public class MapUtils {
         return clientOption;
     }
 
+    public void initGeoClient(Context context){
+        if(geoFenceClient == null) {
+            geoFenceClient = new GeoFenceClient(context);
+            geoFenceClient.createPendingIntent("com.map.baidumapdemo.broadcast");
+        }
+    }
+
     public void createGeoFence(String id, List<LatLng> pos){
         List<DPoint> points = new ArrayList<>();
         for(LatLng p : pos){
@@ -358,27 +389,27 @@ public class MapUtils {
         geoFenceClient.addGeoFence(new DPoint(center.latitude, center.longitude), radius, id);
     }
 
-    public void registGeoListener(BroadcastReceiver receiver){
-        String geoAction = "com.map.baidumapdemo.broadcast";
-        geoFenceClient.createPendingIntent(geoAction);
-
-        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        intentFilter.addAction(geoAction);
-        mContext.registerReceiver(receiver, intentFilter);
-    }
-
-    public void unregistGeoListener(BroadcastReceiver receiver){
-        mContext.unregisterReceiver(receiver);
-    }
+//    public void registGeoListener(BroadcastReceiver receiver){
+//        String geoAction = "com.map.baidumapdemo.broadcast";
+//        geoFenceClient.createPendingIntent(geoAction);
+//
+////        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+////        intentFilter.addAction(geoAction);
+////        mContext.registerReceiver(receiver, intentFilter);
+//    }
+//
+//    public void unregistGeoListener(BroadcastReceiver receiver){
+//        mContext.unregisterReceiver(receiver);
+//    }
 
     public float getDistance(LatLng start, LatLng end) {
         return AMapUtils.calculateLineDistance(start, end);
     }
 
-    public void searchPoi(String keyWord, String city, PoiSearch.OnPoiSearchListener listener){
+    public void searchPoi(Context context, String keyWord, String city, PoiSearch.OnPoiSearchListener listener){
         PoiSearch.Query query = new PoiSearch.Query(keyWord, "", city);
         query.setPageSize(20);
-        PoiSearch poiSearch = new PoiSearch(mContext, query);
+        PoiSearch poiSearch = new PoiSearch(context, query);
         poiSearch.setOnPoiSearchListener(listener);
         poiSearch.setBound(new PoiSearch.SearchBound(new LatLonPoint(mapLocation.getLatitude(), mapLocation.getLongitude()), 3000));
         poiSearch.searchPOIAsyn();
@@ -395,16 +426,16 @@ public class MapUtils {
             aMap.clear();
             aMap = null;
         }
-        if(geoFenceClient != null){
-            geoFenceClient.removeGeoFence();
-            geoFenceClient = null;
-        }
+//        if(geoFenceClient != null){
+//            geoFenceClient.removeGeoFence();
+//            geoFenceClient = null;
+//        }
         removeMarker();
         if(areas != null){
             areas.clear();
             areas = null;
         }
-        mContext = null;
+        //mContext = null;
         MapFactory.instance = null;
     }
 

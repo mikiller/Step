@@ -86,12 +86,13 @@ public class Area implements Serializable{
         graphics.setReached(reached);
     }
 
-    public void createGraphics(AMap aMap){
+    public void createGraphics(AMap aMap, int graphicType){
         if(areaType == Area.POLYGON){
             graphics = new Graphics(aMap, reached, borderList);
         }else if(areaType == Area.CIRCLE){
             graphics = new Graphics(aMap, reached, circle.getLatng(), circle.getRadius());
         }
+        setGraphicsType(graphicType);
     }
 
     public void hide(){

@@ -43,6 +43,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 
@@ -50,7 +52,7 @@ import butterknife.BindView;
  * Created by Mikiller on 2017/9/1.
  */
 
-public class MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnCheckedChangeListener{
+public class MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
     @BindView(R.id.map)
     TextureMapView mapView;
     @BindView(R.id.ll_search)
@@ -81,7 +83,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
     DiscoveryAdapter adapter;
     MapData mapData;
     MapUtils mapUtils;
-    BroadcastReceiver geoReceiver;
+    //    BroadcastReceiver geoReceiver;
     String path;
     private boolean isTrack = true;
     float searchHeight, headTransY, vpTransY, optTransY;
@@ -140,6 +142,12 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
         area5.setCircle(ca);
         city1.setArea(area5);
 
+//        Area area6 = new Area("6");
+//        area6.setAreaType(Area.CIRCLE);
+//        Area.CirlclArea ca1 = new Area.CirlclArea(new LatLng(31.230779, 121.472071), 800);
+//        area6.setCircle(ca1);
+//        city1.setArea(area6);
+
         mapData.setCity(city1);
 
         Achieve achieve = new Achieve();
@@ -197,21 +205,30 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
     protected void initView() {
         path = getActivity().getFilesDir() + File.separator + "area.data";
         mapView.onCreate(saveBundle);
+
+//        geoReceiver = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                if(!isTrack)
+//                    return;
+//                Bundle bundle = intent.getExtras();
+//                int status = bundle.getInt(GeoFence.BUNDLE_KEY_FENCESTATUS);
+//                String id = bundle.getString(GeoFence.BUNDLE_KEY_CUSTOMID);
+//                Log.e(TAG, "id: " + id + ", status: " + status);
+//                if (status == 1) {
+//                    mapUtils.setAreaChecked(id);
+//                }
+//            }
+//        };
+
+        mapData = FileUtils.getDataFromLocal(path, MapData.class);
+        if (mapData == null) {
+            createTestData();
+            mapData = FileUtils.getDataFromLocal(path, MapData.class);
+        }
         initMapUtil();
         initAcheiveSetting();
-        geoReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if(!isTrack)
-                    return;
-                Bundle bundle = intent.getExtras();
-                int status = bundle.getInt(GeoFence.BUNDLE_KEY_FENCESTATUS);
-                String id = bundle.getString(GeoFence.BUNDLE_KEY_CUSTOMID);
-                if (status == 1) {
-                    mapUtils.setAreaChecked(id);
-                }
-            }
-        };
+
 
         btn_acheivement.setOnClickListener(this);
         rdg_scope.setOnCheckedChangeListener(this);
@@ -244,39 +261,27 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
         getDiscoveryList(1, 1, gender);
     }
 
-    private void initMapUtil(){
-        mapUtils = MapUtils.getInstance(getActivity(), mapView.getMap());
-        mapUtils.initLocationStyle(20000);
-        mapUtils.initLocationClient();
-
-        mapData = FileUtils.getDataFromLocal(path, MapData.class);
-        if(mapData == null) {
-            createTestData();
-            mapData = FileUtils.getDataFromLocal(path, MapData.class);
-        }
-        for(City city : mapData.getCityList()) {
-            if(!city.getCityName().equals("上海"))
+    private void initMapUtil() {
+        mapUtils = MapUtils.getInstance();
+        mapUtils.init(getActivity().getApplicationContext(), mapView.getMap());
+        for (City city : mapData.getCityList()) {
+            if (!city.getCityName().equals("上海"))
                 continue;
             for (Area area : city.getAreaList()) {
-                mapUtils.addArea(area);
-                Log.e(TAG, "add area");
-                if (area.getAreaType() == Area.POLYGON)
-                    mapUtils.createGeoFence(area.getAreaId(), area.getBorderList());
-                else if (area.getAreaType() == Area.CIRCLE)
-                    mapUtils.createGeoFence(area.getAreaId(), area.getCircle().getLatng(), area.getCircle().getRadius());
+                mapUtils.addArea(area, Graphics.MAP);
             }
         }
-        mapUtils.setAreaType(Graphics.MAP);
     }
 
-    private void initAcheiveSetting(){
+
+    private void initAcheiveSetting() {
         layout_achSetting.setAchievementList(mapData.getAchievementList());
         layout_achSetting.setAchieveSettingListener(new AcheiveSettingLayout.onAchieveSettingListener() {
             @Override
             public void onAchieveSelected(String[] areaId, String achieveKind) {
-                if(achieveKind.equals("探索地图")){
+                if (achieveKind.equals("探索地图")) {
                     mapUtils.setAreaType(Graphics.MAP);
-                }else {
+                } else {
                     mapUtils.setAreaType(Graphics.ACHEIVE);
                 }
                 mapUtils.setShowAreaIds(areaId);
@@ -284,30 +289,30 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
         });
     }
 
-    public void setIsTrack(boolean isTrack){
-        if(this.isTrack == isTrack)
+    public void setIsTrack(boolean isTrack) {
+        if (this.isTrack == isTrack)
             return;
         else
             this.isTrack = isTrack;
 
-        if(ll_search == null || rl_head  == null || vp_discoveryList == null) {
+        if (ll_search == null || rl_head == null || vp_discoveryList == null) {
             return;
         }
 
-        if(searchHeight <= 0) {
+        if (searchHeight <= 0) {
             searchHeight = ll_search.getMeasuredHeight();
             headTransY = rl_head.getTranslationY();
             vpTransY = vp_discoveryList.getTranslationY();
             optTransY = (int) ll_discovery_opt.getTranslationY();
         }
-        if(isTrack){
+        if (isTrack) {
             AnimUtils.startObjectAnim(ll_search, "translationY", -searchHeight, 0, 300);
             AnimUtils.startObjectAnim(rl_head, "translationY", 0, headTransY, 300);
             AnimUtils.startObjectAnim(ll_discovery_opt, "translationY", 0, optTransY, 400);
             AnimUtils.startObjectAnim(vp_discoveryList, "translationY", 0, vpTransY, 800);
             mapUtils.removeMarker();
             mapUtils.setIsNeedArea(true);
-        }else{
+        } else {
             AnimUtils.startObjectAnim(ll_search, "translationY", 0, -searchHeight, 300);
             AnimUtils.startObjectAnim(rl_head, "translationY", headTransY, 0, 300);
             AnimUtils.startObjectAnim(ll_discovery_opt, "translationY", optTransY, 0, 400);
@@ -318,8 +323,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
 
     }
 
-    private void getDiscoveryList(final int scope, final int kind, final int gender){
-        if(!isTrack) {
+    private void getDiscoveryList(final int scope, final int kind, final int gender) {
+        if (!isTrack) {
             AnimUtils.startObjectAnim(vp_discoveryList, "translationY", 0, vpTransY, 800);
             mapUtils.removeMarker();
         }
@@ -335,11 +340,11 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
                 UserPos userPos = new UserPos(new LatLng(31.2304, 121.462489), "上海市，上海电视台");
                 dis.setUserPos(userPos);
                 dis.setDiscoveryKind(kind);
-                if(kind == Constants.OUTGO){
+                if (kind == Constants.OUTGO) {
                     dis.setJoinCount(3);
                     dis.setTotalCount(5);
                 }
-                if(gender != 2)
+                if (gender != 2)
                     discoveryList.add(dis);
                 dis = new Discovery();
                 dis.setNickName("鸡排侠");
@@ -348,16 +353,16 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
                 UserPos userPos1 = new UserPos(new LatLng(31.229189, 121.468207), "上海市，和平影院");
                 dis.setUserPos(userPos1);
                 dis.setDiscoveryKind(kind);
-                if(kind == Constants.OUTGO){
+                if (kind == Constants.OUTGO) {
                     dis.setJoinCount(2);
                     dis.setTotalCount(6);
                 }
-                if(gender != 1)
+                if (gender != 1)
                     discoveryList.add(dis);
                 adapter.setScope(scope);
                 adapter.setDataList(discoveryList);
                 vp_discoveryList.setCurrentItem(0);
-                if(!isTrack) {
+                if (!isTrack) {
                     AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vpTransY, 0, 500);
                     mapUtils.addMarker(discoveryList.get(vp_discoveryList.getCurrentItem()).getUserPos().getLatlng());
                 }
@@ -376,20 +381,20 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
     public void onResume() {
         super.onResume();
         mapView.onResume();
-        mapUtils.registGeoListener(geoReceiver);
+
     }
 
     @Override
     public void onPause() {
         mapView.onPause();
-        mapUtils.unregistGeoListener(geoReceiver);
         super.onPause();
     }
 
     @Override
     public void onDestroyView() {
         mapView.onDestroy();
-        mapUtils.destory();
+//        mapUtils.destory();
+        mapUtils.setShowAreaIds(null);
         super.onDestroyView();
     }
 
@@ -400,7 +405,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_acheivement:
 //                layout_achSetting.setVisibility(View.VISIBLE);
                 layout_achSetting.show();
@@ -417,7 +422,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
         }
     }
 
-    private void showNewDisDlg(){
+    private void showNewDisDlg() {
         final CustomDialog dlg = new CustomDialog(getActivity());
         dlg.setLayoutRes(R.layout.layout_newdis_dlg).setOnCustomBtnClickListener(new CustomDialog.onCustomBtnsClickListener() {
             @Override
@@ -432,7 +437,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
         }, R.id.btn_mood, R.id.btn_outgo).show();
     }
 
-    private void showGenderDlg(){
+    private void showGenderDlg() {
         final CustomDialog dlg = new CustomDialog(getActivity());
         dlg.setLayoutRes(R.layout.layout_gender_dlg).setOnCustomBtnClickListener(new CustomDialog.onCustomBtnsClickListener() {
             @Override
@@ -440,14 +445,14 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
                 dlg.dismiss();
             }
         }, R.id.rdb_man, R.id.rdb_woman, R.id.rdb_people);
-        final int[] selections = new int[]{R.id.rdb_people,R.id.rdb_man, R.id.rdb_woman};
+        final int[] selections = new int[]{R.id.rdb_people, R.id.rdb_man, R.id.rdb_woman};
         RadioGroup rdg = (RadioGroup) dlg.getCustomView().findViewById(R.id.rdg_gender);
         rdg.check(selections[gender]);
         rdg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                for(int i = 0; i < selections.length; i++){
-                    if(checkedId == selections[i]){
+                for (int i = 0; i < selections.length; i++) {
+                    if (checkedId == selections[i]) {
                         gender = i;
                         break;
                     }
@@ -459,14 +464,14 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
         dlg.show();
     }
 
-    private void refreshDiscoveryList(){
+    private void refreshDiscoveryList() {
         AnimUtils.startRotateAnim(btn_refresh, 360, 0, 1000);
         getDiscoveryList(getDisScope(), getDisKind(), gender);
     }
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        switch (checkedId){
+        switch (checkedId) {
             case R.id.rdb_friend:
                 btn_selection.setVisibility(View.GONE);
                 getDiscoveryList(Constants.FRIEND, getDisKind(), gender);
@@ -484,11 +489,11 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
         }
     }
 
-    private int getDisKind(){
+    private int getDisKind() {
         return rdg_kind.getCheckedRadioButtonId() == R.id.rdb_mood ? Constants.MOOD : Constants.OUTGO;
     }
 
-    private int getDisScope(){
+    private int getDisScope() {
         return rdg_scope.getCheckedRadioButtonId() == R.id.rdb_friend ? Constants.FRIEND : Constants.NEARBY;
     }
 }

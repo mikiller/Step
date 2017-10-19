@@ -176,10 +176,8 @@ public class RegisterActivity extends SuperActivity implements View.OnClickListe
                 break;
             case R.id.btn_signup:
                 if(checkArgs())
-                    loginIM();
-//                    startSignUpLogic();
-                else
-                    Toast.makeText(RegisterActivity.this, "注册信息填写不完整！", Toast.LENGTH_SHORT).show();
+                    //loginIM();
+                    startSignUpLogic();
                 break;
         }
     }
@@ -196,43 +194,50 @@ public class RegisterActivity extends SuperActivity implements View.OnClickListe
 
     private boolean checkArgs(){
         boolean rst = true;
-        if(TextUtils.isEmpty(edt_nickName.getText().toString()))
+        if(TextUtils.isEmpty(edt_nickName.getText().toString())) {
+            Toast.makeText(this, "请填写昵称！", Toast.LENGTH_SHORT).show();
             rst = false;
-        else if(tv_city.getText().toString().equals("请选择城市"))
+        }
+        else if(tv_city.getText().toString().equals("请选择城市")) {
+            Toast.makeText(this, "请选择城市！", Toast.LENGTH_SHORT).show();
             rst = false;
-        else if(rdg_gender.getCheckedRadioButtonId() == View.NO_ID)
+        }else if(rdg_gender.getCheckedRadioButtonId() == View.NO_ID) {
+            Toast.makeText(this, "请选择性别！", Toast.LENGTH_SHORT).show();
             rst = false;
+        }
         return rst;
     }
 
-    private void loginIM(){
-        LoginInfo loginInfo = new LoginInfo("or4h41h0quiyc0il8-pwawbjyq4g", "20a699b323fc2b56e5c0f3b260cf0895");
-        RequestCallback<LoginInfo> callback = new RequestCallback<LoginInfo>() {
-            @Override
-            public void onSuccess(LoginInfo param) {
-                Log.e(TAG, param.getAccount());
-                ActivityManager.startActivity(RegisterActivity.this, MainActivity.class);
-                finish();
-            }
-
-            @Override
-            public void onFailed(int code) {
-                Log.e(TAG, "code: " + code);
-            }
-
-            @Override
-            public void onException(Throwable exception) {
-                exception.printStackTrace();
-            }
-        };
-        NIMClient.getService(AuthService.class).login(loginInfo).setCallback(callback);
-    }
+//    private void loginIM(){
+//        LoginInfo loginInfo = new LoginInfo("or4h41h0quiyc0il8-pwawbjyq4g", "20a699b323fc2b56e5c0f3b260cf0895");
+//        RequestCallback<LoginInfo> callback = new RequestCallback<LoginInfo>() {
+//            @Override
+//            public void onSuccess(LoginInfo param) {
+//                Log.e(TAG, param.getAccount());
+//                ActivityManager.startActivity(RegisterActivity.this, MainActivity.class);
+//                finish();
+//            }
+//
+//            @Override
+//            public void onFailed(int code) {
+//                Log.e(TAG, "code: " + code);
+//            }
+//
+//            @Override
+//            public void onException(Throwable exception) {
+//                exception.printStackTrace();
+//            }
+//        };
+//        NIMClient.getService(AuthService.class).login(loginInfo).setCallback(callback);
+//    }
 
 
     private void startSignUpLogic(){
         SignModel model = new SignModel(edt_nickName.getText().toString(),
                 rdg_gender.getCheckedRadioButtonId() == R.id.rdb_male ? 1 : 2,
                 tv_city.getText().toString());
+        model.setHeadImg(getIntent().getStringExtra("iconurl"));
+        model.setUuid(getIntent().getStringExtra("uid"));
         Log.e(TAG, new Gson().toJson(model));
         ActivityManager.startActivity(this, MainActivity.class);
         back();

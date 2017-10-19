@@ -27,6 +27,10 @@ public class MXPreferenceUtils {
         return CREATER.instance;
     }
 
+    public static MXPreferenceUtils getInstance(){
+        return CREATER.instance;
+    }
+
     public void setReport(String id, String reportJson){
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(id, reportJson).commit();
@@ -39,6 +43,20 @@ public class MXPreferenceUtils {
 
     public String getReprot(String id){
         return sp.getString(id, "{}");
+    }
+
+    public void setString(String key, String value){
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(key, value).commit();
+    }
+
+    public void removeString(String key){
+        SharedPreferences.Editor editor = sp.edit();
+        editor.remove(key).commit();
+    }
+
+    public String getString(String key){
+        return sp.getString(key, "");
     }
 
     public Map getAll(){

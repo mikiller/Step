@@ -17,7 +17,7 @@ import com.westepper.step.adapters.DisDetailRcvAdapter;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.TitleBar;
-import com.westepper.step.listeners.CommitGlobalLayoutListener;
+import com.westepper.step.widgets.CommitGlobalLayoutListener;
 import com.westepper.step.responses.Commit;
 
 import java.io.Serializable;
