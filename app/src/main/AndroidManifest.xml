@@ -140,6 +140,13 @@
             android:value="com.netease.nimlib.service.NimReceiver"/>
 
         <!-- ==================step================== -->
+        <activity android:name=".activities.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".activities.WelcomeActivity" >
 
         </activity>
@@ -148,11 +155,7 @@
 
         <activity android:name=".activities.MainActivity"
             android:windowSoftInputMode="stateHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         
         <activity android:name=".activities.PaihangActivity" />

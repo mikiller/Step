@@ -82,6 +82,7 @@ public class WelcomeActivity extends SuperActivity {
 //                                    model.setNickName(map.get("name"));
 //                                    model.setGender("男".equals(map.get("gender")) ? 1 : 2);
                                     ActivityManager.startActivity(WelcomeActivity.this, RegisterActivity.class, map);
+                                    back();
                                 }
                             }
                         });

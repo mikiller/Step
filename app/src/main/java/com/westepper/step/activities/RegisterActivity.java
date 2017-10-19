@@ -33,6 +33,7 @@ import com.uilib.joooonho.SelectableRoundedImageView;
 import com.westepper.step.R;
 import com.westepper.step.adapters.CityAdapter;
 import com.westepper.step.base.SuperActivity;
+import com.westepper.step.logics.RegistLogic;
 import com.westepper.step.models.CityBean;
 import com.westepper.step.models.SignModel;
 import com.westepper.step.utils.ActivityManager;
@@ -93,7 +94,7 @@ public class RegisterActivity extends SuperActivity implements View.OnClickListe
         GlideImageLoader.getInstance().loadImage(this, getIntent().getStringExtra("iconurl"), R.mipmap.ic_default_head, iv_header, 0);
         if(getIntent().getStringExtra("gender").equals("男")){
             rdg_gender.check(R.id.rdb_male);
-        }else
+        }else if(getIntent().getStringExtra("gender").equals("女"))
             rdg_gender.check(R.id.rdb_female);
         rdg_mainCity.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -208,38 +209,16 @@ public class RegisterActivity extends SuperActivity implements View.OnClickListe
         return rst;
     }
 
-//    private void loginIM(){
-//        LoginInfo loginInfo = new LoginInfo("or4h41h0quiyc0il8-pwawbjyq4g", "20a699b323fc2b56e5c0f3b260cf0895");
-//        RequestCallback<LoginInfo> callback = new RequestCallback<LoginInfo>() {
-//            @Override
-//            public void onSuccess(LoginInfo param) {
-//                Log.e(TAG, param.getAccount());
-//                ActivityManager.startActivity(RegisterActivity.this, MainActivity.class);
-//                finish();
-//            }
-//
-//            @Override
-//            public void onFailed(int code) {
-//                Log.e(TAG, "code: " + code);
-//            }
-//
-//            @Override
-//            public void onException(Throwable exception) {
-//                exception.printStackTrace();
-//            }
-//        };
-//        NIMClient.getService(AuthService.class).login(loginInfo).setCallback(callback);
-//    }
-
-
     private void startSignUpLogic(){
         SignModel model = new SignModel(edt_nickName.getText().toString(),
                 rdg_gender.getCheckedRadioButtonId() == R.id.rdb_male ? 1 : 2,
                 tv_city.getText().toString());
         model.setHeadImg(getIntent().getStringExtra("iconurl"));
         model.setUuid(getIntent().getStringExtra("uid"));
-        Log.e(TAG, new Gson().toJson(model));
-        ActivityManager.startActivity(this, MainActivity.class);
-        back();
+        RegistLogic logic = new RegistLogic(this, model);
+        logic.sendRequest();
+//        Log.e(TAG, new Gson().toJson(model));
+//        ActivityManager.startActivity(this, MainActivity.class);
+//        back();
     }
 }

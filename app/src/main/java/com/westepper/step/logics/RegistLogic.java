@@ -15,6 +15,7 @@ import com.westepper.step.activities.RegisterActivity;
 import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.BaseModel;
 import com.westepper.step.base.BaseResponse;
+import com.westepper.step.base.SuperActivity;
 import com.westepper.step.models.SignModel;
 import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.MXPreferenceUtils;
@@ -37,7 +38,7 @@ public class RegistLogic extends BaseLogic<SignModel> {
 
     @Override
     protected void setUrl() {
-        url = "user/regist";
+        url = "user/register";
     }
 
     @Override
@@ -69,7 +70,7 @@ public class RegistLogic extends BaseLogic<SignModel> {
             public void onSuccess(LoginInfo param) {
                 Log.e(TAG, param.getAccount());
                 ActivityManager.startActivity((Activity) context, MainActivity.class);
-                ((Activity)context).finish();
+                ((SuperActivity)context).back();
             }
 
             @Override

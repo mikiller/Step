@@ -42,6 +42,7 @@ public class SplashActivity extends SuperActivity {
 
     @Override
     protected void initView() {
+        NIMClient.init(this, loginInfo(), options());
         NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(new Observer<StatusCode>() {
             @Override
             public void onEvent(StatusCode statusCode) {
@@ -57,12 +58,13 @@ public class SplashActivity extends SuperActivity {
                 }
             }
         }, true);
-        NIMClient.init(this, loginInfo(), options());
+
 
         getWindow().getDecorView().postDelayed(new Runnable() {
             @Override
             public void run() {
-//                ActivityManager.
+                ActivityManager.startActivity(SplashActivity.this, isLogin ? MainActivity.class : WelcomeActivity.class);
+                back();
             }
         }, 3000);
     }

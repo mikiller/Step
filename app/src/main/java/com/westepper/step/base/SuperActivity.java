@@ -97,7 +97,7 @@ public abstract class SuperActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    protected void back(){
+    public void back(){
         ActivityManager.hideInputMethod(this);
         this.finish();
     }
