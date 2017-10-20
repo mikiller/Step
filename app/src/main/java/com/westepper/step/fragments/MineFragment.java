@@ -17,6 +17,7 @@ import com.mikiller.mkglidelib.imageloader.ImageLoader;
 import com.uilib.utils.BitmapUtils;
 import com.westepper.step.R;
 import com.westepper.step.activities.GalleryActivity;
+import com.westepper.step.activities.MyAchieveActivity;
 import com.westepper.step.activities.MyDiscoveryActivity;
 import com.westepper.step.activities.PaihangActivity;
 import com.westepper.step.activities.SettingActivity;
@@ -235,6 +236,16 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 args = new HashMap<>();
                 args.put(Constants.DIS_KIND, Constants.OUTGO);
                 ActivityManager.startActivity(getActivity(), MyDiscoveryActivity.class, args);
+                break;
+            case R.id.menu_discovery:
+                args = new HashMap<>();
+                args.put(Constants.ACH_KIND, Constants.ACH_CITY);
+                ActivityManager.startActivity(getActivity(), MyAchieveActivity.class, args);
+                break;
+            case R.id.menu_acheive:
+                args = new HashMap<>();
+                args.put(Constants.ACH_KIND, Constants.ACH_BADGE);
+                ActivityManager.startActivity(getActivity(), MyAchieveActivity.class, args);
                 break;
 //            case R.id.tv_user_name:
 //                ((BaseActivity) getActivity()).startToActivity(UserRegisterActivity.class);

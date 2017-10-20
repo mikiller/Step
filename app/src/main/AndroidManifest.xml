@@ -176,6 +176,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.MyDiscoveryActivity" />
+        <activity android:name=".activities.MyAchieveActivity" />
     </application>
 
 </manifest>

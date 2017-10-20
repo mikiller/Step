@@ -23,7 +23,7 @@ import java.util.List;
  */
 
 public class AcheiveSettingLayout extends RelativeLayout {
-    private LinearLayout ll_ach_setting;
+    private LinearLayout ll_ach_setting, ll_ach;
 //    private RelativeLayout rl_ach_map;
     private RadioButton btn_ach_map;
 
@@ -50,6 +50,7 @@ public class AcheiveSettingLayout extends RelativeLayout {
     private void initView(Context context, AttributeSet attrs, int defStyleAttr){
         LayoutInflater.from(context).inflate(R.layout.layout_acheive_setting, this);
         ll_ach_setting = (LinearLayout) findViewById(R.id.ll_ach_setting);
+        ll_ach = (LinearLayout) findViewById(R.id.ll_ach);
 //        rl_ach_map = (RelativeLayout) findViewById(R.id.rl_ach_map);
         btn_ach_map = (RadioButton) findViewById(R.id.btn_ach_map);
         lastItem = btn_ach_map;
@@ -100,7 +101,7 @@ public class AcheiveSettingLayout extends RelativeLayout {
                     onItemChecked(item, areaId, achieveKind);
                 }
             });
-            ll_ach_setting.addView(achPkg);
+            ll_ach.addView(achPkg);
         }
     }
 

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:paddingLeft="15dp">
+
+    <LinearLayout
+        android:id="@+id/ll_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/menu_title"
+            style="@style/nomal_text_style"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="24dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="24dp"
+            android:text="上海" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_subAchTitle"
+                style="@style/nomal_text_style"
+                android:text="aaaa"
+                android:visibility="invisible"/>
+
+            <TextView
+                android:id="@+id/tv_pgs"
+                style="@style/nomal_text_style"
+                android:text="0%"
+                android:layout_alignParentRight="true"
+                android:layout_alignBaseline="@+id/tv_subAchTitle"/>
+
+            <ProgressBar
+                android:id="@+id/pgs"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_subAchTitle"
+                android:progress="0" />
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/btn_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:padding="15dp"
+            android:src="@mipmap/next" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/ll_menu"
+        android:background="@color/line_gray" />
+</RelativeLayout>

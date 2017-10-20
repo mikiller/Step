@@ -104,4 +104,20 @@
         <item name="android:padding">15dp</item>
         <item name="android:background">@drawable/selector_menuitem</item>
     </style>
+    
+    <style name="my_ach_badge">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:layout_marginRight">15dp</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="my_ach_badge_txt" parent="hint_text_style2">
+        <item name="android:textColor">@color/blackPrimary</item>
+        <item name="android:layout_marginBottom">14dp</item>
+        <item name="android:text">1</item>
+    </style>
 </resources>

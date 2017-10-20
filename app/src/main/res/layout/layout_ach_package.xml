@@ -43,7 +43,6 @@
         android:id="@+id/ll_ach_items"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/selector_menuitem"
         android:orientation="vertical"
         android:gravity="top"
         android:visibility="gone"/>
