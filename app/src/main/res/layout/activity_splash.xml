@@ -10,23 +10,27 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="0.7"
-        android:gravity="bottom"
+        android:gravity="bottom|center_horizontal"
         android:orientation="vertical">
 
         <com.uilib.joooonho.SelectableRoundedImageView xmlns:siv="http://schemas.android.com/apk/res-auto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/iv_logo"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:src="@mipmap/ic_launcher"
+            android:transitionName="@string/splash_trans"
             siv:sriv_left_bottom_corner_radius="7dp"
             siv:sriv_left_top_corner_radius="7dp"
             siv:sriv_right_bottom_corner_radius="7dp"
             siv:sriv_right_top_corner_radius="7dp" />
 
         <ImageView
+            android:id="@+id/iv_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:src="@mipmap/ic_label" />
+            android:src="@mipmap/ic_label"
+            android:transitionName="@string/splash_label"/>
     </LinearLayout>
 
     <View

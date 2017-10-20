@@ -15,9 +15,11 @@ import android.widget.LinearLayout;
 
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
+import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.SDKOptions;
 import com.netease.nimlib.sdk.StatusBarNotificationConfig;
 import com.netease.nimlib.sdk.StatusCode;
+import com.netease.nimlib.sdk.auth.AuthService;
 import com.netease.nimlib.sdk.auth.AuthServiceObserver;
 import com.netease.nimlib.sdk.auth.LoginInfo;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -78,9 +80,6 @@ public class WelcomeActivity extends SuperActivity {
                             @Override
                             public void onFailed(String code, String msg, SignModel localData) {
                                 if("1".equals(code)){
-//                                    model.setHeadImg(map.get("iconurl"));
-//                                    model.setNickName(map.get("name"));
-//                                    model.setGender("男".equals(map.get("gender")) ? 1 : 2);
                                     ActivityManager.startActivity(WelcomeActivity.this, RegisterActivity.class, map);
                                     back();
                                 }

@@ -6,8 +6,11 @@ import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.RequestCallback;
+import com.netease.nimlib.sdk.StatusCode;
 import com.netease.nimlib.sdk.auth.AuthService;
+import com.netease.nimlib.sdk.auth.AuthServiceObserver;
 import com.netease.nimlib.sdk.auth.LoginInfo;
 import com.netlib.mkokhttp.OkHttpManager;
 import com.westepper.step.activities.MainActivity;

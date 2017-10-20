@@ -89,11 +89,13 @@
         <!-- ===================网易云信================= -->
         <service
             android:name="com.netease.nimlib.service.NimService"
+            android:exported="true"
             android:process=":core"/>
 
         <!-- 运行后台辅助服务 -->
         <service
             android:name="com.netease.nimlib.service.NimService$Aux"
+            android:exported="true"
             android:process=":core"/>
 
         <!-- 声明网易云通信后台辅助服务 -->
@@ -107,7 +109,7 @@
             保持和 NimService 同一进程 -->
         <receiver android:name="com.netease.nimlib.service.NimReceiver"
             android:process=":core"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>

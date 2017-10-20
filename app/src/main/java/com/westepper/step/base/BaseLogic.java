@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -16,7 +15,6 @@ import com.google.gson.JsonSyntaxException;
 import com.westepper.step.R;
 import com.netlib.mkokhttp.OkHttpManager;
 import com.netlib.mkokhttp.callback.Callback;
-import com.westepper.step.base.BaseModel;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -33,8 +31,7 @@ import okhttp3.Response;
  */
 public abstract class BaseLogic<P> extends Callback<P> {
     protected final String TAG = this.getClass().getSimpleName();
-//    public static final String serviceIp = "http://218.1.109.5";
-    private String webServiceIp = "http://180.166.160.22/api/";
+    private String httpBaseIp = "http://180.166.160.22/api/";
     protected Context context;
 
     OkHttpManager httpMgr;
@@ -57,7 +54,7 @@ public abstract class BaseLogic<P> extends Callback<P> {
 
     public BaseLogic(Context context) {
         httpMgr = OkHttpManager.getInstance();
-        httpMgr.init(webServiceIp);
+        httpMgr.init(httpBaseIp);
         if (context != null) {
             this.context = context;
             networkDlg = new ProgressDialog(context,
@@ -117,9 +114,9 @@ public abstract class BaseLogic<P> extends Callback<P> {
         if (needDlg)
             showProgressDialog();
         if (model != null)
-            OkHttpManager.getInstance().sendRequest(webServiceIp.concat(url), requestType, model, files, this);
+            OkHttpManager.getInstance().sendRequest(httpBaseIp.concat(url), requestType, model, files, this);
         else if (params != null) {
-            OkHttpManager.getInstance().sendRequest(webServiceIp.concat(url), requestType, params, files, this);
+            OkHttpManager.getInstance().sendRequest(httpBaseIp.concat(url), requestType, params, files, this);
         }
     }
 

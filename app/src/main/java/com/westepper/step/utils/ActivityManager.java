@@ -18,13 +18,13 @@ import java.util.Map;
 
 public class ActivityManager {
     public static Class<? extends SuperActivity> currentActivity;
-    public static Activity lastActivity;
+    public static SuperActivity lastActivity;
 
     public static void startActivity(Activity act, Class<? extends SuperActivity> act1){
         Intent intent = new Intent(act, act1);
         //act.getApplicationContext().startActivity(intent);
         act.startActivity(intent);
-        lastActivity = act;
+        lastActivity = (SuperActivity) act;
         currentActivity = act1;
     }
 
@@ -43,7 +43,7 @@ public class ActivityManager {
         }
         //act.getApplicationContext().startActivity(intent);
         act.startActivity(intent);
-        lastActivity = act;
+        lastActivity = (SuperActivity) act;
         currentActivity = act1;
     }
 
@@ -61,7 +61,7 @@ public class ActivityManager {
             }
         }
         act.startActivityForResult(intent, requestCode);
-        lastActivity = act;
+        lastActivity = (SuperActivity) act;
         currentActivity = act1;
     }
 

@@ -79,6 +79,7 @@ public class RegisterActivity extends SuperActivity implements View.OnClickListe
     CityAdapter adapter;
     LinearLayoutManager llMgr;
 
+    String headUrl;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,8 +91,9 @@ public class RegisterActivity extends SuperActivity implements View.OnClickListe
         tv_city.setOnClickListener(this);
         btn_close.setOnClickListener(this);
 
+        headUrl = getIntent().getStringExtra("iconurl");
         edt_nickName.setText(getIntent().getStringExtra("name"));
-        GlideImageLoader.getInstance().loadImage(this, getIntent().getStringExtra("iconurl"), R.mipmap.ic_default_head, iv_header, 0);
+        GlideImageLoader.getInstance().loadImage(this, headUrl, R.mipmap.ic_default_head, iv_header, 0);
         if(getIntent().getStringExtra("gender").equals("男")){
             rdg_gender.check(R.id.rdb_male);
         }else if(getIntent().getStringExtra("gender").equals("女"))
@@ -213,12 +215,9 @@ public class RegisterActivity extends SuperActivity implements View.OnClickListe
         SignModel model = new SignModel(edt_nickName.getText().toString(),
                 rdg_gender.getCheckedRadioButtonId() == R.id.rdb_male ? 1 : 2,
                 tv_city.getText().toString());
-        model.setHeadImg(getIntent().getStringExtra("iconurl"));
+        model.setHeadImg(headUrl);
         model.setUuid(getIntent().getStringExtra("uid"));
         RegistLogic logic = new RegistLogic(this, model);
         logic.sendRequest();
-//        Log.e(TAG, new Gson().toJson(model));
-//        ActivityManager.startActivity(this, MainActivity.class);
-//        back();
     }
 }

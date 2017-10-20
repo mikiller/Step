@@ -6,8 +6,11 @@ import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.RequestCallback;
+import com.netease.nimlib.sdk.StatusCode;
 import com.netease.nimlib.sdk.auth.AuthService;
+import com.netease.nimlib.sdk.auth.AuthServiceObserver;
 import com.netease.nimlib.sdk.auth.LoginInfo;
 import com.netlib.mkokhttp.OkHttpManager;
 import com.westepper.step.activities.MainActivity;
@@ -31,7 +34,7 @@ public class LoginLogic extends BaseLogic<SignModel> {
 
     @Override
     protected void setResponseType() {
-        responseType = new TypeToken<BaseResponse<BaseModel>>(){}.getType();
+        responseType = new TypeToken<BaseResponse<SignModel>>(){}.getType();
     }
 
     @Override
@@ -61,7 +64,7 @@ public class LoginLogic extends BaseLogic<SignModel> {
     private void loginIM(SignModel response){
         MXPreferenceUtils.getInstance(context, MXPreferenceUtils.REPORTS).setString("account", response.getUserId());
         MXPreferenceUtils.getInstance().setString("token", response.getToken());
-        LoginInfo loginInfo = new LoginInfo(response.getUserId(), response.getToken() /*"or4h41h0quiyc0il8-pwawbjyq4g", "20a699b323fc2b56e5c0f3b260cf0895"*/);
+        LoginInfo loginInfo = new LoginInfo(response.getUserId(), response.getToken()/*"or4h41h0quiyc0il8-pwawbjyq4g", "20a699b323fc2b56e5c0f3b260cf0895"*/);
         NIMClient.getService(AuthService.class).login(loginInfo).setCallback(new RequestCallback<LoginInfo>() {
             @Override
             public void onSuccess(LoginInfo param) {

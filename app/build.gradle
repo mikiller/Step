@@ -11,7 +11,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
-        ndk{
+        ndk {
             abiFilters "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
         }
     }
@@ -28,7 +28,7 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
-    lintOptions{
+    lintOptions {
         abortOnError false
     }
 }
@@ -53,13 +53,13 @@ dependencies {
     compile project(':indexlib')
     compile 'com.android.support:multidex:'
     // 基础功能 (必需)
-        compile 'com.netease.nimlib:basesdk:4.2.0'
+    compile 'com.netease.nimlib:basesdk:4.2.0'
     // 音视频需要
-        compile 'com.netease.nimlib:avchat:4.2.0'
+    compile 'com.netease.nimlib:avchat:4.2.0'
     // 聊天室需要
-        compile 'com.netease.nimlib:chatroom:4.2.0'
+    compile 'com.netease.nimlib:chatroom:4.2.0'
     // 实时会话服务需要
-        compile 'com.netease.nimlib:rts:4.2.0'
+    compile 'com.netease.nimlib:rts:4.2.0'
     // 全文检索服务需要
-        compile 'com.netease.nimlib:lucene:4.2.0'
+    compile 'com.netease.nimlib:lucene:4.2.0'
 }

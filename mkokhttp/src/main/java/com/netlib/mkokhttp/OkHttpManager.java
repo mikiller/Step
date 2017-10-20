@@ -118,6 +118,7 @@ public class OkHttpManager {
     }
 
     private OkHttpRequestBuilder requestJsonPost(String json){
+        Log.e("okhttpmanager", "request json: " + json);
         return OkHttpUtils.postJsonString().content(json);
     }
 

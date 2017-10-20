@@ -7,6 +7,9 @@
     <string name="setting">设置</string>
     <string name="cancel">取消</string>
 
+    <string name="splash_trans">splashIcon</string>
+    <string name="splash_label">splashTxt</string>
+
     <string name="wxappid">wxc691f0095ed06444</string>
     <string name="wyappid">23b9d29dc4cbfff89a0bfead16afb1a3</string>
 

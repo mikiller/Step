@@ -5,12 +5,19 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.Observer;
+import com.netease.nimlib.sdk.StatusCode;
+import com.netease.nimlib.sdk.auth.AuthService;
+import com.netease.nimlib.sdk.auth.AuthServiceObserver;
 import com.uilib.customdialog.CustomDialog;
 import com.westepper.step.R;
 import com.westepper.step.base.Constants;
@@ -122,8 +129,9 @@ public class SettingActivity extends SuperActivity implements View.OnClickListen
             case R.id.menu_clear:
                 break;
             case R.id.tv_logout:
+                NIMClient.getService(AuthService.class).logout();
                 ActivityManager.startActivity(this, WelcomeActivity.class);
-                finish();
+                back();
                 break;
             case R.id.menu_contact:
                 Spanned phone = Html.fromHtml(getString(R.string.contact_phone)),
@@ -144,7 +152,7 @@ public class SettingActivity extends SuperActivity implements View.OnClickListen
 
     private void callPhone() {
         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:12345678"));
-        startActivity(intent);
+        ActivityCompat.startActivity(this, intent, null);
     }
 
     private void sendEmail(){
