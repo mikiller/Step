@@ -32,7 +32,7 @@ public class AcheiveSettingLayout extends RelativeLayout {
     private RadioButton lastItem;
     private onAchieveSettingListener achieveSettingListener;
 
-    private int[] icons = new int[]{R.mipmap.ic_ach1, R.mipmap.ic_ach2, R.mipmap.ic_ach3, R.mipmap.ic_ach4, R.mipmap.ic_ach5};
+    private int[] icons = new int[]{R.mipmap.ic_ach1, R.mipmap.ic_ach2, R.mipmap.ic_ach3, R.mipmap.ic_ach4};
 
     public AcheiveSettingLayout(Context context) {
         this(context, null, 0);

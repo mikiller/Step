@@ -63,7 +63,8 @@ public class TitleBar extends RelativeLayout {
 
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.TitleBar);
         if(ta != null){
-            view_bg.setBackgroundColor(ta.getColor(R.styleable.TitleBar_titleBgColor, getResources().getColor(R.color.colorPrimary)));
+            setBgColor(ta.getColor(R.styleable.TitleBar_titleBgColor, getResources().getColor(R.color.colorPrimary)));
+//            view_bg.setBackgroundColor(ta.getColor(R.styleable.TitleBar_titleBgColor, getResources().getColor(R.color.colorPrimary)));
             backStyle = ta.getInt(R.styleable.TitleBar_backStyle, ARROW);
             btn_back.setImageResource(backStyle == ARROW ? R.mipmap.ic_back : R.mipmap.ic_close1);
             setSubStyle(ta.getInt(R.styleable.TitleBar_subStyle, NONE));
@@ -143,6 +144,10 @@ public class TitleBar extends RelativeLayout {
 
     public void setHeader(String path){
         GlideImageLoader.getInstance().loadImage(getContext(), path, R.mipmap.ic_default_head, iv_header, 0);
+    }
+
+    public void setBgColor(int color){
+        view_bg.setBackgroundColor(color);
     }
 
     public void setBgAlpha(float alpha){

@@ -16,12 +16,15 @@ public class Constants {
     public static final String DIS_SCOPE = "DIS_SCOPE";
     public static final String MAX_SELECT = "MAX_SELECT";
     public static final String ACH_KIND = "ACH_KIND";
+    public static final String BADGE_KIND = "BADGE_KIND";
     public static final int MOOD = 1;
     public static final int OUTGO = 2;
     public static final int FRIEND = 1;
     public static final int NEARBY = 2;
     public static final int ACH_CITY = 1;
     public static final int ACH_BADGE = 2;
+    public static final int CITY = 1;
+    public static final int LEVEL = 2;
     public static final String GALLERY_TYPE = "gallery_type";
     public static final String ISMULTIPLE = "sMultiple";
     public static final String DISCOVERY_DETAIL = "discovery_detail";

@@ -64,7 +64,7 @@ public class LoginLogic extends BaseLogic<SignModel> {
     private void loginIM(SignModel response){
         MXPreferenceUtils.getInstance(context, MXPreferenceUtils.REPORTS).setString("account", response.getUserId());
         MXPreferenceUtils.getInstance().setString("token", response.getToken());
-        LoginInfo loginInfo = new LoginInfo(response.getUserId(), response.getToken()/*"or4h41h0quiyc0il8-pwawbjyq4g", "20a699b323fc2b56e5c0f3b260cf0895"*/);
+        LoginInfo loginInfo = new LoginInfo(response.getUserId(), response.getToken()/*"800036", "139ed2be4464ff498382c97a3e1b4d75"*/);
         NIMClient.getService(AuthService.class).login(loginInfo).setCallback(new RequestCallback<LoginInfo>() {
             @Override
             public void onSuccess(LoginInfo param) {

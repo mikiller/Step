@@ -59,6 +59,7 @@
         <!-- 是否模糊 -->
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowFrame">@null</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="sliptline">

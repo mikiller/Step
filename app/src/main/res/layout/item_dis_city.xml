@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:paddingRight="15dp"
+    android:paddingLeft="15dp"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+    <ImageView
+        android:id="@+id/iv_city_logo"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@mipmap/ic_city_logo"/>
+    
+    <View
+        android:id="@+id/line"
+        android:layout_width="4dp"
+        android:layout_height="54dp"
+        android:background="@drawable/shape_item_city_line"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:visibility="gone"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="vertical"
+        android:background="@drawable/ic_city_bg"
+        android:layout_marginLeft="10dp">
+
+        <TextView
+            android:id="@+id/tv_dis_city"
+            style="@style/nomal_text_style"
+            android:text="发现"
+            android:layout_marginLeft="15dp"/>
+
+        <TextView
+            android:id="@+id/tv_date"
+            style="@style/hint_text_style2"
+            android:text="1970/01/01"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="4dp"/>
+    </LinearLayout>
+</LinearLayout>

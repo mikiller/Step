@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -21,6 +22,7 @@ public class MyAchieveMenu extends RelativeLayout {
     private TextView menu_title, tv_subAchTitle, tv_pgs;
     private ProgressBar pgs;
     private ImageButton btn_next;
+    private ImageView menu_icon;
     public MyAchieveMenu(Context context) {
         this(context, null, 0);
     }
@@ -37,6 +39,7 @@ public class MyAchieveMenu extends RelativeLayout {
     private void initView(Context context, AttributeSet attrs, int defStyleAttr){
         LayoutInflater.from(context).inflate(R.layout.layout_myach_menu, this);
         menu_title = (TextView) findViewById(R.id.menu_title);
+        menu_icon = (ImageView) findViewById(R.id.menu_icon);
         tv_subAchTitle = (TextView) findViewById(R.id.tv_subAchTitle);
         tv_pgs = (TextView) findViewById(R.id.tv_pgs);
         pgs = (ProgressBar) findViewById(R.id.pgs);
@@ -60,6 +63,24 @@ public class MyAchieveMenu extends RelativeLayout {
 
     public void setSubTitle(String sub){
         tv_subAchTitle.setText(sub);
+    }
+
+    public void setNeedSubTitle(boolean isNeed){
+        tv_subAchTitle.setVisibility(isNeed ? VISIBLE : INVISIBLE);
+    }
+
+    public void setNeedIcon(boolean isNeed){
+        menu_icon.setVisibility(isNeed ? VISIBLE : GONE);
+        menu_title.setVisibility(isNeed ? GONE : VISIBLE);
+    }
+
+    public void setNeedNext(boolean isNeed){
+        btn_next.setVisibility(isNeed ? VISIBLE : GONE);
+    }
+
+    public void setMenu_icon(int resId){
+        setNeedIcon(true);
+        menu_icon.setImageResource(resId);
     }
 
     public void setPgs(int percent){

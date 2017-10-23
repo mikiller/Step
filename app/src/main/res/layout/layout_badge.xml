@@ -5,12 +5,15 @@
     android:orientation="vertical"
     android:gravity="center_horizontal">
 
-    <ImageView
-        android:id="@+id/iv_badge"
+    <ImageButton
+        android:id="@+id/btn_badge"
         android:layout_width="wrap_content"
         android:layout_height="55dp"
         android:layout_marginBottom="5dp"
-        android:src="@mipmap/ic_dis_city" />
+        android:src="@mipmap/ic_dis_city"
+        android:scaleType="centerCrop"
+        android:background="@null"
+        android:transitionName="@string/city_badge"/>
 
     <TextView
         android:id="@+id/tv_badge"

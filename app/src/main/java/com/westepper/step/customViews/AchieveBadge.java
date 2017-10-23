@@ -4,7 +4,8 @@ import android.content.Context;
 import android.content.pm.LabeledIntent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.ImageView;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,7 +16,7 @@ import com.westepper.step.R;
  */
 
 public class AchieveBadge extends LinearLayout {
-    private ImageView iv_badge;
+    private ImageButton btn_badge;
     private TextView tv_badge;
     public AchieveBadge(Context context) {
         this(context, null, 0);
@@ -32,15 +33,24 @@ public class AchieveBadge extends LinearLayout {
 
     private void initView(Context context, AttributeSet attrs, int defStyleAttr){
         LayoutInflater.from(context).inflate(R.layout.layout_badge, this);
-        iv_badge = (ImageView) findViewById(R.id.iv_badge);
+        btn_badge = (ImageButton) findViewById(R.id.btn_badge);
         tv_badge = (TextView) findViewById(R.id.tv_badge);
     }
 
     public void setBadgeImg(int resId){
-        iv_badge.setImageResource(resId);
+        btn_badge.setImageResource(resId);
+    }
+
+    public View getBadge(){
+        return btn_badge;
     }
 
     public void setBadgeNum(int num){
         tv_badge.setText(String.valueOf(num));
+        btn_badge.setEnabled(num > 0);
+    }
+
+    public void setOnClickListener(OnClickListener listener){
+        btn_badge.setOnClickListener(listener);
     }
 }

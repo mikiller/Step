@@ -177,6 +177,7 @@
         </activity>
         <activity android:name=".activities.MyDiscoveryActivity" />
         <activity android:name=".activities.MyAchieveActivity" />
+        <activity android:name=".activities.MyCityActivity" />
     </application>
 
 </manifest>
