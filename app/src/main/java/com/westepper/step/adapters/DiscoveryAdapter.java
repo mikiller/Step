@@ -96,7 +96,7 @@ public class DiscoveryAdapter extends PagerAdapter {
         container.removeView((View) object);
     }
 
-    public class ViewHolder{
+    protected class ViewHolder{
         private TextView tv_nickName, tv_msg, tv_time;
         private ImageView iv_gender;
         private SelectableRoundedImageView iv_img1, iv_img2, iv_img3;

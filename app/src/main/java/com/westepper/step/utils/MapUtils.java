@@ -206,7 +206,8 @@ public class MapUtils {
         }else{
             hideArea();
             for(String id : showAreaIds){
-                areas.get(id).show();
+                if(areas.get(id) != null)
+                    areas.get(id).show();
             }
         }
     }

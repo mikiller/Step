@@ -1,29 +1,22 @@
 package com.westepper.step.activities;
 
-import android.animation.ObjectAnimator;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import com.uilib.customdialog.CustomDialog;
 import com.westepper.step.R;
+import com.westepper.step.adapters.AchieveRcvAdapter;
+import com.westepper.step.adapters.ReachedAchRcvAdapter;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
-import com.westepper.step.customViews.AchieveBadge;
-import com.westepper.step.customViews.MyAchieveMenu;
 import com.westepper.step.customViews.TitleBar;
-import com.westepper.step.utils.ActivityManager;
+import com.westepper.step.responses.AchieveProgress;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
-import butterknife.BindViews;
 
 /**
  * Created by Mikiller on 2017/10/20.
@@ -32,22 +25,12 @@ import butterknife.BindViews;
 public class MyAchieveActivity extends SuperActivity {
     @BindView(R.id.titleBar)
     TitleBar titleBar;
-    @BindView(R.id.ll_achMenus)
-    LinearLayout ll_achMenus;
-    @BindView(R.id.rl_scoreBg)
-    RelativeLayout rl_scoreBg;
-    @BindView(R.id.tv_score)
-    TextView tv_score;
-    @BindView(R.id.tv_badgeTitle)
-    TextView tv_badgeTitle;
-    @BindView(R.id.tv_achTitle)
-    TextView tv_achTitle;
-    @BindView(R.id.tv_achNum)
-    TextView tv_achNum;
-    @BindViews({R.id.myAchCity, R.id.myAchL1, R.id.myAchL2, R.id.myAchL3})
-    AchieveBadge[] badges;
+    @BindView(R.id.rcv_ach)
+    RecyclerView rcv_ach;
 
     int achKind;
+    AchieveRcvAdapter adapter;
+    ReachedAchRcvAdapter reachedAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,15 +51,21 @@ public class MyAchieveActivity extends SuperActivity {
 
     @Override
     protected void initView() {
-        int bgColor = achKind == Constants.ACH_CITY ? getResources().getColor(R.color.splash_label) : getResources().getColor(R.color.colorPrimary);
-        titleBar.setBgColor(bgColor);
+        titleBar.setBgColor(achKind == Constants.ACH_CITY ? getResources().getColor(R.color.splash_label) : getResources().getColor(R.color.colorPrimary));
         titleBar.setSubImg(R.mipmap.ic_share);
         titleBar.setTitle(achKind == Constants.ACH_CITY ? "探索" : "成就");
-        rl_scoreBg.setBackgroundColor(bgColor);
         titleBar.setTitleListener(new TitleBar.TitleListener() {
             @Override
             protected void onBackClicked() {
-                back();
+                if(adapter.isNeedHead())
+                    back();
+                else{
+                    adapter.setNeedHead(true);
+                    adapter.setPgsList(createData());
+                    if(rcv_ach.getAdapter() instanceof ReachedAchRcvAdapter)
+                        rcv_ach.setAdapter(adapter);
+                    titleBar.setTitle(achKind == Constants.ACH_CITY ? "探索" : "成就");
+                }
             }
 
             @Override
@@ -85,85 +74,72 @@ public class MyAchieveActivity extends SuperActivity {
             }
         });
 
-        tv_badgeTitle.setText(achKind == Constants.ACH_CITY ? "城市徽章" : "探索等级");
-        badges[0].setBadgeImg(achKind == Constants.ACH_CITY ? R.mipmap.ic_dis_city : R.mipmap.ic_ach_l1);
-        badges[0].setBadgeNum(1);
-        badges[1].setBadgeImg(achKind == Constants.ACH_CITY ? R.mipmap.ic_dis_l1 : R.mipmap.ic_ach_l2);
-        badges[1].setBadgeNum(1);
-        badges[2].setBadgeImg(achKind == Constants.ACH_CITY ? R.mipmap.ic_dis_l2 : R.mipmap.ic_ach_l3);
-        badges[2].setBadgeNum(1);
-        badges[3].setBadgeImg(achKind == Constants.ACH_CITY ? R.mipmap.ic_dis_l3 : R.mipmap.ic_ach_l4);
-        badges[3].setBadgeNum(1);
-        if (achKind == Constants.ACH_CITY) {
-            for (int i = 0; i < badges.length; i++) {
-                final int badgeKind = i;
-                badges[i].setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Map<String, Object> args = new HashMap<String, Object>();
-                        args.put(Constants.BADGE_KIND, badgeKind);
-                        Map<String, View> trans = new HashMap<String, View>();
-                        trans.put(getString(R.string.city_badge), v);
-                        ActivityManager.startActivityWithTransAnim(MyAchieveActivity.this, MyCityActivity.class, trans, args);
-                    }
-                });
-            }
-        }else{
-            badges[0].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    CustomDialog dlg = new CustomDialog(MyAchieveActivity.this);
-                    dlg.setLayoutRes(R.layout.layout_congratulation);
-                    dlg.setCancelable(true);
-                    dlg.show();
+        rcv_ach.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        rcv_ach.setAdapter(adapter = new AchieveRcvAdapter(this, achKind));
+        adapter.setListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adapter.setNeedHead(false);
+                if(achKind == Constants.ACH_CITY){
+                    //createAreaData();
+                    adapter.setPgsList(createAreas());
+                    titleBar.setTitle("上海");
+                }else{
+                    //goto sub ach
+                    titleBar.setTitle("城市探索");
+                    reachedAdapter = new ReachedAchRcvAdapter(MyAchieveActivity.this);
+                    List<String> reachList = new ArrayList<String>();
+                    reachList.add("1");
+                    reachList.add("2");
+                    reachedAdapter.setReachIdList(reachList);
+                    rcv_ach.setAdapter(reachedAdapter);
                 }
-            });
-        }
+            }
+        });
+        adapter.setPgsList(createData());
+    }
 
-        tv_achTitle.setText(achKind == Constants.ACH_CITY ? "发现城市" : "获得成就");
-        tv_achNum.setVisibility(achKind == Constants.ACH_CITY ? View.GONE : View.VISIBLE);
-
+    private List<AchieveProgress> createData() {
+        List<AchieveProgress> data = new ArrayList<>();
         if (achKind == Constants.ACH_CITY) {
-            createCities();
+            createCities(data);
         } else {
-            createAchieves();
+            createAchieves(data);
         }
+        return data;
     }
 
-    private void createCities() {
-        ll_achMenus.addView(createAchMenu("上海", 0, null, 0));
-        ll_achMenus.addView(createAchMenu("杭州", 0, null, 0));
-        ll_achMenus.addView(createAchMenu("北京", 0, null, 0));
-        ll_achMenus.addView(createAchMenu("广州", 0, null, 0));
+    private List<AchieveProgress> createAreas(){
+        List<AchieveProgress> data = new ArrayList<>();
+        data.add(createAchMenu("静安区", 0, 0, Constants.ACH_AREA));
+        data.add(createAchMenu("黄浦区", 0, 0, Constants.ACH_AREA));
+        data.add(createAchMenu("虹口区", 0, 0, Constants.ACH_AREA));
+        return data;
     }
 
-    private void createAchieves() {
-        ll_achMenus.addView(createAchMenu(null, R.mipmap.ic_ach_step, "初识STEP", 0));
-        ll_achMenus.addView(createAchMenu(null, R.mipmap.ic_ach_dis, "探索世界", 0));
-        ll_achMenus.addView(createAchMenu(null, R.mipmap.ic_ach_sh, "我爱上海", 0));
-        ll_achMenus.addView(createAchMenu(null, R.mipmap.ic_ach_pos, "地标名胜", 0));
-        ll_achMenus.addView(createAchMenu(null, R.mipmap.ic_ach_timer, "限时成就", 0));
+    private void createCities(List<AchieveProgress> data) {
+        data.add(createAchMenu("上海", 0, 0, achKind));
+        data.add(createAchMenu("杭州", 0, 0, achKind));
+        data.add(createAchMenu("北京", 0, 0, achKind));
+        data.add(createAchMenu("广州", 0, 0, achKind));
+    }
+
+    private void createAchieves(List<AchieveProgress> data) {
+        data.add(createAchMenu("初识STEP", R.mipmap.ic_ach_step, 0, achKind));
+        data.add(createAchMenu("探索世界", R.mipmap.ic_ach_dis, 0, achKind));
+        data.add(createAchMenu("我爱上海", R.mipmap.ic_ach_sh, 0, achKind));
+        data.add(createAchMenu("地标名胜", R.mipmap.ic_ach_pos, 0, achKind));
+        data.add(createAchMenu("限时成就", R.mipmap.ic_ach_timer, 0, achKind));
 
     }
 
-    private MyAchieveMenu createAchMenu(String title, int iconId, String subTitle, int pgs) {
-        MyAchieveMenu menu = new MyAchieveMenu(this);
-        if (!TextUtils.isEmpty(title)) {
-            menu.setTitle(title);
-            menu.setTag(title);
-        } else {
-            menu.setMenu_icon(iconId);
-        }
-        if (!TextUtils.isEmpty(subTitle)) {
-            menu.setSubTitle(subTitle);
-            menu.setNeedSubTitle(true);
-            menu.setTag(subTitle);
-        } else {
-            menu.setNeedSubTitle(false);
-        }
-        menu.setPgs(pgs);
-
-        return menu;
+    private AchieveProgress createAchMenu(String title, int iconId, int pgs, int type) {
+        AchieveProgress achPgs = new AchieveProgress();
+        achPgs.setType(type);
+        achPgs.setName(title);
+        achPgs.setIconId(iconId);
+        achPgs.setPercent(pgs);
+        return achPgs;
     }
 
     @Override

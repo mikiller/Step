@@ -1,5 +1,7 @@
 package com.westepper.step.base;
 
+import com.westepper.step.utils.MXPreferenceUtils;
+
 import java.io.Serializable;
 
 /**
@@ -10,6 +12,11 @@ public class BaseModel implements Serializable {
     private static final long serialVersionUID = -7989127778033177550L;
     protected String userId;
     protected String token;
+
+    public BaseModel() {
+        userId = MXPreferenceUtils.getInstance().getString("account");
+        token = MXPreferenceUtils.getInstance().getString("token");
+    }
 
     public String getUserId() {
         return userId;

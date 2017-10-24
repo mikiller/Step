@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:layout_marginBottom="10dp">
+
+    <ImageView
+        android:id="@+id/iv_ach_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="11dp"
+        android:layout_marginTop="15dp"
+        android:src="@mipmap/ic_l1" />
+
+    <TextView
+        android:id="@+id/tv_ach_name"
+        style="@style/nomal_text_style"
+        android:layout_marginTop="17dp"
+        android:layout_toRightOf="@+id/iv_ach_icon"
+        android:text="成就" />
+
+    <TextView
+        android:id="@+id/tv_fen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tv_ach_name"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:text="分"
+        android:textColor="@color/colorPrimary"
+        android:textSize="11sp" />
+
+    <TextView
+        android:id="@+id/tv_ach_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tv_ach_name"
+        android:layout_toLeftOf="@+id/tv_fen"
+        android:text="0"
+        android:textColor="@color/colorPrimary"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/tv_ach_title"
+        style="@style/join_txt"
+        android:layout_alignLeft="@+id/tv_ach_name"
+        android:layout_below="@+id/tv_ach_name"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:text="副标题" />
+
+    <View
+        android:id="@+id/line"
+        style="@style/sliptline"
+        android:layout_alignLeft="@+id/tv_ach_name"
+        android:layout_below="@+id/tv_ach_title"
+        android:layout_marginTop="15dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignLeft="@+id/tv_ach_name"
+        android:layout_below="@+id/line"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="15dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_ach_desc"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="说明"
+            android:textColor="@color/text_color_black" />
+
+        <ImageButton
+            android:id="@+id/btn_ach_loc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:src="@mipmap/ic_ach_loc" />
+    </LinearLayout>
+</RelativeLayout>

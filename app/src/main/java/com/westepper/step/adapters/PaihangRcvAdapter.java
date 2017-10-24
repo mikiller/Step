@@ -42,7 +42,7 @@ public class PaihangRcvAdapter extends RecyclerView.Adapter<PaihangRcvAdapter.Ho
         return datas == null ? 0 : datas.size();
     }
 
-    public class Holder extends RecyclerView.ViewHolder{
+    protected class Holder extends RecyclerView.ViewHolder{
         private TextView tv_num, tv_nickName, tv_hint, tv_disNum, tv_achNum;
         private SelectableRoundedImageView iv_header;
         private ImageView iv_dis, iv_ach;

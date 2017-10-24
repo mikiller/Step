@@ -303,7 +303,7 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return pathList == null ? itemCount : (pathList.size() < 9 ? pathList.size() + itemCount : pathList.size() + headCount + footCount);
     }
 
-    public static class ItemHolder extends RecyclerView.ViewHolder{
+    protected static class ItemHolder extends RecyclerView.ViewHolder{
         private LinearLayout ll_camera;
 //        private RelativeLayout rl_img;
         private CardView cv_img;
@@ -335,7 +335,7 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    public static class HeadHolder extends RecyclerView.ViewHolder{
+    protected static class HeadHolder extends RecyclerView.ViewHolder{
 
         private EditText edt_msg;
         public HeadHolder(View itemView) {
@@ -344,7 +344,7 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    public static class FootHolder extends RecyclerView.ViewHolder{
+    protected static class FootHolder extends RecyclerView.ViewHolder{
 
         private TextView tv_pos;
 
@@ -354,7 +354,7 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    public static class Foot2Holder extends RecyclerView.ViewHolder{
+    protected static class Foot2Holder extends RecyclerView.ViewHolder{
         private LinearLayout ll_goParam;
         private MyMenuItem menu_people, menu_date, menu_publish;
 

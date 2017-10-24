@@ -1,18 +1,14 @@
 package com.westepper.step.fragments;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
-import com.amap.api.fence.GeoFence;
 import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -43,8 +39,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 
@@ -84,7 +78,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
     MapData mapData;
     MapUtils mapUtils;
     //    BroadcastReceiver geoReceiver;
-    String path;
+//    String path;
     private boolean isTrack = true;
     float searchHeight, headTransY, vpTransY, optTransY;
     int gender = 0;
@@ -153,12 +147,12 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
         Achieve achieve = new Achieve();
         achieve.setAchieveKind("城市探索");
         AchieveArea achieveArea = new AchieveArea();
-        achieveArea.setAchieveName("静安区");
+        achieveArea.setAchieveAreaName("静安区");
         achieveArea.setAchieveAreaId("13");
         achieveArea.setAreaIds("3,4");
         achieve.setAchieveArea(achieveArea);
         AchieveArea achieveArea1 = new AchieveArea();
-        achieveArea1.setAchieveName("黄浦区");
+        achieveArea1.setAchieveAreaName("黄浦区");
         achieveArea1.setAchieveAreaId("14");
         achieveArea1.setAreaIds("1,2,5");
         achieve.setAchieveArea(achieveArea1);
@@ -167,12 +161,12 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
         Achieve achieve1 = new Achieve();
         achieve1.setAchieveKind("发现世界");
         AchieveArea achieveArea2 = new AchieveArea();
-        achieveArea2.setAchieveName("人民广场");
+        achieveArea2.setAchieveAreaName("人民广场");
         achieveArea2.setAchieveAreaId("16");
         achieveArea2.setAreaIds("5");
         achieve1.setAchieveArea(achieveArea2);
         AchieveArea achieveArea3 = new AchieveArea();
-        achieveArea3.setAchieveName("上海电视台");
+        achieveArea3.setAchieveAreaName("上海电视台");
         achieveArea3.setAchieveAreaId("17");
         achieveArea3.setAreaIds("1,2");
         achieve1.setAchieveArea(achieveArea3);
@@ -181,19 +175,19 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
         Achieve achieve2 = new Achieve();
         achieve2.setAchieveKind("行者无疆");
         AchieveArea achieveArea4 = new AchieveArea();
-        achieveArea4.setAchieveName("南京西路");
+        achieveArea4.setAchieveAreaName("南京西路");
         achieveArea4.setAchieveAreaId("20");
         achieveArea4.setAreaIds("1,4");
         achieve2.setAchieveArea(achieveArea4);
         AchieveArea achieveArea5 = new AchieveArea();
-        achieveArea5.setAchieveName("威海路");
+        achieveArea5.setAchieveAreaName("威海路");
         achieveArea5.setAchieveAreaId("21");
         achieveArea5.setAreaIds("2,3");
         achieve2.setAchieveArea(achieveArea5);
         mapData.setAchieve(achieve2);
 
         String areaStr = new Gson().toJson(mapData);
-        FileUtils.saveToLocal(areaStr, path);
+        FileUtils.saveToLocal(areaStr, FileUtils.getFilePath(getActivity(), "area.data"));
     }
 
     @Override
@@ -203,28 +197,15 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
 
     @Override
     protected void initView() {
-        path = getActivity().getFilesDir() + File.separator + "area.data";
         mapView.onCreate(saveBundle);
 
-//        geoReceiver = new BroadcastReceiver() {
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                if(!isTrack)
-//                    return;
-//                Bundle bundle = intent.getExtras();
-//                int status = bundle.getInt(GeoFence.BUNDLE_KEY_FENCESTATUS);
-//                String id = bundle.getString(GeoFence.BUNDLE_KEY_CUSTOMID);
-//                Log.e(TAG, "id: " + id + ", status: " + status);
-//                if (status == 1) {
-//                    mapUtils.setAreaChecked(id);
-//                }
-//            }
-//        };
-
-        mapData = FileUtils.getDataFromLocal(path, MapData.class);
+        mapData = FileUtils.getDataFromLocal(FileUtils.getFilePath(getActivity(), Constants.MAP_DATA), MapData.class);
         if (mapData == null) {
+//            createTestData();
+            mapData = new MapData();
+            //for test
             createTestData();
-            mapData = FileUtils.getDataFromLocal(path, MapData.class);
+            mapData = FileUtils.getDataFromLocal(FileUtils.getFilePath(getActivity(), "area.data"), MapData.class);
         }
         initMapUtil();
         initAcheiveSetting();
@@ -264,13 +245,13 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
     private void initMapUtil() {
         mapUtils = MapUtils.getInstance();
         mapUtils.init(getActivity().getApplicationContext(), mapView.getMap());
-        for (City city : mapData.getCityList()) {
-            if (!city.getCityName().equals("上海"))
-                continue;
-            for (Area area : city.getAreaList()) {
-                mapUtils.addArea(area, Graphics.MAP);
+            for (City city : mapData.getCityList()) {
+                if (!city.getCityName().equals("上海"))
+                    continue;
+                for (Area area : city.getAreaList()) {
+                    mapUtils.addArea(area, Graphics.MAP);
+                }
             }
-        }
     }
 
 

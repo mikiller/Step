@@ -83,7 +83,7 @@ public class PoiRcvAdapter extends RecyclerView.Adapter<PoiRcvAdapter.Holder> {
         return datas == null ? 0 : datas.size();
     }
 
-    public static class Holder extends RecyclerView.ViewHolder{
+    protected static class Holder extends RecyclerView.ViewHolder{
 
         private TextView tv_poi, tv_adr;
         private ImageView iv_poi;

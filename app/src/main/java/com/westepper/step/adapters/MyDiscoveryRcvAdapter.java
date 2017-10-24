@@ -87,7 +87,7 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
         return discoveryList == null ? 0 : discoveryList.size();
     }
 
-    public class DisHolder extends RecyclerView.ViewHolder{
+    protected class DisHolder extends RecyclerView.ViewHolder{
 
         private TextView tv_date1, tv_date2, tv_msg, tv_pos, btn_good, btn_commit, tv_joinNum, tv_chat;
         private SelectableRoundedImageView iv_img1, iv_img2, iv_img3;

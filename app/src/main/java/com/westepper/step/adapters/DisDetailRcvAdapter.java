@@ -164,7 +164,7 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return commits == null ? 0 : commits.size();
     }
 
-    public class DetailHolder extends RecyclerView.ViewHolder{
+    protected class DetailHolder extends RecyclerView.ViewHolder{
         private SelectableRoundedImageView iv_header;
         private TextView tv_nickName, tv_goodNum, tv_detailMsg, tv_detailPos, tv_time, tv_joinTime;
         private ImageView iv_gender;
@@ -186,7 +186,7 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    public class CommitTitleHolder extends RecyclerView.ViewHolder{
+    protected class CommitTitleHolder extends RecyclerView.ViewHolder{
 
         public CommitTitleHolder(View itemView) {
             super(itemView);

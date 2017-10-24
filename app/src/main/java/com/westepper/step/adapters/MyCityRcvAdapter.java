@@ -53,7 +53,7 @@ public class MyCityRcvAdapter extends RecyclerView.Adapter<MyCityRcvAdapter.City
         return dataList == null ? 0 : dataList.size();
     }
 
-    public class CityHolder extends RecyclerView.ViewHolder{
+    protected static class CityHolder extends RecyclerView.ViewHolder{
         private ImageView iv_city_logo;
         private View line;
         private TextView tv_dis_city, tv_date;

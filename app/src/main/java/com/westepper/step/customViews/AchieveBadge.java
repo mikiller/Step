@@ -53,4 +53,12 @@ public class AchieveBadge extends LinearLayout {
     public void setOnClickListener(OnClickListener listener){
         btn_badge.setOnClickListener(listener);
     }
+
+    public int getBadgeKind() {
+        return (int) btn_badge.getTag();
+    }
+
+    public void setBadgeKind(int badgeKind) {
+        btn_badge.setTag(badgeKind);
+    }
 }

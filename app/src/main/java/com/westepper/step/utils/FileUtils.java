@@ -1,5 +1,7 @@
 package com.westepper.step.utils;
 
+import android.content.Context;
+
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -13,6 +15,11 @@ import java.io.IOException;
  */
 
 public class FileUtils {
+
+    public static String getFilePath(Context context, String fileName){
+        return context.getFilesDir() + File.separator + fileName;
+    }
+
     public static void saveToLocal(String str, String filePath) {
         File file = new File(filePath);
         if (!file.exists()) {

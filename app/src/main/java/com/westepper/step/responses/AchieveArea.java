@@ -1,7 +1,6 @@
 package com.westepper.step.responses;
 
 import android.text.TextUtils;
-import android.widget.TextView;
 
 import java.io.Serializable;
 
@@ -12,7 +11,13 @@ import java.io.Serializable;
 public class AchieveArea implements Serializable {
 
     private String achieveAreaId;
-    private String achieveName;
+    private String achieveAreaName;
+    private String achievementCenter;
+    private String title;
+    private String desc;
+    private String credit_level;
+    private String credit_coefficient;
+    private String category_id;
     private String areaIds;
 
     public String getAchieveAreaId() {
@@ -23,12 +28,60 @@ public class AchieveArea implements Serializable {
         this.achieveAreaId = achieveAreaId;
     }
 
-    public String getAchieveName() {
-        return achieveName;
+    public String getAchieveAreaName() {
+        return achieveAreaName;
     }
 
-    public void setAchieveName(String achieveName) {
-        this.achieveName = achieveName;
+    public void setAchieveAreaName(String achieveAreaName) {
+        this.achieveAreaName = achieveAreaName;
+    }
+
+    public String getAchievementCenter() {
+        return achievementCenter;
+    }
+
+    public void setAchievementCenter(String achievementCenter) {
+        this.achievementCenter = achievementCenter;
+    }
+
+    public String getCategory_id() {
+        return category_id;
+    }
+
+    public void setCategory_id(String category_id) {
+        this.category_id = category_id;
+    }
+
+    public String getCredit_coefficient() {
+        return credit_coefficient;
+    }
+
+    public void setCredit_coefficient(String credit_coefficient) {
+        this.credit_coefficient = credit_coefficient;
+    }
+
+    public String getCredit_level() {
+        return credit_level;
+    }
+
+    public void setCredit_level(String credit_level) {
+        this.credit_level = credit_level;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String[] getAreaIds() {

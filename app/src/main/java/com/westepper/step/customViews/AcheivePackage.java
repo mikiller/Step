@@ -4,18 +4,14 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.uilib.joooonho.SelectableRoundedImageView;
@@ -24,7 +20,6 @@ import com.westepper.step.responses.Achieve;
 import com.westepper.step.responses.AchieveArea;
 import com.westepper.step.utils.AnimUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -147,12 +142,12 @@ public class AcheivePackage extends LinearLayout {
 
     public void addAchieveArea(final AchieveArea achieveArea){
         final RadioButton text = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.item_ach, null);
-        text.setText(achieveArea.getAchieveName());
+        text.setText(achieveArea.getAchieveAreaName());
         text.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(achieveClickListener != null)
-                    achieveClickListener.onAchieveAreaClick(text, achieveArea.getAreaIds(), achieveArea.getAchieveName());
+                    achieveClickListener.onAchieveAreaClick(text, achieveArea.getAreaIds(), achieveArea.getAchieveAreaName());
             }
         });
         ll_ach_items.addView(text);

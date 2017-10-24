@@ -13,6 +13,11 @@
         bar:subStyle="IMG"
         bar:titleTxt="成就" />
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rcv_ach"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">

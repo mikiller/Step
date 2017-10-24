@@ -1,6 +1,7 @@
 package com.westepper.step.activities;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -32,6 +33,8 @@ import com.westepper.step.R;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.MyApplication;
 import com.westepper.step.base.SuperActivity;
+import com.westepper.step.logics.GetMapDataLogic;
+import com.westepper.step.models.MapDataModel;
 import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.MXPreferenceUtils;
 
@@ -71,6 +74,9 @@ public class SplashActivity extends SuperActivity {
                 isLogin = statusCode == StatusCode.LOGINED;
             }
         }, true);
+
+        getMapData();
+
         getWindow().getDecorView().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -90,6 +96,16 @@ public class SplashActivity extends SuperActivity {
                 }
             }
         }, 3000);
+    }
+
+    private void getMapData(){
+        try {
+            MapDataModel model = new MapDataModel(String.valueOf(getPackageManager().getPackageInfo(getPackageName(), 0).versionCode));
+            GetMapDataLogic logic = new GetMapDataLogic(this, model);
+            logic.sendRequest();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
