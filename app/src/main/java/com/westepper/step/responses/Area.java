@@ -1,17 +1,11 @@
 package com.westepper.step.responses;
 
-import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.model.Circle;
-import com.amap.api.maps.model.CircleOptions;
 import com.amap.api.maps.model.LatLng;
-import com.amap.api.maps.model.Polygon;
-import com.amap.api.maps.model.PolygonOptions;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,7 +103,7 @@ public class Area implements Parcelable{
         if(areaType == Area.POLYGON){
             graphics = new Graphics(aMap, reached, borderList);
         }else if(areaType == Area.CIRCLE){
-            graphics = new Graphics(aMap, reached, circle.getLatng(), circle.getRadius());
+            graphics = new Graphics(aMap, reached, circle.getLatlng(), circle.getRadius());
         }
         setGraphicsType(graphicType);
     }
@@ -137,16 +131,16 @@ public class Area implements Parcelable{
     }
 
     public static class CirlclArea implements Parcelable {
-        private LatLng latng;
+        private LatLng latlng;
         private int radius;
 
         public CirlclArea(LatLng latng, int radius) {
-            this.latng = latng;
+            this.latlng = latng;
             this.radius = radius;
         }
 
         protected CirlclArea(Parcel in) {
-            latng = in.readParcelable(LatLng.class.getClassLoader());
+            latlng = in.readParcelable(LatLng.class.getClassLoader());
             radius = in.readInt();
         }
 
@@ -162,12 +156,12 @@ public class Area implements Parcelable{
             }
         };
 
-        public LatLng getLatng() {
-            return latng;
+        public LatLng getLatlng() {
+            return latlng;
         }
 
-        public void setLatng(LatLng latng) {
-            this.latng = latng;
+        public void setLatlng(LatLng latlng) {
+            this.latlng = latlng;
         }
 
         public int getRadius() {
@@ -185,7 +179,7 @@ public class Area implements Parcelable{
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeParcelable(latng, flags);
+            dest.writeParcelable(latlng, flags);
             dest.writeInt(radius);
         }
     }

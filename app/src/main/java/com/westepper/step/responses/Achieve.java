@@ -12,15 +12,17 @@ import java.util.List;
  */
 
 public class Achieve implements Parcelable {
-
+    private String achieveCategory_id;
     private String achieveKind;
     private List<AchieveArea> achieveAreaList = new ArrayList<>();
 
-    public Achieve(String achieveKind) {
+    public Achieve(String id, String achieveKind) {
+        this.achieveCategory_id = id;
         this.achieveKind = achieveKind;
     }
 
     protected Achieve(Parcel in) {
+        achieveCategory_id = in.readString();
         achieveKind = in.readString();
         achieveAreaList = in.createTypedArrayList(AchieveArea.CREATOR);
     }
@@ -45,6 +47,14 @@ public class Achieve implements Parcelable {
         this.achieveAreaList = achieveAreaList;
     }
 
+    public String getAchieveCategory_id() {
+        return achieveCategory_id;
+    }
+
+    public void setAchieveCategory_id(String achieveCategory_id) {
+        this.achieveCategory_id = achieveCategory_id;
+    }
+
     public void setAchieveArea(AchieveArea achieveArea){
         this.achieveAreaList.add(achieveArea);
     }
@@ -64,6 +74,7 @@ public class Achieve implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(achieveCategory_id);
         dest.writeString(achieveKind);
         dest.writeTypedList(achieveAreaList);
     }

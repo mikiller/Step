@@ -76,7 +76,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
     ViewPager vp_discoveryList;
 
     DiscoveryAdapter adapter;
-//    MapData mapData;
+    //    MapData mapData;
     MapUtils mapUtils;
     //    BroadcastReceiver geoReceiver;
 //    String path;
@@ -235,13 +235,16 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
     private void initMapUtil() {
         mapUtils = MapUtils.getInstance();
         mapUtils.init(getActivity().getApplicationContext(), mapView.getMap());
-            for (City city : MainActivity.mapData.getCityList()) {
-                if (!city.getCityName().equals("上海"))
-                    continue;
-                for (Area area : city.getAreaList()) {
-                    mapUtils.addArea(area, Graphics.MAP);
-                }
+        for (City city : MainActivity.mapData.getCityList()) {
+            if (!city.getCityName().equals("上海"))
+                continue;
+            for (Area area : city.getAreaList()) {
+                mapUtils.addArea(area, Graphics.MAP);
             }
+        }
+        for(Area area : MainActivity.mapData.getAchievementAreaList()){
+            mapUtils.addAchieveArea(area);
+        }
     }
 
 
@@ -253,7 +256,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
                 if (achieveKind.equals("探索地图")) {
                     mapUtils.setAreaType(Graphics.MAP);
                 } else {
-                    mapUtils.setAreaType(Graphics.ACHEIVE);
+                    mapUtils.setAreaType(Graphics.ACHEIVE, areaId);
                 }
                 mapUtils.setShowAreaIds(areaId);
             }
@@ -371,9 +374,9 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
 
     @Override
     public void fragmentCallback(int type, Intent data) {
-        if(type == Constants.SHOW_ACHIEVE_AREA){
+        if (type == Constants.SHOW_ACHIEVE_AREA) {
             layout_achSetting.checkAchItem("城市探索", data.getStringExtra(Constants.ACH_KIND));
-        }else
+        } else
             setIsTrack(type == R.id.rdb_track);
     }
 

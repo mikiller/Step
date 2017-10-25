@@ -1,11 +1,8 @@
 package com.westepper.step.utils;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.location.Location;
-import android.net.ConnectivityManager;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -29,8 +26,8 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.autonavi.amap.mapcore.Inner_3dMap_location;
 import com.westepper.step.R;
-import com.westepper.step.fragments.MapFragment;
 import com.westepper.step.responses.Area;
+import com.westepper.step.responses.Graphics;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,10 +35,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Mikiller on 2017/3/27.
@@ -49,7 +47,7 @@ import java.util.Map;
 
 public class MapUtils {
     private static final String TAG = MapUtils.class.getSimpleName();
-//    private Context mContext;
+    //    private Context mContext;
     private AMap aMap;
     private MyLocationStyle locationStyle;
     private AMapLocationClient locationClient;
@@ -57,12 +55,15 @@ public class MapUtils {
     private Inner_3dMap_location mapLocation;
 
     Map<String, Area> areas = new HashMap<>();
+    Map<String, Area> achieveAreas = new HashMap<>();
     List<String> showAreaIds = new ArrayList();
     boolean needArea = true;
     float currentZoom = 15;
     private BitmapDescriptor markerImg;
     private Marker lastMarker;
     private OnGetLocationListener getLocationListener;
+
+    private Timer relocationTimer = new Timer();
 
     private MapUtils() {
         markerImg = BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker);
@@ -111,7 +112,7 @@ public class MapUtils {
         aMap.animateCamera(new CameraUpdateFactory().newCameraPosition(new CameraPosition(latLng, currentZoom, 0, 0)));
     }
 
-    public void init(Context context, AMap aMap){
+    public void init(Context context, AMap aMap) {
         this.aMap = aMap;
         initLocationStyle(context, 2000);
         initLocationClient(context);
@@ -132,15 +133,37 @@ public class MapUtils {
 
             @Override
             public void onCameraChangeFinish(CameraPosition cameraPosition) {
-                if(!needArea)
+                if (!needArea)
                     return;
-                if(currentZoom < 13){
+                if (currentZoom < 13) {
                     hideArea();
-                }else{
+                } else {
                     showArea();
                 }
             }
         });
+
+        aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
+            @Override
+            public void onTouch(MotionEvent motionEvent) {
+                if(motionEvent.getPointerCount() == 2)
+                    return;
+                if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                    relocationTimer.cancel();
+                    aMap.setMyLocationEnabled(false);
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    relocationTimer = new Timer();
+                    relocationTimer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            aMap.setMyLocationStyle(locationStyle);
+                            aMap.setMyLocationEnabled(true);
+                        }
+                    }, 5000);
+                }
+            }
+        });
+
     }
 
     private void setCustomStyle(Context context) {
@@ -192,32 +215,40 @@ public class MapUtils {
         return locationStyle;
     }
 
-    private void hideArea(){
-        for(Area area : areas.values()){
+    private void hideArea() {
+        for (Area area : areas.values()) {
+            area.hide();
+        }
+        for (Area area : achieveAreas.values()) {
             area.hide();
         }
     }
 
-    private void showArea(){
-        if(showAreaIds.size() == 0) {
+    private void showArea() {
+        if (showAreaIds.size() == 0) {
             for (Area area : areas.values()) {
                 area.show();
             }
-        }else{
+            for (Area area : achieveAreas.values()) {
+                area.hide();
+            }
+        } else {
             hideArea();
-            for(String id : showAreaIds){
-                if(areas.get(id) != null)
+            for (String id : showAreaIds) {
+                if (areas.get(id) != null)
                     areas.get(id).show();
+                else if (achieveAreas.get(id) != null)
+                    achieveAreas.get(id).show();
             }
         }
     }
 
-    public void setIsNeedArea(boolean isNeed){
+    public void setIsNeedArea(boolean isNeed) {
         needArea = isNeed;
-        if(needArea) {
+        if (needArea) {
             showArea();
             aMap.setMyLocationStyle(locationStyle);
-        }else
+        } else
             hideArea();
         aMap.setMyLocationEnabled(needArea);
     }
@@ -276,42 +307,62 @@ public class MapUtils {
         aMap.clear();
     }
 
-    public int getAreasSize(){
+    public int getAreasSize() {
         return areas.size();
     }
 
-    public void addArea(Area area, int graphicType){
+    public void addArea(Area area, int graphicType) {
+        addArea(areas, area, graphicType);
+    }
 
-        if(areas.get(area.getAreaId()) == null){
+    public void addAchieveArea(Area area) {
+        addArea(achieveAreas, area, Graphics.ACHEIVE);
+    }
+
+    private void addArea(Map<String, Area> areas, Area area, int graphicType) {
+        if (areas.get(area.getAreaId()) == null) {
             Log.e(TAG, "add area: " + area.getAreaId());
             area.createGraphics(aMap, graphicType);
             if (area.getAreaType() == Area.POLYGON)
                 createGeoFence(area.getAreaId(), area.getBorderList());
             else if (area.getAreaType() == Area.CIRCLE)
-                createGeoFence(area.getAreaId(), area.getCircle().getLatng(), area.getCircle().getRadius());
+                createGeoFence(area.getAreaId(), area.getCircle().getLatlng(), area.getCircle().getRadius());
             areas.put(area.getAreaId(), area);
-        }else{
+        } else {
             areas.get(area.getAreaId()).createGraphics(aMap, graphicType);
         }
     }
 
-    public void setAreaChecked(String id){
-        if(areas.get(id) == null)
-            return;
-        areas.get(id).setReached(true);
+    public void setAreaChecked(String id) {
+        if (areas.get(id) != null)
+            areas.get(id).setReached(true);
+        else if (achieveAreas.get(id) != null)
+            achieveAreas.get(id).setReached(true);
         //save to local
     }
 
-    public void setAreaType(int type){
-        for(Area area : areas.values()){
+    public void setAreaType(int type) {
+        for (Area area : areas.values()) {
             area.setGraphicsType(type);
         }
     }
 
-    public void setShowAreaIds(String[] ids){
-        if(ids == null || ids.length == 0)
+    public void setAreaType(int type, String[] ids) {
+        if (ids == null)
+            setAreaType(type);
+        else {
+            for (String id : ids) {
+                if (areas.get(id) != null) {
+                    areas.get(id).setGraphicsType(type);
+                }
+            }
+        }
+    }
+
+    public void setShowAreaIds(String[] ids) {
+        if (ids == null || ids.length == 0)
             showAreaIds = new ArrayList<>();
-        else{
+        else {
             showAreaIds = Arrays.asList(ids);
         }
         showArea();
@@ -328,15 +379,15 @@ public class MapUtils {
         moveCamera(lbs);
     }
 
-    public void removeMarker(){
-        if(lastMarker != null){
+    public void removeMarker() {
+        if (lastMarker != null) {
             lastMarker.remove();
             lastMarker = null;
         }
     }
 
     public void initLocationClient(Context context) {
-        if(locationClient == null) {
+        if (locationClient == null) {
             locationClient = new AMapLocationClient(context);
             locationClient.setLocationOption(createClientOption());
             locationClient.setLocationListener(new AMapLocationListener() {
@@ -357,7 +408,7 @@ public class MapUtils {
         startLoaction();
     }
 
-    public void startLoaction(){
+    public void startLoaction() {
         locationClient.startLocation();
     }
 
@@ -370,23 +421,23 @@ public class MapUtils {
         return clientOption;
     }
 
-    public void initGeoClient(Context context){
-        if(geoFenceClient == null) {
+    public void initGeoClient(Context context) {
+        if (geoFenceClient == null) {
             geoFenceClient = new GeoFenceClient(context);
             geoFenceClient.createPendingIntent("com.map.baidumapdemo.broadcast");
         }
     }
 
-    public void createGeoFence(String id, List<LatLng> pos){
+    public void createGeoFence(String id, List<LatLng> pos) {
         List<DPoint> points = new ArrayList<>();
-        for(LatLng p : pos){
+        for (LatLng p : pos) {
             points.add(new DPoint(p.latitude, p.longitude));
         }
         geoFenceClient.addGeoFence(points, id);
 
     }
 
-    public void createGeoFence(String id, LatLng center, int radius){
+    public void createGeoFence(String id, LatLng center, int radius) {
         geoFenceClient.addGeoFence(new DPoint(center.latitude, center.longitude), radius, id);
     }
 
@@ -407,7 +458,7 @@ public class MapUtils {
         return AMapUtils.calculateLineDistance(start, end);
     }
 
-    public void searchPoi(Context context, String keyWord, String city, PoiSearch.OnPoiSearchListener listener){
+    public void searchPoi(Context context, String keyWord, String city, PoiSearch.OnPoiSearchListener listener) {
         PoiSearch.Query query = new PoiSearch.Query(keyWord, "", city);
         query.setPageSize(20);
         PoiSearch poiSearch = new PoiSearch(context, query);
@@ -432,10 +483,12 @@ public class MapUtils {
 //            geoFenceClient = null;
 //        }
         removeMarker();
-        if(areas != null){
+        if (areas != null) {
             areas.clear();
             areas = null;
         }
+
+        achieveAreas.clear();
         //mContext = null;
         MapFactory.instance = null;
     }

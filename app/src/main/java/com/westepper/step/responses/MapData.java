@@ -13,13 +13,16 @@ import java.util.List;
 
 public class MapData implements Parcelable {
     private List<City> cityList = new ArrayList<>();
+    private List<Area> achievementAreaList = new ArrayList<>();
     private List<Achieve> achievementList = new ArrayList<>();
 
     public MapData() {
     }
 
+
     protected MapData(Parcel in) {
         cityList = in.createTypedArrayList(City.CREATOR);
+        achievementAreaList = in.createTypedArrayList(Area.CREATOR);
         achievementList = in.createTypedArrayList(Achieve.CREATOR);
     }
 
@@ -47,6 +50,14 @@ public class MapData implements Parcelable {
         cityList.add(city);
     }
 
+    public List<Area> getAchievementAreaList() {
+        return achievementAreaList;
+    }
+
+    public void setAchievementAreaList(List<Area> achievementAreaList) {
+        this.achievementAreaList = achievementAreaList;
+    }
+
     public List<Achieve> getAchievementList() {
         return achievementList;
     }
@@ -67,6 +78,9 @@ public class MapData implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedList(cityList);
+        dest.writeTypedList(achievementAreaList);
         dest.writeTypedList(achievementList);
     }
+
+
 }
