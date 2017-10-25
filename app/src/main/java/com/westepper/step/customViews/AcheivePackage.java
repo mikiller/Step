@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -141,16 +142,25 @@ public class AcheivePackage extends LinearLayout {
     }
 
     public void addAchieveArea(final AchieveArea achieveArea){
-        final RadioButton text = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.item_ach, null);
-        text.setText(achieveArea.getAchieveAreaName());
-        text.setOnClickListener(new OnClickListener() {
+        final RadioButton achItem = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.item_ach, null);
+        achItem.setText(achieveArea.getAchieveAreaName());
+        achItem.setTag(achieveArea.getAchieveAreaId());
+//        achItem.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(achieveClickListener != null)
+//                    achieveClickListener.onCheckAchieveArea(achItem, achieveArea.getAreaIds(), achieveArea.getAchieveAreaName());
+//            }
+//        });
+        achItem.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                if(achieveClickListener != null)
-                    achieveClickListener.onAchieveAreaClick(text, achieveArea.getAreaIds(), achieveArea.getAchieveAreaName());
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked && achieveClickListener != null){
+                    achieveClickListener.onCheckAchieveArea(achItem, achieveArea.getAreaIds(), achieveArea.getAchieveAreaName());
+                }
             }
         });
-        ll_ach_items.addView(text);
+        ll_ach_items.addView(achItem);
         ll_ach_items.measure(0,0);
         ll_ach_items.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
@@ -163,6 +173,15 @@ public class AcheivePackage extends LinearLayout {
 
     }
 
+    public void checkAchItem(String id){
+        ll_ach_package.performClick();
+        RadioButton item = (RadioButton) ll_ach_items.findViewWithTag(id);
+        if(item != null){
+//            item.performClick();
+            item.setChecked(true);
+        }
+    }
+
     public AchieveClickListener getAchieveClickListener() {
         return achieveClickListener;
     }
@@ -173,7 +192,7 @@ public class AcheivePackage extends LinearLayout {
 
     public interface AchieveClickListener{
         void onPackageClick(AcheivePackage pkg);
-        void onAchieveAreaClick(RadioButton item, String[] areaId, String achieveKind);
+        void onCheckAchieveArea(RadioButton item, String[] areaId, String achieveKind);
     }
 
     @Override

@@ -16,6 +16,7 @@ import com.uilib.customdialog.CustomDialog;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
 import com.westepper.step.activities.GalleryActivity;
+import com.westepper.step.activities.MainActivity;
 import com.westepper.step.adapters.DiscoveryAdapter;
 import com.westepper.step.base.BaseFragment;
 import com.westepper.step.base.Constants;
@@ -75,7 +76,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
     ViewPager vp_discoveryList;
 
     DiscoveryAdapter adapter;
-    MapData mapData;
+//    MapData mapData;
     MapUtils mapUtils;
     //    BroadcastReceiver geoReceiver;
 //    String path;
@@ -83,112 +84,108 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
     float searchHeight, headTransY, vpTransY, optTransY;
     int gender = 0;
 
-    private void createTestData() {
-        MapData mapData = new MapData();
-        City city1 = new City();
-        city1.setCityName("上海");
-        Area area1 = new Area("1");
-        area1.setAreaType(Area.POLYGON);
-        List<LatLng> coords = new ArrayList<>();
-        coords.add(new LatLng(31.230957, 121.462133));
-        coords.add(new LatLng(31.230911, 121.464043));
-        coords.add(new LatLng(31.227425, 121.465052));
-        coords.add(new LatLng(31.226847, 121.463078));
-        coords.add(new LatLng(31.229856, 121.462005));
-        area1.setBorderList(coords);
-        city1.setArea(area1);
-
-        Area area2 = new Area("2");
-        area2.setAreaType(Area.POLYGON);
-        List<LatLng> coords2 = new ArrayList<>();
-        coords2.add(new LatLng(31.230122, 121.459419));
-        coords2.add(new LatLng(31.230957, 121.462133));
-        coords2.add(new LatLng(31.229856, 121.462005));
-        coords2.add(new LatLng(31.228085, 121.462638));
-        coords2.add(new LatLng(31.226681, 121.459885));
-        area2.setBorderList(coords2);
-        city1.setArea(area2);
-
-        Area area3 = new Area("3");
-        area3.setAreaType(Area.POLYGON);
-        List<LatLng> coords3 = new ArrayList<>();
-        coords3.add(new LatLng(31.230911, 121.464043));
-        coords3.add(new LatLng(31.230819, 121.465792));
-        coords3.add(new LatLng(31.227489, 121.466908));
-        coords3.add(new LatLng(31.227425, 121.465052));
-        area3.setBorderList(coords3);
-        city1.setArea(area3);
-
-        Area area4 = new Area("4");
-        area4.setAreaType(Area.POLYGON);
-        List<LatLng> coords4 = new ArrayList<>();
-        coords4.add(new LatLng(31.226847, 121.463078));
-        coords4.add(new LatLng(31.227425, 121.465052));
-        coords4.add(new LatLng(31.227489, 121.466908));
-        coords4.add(new LatLng(31.225617, 121.467541));
-        coords4.add(new LatLng(31.225241, 121.463249));
-        area4.setBorderList(coords4);
-        city1.setArea(area4);
-
-        Area area5 = new Area("5");
-        area5.setAreaType(Area.CIRCLE);
-        Area.CirlclArea ca = new Area.CirlclArea(new LatLng(31.230779, 121.472071), 800);
-        area5.setCircle(ca);
-        city1.setArea(area5);
-
-//        Area area6 = new Area("6");
-//        area6.setAreaType(Area.CIRCLE);
-//        Area.CirlclArea ca1 = new Area.CirlclArea(new LatLng(31.230779, 121.472071), 800);
-//        area6.setCircle(ca1);
-//        city1.setArea(area6);
-
-        mapData.setCity(city1);
-
-        Achieve achieve = new Achieve();
-        achieve.setAchieveKind("城市探索");
-        AchieveArea achieveArea = new AchieveArea();
-        achieveArea.setAchieveAreaName("静安区");
-        achieveArea.setAchieveAreaId("13");
-        achieveArea.setAreaIds("3,4");
-        achieve.setAchieveArea(achieveArea);
-        AchieveArea achieveArea1 = new AchieveArea();
-        achieveArea1.setAchieveAreaName("黄浦区");
-        achieveArea1.setAchieveAreaId("14");
-        achieveArea1.setAreaIds("1,2,5");
-        achieve.setAchieveArea(achieveArea1);
-        mapData.setAchieve(achieve);
-
-        Achieve achieve1 = new Achieve();
-        achieve1.setAchieveKind("发现世界");
-        AchieveArea achieveArea2 = new AchieveArea();
-        achieveArea2.setAchieveAreaName("人民广场");
-        achieveArea2.setAchieveAreaId("16");
-        achieveArea2.setAreaIds("5");
-        achieve1.setAchieveArea(achieveArea2);
-        AchieveArea achieveArea3 = new AchieveArea();
-        achieveArea3.setAchieveAreaName("上海电视台");
-        achieveArea3.setAchieveAreaId("17");
-        achieveArea3.setAreaIds("1,2");
-        achieve1.setAchieveArea(achieveArea3);
-        mapData.setAchieve(achieve1);
-
-        Achieve achieve2 = new Achieve();
-        achieve2.setAchieveKind("行者无疆");
-        AchieveArea achieveArea4 = new AchieveArea();
-        achieveArea4.setAchieveAreaName("南京西路");
-        achieveArea4.setAchieveAreaId("20");
-        achieveArea4.setAreaIds("1,4");
-        achieve2.setAchieveArea(achieveArea4);
-        AchieveArea achieveArea5 = new AchieveArea();
-        achieveArea5.setAchieveAreaName("威海路");
-        achieveArea5.setAchieveAreaId("21");
-        achieveArea5.setAreaIds("2,3");
-        achieve2.setAchieveArea(achieveArea5);
-        mapData.setAchieve(achieve2);
-
-        String areaStr = new Gson().toJson(mapData);
-        FileUtils.saveToLocal(areaStr, FileUtils.getFilePath(getActivity(), "area.data"));
-    }
+//    private void createTestData() {
+//        MapData mapData = new MapData();
+//        City city1 = new City("上海");
+//        Area area1 = new Area("1");
+//        area1.setAreaType(Area.POLYGON);
+//        List<LatLng> coords = new ArrayList<>();
+//        coords.add(new LatLng(31.230957, 121.462133));
+//        coords.add(new LatLng(31.230911, 121.464043));
+//        coords.add(new LatLng(31.227425, 121.465052));
+//        coords.add(new LatLng(31.226847, 121.463078));
+//        coords.add(new LatLng(31.229856, 121.462005));
+//        area1.setBorderList(coords);
+//        city1.setArea(area1);
+//
+//        Area area2 = new Area("2");
+//        area2.setAreaType(Area.POLYGON);
+//        List<LatLng> coords2 = new ArrayList<>();
+//        coords2.add(new LatLng(31.230122, 121.459419));
+//        coords2.add(new LatLng(31.230957, 121.462133));
+//        coords2.add(new LatLng(31.229856, 121.462005));
+//        coords2.add(new LatLng(31.228085, 121.462638));
+//        coords2.add(new LatLng(31.226681, 121.459885));
+//        area2.setBorderList(coords2);
+//        city1.setArea(area2);
+//
+//        Area area3 = new Area("3");
+//        area3.setAreaType(Area.POLYGON);
+//        List<LatLng> coords3 = new ArrayList<>();
+//        coords3.add(new LatLng(31.230911, 121.464043));
+//        coords3.add(new LatLng(31.230819, 121.465792));
+//        coords3.add(new LatLng(31.227489, 121.466908));
+//        coords3.add(new LatLng(31.227425, 121.465052));
+//        area3.setBorderList(coords3);
+//        city1.setArea(area3);
+//
+//        Area area4 = new Area("4");
+//        area4.setAreaType(Area.POLYGON);
+//        List<LatLng> coords4 = new ArrayList<>();
+//        coords4.add(new LatLng(31.226847, 121.463078));
+//        coords4.add(new LatLng(31.227425, 121.465052));
+//        coords4.add(new LatLng(31.227489, 121.466908));
+//        coords4.add(new LatLng(31.225617, 121.467541));
+//        coords4.add(new LatLng(31.225241, 121.463249));
+//        area4.setBorderList(coords4);
+//        city1.setArea(area4);
+//
+//        Area area5 = new Area("5");
+//        area5.setAreaType(Area.CIRCLE);
+//        Area.CirlclArea ca = new Area.CirlclArea(new LatLng(31.230779, 121.472071), 800);
+//        area5.setCircle(ca);
+//        city1.setArea(area5);
+//
+////        Area area6 = new Area("6");
+////        area6.setAreaType(Area.CIRCLE);
+////        Area.CirlclArea ca1 = new Area.CirlclArea(new LatLng(31.230779, 121.472071), 800);
+////        area6.setCircle(ca1);
+////        city1.setArea(area6);
+//
+//        mapData.setCity(city1);
+//
+//        Achieve achieve = new Achieve("城市探索");
+//        AchieveArea achieveArea = new AchieveArea();
+//        achieveArea.setAchieveAreaName("静安区");
+//        achieveArea.setAchieveAreaId("13");
+//        achieveArea.setAreaIds("3,4");
+//        achieve.setAchieveArea(achieveArea);
+//        AchieveArea achieveArea1 = new AchieveArea();
+//        achieveArea1.setAchieveAreaName("黄浦区");
+//        achieveArea1.setAchieveAreaId("14");
+//        achieveArea1.setAreaIds("1,2,5");
+//        achieve.setAchieveArea(achieveArea1);
+//        mapData.setAchieve(achieve);
+//
+//        Achieve achieve1 = new Achieve("发现世界");
+//        AchieveArea achieveArea2 = new AchieveArea();
+//        achieveArea2.setAchieveAreaName("人民广场");
+//        achieveArea2.setAchieveAreaId("16");
+//        achieveArea2.setAreaIds("5");
+//        achieve1.setAchieveArea(achieveArea2);
+//        AchieveArea achieveArea3 = new AchieveArea();
+//        achieveArea3.setAchieveAreaName("上海电视台");
+//        achieveArea3.setAchieveAreaId("17");
+//        achieveArea3.setAreaIds("1,2");
+//        achieve1.setAchieveArea(achieveArea3);
+//        mapData.setAchieve(achieve1);
+//
+//        Achieve achieve2 = new Achieve("行者无疆");
+//        AchieveArea achieveArea4 = new AchieveArea();
+//        achieveArea4.setAchieveAreaName("南京西路");
+//        achieveArea4.setAchieveAreaId("20");
+//        achieveArea4.setAreaIds("1,4");
+//        achieve2.setAchieveArea(achieveArea4);
+//        AchieveArea achieveArea5 = new AchieveArea();
+//        achieveArea5.setAchieveAreaName("威海路");
+//        achieveArea5.setAchieveAreaId("21");
+//        achieveArea5.setAreaIds("2,3");
+//        achieve2.setAchieveArea(achieveArea5);
+//        mapData.setAchieve(achieve2);
+//
+//        String areaStr = new Gson().toJson(mapData);
+//        FileUtils.saveToLocal(areaStr, FileUtils.getFilePath(getActivity(), "area.data"));
+//    }
 
     @Override
     protected void setLayoutRes() {
@@ -199,14 +196,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
     protected void initView() {
         mapView.onCreate(saveBundle);
 
-        mapData = FileUtils.getDataFromLocal(FileUtils.getFilePath(getActivity(), Constants.MAP_DATA), MapData.class);
-        if (mapData == null) {
-//            createTestData();
-            mapData = new MapData();
-            //for test
-            createTestData();
-            mapData = FileUtils.getDataFromLocal(FileUtils.getFilePath(getActivity(), "area.data"), MapData.class);
-        }
+
         initMapUtil();
         initAcheiveSetting();
 
@@ -245,7 +235,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
     private void initMapUtil() {
         mapUtils = MapUtils.getInstance();
         mapUtils.init(getActivity().getApplicationContext(), mapView.getMap());
-            for (City city : mapData.getCityList()) {
+            for (City city : MainActivity.mapData.getCityList()) {
                 if (!city.getCityName().equals("上海"))
                     continue;
                 for (Area area : city.getAreaList()) {
@@ -256,7 +246,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
 
 
     private void initAcheiveSetting() {
-        layout_achSetting.setAchievementList(mapData.getAchievementList());
+        layout_achSetting.setAchievementList(MainActivity.mapData.getAchievementList());
         layout_achSetting.setAchieveSettingListener(new AcheiveSettingLayout.onAchieveSettingListener() {
             @Override
             public void onAchieveSelected(String[] areaId, String achieveKind) {
@@ -381,7 +371,10 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
 
     @Override
     public void fragmentCallback(int type, Intent data) {
-        setIsTrack(type == R.id.rdb_track);
+        if(type == Constants.SHOW_ACHIEVE_AREA){
+            layout_achSetting.checkAchItem("城市探索", data.getStringExtra(Constants.ACH_KIND));
+        }else
+            setIsTrack(type == R.id.rdb_track);
     }
 
     @Override

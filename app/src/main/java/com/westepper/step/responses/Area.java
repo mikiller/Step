@@ -19,8 +19,7 @@ import java.util.List;
  * Created by Mikiller on 2017/8/29.
  */
 
-public class Area implements Serializable{
-    private static final long serialVersionUID = 424384235978049417L;
+public class Area implements Parcelable{
 
     public static final int CIRCLE = 2, POLYGON = 1;
     private String areaId;
@@ -34,6 +33,26 @@ public class Area implements Serializable{
     public Area(String id) {
         this.areaId = id;
     }
+
+    protected Area(Parcel in) {
+        areaId = in.readString();
+        areaType = in.readInt();
+        borderList = in.createTypedArrayList(LatLng.CREATOR);
+        circle = in.readParcelable(CirlclArea.class.getClassLoader());
+        reached = in.readByte() != 0;
+    }
+
+    public static final Creator<Area> CREATOR = new Creator<Area>() {
+        @Override
+        public Area createFromParcel(Parcel in) {
+            return new Area(in);
+        }
+
+        @Override
+        public Area[] newArray(int size) {
+            return new Area[size];
+        }
+    };
 
     public String getAreaId() {
         return areaId;
@@ -101,6 +120,20 @@ public class Area implements Serializable{
 
     public void show(){
         graphics.show(reached);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(areaId);
+        dest.writeInt(areaType);
+        dest.writeTypedList(borderList);
+        dest.writeParcelable(circle, flags);
+        dest.writeByte((byte) (reached ? 1 : 0));
     }
 
     public static class CirlclArea implements Parcelable {

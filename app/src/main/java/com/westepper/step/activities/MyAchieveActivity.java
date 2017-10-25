@@ -4,13 +4,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
+
 import com.westepper.step.R;
 import com.westepper.step.adapters.AchieveRcvAdapter;
 import com.westepper.step.adapters.ReachedAchRcvAdapter;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.TitleBar;
+import com.westepper.step.responses.Achieve;
 import com.westepper.step.responses.AchieveProgress;
 
 import java.util.ArrayList;
@@ -76,23 +77,35 @@ public class MyAchieveActivity extends SuperActivity {
 
         rcv_ach.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rcv_ach.setAdapter(adapter = new AchieveRcvAdapter(this, achKind));
-        adapter.setListener(new View.OnClickListener() {
+        adapter.setListener(new AchieveRcvAdapter.OnMenuClickListener() {
             @Override
-            public void onClick(View v) {
-                adapter.setNeedHead(false);
-                if(achKind == Constants.ACH_CITY){
+            public void onMenuClicked(String title, int kind) {
+                if(kind == Constants.ACH_CITY){
                     //createAreaData();
                     adapter.setPgsList(createAreas());
-                    titleBar.setTitle("上海");
+                    titleBar.setTitle(title);
                 }else{
                     //goto sub ach
-                    titleBar.setTitle("城市探索");
+                    titleBar.setTitle(title);
                     reachedAdapter = new ReachedAchRcvAdapter(MyAchieveActivity.this);
-                    List<String> reachList = new ArrayList<String>();
-                    reachList.add("1");
-                    reachList.add("2");
-                    reachedAdapter.setReachIdList(reachList);
-                    rcv_ach.setAdapter(reachedAdapter);
+                    for(Achieve achieve: MainActivity.mapData.getAchievementList()){
+                        if(achieve.getAchieveKind().equals(title)){
+                            if(title.equals("城市探索")) {
+                                List<String> ids = new ArrayList<String>();
+                                ids.add("3");
+                                ids.add("4");
+                                reachedAdapter.setReachIds(ids);
+                            }
+                            reachedAdapter.setAchAreaList(achieve.getAchieveAreaList());
+                            rcv_ach.setAdapter(reachedAdapter);
+                            break;
+                        }
+                    }
+//                    List<String> reachList = new ArrayList<String>();
+//                    reachList.add("1");
+//                    reachList.add("2");
+//                    reachedAdapter.setAchAreaList(reachList);
+//                    rcv_ach.setAdapter(reachedAdapter);
                 }
             }
         });
@@ -125,8 +138,9 @@ public class MyAchieveActivity extends SuperActivity {
     }
 
     private void createAchieves(List<AchieveProgress> data) {
+
         data.add(createAchMenu("初识STEP", R.mipmap.ic_ach_step, 0, achKind));
-        data.add(createAchMenu("探索世界", R.mipmap.ic_ach_dis, 0, achKind));
+        data.add(createAchMenu("城市探索", R.mipmap.ic_ach_dis, 0, achKind));
         data.add(createAchMenu("我爱上海", R.mipmap.ic_ach_sh, 0, achKind));
         data.add(createAchMenu("地标名胜", R.mipmap.ic_ach_pos, 0, achKind));
         data.add(createAchMenu("限时成就", R.mipmap.ic_ach_timer, 0, achKind));

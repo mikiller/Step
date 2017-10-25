@@ -10,8 +10,11 @@ import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.BaseModel;
 import com.westepper.step.base.BaseResponse;
 import com.westepper.step.base.Constants;
+import com.westepper.step.responses.Achieve;
 import com.westepper.step.responses.MapData;
 import com.westepper.step.utils.FileUtils;
+
+import java.util.List;
 
 /**
  * Created by Mikiller on 2017/10/24.
@@ -44,8 +47,24 @@ public class GetMapDataLogic extends BaseLogic<MapData> {
 
     @Override
     public void onSuccess(MapData response) {
+        if(response.getAchievementList().size() < 4){
+            String[] kinds = new String[]{"城市探索", "我爱上海", "地标名胜", "限时成就"};
+//            int i = 0;
+//            List<Achieve> tmp = response.getAchievementList();
+            for(int i = 0; i < kinds.length; i++) {
+                if(i < response.getAchievementList().size()){
+                    if (response.getAchievementList().get(i).getAchieveKind().equals(kinds[i])) {
+                        continue;
+                    }else{
+                        response.getAchievementList().add(i, new Achieve(kinds[i]));
+                    }
+                }else{
+                    response.getAchievementList().add(new Achieve(kinds[i]));
+                }
+            }
+        }
         String data = new Gson().toJson(response);
-        Log.e(TAG, data);
+//        Log.e(TAG, data);
         FileUtils.saveToLocal(data, FileUtils.getFilePath(context, Constants.MAP_DATA));
     }
 

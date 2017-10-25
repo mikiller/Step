@@ -38,7 +38,8 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
     private boolean needHead = true;
     private int achKind;
 
-    private View.OnClickListener listener;
+//    private View.OnClickListener listener;
+    private OnMenuClickListener listener;
     private List<AchieveProgress> pgsList;
 
     public AchieveRcvAdapter(Context mContext, int achKind) {
@@ -63,7 +64,7 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
-    public void setListener(View.OnClickListener listener) {
+    public void setListener(OnMenuClickListener listener) {
         this.listener = listener;
     }
 
@@ -87,7 +88,7 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
             ((HeadHolder)holder).setBadge();
             ((HeadHolder)holder).setAchTitle(2);
         }else if(holder instanceof AchProgressHolder){
-            AchieveProgress achPgs = pgsList.get(holder.getAdapterPosition() - (needHead ? 1 : 0));
+            final AchieveProgress achPgs = pgsList.get(holder.getAdapterPosition() - (needHead ? 1 : 0));
             if (achPgs.getType() == Constants.ACH_BADGE) {
                 ((AchProgressHolder)holder).setMenu_icon(achPgs.getIconId());
                 ((AchProgressHolder)holder).setSubTitle(achPgs.getName());
@@ -99,8 +100,14 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
                 ((AchProgressHolder)holder).setNeedNext(achPgs.getType() == Constants.ACH_AREA ? false : true);
             }
             ((AchProgressHolder)holder).setPgs(achPgs.getPercent());
-            if(listener != null){
-                ((AchProgressHolder)holder).setAchMenuClickListener(listener);
+            if(listener != null && ((AchProgressHolder) holder).canClick() && !achPgs.getName().equals("初识STEP")){
+                ((AchProgressHolder)holder).setAchMenuClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        setNeedHead(false);
+                        listener.onMenuClicked(achPgs.getName(), achPgs.getType());
+                    }
+                });
             }
         }
     }
@@ -219,6 +226,10 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
             btn_next.setVisibility(isNeed ? VISIBLE : GONE);
         }
 
+        public boolean canClick(){
+            return btn_next.getVisibility() == VISIBLE;
+        }
+
         public void setMenu_icon(int resId){
             setNeedIcon(true);
             menu_icon.setImageResource(resId);
@@ -231,7 +242,12 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
         }
 
         public void setAchMenuClickListener(View.OnClickListener listener){
-            btn_next.setOnClickListener(listener);
+            itemView.setOnClickListener(listener);
+//            btn_next.setOnClickListener(listener);
         }
+    }
+
+    public interface OnMenuClickListener{
+        void onMenuClicked(String title, int kind);
     }
 }

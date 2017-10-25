@@ -33,6 +33,7 @@ public class AcheiveSettingLayout extends RelativeLayout {
     private onAchieveSettingListener achieveSettingListener;
 
     private int[] icons = new int[]{R.mipmap.ic_ach1, R.mipmap.ic_ach2, R.mipmap.ic_ach3, R.mipmap.ic_ach4};
+//    private String[] titles = new String[]{"探索世界","我爱上海","地标名胜", "限时成就"};
 
     public AcheiveSettingLayout(Context context) {
         this(context, null, 0);
@@ -77,10 +78,12 @@ public class AcheiveSettingLayout extends RelativeLayout {
     public void setAchievementList(List<Achieve> achieveList){
         achievementList = achieveList;
         int i = 0;
-        for(Achieve achieve : achieveList){
+//        for(int i = 0; i < icons.length; i++){
+        for(Achieve ach : achieveList){
             AcheivePackage achPkg = new AcheivePackage(getContext());
+            achPkg.setTag(ach.getAchieveKind());
             achPkg.setAchIcon(getContext().getResources().getDrawable(icons[i++]));
-            achPkg.setAchieve(achieve);
+            achPkg.setAchieve(ach);
             achPkg.setAchieveClickListener(new AcheivePackage.AchieveClickListener() {
                 @Override
                 public void onPackageClick(AcheivePackage pkg) {
@@ -97,11 +100,18 @@ public class AcheiveSettingLayout extends RelativeLayout {
                 }
 
                 @Override
-                public void onAchieveAreaClick(RadioButton item, String[] areaId, String achieveKind) {
+                public void onCheckAchieveArea(RadioButton item, String[] areaId, String achieveKind) {
                     onItemChecked(item, areaId, achieveKind);
                 }
             });
             ll_ach.addView(achPkg);
+        }
+    }
+
+    public void checkAchItem(String kind, String id){
+        AcheivePackage achPkg = (AcheivePackage) ll_ach.findViewWithTag(kind);
+        if(achPkg != null){
+            achPkg.checkAchItem(id);
         }
     }
 

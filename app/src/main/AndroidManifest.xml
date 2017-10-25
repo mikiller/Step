@@ -156,7 +156,8 @@
         <activity android:name=".activities.RegisterActivity"/>
 
         <activity android:name=".activities.MainActivity"
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="stateHidden"
+            android:launchMode="singleInstance">
 
         </activity>
         

@@ -245,7 +245,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             case R.id.menu_acheive:
                 args = new HashMap<>();
                 args.put(Constants.ACH_KIND, Constants.ACH_BADGE);
-                ActivityManager.startActivity(getActivity(), MyAchieveActivity.class, args);
+                ActivityManager.startActivityforResult(getActivity(), MyAchieveActivity.class, Constants.SHOW_ACHIEVE_AREA, args);
                 break;
 //            case R.id.tv_user_name:
 //                ((BaseActivity) getActivity()).startToActivity(UserRegisterActivity.class);

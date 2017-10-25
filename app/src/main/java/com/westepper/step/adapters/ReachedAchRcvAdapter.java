@@ -1,6 +1,8 @@
 package com.westepper.step.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.Dimension;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,7 +14,15 @@ import android.widget.TextView;
 
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
+import com.westepper.step.activities.MainActivity;
+import com.westepper.step.base.Constants;
+import com.westepper.step.base.SuperActivity;
+import com.westepper.step.responses.AchieveArea;
+import com.westepper.step.utils.ActivityManager;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,18 +32,33 @@ import java.util.List;
 public class ReachedAchRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int REACHTITLE = 0, UNREACHTITLE = 1, ACHIEVE = 2;
     private Context mContext;
-    private List<String> reachIdList;
+    private List<AchieveArea> achAreaList;
+    private List<String> reachIds = new ArrayList<>();
+    private int dataOffset = 0;
 
     public ReachedAchRcvAdapter(Context mContext) {
         this.mContext = mContext;
     }
 
-    public List<String> getReachIdList() {
-        return reachIdList;
+    public List<AchieveArea> getAchAreaList() {
+        return achAreaList;
     }
 
-    public void setReachIdList(List<String> reachIdList) {
-        this.reachIdList = reachIdList;
+    public void setAchAreaList(List<AchieveArea> achAreaList) {
+        this.achAreaList = new ArrayList<>(achAreaList);
+        int j = 0;
+        for(String id : reachIds){
+            for(int i = 0; i < achAreaList.size(); i++){
+                if(achAreaList.get(i).getAchieveAreaId().equals(id) && i != j){
+                    Collections.swap(this.achAreaList, i, j++);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void setReachIds(List<String> reachIds) {
+        this.reachIds = reachIds;
     }
 
     @Override
@@ -57,18 +82,39 @@ public class ReachedAchRcvAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
+        if(getItemViewType(position) == REACHTITLE || getItemViewType(position) == UNREACHTITLE){
+            dataOffset++;
+        }
+        if(holder instanceof AchieveHolder){
+            int pos = holder.getAdapterPosition() - dataOffset;
+            final AchieveArea area = achAreaList.get(pos);
+            ((AchieveHolder) holder).setIcon(pos < reachIds.size(), Integer.parseInt(area.getCredit_level()));
+            ((AchieveHolder) holder).setTitle(area.getTitle());
+            ((AchieveHolder) holder).setDesc(area.getDesc());
+            ((AchieveHolder) holder).setName(area.getAchieveAreaName());
+            ((AchieveHolder) holder).setScore(area.getScore());
+            ((AchieveHolder) holder).setLocClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.putExtra(Constants.ACH_KIND, area.getAchieveAreaId());
+                    ((SuperActivity)mContext).setResult(Activity.RESULT_OK, intent);
+                    ((SuperActivity)mContext).back();
+                }
+            });
+        }
     }
 
     @Override
     public int getItemCount() {
-        return reachIdList.size() + 3;
+        return achAreaList.size() + (reachIds.size() > 0 ? 2 : 1);
     }
 
     @Override
     public int getItemViewType(int position) {
         if(position == 0)
-            return REACHTITLE;
-        else if(position == reachIdList.size() + 1)
+            return reachIds.size() == 0 ? UNREACHTITLE : REACHTITLE;
+        else if(reachIds.size() > 0 && position == reachIds.size() + 1)
             return UNREACHTITLE;
         else
             return ACHIEVE;

@@ -22,7 +22,9 @@ public class FileUtils {
 
     public static void saveToLocal(String str, String filePath) {
         File file = new File(filePath);
-        if (!file.exists()) {
+        if(file.exists()){
+            file.delete();
+        }
             FileOutputStream fos = null;
             try {
                 file.createNewFile();
@@ -40,7 +42,7 @@ public class FileUtils {
                 }
             }
 
-        }
+
     }
 
     public static <T> T getDataFromLocal(String filePath, Class<?> T) {

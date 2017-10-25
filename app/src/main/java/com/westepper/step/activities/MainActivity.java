@@ -10,6 +10,8 @@ import com.westepper.step.adapters.MainFragmentAdapter;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.UntouchableViewPager;
+import com.westepper.step.responses.MapData;
+import com.westepper.step.utils.FileUtils;
 
 import butterknife.BindView;
 
@@ -24,6 +26,7 @@ public class MainActivity extends SuperActivity {
     RadioGroup rdg_guideBar;
 
     MainFragmentAdapter adapter;
+    public static MapData mapData;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,10 +58,18 @@ public class MainActivity extends SuperActivity {
         vp_content.setOffscreenPageLimit(1);
         vp_content.setAdapter(adapter = new MainFragmentAdapter(getSupportFragmentManager()));
         rdg_guideBar.check(R.id.rdb_track);
+        mapData = FileUtils.getDataFromLocal(FileUtils.getFilePath(this, Constants.MAP_DATA), MapData.class);
+        if (mapData == null) {
+            mapData = new MapData();
+            //for test
+//            createTestData();
+//            mapData = FileUtils.getDataFromLocal(FileUtils.getFilePath(getActivity(), "area.data"), MapData.class);
+        }
     }
 
     @Override
     protected void initData() {
+
     }
 
     @Override
@@ -70,6 +81,10 @@ public class MainActivity extends SuperActivity {
             case Constants.CHANGE_HEADER:
             case Constants.CHANGE_USER_BG:
                 adapter.getItem(2).fragmentCallback(requestCode, data);
+                break;
+            case Constants.SHOW_ACHIEVE_AREA:
+                rdg_guideBar.check(R.id.rdb_track);
+                adapter.getItem(1).fragmentCallback(requestCode, data);
                 break;
         }
     }

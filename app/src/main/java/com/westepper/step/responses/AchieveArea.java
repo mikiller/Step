@@ -1,5 +1,7 @@
 package com.westepper.step.responses;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 
 import java.io.Serializable;
@@ -8,7 +10,7 @@ import java.io.Serializable;
  * Created by Mikiller on 2017/10/13.
  */
 
-public class AchieveArea implements Serializable {
+public class AchieveArea implements Parcelable {
 
     private String achieveAreaId;
     private String achieveAreaName;
@@ -19,6 +21,33 @@ public class AchieveArea implements Serializable {
     private String credit_coefficient;
     private String category_id;
     private String areaIds;
+
+    public AchieveArea() {
+    }
+
+    protected AchieveArea(Parcel in) {
+        achieveAreaId = in.readString();
+        achieveAreaName = in.readString();
+        achievementCenter = in.readString();
+        title = in.readString();
+        desc = in.readString();
+        credit_level = in.readString();
+        credit_coefficient = in.readString();
+        category_id = in.readString();
+        areaIds = in.readString();
+    }
+
+    public static final Creator<AchieveArea> CREATOR = new Creator<AchieveArea>() {
+        @Override
+        public AchieveArea createFromParcel(Parcel in) {
+            return new AchieveArea(in);
+        }
+
+        @Override
+        public AchieveArea[] newArray(int size) {
+            return new AchieveArea[size];
+        }
+    };
 
     public String getAchieveAreaId() {
         return achieveAreaId;
@@ -94,5 +123,27 @@ public class AchieveArea implements Serializable {
 
     public void setAreaIds(String areaIds) {
         this.areaIds = areaIds;
+    }
+
+    public int getScore(){
+        return Integer.parseInt(credit_level) * Integer.parseInt(credit_coefficient);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(achieveAreaId);
+        dest.writeString(achieveAreaName);
+        dest.writeString(achievementCenter);
+        dest.writeString(title);
+        dest.writeString(desc);
+        dest.writeString(credit_level);
+        dest.writeString(credit_coefficient);
+        dest.writeString(category_id);
+        dest.writeString(areaIds);
     }
 }
