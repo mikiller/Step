@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
+import com.netease.nim.uikit.NimUIKit;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.RequestCallback;
@@ -65,7 +66,8 @@ public class LoginLogic extends BaseLogic<SignModel> {
         MXPreferenceUtils.getInstance(context, MXPreferenceUtils.REPORTS).setString("account", response.getUserId());
         MXPreferenceUtils.getInstance().setString("token", response.getToken());
         LoginInfo loginInfo = new LoginInfo(response.getUserId(), response.getToken()/*"800036", "139ed2be4464ff498382c97a3e1b4d75"*/);
-        NIMClient.getService(AuthService.class).login(loginInfo).setCallback(new RequestCallback<LoginInfo>() {
+//        NIMClient.getService(AuthService.class).login(loginInfo).setCallback(new RequestCallback<LoginInfo>() {
+        NimUIKit.doLogin(loginInfo, new RequestCallback<LoginInfo>() {
             @Override
             public void onSuccess(LoginInfo param) {
                 Log.e(TAG, param.getAccount());

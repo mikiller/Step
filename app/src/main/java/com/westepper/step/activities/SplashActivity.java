@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.netease.nim.uikit.NimUIKit;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.SDKOptions;
@@ -33,6 +34,7 @@ import com.westepper.step.R;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.MyApplication;
 import com.westepper.step.base.SuperActivity;
+import com.westepper.step.customViews.MyMenuItem;
 import com.westepper.step.logics.GetMapDataLogic;
 import com.westepper.step.models.MapDataModel;
 import com.westepper.step.utils.ActivityManager;
@@ -50,7 +52,7 @@ public class SplashActivity extends SuperActivity {
     @BindView(R.id.iv_label)
     ImageView iv_label;
 
-    public boolean isLogin = true;
+//    public boolean isLogin = true;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,13 +67,13 @@ public class SplashActivity extends SuperActivity {
 
                 if (statusCode.wontAutoLogin()) {
                     //返回登录页
-                    if(isLogin) {
+                    if(MyApplication.isLogin) {
                         Log.e(TAG, "wontAutoLogin");
                         ActivityManager.startActivity(ActivityManager.lastActivity, WelcomeActivity.class);
                         ActivityManager.lastActivity.back();
                     }
                 }
-                isLogin = statusCode == StatusCode.LOGINED;
+                MyApplication.isLogin = statusCode == StatusCode.LOGINED;
             }
         }, true);
 
@@ -80,7 +82,7 @@ public class SplashActivity extends SuperActivity {
         getWindow().getDecorView().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (!isLogin) {
+                if (!MyApplication.isLogin) {
                     //显示微信按钮
                     Intent intent = new Intent(SplashActivity.this, WelcomeActivity.class);
                     ActivityOptionsCompat option = ActivityOptionsCompat.makeSceneTransitionAnimation(SplashActivity.this,

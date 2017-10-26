@@ -1,0 +1,86 @@
+[
+    {
+        "merged": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\res\\merged\\debug\\color-v23\\abc_btn_colored_borderless_text_material.xml",
+        "source": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.0.1\\res\\color-v23\\abc_btn_colored_borderless_text_material.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\res\\merged\\debug\\color-v23\\abc_color_highlight_material.xml",
+        "source": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.0.1\\res\\color-v23\\abc_color_highlight_material.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\res\\merged\\debug\\color-v23\\abc_tint_default.xml",
+        "source": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.3.1\\res\\color-v23\\abc_tint_default.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\res\\merged\\debug\\color-v23\\abc_tint_btn_checkable.xml",
+        "source": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.3.1\\res\\color-v23\\abc_tint_btn_checkable.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\res\\merged\\debug\\color-v23\\abc_tint_spinner.xml",
+        "source": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.3.1\\res\\color-v23\\abc_tint_spinner.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\res\\merged\\debug\\color-v23\\abc_color_highlight_material.xml",
+        "source": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.3.1\\res\\color-v23\\abc_color_highlight_material.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\res\\merged\\debug\\color-v23\\abc_tint_seek_thumb.xml",
+        "source": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.3.1\\res\\color-v23\\abc_tint_seek_thumb.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\res\\merged\\debug\\color-v23\\abc_btn_colored_borderless_text_material.xml",
+        "source": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.3.1\\res\\color-v23\\abc_btn_colored_borderless_text_material.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\res\\merged\\debug\\color-v23\\abc_tint_switch_thumb.xml",
+        "source": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.3.1\\res\\color-v23\\abc_tint_switch_thumb.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\res\\merged\\debug\\color-v23\\design_tint_password_toggle.xml",
+        "source": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\design\\25.3.1\\res\\color-v23\\design_tint_password_toggle.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\res\\merged\\debug\\color-v23\\abc_btn_colored_text_material.xml",
+        "source": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.3.1\\res\\color-v23\\abc_btn_colored_text_material.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\res\\merged\\debug\\color-v23\\abc_tint_seek_thumb.xml",
+        "source": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.0.1\\res\\color-v23\\abc_tint_seek_thumb.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\res\\merged\\debug\\color-v23\\abc_tint_switch_track.xml",
+        "source": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.0.1\\res\\color-v23\\abc_tint_switch_track.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\res\\merged\\debug\\color-v23\\abc_tint_edittext.xml",
+        "source": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.0.1\\res\\color-v23\\abc_tint_edittext.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\res\\merged\\debug\\color-v23\\abc_tint_edittext.xml",
+        "source": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.3.1\\res\\color-v23\\abc_tint_edittext.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\res\\merged\\debug\\color-v23\\design_tint_password_toggle.xml",
+        "source": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\design\\25.0.1\\res\\color-v23\\design_tint_password_toggle.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\res\\merged\\debug\\color-v23\\abc_tint_switch_thumb.xml",
+        "source": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.0.1\\res\\color-v23\\abc_tint_switch_thumb.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\res\\merged\\debug\\color-v23\\abc_tint_switch_track.xml",
+        "source": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.3.1\\res\\color-v23\\abc_tint_switch_track.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\res\\merged\\debug\\color-v23\\abc_tint_default.xml",
+        "source": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.0.1\\res\\color-v23\\abc_tint_default.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\res\\merged\\debug\\color-v23\\abc_tint_btn_checkable.xml",
+        "source": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.0.1\\res\\color-v23\\abc_tint_btn_checkable.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\res\\merged\\debug\\color-v23\\abc_tint_spinner.xml",
+        "source": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.0.1\\res\\color-v23\\abc_tint_spinner.xml"
+    }
+]

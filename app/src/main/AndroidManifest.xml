@@ -54,10 +54,15 @@
             android:name="UMENG_APPKEY"
             android:value="59e70abdb27b0a6fb30011c0" >
         </meta-data>
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="d63ac3eeeda75d8aede2469142f46d5f">
+
+        <meta-data android:name="com.amap.api.v2.apikey"
+            android:value="d63ac3eeeda75d8aede2469142f46d5f">
             //开发者申请的key
         </meta-data>
 
+        <meta-data
+            android:name="com.netease.nim.appKey"
+            android:value="23b9d29dc4cbfff89a0bfead16afb1a3" />
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="@string/file_provider"
@@ -121,25 +126,6 @@
 
         <!-- 网易云通信进程间通信service -->
         <service android:name="com.netease.nimlib.service.ResponseService"/>
-
-        <!-- 安卓保活配置 -->
-        <service
-            android:name="com.netease.cosine.core.CosineService"
-            android:process=":cosine">
-        </service>
-
-        <receiver
-            android:name="com.netease.cosine.target.CosineReceiver"
-            android:exported="true"
-            android:process=":cosine">
-        </receiver>
-
-        <meta-data
-            android:name="com.netease.cosine.target"
-            android:value=""/>
-        <meta-data
-            android:name="com.netease.cosine.target.receiver"
-            android:value="com.netease.nimlib.service.NimReceiver"/>
 
         <!-- ==================step================== -->
         <activity android:name=".activities.SplashActivity">

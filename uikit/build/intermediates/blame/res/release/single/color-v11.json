@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\res\\merged\\release\\color-v11\\abc_background_cache_hint_selector_material_light.xml",
+        "source": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.3.1\\res\\color-v11\\abc_background_cache_hint_selector_material_light.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\res\\merged\\release\\color-v11\\abc_background_cache_hint_selector_material_dark.xml",
+        "source": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.0.1\\res\\color-v11\\abc_background_cache_hint_selector_material_dark.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\res\\merged\\release\\color-v11\\abc_background_cache_hint_selector_material_dark.xml",
+        "source": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.3.1\\res\\color-v11\\abc_background_cache_hint_selector_material_dark.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\res\\merged\\release\\color-v11\\abc_background_cache_hint_selector_material_light.xml",
+        "source": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.0.1\\res\\color-v11\\abc_background_cache_hint_selector_material_light.xml"
+    }
+]

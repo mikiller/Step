@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\res\\merged\\debug\\layout-v16\\notification_template_custom_big.xml",
+        "source": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.3.1\\res\\layout-v16\\notification_template_custom_big.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\res\\merged\\debug\\layout-v16\\notification_template_custom_big.xml",
+        "source": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\25.0.1\\res\\layout-v16\\notification_template_custom_big.xml"
+    }
+]

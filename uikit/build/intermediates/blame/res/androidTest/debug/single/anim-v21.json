@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim-v21\\design_appbar_state_list_animator.xml",
+        "source": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\design\\25.0.1\\res\\anim-v21\\design_appbar_state_list_animator.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim-v21\\design_bottom_sheet_slide_out.xml",
+        "source": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\design\\25.3.1\\res\\anim-v21\\design_bottom_sheet_slide_out.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim-v21\\design_bottom_sheet_slide_in.xml",
+        "source": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\design\\25.0.1\\res\\anim-v21\\design_bottom_sheet_slide_in.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim-v21\\design_bottom_sheet_slide_in.xml",
+        "source": "G:\\WorkSpace\\Step\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\design\\25.3.1\\res\\anim-v21\\design_bottom_sheet_slide_in.xml"
+    },
+    {
+        "merged": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\res\\merged\\androidTest\\debug\\anim-v21\\design_bottom_sheet_slide_out.xml",
+        "source": "G:\\WorkSpace\\NIM_Android_Demo_v4.2.0\\nim_demo\\uikit\\build\\intermediates\\exploded-aar\\com.android.support\\design\\25.0.1\\res\\anim-v21\\design_bottom_sheet_slide_out.xml"
+    }
+]

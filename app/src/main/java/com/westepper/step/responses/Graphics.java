@@ -32,14 +32,12 @@ public class Graphics {
         return polygon;
     }
 
-    public Graphics(AMap aMap, boolean reached, List<LatLng>borderList){
+    public Graphics(AMap aMap, List<LatLng>borderList){
         polygon = aMap.addPolygon(new PolygonOptions().addAll(borderList));
-
     }
 
-    public Graphics(AMap aMap, boolean reached, LatLng latLng, int radius){
+    public Graphics(AMap aMap, LatLng latLng, int radius){
         circle = aMap.addCircle(new CircleOptions().center(latLng).radius(radius));
-
     }
 
     public void setGraphicsReached(boolean reached){
@@ -111,11 +109,11 @@ public class Graphics {
         }
     }
 
-    public void hide(boolean reached){
+    public void hide(){
         if(polygon != null)
-            hidePolygon(reached);
+            polygon.setVisible(false);
         else if(circle != null)
-            hideCircle(reached);
+            circle.setVisible(false);
     }
 
     public void show(boolean reached){
@@ -125,17 +123,8 @@ public class Graphics {
             showCircle(reached);
     }
 
-    private void hidePolygon(boolean reached){
-        if(reached){
-            polygon.setFillColor(Color.TRANSPARENT);
-        }else{
-            polygon.setStrokeWidth(0);
-            if(graphicsType == ACHEIVE)
-                polygon.setFillColor(Color.TRANSPARENT);
-        }
-    }
-
     private void showPolygon(boolean reached){
+        polygon.setVisible(true);
         if(reached){
             if(graphicsType == MAP)
                 polygon.setFillColor(NORMAL_FILL);
@@ -151,17 +140,8 @@ public class Graphics {
         }
     }
 
-    private void hideCircle(boolean reached){
-        if(reached){
-            circle.setFillColor(Color.TRANSPARENT);
-        }else{
-            circle.setStrokeWidth(0);
-            if(graphicsType == ACHEIVE)
-                circle.setFillColor(Color.TRANSPARENT);
-        }
-    }
-
     private void showCircle(boolean reached){
+        circle.setVisible(true);
         if(reached){
             if(graphicsType == MAP)
                 circle.setFillColor(NORMAL_FILL);

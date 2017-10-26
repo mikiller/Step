@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.netease.nim.uikit.NimUIKit;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.RequestCallback;
@@ -73,8 +74,8 @@ public class WelcomeActivity extends SuperActivity {
                         LoginLogic logic = new LoginLogic(WelcomeActivity.this, model);
                         logic.setCallback(new BaseLogic.LogicCallback<SignModel>() {
                             @Override
-                            public void onSuccess(SignModel response) {
-
+                            public void onSuccess(final SignModel response) {
+//
                             }
 
                             @Override

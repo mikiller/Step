@@ -1,1 +1,1 @@
-include ':app',':mkokhttp','mk_uilib','mkglidelib',':indexlib'
+include ':app',':mkokhttp','mk_uilib','mkglidelib',':indexlib','uikit'

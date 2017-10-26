@@ -101,15 +101,15 @@ public class Area implements Parcelable{
 
     public void createGraphics(AMap aMap, int graphicType){
         if(areaType == Area.POLYGON){
-            graphics = new Graphics(aMap, reached, borderList);
+            graphics = new Graphics(aMap, borderList);
         }else if(areaType == Area.CIRCLE){
-            graphics = new Graphics(aMap, reached, circle.getLatlng(), circle.getRadius());
+            graphics = new Graphics(aMap, circle.getLatlng(), circle.getRadius());
         }
         setGraphicsType(graphicType);
     }
 
     public void hide(){
-        graphics.hide(reached);
+        graphics.hide();
     }
 
     public void show(){
