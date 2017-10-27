@@ -69,31 +69,31 @@
                 android:layout_height="1dp"
                 android:layout_below="@+id/tv_notify"
                 android:layout_marginLeft="15dp"
-                android:background="@color/line_gray" />
+                android:background="@color/sliptLine" />
         </RelativeLayout>
 
-        <com.westepper.step.customViews.MyMenuItem
+        <com.uilib.mxmenuitem.MyMenuItem
             android:id="@+id/menu_privacy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             menu:menuTitle="隐私" />
 
-        <com.westepper.step.customViews.MyMenuItem
+        <com.uilib.mxmenuitem.MyMenuItem
             android:id="@+id/menu_advice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             menu:menuTitle="意见反馈"
             menu:needNext="true" />
 
-        <com.westepper.step.customViews.MyMenuItem
+        <com.uilib.mxmenuitem.MyMenuItem
             android:id="@+id/menu_about"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             menu:menuTitle="关于Step"
             menu:needNext="true" />
 
-        <com.westepper.step.customViews.MyMenuItem
+        <com.uilib.mxmenuitem.MyMenuItem
             android:id="@+id/menu_clear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

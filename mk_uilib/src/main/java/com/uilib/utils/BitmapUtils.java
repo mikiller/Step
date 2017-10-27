@@ -19,10 +19,12 @@ import android.media.ExifInterface;
 import android.renderscript.Allocation;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -72,6 +74,24 @@ public class BitmapUtils {
         Matrix matrix = new Matrix();
         matrix.preScale(dscWidth / width, dscHeight / height, 0, 0);
         return matrix;
+    }
+
+    public static String getBmpBase64Str(String path, int width, int height){
+        Bitmap bmp = BitmapUtils.decodeSampleBmpFromFile(path, width, height);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        String rst = "";
+        try {
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            baos.flush();
+
+            baos.close();
+            byte[] bmpBytes = baos.toByteArray();
+            rst = Base64.encodeToString(bmpBytes, Base64.DEFAULT);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return rst;
     }
 
     public static Bitmap drawRoundBmp(Bitmap src, float corner){

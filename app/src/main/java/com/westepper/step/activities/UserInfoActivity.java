@@ -20,7 +20,7 @@ import com.uilib.mxgallery.utils.CameraGalleryUtils;
 import com.westepper.step.R;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
-import com.westepper.step.customViews.MyMenuItem;
+import com.uilib.mxmenuitem.MyMenuItem;
 import com.westepper.step.customViews.TitleBar;
 import com.westepper.step.widgets.CommitGlobalLayoutListener;
 import com.westepper.step.responses.UserInfo;

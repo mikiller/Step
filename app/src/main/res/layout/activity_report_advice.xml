@@ -22,7 +22,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/line_gray" />
+            android:background="@color/sliptLine" />
 
         <EditText
             android:id="@+id/edt_advice"
@@ -69,7 +69,7 @@
             <RadioButton
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/line_gray"
+                android:background="@color/sliptLine"
                 android:button="@null"
                 android:enabled="false"/>
 
@@ -81,7 +81,7 @@
             <RadioButton
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/line_gray"
+                android:background="@color/sliptLine"
                 android:button="@null"
                 android:enabled="false"/>
 
@@ -99,7 +99,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/line_gray" />
+                android:background="@color/sliptLine" />
 
             <LinearLayout
                 android:layout_width="match_parent"

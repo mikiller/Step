@@ -6,7 +6,9 @@ import android.graphics.Canvas;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +22,10 @@ import android.widget.TextView;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
-import com.uilib.customdialog.CustomDialog;
-import com.uilib.mxgallery.utils.CameraGalleryUtils;
 import com.westepper.step.R;
 import com.westepper.step.activities.GalleryActivity;
 import com.westepper.step.base.Constants;
-import com.westepper.step.customViews.MyMenuItem;
+import com.uilib.mxmenuitem.MyMenuItem;
 import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.MapUtils;
 
@@ -53,6 +53,7 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private View.OnClickListener footClickListener;
 
     private PoiItem poiItem;
+    private String info;
 
     public DisPhotoRcvAdapter(Context context, boolean needCamera, int column, int margin) {
         mContext = context;
@@ -66,6 +67,10 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public DisPhotoRcvAdapter(Context context, boolean needCamera, List<String> pathList, int column, int margin) {
         this(context, needCamera, column, margin);
         this.pathList = pathList;
+    }
+
+    public String getInfo(){
+        return info;
     }
 
     @Override
@@ -131,6 +136,22 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private void bindHeadHolder(HeadHolder holder){
         holder.edt_msg.setHint(disKind == Constants.MOOD ? "记录你的心情..." : "描述你的约行...");
+        holder.edt_msg.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                info = s.toString();
+            }
+        });
     }
 
     private void bindItemHolder(ItemHolder holder, int position){
@@ -160,9 +181,10 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private void bindFootHolder(FootHolder holder){
-        if(poiItem == null)
+        if(poiItem == null) {
+            poiItem = new PoiItem("未选择", null, "", "");
             holder.tv_pos.setText("未选择");
-        else {
+        }else {
             String city = TextUtils.isEmpty(poiItem.getCityName()) ? poiItem.getTitle() : poiItem.getCityName() + ", " + poiItem.getTitle();
             holder.tv_pos.setText(city);
         }
@@ -200,6 +222,10 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         for(File file : files){
             addItem(file.getPath());
         }
+    }
+
+    public List<String> getItems(){
+        return pathList;
     }
 
     public void removeItem(int pos){

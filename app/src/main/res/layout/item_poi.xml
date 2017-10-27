@@ -24,7 +24,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/line_gray"
+        android:background="@color/sliptLine"
         android:layout_below="@+id/tv_adr"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"/>

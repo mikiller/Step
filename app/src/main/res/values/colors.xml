@@ -16,10 +16,8 @@
     <color name="bolder_stoke">#D2D2D2</color>
     <color name="bolder_sold">#6600A8FF</color>
 
-    <color name="line_gray">#DCDCDC</color>
     <color name="text_hint_color">#8c8c8c</color>
     <color name="discovery_time">#b2b2b2</color>
-    <color name="discovery_kind_unchecked">#a0bed2</color>
     <color name="cancel_btn_bg">#f0f6fa</color>
 
     <color name="first_bg">#FFF5BE23</color>

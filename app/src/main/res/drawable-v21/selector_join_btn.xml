@@ -4,7 +4,7 @@
     <item>
         <selector>
             <item android:state_enabled="true" android:drawable="@color/colorPrimary" />
-            <item android:drawable="@color/line_gray" android:state_enabled="false" />
+            <item android:drawable="@color/sliptLine" android:state_enabled="false" />
         </selector>
     </item>
 </ripple>

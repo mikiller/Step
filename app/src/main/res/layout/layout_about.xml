@@ -38,23 +38,23 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="15dp"
-            android:background="@color/line_gray"/>
+            android:background="@color/sliptLine"/>
 
-        <com.westepper.step.customViews.MyMenuItem
+        <com.uilib.mxmenuitem.MyMenuItem
             android:id="@+id/menu_grade"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             menu:menuTitle="喜欢我们，打分鼓励"
             menu:needNext="true"/>
 
-        <com.westepper.step.customViews.MyMenuItem
+        <com.uilib.mxmenuitem.MyMenuItem
             android:id="@+id/menu_service"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             menu:menuTitle="服务条款"
             menu:needNext="true"/>
 
-        <com.westepper.step.customViews.MyMenuItem
+        <com.uilib.mxmenuitem.MyMenuItem
             android:id="@+id/menu_contact"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

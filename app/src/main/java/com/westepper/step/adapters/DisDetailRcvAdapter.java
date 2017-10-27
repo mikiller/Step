@@ -10,14 +10,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.westepper.step.R;
 import com.westepper.step.activities.AllCommitsActivity;
 import com.westepper.step.base.Constants;
-import com.westepper.step.customViews.MyMenuItem;
+import com.uilib.mxmenuitem.MyMenuItem;
 import com.westepper.step.responses.Commit;
 import com.westepper.step.responses.Discovery;
 import com.westepper.step.utils.ActivityManager;

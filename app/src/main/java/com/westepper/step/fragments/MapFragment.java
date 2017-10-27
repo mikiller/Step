@@ -19,13 +19,17 @@ import com.westepper.step.activities.GalleryActivity;
 import com.westepper.step.activities.MainActivity;
 import com.westepper.step.adapters.DiscoveryAdapter;
 import com.westepper.step.base.BaseFragment;
+import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.Constants;
 import com.westepper.step.customViews.AcheiveSettingLayout;
 import com.westepper.step.customViews.SearchView;
+import com.westepper.step.logics.GetDiscoveryListLogic;
+import com.westepper.step.models.DiscoveryListModel;
 import com.westepper.step.responses.Achieve;
 import com.westepper.step.responses.AchieveArea;
 import com.westepper.step.responses.Area;
 import com.westepper.step.responses.City;
+import com.westepper.step.responses.DiscoveryList;
 import com.westepper.step.responses.MapData;
 import com.westepper.step.responses.Discovery;
 import com.westepper.step.responses.Graphics;
@@ -47,7 +51,8 @@ import butterknife.BindView;
  * Created by Mikiller on 2017/9/1.
  */
 
-public class MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
+public class
+MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
     @BindView(R.id.map)
     TextureMapView mapView;
     @BindView(R.id.ll_search)
@@ -83,109 +88,6 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
     private boolean isTrack = true;
     float searchHeight, headTransY, vpTransY, optTransY;
     int gender = 0;
-
-//    private void createTestData() {
-//        MapData mapData = new MapData();
-//        City city1 = new City("上海");
-//        Area area1 = new Area("1");
-//        area1.setAreaType(Area.POLYGON);
-//        List<LatLng> coords = new ArrayList<>();
-//        coords.add(new LatLng(31.230957, 121.462133));
-//        coords.add(new LatLng(31.230911, 121.464043));
-//        coords.add(new LatLng(31.227425, 121.465052));
-//        coords.add(new LatLng(31.226847, 121.463078));
-//        coords.add(new LatLng(31.229856, 121.462005));
-//        area1.setBorderList(coords);
-//        city1.setArea(area1);
-//
-//        Area area2 = new Area("2");
-//        area2.setAreaType(Area.POLYGON);
-//        List<LatLng> coords2 = new ArrayList<>();
-//        coords2.add(new LatLng(31.230122, 121.459419));
-//        coords2.add(new LatLng(31.230957, 121.462133));
-//        coords2.add(new LatLng(31.229856, 121.462005));
-//        coords2.add(new LatLng(31.228085, 121.462638));
-//        coords2.add(new LatLng(31.226681, 121.459885));
-//        area2.setBorderList(coords2);
-//        city1.setArea(area2);
-//
-//        Area area3 = new Area("3");
-//        area3.setAreaType(Area.POLYGON);
-//        List<LatLng> coords3 = new ArrayList<>();
-//        coords3.add(new LatLng(31.230911, 121.464043));
-//        coords3.add(new LatLng(31.230819, 121.465792));
-//        coords3.add(new LatLng(31.227489, 121.466908));
-//        coords3.add(new LatLng(31.227425, 121.465052));
-//        area3.setBorderList(coords3);
-//        city1.setArea(area3);
-//
-//        Area area4 = new Area("4");
-//        area4.setAreaType(Area.POLYGON);
-//        List<LatLng> coords4 = new ArrayList<>();
-//        coords4.add(new LatLng(31.226847, 121.463078));
-//        coords4.add(new LatLng(31.227425, 121.465052));
-//        coords4.add(new LatLng(31.227489, 121.466908));
-//        coords4.add(new LatLng(31.225617, 121.467541));
-//        coords4.add(new LatLng(31.225241, 121.463249));
-//        area4.setBorderList(coords4);
-//        city1.setArea(area4);
-//
-//        Area area5 = new Area("5");
-//        area5.setAreaType(Area.CIRCLE);
-//        Area.CirlclArea ca = new Area.CirlclArea(new LatLng(31.230779, 121.472071), 800);
-//        area5.setCircle(ca);
-//        city1.setArea(area5);
-//
-////        Area area6 = new Area("6");
-////        area6.setAreaType(Area.CIRCLE);
-////        Area.CirlclArea ca1 = new Area.CirlclArea(new LatLng(31.230779, 121.472071), 800);
-////        area6.setCircle(ca1);
-////        city1.setArea(area6);
-//
-//        mapData.setCity(city1);
-//
-//        Achieve achieve = new Achieve("城市探索");
-//        AchieveArea achieveArea = new AchieveArea();
-//        achieveArea.setAchieveAreaName("静安区");
-//        achieveArea.setAchieveAreaId("13");
-//        achieveArea.setAreaIds("3,4");
-//        achieve.setAchieveArea(achieveArea);
-//        AchieveArea achieveArea1 = new AchieveArea();
-//        achieveArea1.setAchieveAreaName("黄浦区");
-//        achieveArea1.setAchieveAreaId("14");
-//        achieveArea1.setAreaIds("1,2,5");
-//        achieve.setAchieveArea(achieveArea1);
-//        mapData.setAchieve(achieve);
-//
-//        Achieve achieve1 = new Achieve("发现世界");
-//        AchieveArea achieveArea2 = new AchieveArea();
-//        achieveArea2.setAchieveAreaName("人民广场");
-//        achieveArea2.setAchieveAreaId("16");
-//        achieveArea2.setAreaIds("5");
-//        achieve1.setAchieveArea(achieveArea2);
-//        AchieveArea achieveArea3 = new AchieveArea();
-//        achieveArea3.setAchieveAreaName("上海电视台");
-//        achieveArea3.setAchieveAreaId("17");
-//        achieveArea3.setAreaIds("1,2");
-//        achieve1.setAchieveArea(achieveArea3);
-//        mapData.setAchieve(achieve1);
-//
-//        Achieve achieve2 = new Achieve("行者无疆");
-//        AchieveArea achieveArea4 = new AchieveArea();
-//        achieveArea4.setAchieveAreaName("南京西路");
-//        achieveArea4.setAchieveAreaId("20");
-//        achieveArea4.setAreaIds("1,4");
-//        achieve2.setAchieveArea(achieveArea4);
-//        AchieveArea achieveArea5 = new AchieveArea();
-//        achieveArea5.setAchieveAreaName("威海路");
-//        achieveArea5.setAchieveAreaId("21");
-//        achieveArea5.setAreaIds("2,3");
-//        achieve2.setAchieveArea(achieveArea5);
-//        mapData.setAchieve(achieve2);
-//
-//        String areaStr = new Gson().toJson(mapData);
-//        FileUtils.saveToLocal(areaStr, FileUtils.getFilePath(getActivity(), "area.data"));
-//    }
 
     @Override
     protected void setLayoutRes() {
@@ -291,7 +193,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
             AnimUtils.startObjectAnim(rl_head, "translationY", headTransY, 0, 300);
             AnimUtils.startObjectAnim(ll_discovery_opt, "translationY", optTransY, 0, 400);
             AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vpTransY, 0, 500);
-            mapUtils.addMarker(adapter.getItem(vp_discoveryList.getCurrentItem()).getUserPos().getLatlng());
+            if(adapter.getCount() > 0)
+                mapUtils.addMarker(adapter.getItem(vp_discoveryList.getCurrentItem()).getUserPos().getLatlng());
             mapUtils.setIsNeedArea(false);
         }
 
@@ -303,45 +206,67 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, R
             mapUtils.removeMarker();
         }
         //test create discovery list
-        vp_discoveryList.postDelayed(new Runnable() {
+        GetDiscoveryListLogic logic = new GetDiscoveryListLogic(getActivity(), new DiscoveryListModel(gender, kind, scope, mapUtils.getMapLocation().getLatitude(), mapUtils.getMapLocation().getLongitude()));
+        logic.setCallback(new BaseLogic.LogicCallback<DiscoveryList>() {
             @Override
-            public void run() {
-                List<Discovery> discoveryList = new ArrayList<>();
-                Discovery dis = new Discovery();
-                dis.setNickName("小飞");
-                dis.setGender(1);
-                dis.setInfo("小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排");
-                UserPos userPos = new UserPos(new LatLng(31.2304, 121.462489), "上海市，上海电视台");
-                dis.setUserPos(userPos);
-                dis.setDiscoveryKind(kind);
-                if (kind == Constants.OUTGO) {
-                    dis.setJoinCount(3);
-                    dis.setTotalCount(5);
-                }
-                if (gender != 2)
-                    discoveryList.add(dis);
-                dis = new Discovery();
-                dis.setNickName("鸡排侠");
-                dis.setGender(2);
-                dis.setInfo("鸡排不用飞哥送");
-                UserPos userPos1 = new UserPos(new LatLng(31.229189, 121.468207), "上海市，和平影院");
-                dis.setUserPos(userPos1);
-                dis.setDiscoveryKind(kind);
-                if (kind == Constants.OUTGO) {
-                    dis.setJoinCount(2);
-                    dis.setTotalCount(6);
-                }
-                if (gender != 1)
-                    discoveryList.add(dis);
+            public void onSuccess(DiscoveryList response) {
                 adapter.setScope(scope);
-                adapter.setDataList(discoveryList);
+                adapter.setDataList(response.getDiscoveryList());
                 vp_discoveryList.setCurrentItem(0);
                 if (!isTrack) {
                     AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vpTransY, 0, 500);
-                    mapUtils.addMarker(discoveryList.get(vp_discoveryList.getCurrentItem()).getUserPos().getLatlng());
+                    if(response.getDiscoveryList().size() > 0)
+                    mapUtils.addMarker(response.getDiscoveryList().get(0).getUserPos().getLatlng());
                 }
             }
-        }, 1000);
+
+            @Override
+            public void onFailed(String code, String msg, DiscoveryList localData) {
+
+            }
+        });
+        logic.sendRequest();
+
+//
+//        vp_discoveryList.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                List<Discovery> discoveryList = new ArrayList<>();
+//                Discovery dis = new Discovery();
+//                dis.setNickName("小飞");
+//                dis.setGender(1);
+//                dis.setInfo("小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排");
+//                UserPos userPos = new UserPos(new LatLng(31.2304, 121.462489), "上海市，上海电视台");
+//                dis.setUserPos(userPos);
+//                dis.setDiscoveryKind(kind);
+//                if (kind == Constants.OUTGO) {
+//                    dis.setJoinCount(3);
+//                    dis.setTotalCount(5);
+//                }
+//                if (gender != 2)
+//                    discoveryList.add(dis);
+//                dis = new Discovery();
+//                dis.setNickName("鸡排侠");
+//                dis.setGender(2);
+//                dis.setInfo("鸡排不用飞哥送");
+//                UserPos userPos1 = new UserPos(new LatLng(31.229189, 121.468207), "上海市，和平影院");
+//                dis.setUserPos(userPos1);
+//                dis.setDiscoveryKind(kind);
+//                if (kind == Constants.OUTGO) {
+//                    dis.setJoinCount(2);
+//                    dis.setTotalCount(6);
+//                }
+//                if (gender != 1)
+//                    discoveryList.add(dis);
+//                adapter.setScope(scope);
+//                adapter.setDataList(discoveryList);
+//                vp_discoveryList.setCurrentItem(0);
+//                if (!isTrack) {
+//                    AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vpTransY, 0, 500);
+//                    mapUtils.addMarker(discoveryList.get(vp_discoveryList.getCurrentItem()).getUserPos().getLatlng());
+//                }
+//            }
+//        }, 1000);
 
     }
 

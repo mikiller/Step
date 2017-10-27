@@ -9,7 +9,7 @@
     <item android:state_checked="false">
         <shape>
             <corners android:radius="30dp"/>
-            <solid android:color="@color/line_gray"/>
+            <solid android:color="@color/sliptLine"/>
         </shape>
     </item>
 </selector>

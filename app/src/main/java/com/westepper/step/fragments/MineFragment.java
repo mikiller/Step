@@ -1,8 +1,6 @@
 package com.westepper.step.fragments;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -13,8 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
-import com.mikiller.mkglidelib.imageloader.ImageLoader;
-import com.uilib.utils.BitmapUtils;
 import com.westepper.step.R;
 import com.westepper.step.activities.GalleryActivity;
 import com.westepper.step.activities.MyAchieveActivity;
@@ -24,7 +20,7 @@ import com.westepper.step.activities.SettingActivity;
 import com.westepper.step.activities.UserInfoActivity;
 import com.westepper.step.base.BaseFragment;
 import com.westepper.step.base.Constants;
-import com.westepper.step.customViews.MyMenuItem;
+import com.uilib.mxmenuitem.MyMenuItem;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.responses.UserInfo;

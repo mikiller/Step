@@ -38,6 +38,7 @@ import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.netease.nimlib.sdk.team.model.Team;
 import com.netease.nimlib.sdk.team.model.TeamMember;
+import com.uilib.mxmenuitem.MyMenuItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -134,6 +135,13 @@ public class RecentContactsFragment extends TFragment {
         adapter = new RecentContactAdapter(recyclerView, items);
         initCallBack();
         adapter.setCallback(callback);
+        MyMenuItem header = new MyMenuItem(getActivity());
+        header.setMenuIcon(getResources().getDrawable(R.drawable.ic_myfriend));
+        header.setMenuName("我的好友");
+        header.setNeedNext(true);
+        adapter.addHeaderView(header);
+        adapter.setHeaderAndEmpty(true);
+        adapter.setEmptyView(new View(getActivity()));
 
         // recyclerView
         recyclerView.setAdapter(adapter);

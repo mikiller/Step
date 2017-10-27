@@ -76,24 +76,6 @@ public class MapUtils {
         private static MapUtils instance = new MapUtils();
     }
 
-//    public static MapUtils getInstance(Context context, AMap aMap) {
-//        if (MapFactory.instance == null)
-//            MapFactory.instance = new MapUtils();
-//
-//        //if (MapFactory.instance.aMap == null)
-//            MapFactory.instance.aMap = aMap;
-////        if (MapFactory.instance.mContext == null)
-////            MapFactory.instance.mContext = context;
-////        if(MapFactory.instance.mapLocation == null)
-////            MapFactory.instance.mapLocation = new Inner_3dMap_location("");
-//        //if(MapFactory.instance.geoFenceClient == null) {
-//            MapFactory.instance.geoFenceClient = new GeoFenceClient(context);
-//            MapFactory.instance.geoFenceClient.createPendingIntent("com.map.baidumapdemo.broadcast");
-//        //}
-//
-//        return MapFactory.instance;
-//    }
-
     public static MapUtils getInstance() {
         if (MapFactory.instance == null)
             MapFactory.instance = new MapUtils();
@@ -135,7 +117,7 @@ public class MapUtils {
             public void onCameraChangeFinish(CameraPosition cameraPosition) {
                 if (!needArea)
                     return;
-                if (currentZoom < 13) {
+                if (currentZoom < 10) {
                     hideArea();
                 } else {
                     showArea();
@@ -146,18 +128,20 @@ public class MapUtils {
         aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
             @Override
             public void onTouch(MotionEvent motionEvent) {
-                if(motionEvent.getPointerCount() == 2)
+                if(motionEvent.getPointerCount() == 2 )
                     return;
                 if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
                     relocationTimer.cancel();
                     aMap.setMyLocationEnabled(false);
-                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP ) {
                     relocationTimer = new Timer();
                     relocationTimer.schedule(new TimerTask() {
                         @Override
                         public void run() {
-                            aMap.setMyLocationStyle(locationStyle);
-                            aMap.setMyLocationEnabled(true);
+                            if(needArea) {
+                                aMap.setMyLocationStyle(locationStyle);
+                                aMap.setMyLocationEnabled(true);
+                            }
                         }
                     }, 5000);
                 }

@@ -20,7 +20,9 @@ import com.westepper.step.responses.Discovery;
 import com.westepper.step.responses.UserPos;
 import com.westepper.step.utils.ActivityManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -118,7 +120,9 @@ public class MyDiscoveryActivity extends SuperActivity {
             discovery.setDiscoveryKind(disKind);
             discovery.setInfo("机场已成我家，一周天天回家。好心人给我送口外卖吧。鸡排侠又饿了。");
             discovery.setUserPos(new UserPos(null, "上海市，上海电视台"));
-            discovery.setPushTime(1507786461l*1000l - (long)(i*100000000l));
+            long stemp = 1507786461l*1000l - (long)(i*100000000l);
+            String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(stemp));
+            discovery.setPushTime(stemp);
             List<String> imgs = new ArrayList<>();
             imgs.add("http://pic1.win4000.com/pic/c/09/8b8f408807.jpg");
             imgs.add("http://tse2.mm.bing.net/th?id=OIP.yIi9TwH7EiIlIbsgvwTdHwFNC7&pid=15.1");

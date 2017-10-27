@@ -14,25 +14,28 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.amap.api.services.core.PoiItem;
+import com.google.gson.Gson;
 import com.uilib.mxgallery.utils.CameraGalleryUtils;
+import com.uilib.utils.BitmapUtils;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
 import com.westepper.step.adapters.DisPhotoRcvAdapter;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
-import com.westepper.step.customViews.MyMenuItem;
+import com.uilib.mxmenuitem.MyMenuItem;
 import com.westepper.step.customViews.TitleBar;
+import com.westepper.step.logics.NewDiscoveryLogic;
+import com.westepper.step.models.NewDiscoveryModel;
 import com.westepper.step.utils.ActivityManager;
 
 import java.io.File;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import butterknife.BindView;
 
@@ -57,6 +60,7 @@ public class NewDiscoveryActivity extends SuperActivity {
     List<File> fileList;
     DisPhotoRcvAdapter adapter;
     int dateNum, peopleNum;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,7 +91,7 @@ public class NewDiscoveryActivity extends SuperActivity {
 
             @Override
             protected void onSubClicked() {
-                super.onSubClicked();
+                sendNewDiscovery();
             }
         });
         titleBar.setTitle(disKind == Constants.MOOD ? "新心情" : "新约行");
@@ -152,6 +156,30 @@ public class NewDiscoveryActivity extends SuperActivity {
         });
         rcv_photo.setAdapter(adapter);
         adapter.createTouchHelper().attachToRecyclerView(rcv_photo);
+    }
+
+    private void sendNewDiscovery(){
+        NewDiscoveryModel model = new NewDiscoveryModel(2, disKind, adapter.getInfo(), "0", System.currentTimeMillis());
+        model.setPoiTitle(adapter.getPoiItem().getTitle());
+
+        String img = "data:image/jpeg;base64,";
+        ArrayList<String> imgList = new ArrayList<>();
+        if(!TextUtils.isEmpty(tmpFile)) {
+            img = img.concat(BitmapUtils.getBmpBase64Str(tmpFile,
+                    DisplayUtil.getScreenWidth(this) * 2 / 3, DisplayUtil.getScreenHeight(this) / 3));
+            imgList.add(img);
+        }else{
+            for(String path : adapter.getItems()){
+                String tmp = img.concat(BitmapUtils.getBmpBase64Str(path,
+                        DisplayUtil.getScreenWidth(this) * 2 / 3, DisplayUtil.getScreenHeight(this) / 3));
+                imgList.add(tmp);
+            }
+        }
+        model.setImgList(imgList);
+        String json = new Gson().toJson(model);
+        Log.e(TAG, json);
+        NewDiscoveryLogic logic = new NewDiscoveryLogic(this, model);
+        logic.sendRequest();
     }
 
     private void createPeoplePicker(final MyMenuItem menu){

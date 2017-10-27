@@ -123,7 +123,7 @@
         android:layout_height="1dp"
         android:layout_below="@+id/rl_header"
         android:layout_marginLeft="15dp"
-        android:background="@color/line_gray" />
+        android:background="@color/sliptLine" />
 
     <RelativeLayout
         android:id="@+id/rl_join"
@@ -137,7 +137,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/line_gray" />
+            android:background="@color/sliptLine" />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -67,4 +67,18 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:background">@color/tagBgGray</item>
     </style>
+
+    <style name="nomal_text_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="hint_text_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/discovery_kind_unchecked</item>
+    </style>
 </resources>

@@ -12,7 +12,7 @@
         android:orientation="vertical"
         android:visibility="visible">
 
-        <com.westepper.step.customViews.MyMenuItem xmlns:menu="http://schemas.android.com/apk/res-auto"
+        <com.uilib.mxmenuitem.MyMenuItem xmlns:menu="http://schemas.android.com/apk/res-auto"
             android:id="@+id/menu_people"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
             menu:needNext="true"
             menu:needSubText="true" />
 
-        <com.westepper.step.customViews.MyMenuItem xmlns:menu="http://schemas.android.com/apk/res-auto"
+        <com.uilib.mxmenuitem.MyMenuItem xmlns:menu="http://schemas.android.com/apk/res-auto"
             android:id="@+id/menu_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
             menu:needNext="true"
             menu:needSubText="true" />
 
-        <com.westepper.step.customViews.MyMenuItem xmlns:menu="http://schemas.android.com/apk/res-auto"
+        <com.uilib.mxmenuitem.MyMenuItem xmlns:menu="http://schemas.android.com/apk/res-auto"
             android:id="@+id/menu_publish"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

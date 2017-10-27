@@ -2,39 +2,25 @@ package com.westepper.step.activities;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.netease.nim.uikit.NimUIKit;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
-import com.netease.nimlib.sdk.SDKOptions;
-import com.netease.nimlib.sdk.StatusBarNotificationConfig;
 import com.netease.nimlib.sdk.StatusCode;
 import com.netease.nimlib.sdk.auth.AuthServiceObserver;
-import com.netease.nimlib.sdk.auth.LoginInfo;
-import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
-import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 import com.uilib.joooonho.SelectableRoundedImageView;
-import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.MyApplication;
 import com.westepper.step.base.SuperActivity;
-import com.westepper.step.customViews.MyMenuItem;
 import com.westepper.step.logics.GetMapDataLogic;
 import com.westepper.step.models.MapDataModel;
 import com.westepper.step.utils.ActivityManager;
@@ -92,6 +78,7 @@ public class SplashActivity extends SuperActivity {
                     back();
                 } else {
                     //进入主页
+                    NimUIKit.setAccount(MXPreferenceUtils.getInstance().getString("account"));
                     ActivityManager.startActivity(SplashActivity.this, MainActivity.class);
                     overridePendingTransition(R.anim.alpha_in, R.anim.alpha_out);
                     back();
