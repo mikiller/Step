@@ -7,6 +7,7 @@ import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -111,10 +112,7 @@ public class CustomDialog extends Dialog {
         //setContentView(layoutRes == View.NO_ID ? R.layout.layout_custom_dlg : layoutRes);
         setContentView(customView);
         getWindow().setGravity(Gravity.CENTER);
-        WindowManager.LayoutParams dlgLp = getWindow().getAttributes();
-        dlgLp.width = DisplayUtil.getScreenWidth(mContext);
-        dlgLp.height = DisplayUtil.getScreenHeight(mContext);
-        getWindow().setAttributes(dlgLp);
+        getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         title = (TextView) findViewById(R.id.tv_dlg_title);
         if (title != null)
             title.setText(titleStr);

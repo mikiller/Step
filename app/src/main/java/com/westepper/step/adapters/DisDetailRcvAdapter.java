@@ -20,6 +20,7 @@ import com.uilib.mxmenuitem.MyMenuItem;
 import com.westepper.step.responses.Commit;
 import com.westepper.step.responses.Discovery;
 import com.westepper.step.utils.ActivityManager;
+import com.westepper.step.utils.MXTimeUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -111,7 +112,7 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         holder.tv_detailMsg.setText(discovery.getInfo());
         holder.tv_detailPos.setText(discovery.getUserPos().getPoiTitle());
         holder.rl_join.setVisibility(discovery.getDiscoveryKind() == 1 ? View.GONE : View.VISIBLE);
-        holder.tv_time.setText("2017/4/5");
+        holder.tv_time.setText(MXTimeUtils.getFormatTime("yyyy/MM/dd", discovery.getPushTime()));
         holder.btn_commit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

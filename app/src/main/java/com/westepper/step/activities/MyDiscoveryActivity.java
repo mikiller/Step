@@ -17,6 +17,7 @@ import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.TitleBar;
 import com.westepper.step.responses.Discovery;
+import com.westepper.step.responses.ImgDetail;
 import com.westepper.step.responses.UserPos;
 import com.westepper.step.utils.ActivityManager;
 
@@ -123,11 +124,11 @@ public class MyDiscoveryActivity extends SuperActivity {
             long stemp = 1507786461l*1000l - (long)(i*100000000l);
             String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(stemp));
             discovery.setPushTime(stemp);
-            List<String> imgs = new ArrayList<>();
-            imgs.add("http://pic1.win4000.com/pic/c/09/8b8f408807.jpg");
-            imgs.add("http://tse2.mm.bing.net/th?id=OIP.yIi9TwH7EiIlIbsgvwTdHwFNC7&pid=15.1");
-            imgs.add("http://photocdn.sohu.com/20130909/Img386224746.jpg");
-            imgs.add("http://pic4.nipic.com/20090826/1412106_020349894777_2.jpg");
+            List<ImgDetail> imgs = new ArrayList<>();
+            imgs.add(new ImgDetail("http://pic1.win4000.com/pic/c/09/8b8f408807.jpg", 300, 200));
+            imgs.add(new ImgDetail("http://tse2.mm.bing.net/th?id=OIP.yIi9TwH7EiIlIbsgvwTdHwFNC7&pid=15.1", 400, 260));
+            imgs.add(new ImgDetail("http://photocdn.sohu.com/20130909/Img386224746.jpg", 300, 200));
+            imgs.add(new ImgDetail("http://pic4.nipic.com/20090826/1412106_020349894777_2.jpg", 450, 300));
             discovery.setImgList(imgs);
             if(disKind == Constants.OUTGO){
                 Random random = new Random(System.currentTimeMillis() * i);

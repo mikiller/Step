@@ -62,9 +62,9 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
         }
         holder.tv_msg.setText(discovery.getInfo());
         holder.tv_pos.setText(discovery.getUserPos().getPoiTitle());
-        GlideImageLoader.getInstance().loadImage(mContext, discovery.getImgList().get(0), R.mipmap.placeholder, holder.iv_img1, 0);
-        GlideImageLoader.getInstance().loadImage(mContext, discovery.getImgList().get(1), R.mipmap.placeholder, holder.iv_img2, 0);
-        GlideImageLoader.getInstance().loadImage(mContext, discovery.getImgList().get(2), R.mipmap.placeholder, holder.iv_img3, 0);
+        GlideImageLoader.getInstance().loadImage(mContext, discovery.getImgList().get(0).getImg_url(), R.mipmap.placeholder, holder.iv_img1, 0);
+        GlideImageLoader.getInstance().loadImage(mContext, discovery.getImgList().get(1).getImg_url(), R.mipmap.placeholder, holder.iv_img2, 0);
+        GlideImageLoader.getInstance().loadImage(mContext, discovery.getImgList().get(2).getImg_url(), R.mipmap.placeholder, holder.iv_img3, 0);
         if(disKind == Constants.OUTGO) {
             holder.ll_chat.setVisibility(View.VISIBLE );
             holder.tv_joinNum.setText(String.format("邀约%1$s人, 已报名%2$s人", discovery.getTotalCount(), discovery.getJoinCount()));

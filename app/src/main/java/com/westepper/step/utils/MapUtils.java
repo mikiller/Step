@@ -305,7 +305,6 @@ public class MapUtils {
 
     private void addArea(Map<String, Area> areas, Area area, int graphicType) {
         if (areas.get(area.getAreaId()) == null) {
-            Log.e(TAG, "add area: " + area.getAreaId());
             area.createGraphics(aMap, graphicType);
             if (area.getAreaType() == Area.POLYGON)
                 createGeoFence(area.getAreaId(), area.getBorderList());

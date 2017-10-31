@@ -1,8 +1,10 @@
 package com.westepper.step.fragments;
 
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -202,7 +204,12 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
     private void getDiscoveryList(final int scope, final int kind, final int gender) {
         if (!isTrack) {
-            AnimUtils.startObjectAnim(vp_discoveryList, "translationY", 0, vpTransY, 800);
+            AnimUtils.startObjectAnim(vp_discoveryList, "translationY", 0, vpTransY, 300, new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    Log.e(TAG, "anim 1 " + animation.getAnimatedValue());
+                }
+            });
             mapUtils.removeMarker();
         }
         //test create discovery list
@@ -214,7 +221,12 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
                 adapter.setDataList(response.getDiscoveryList());
                 vp_discoveryList.setCurrentItem(0);
                 if (!isTrack) {
-                    AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vpTransY, 0, 500);
+                    AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vpTransY, 0, 500, new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animation) {
+                            Log.e(TAG, "anim 2 " + animation.getAnimatedValue());
+                        }
+                    });
                     if(response.getDiscoveryList().size() > 0)
                     mapUtils.addMarker(response.getDiscoveryList().get(0).getUserPos().getLatlng());
                 }
@@ -226,48 +238,6 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
             }
         });
         logic.sendRequest();
-
-//
-//        vp_discoveryList.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                List<Discovery> discoveryList = new ArrayList<>();
-//                Discovery dis = new Discovery();
-//                dis.setNickName("小飞");
-//                dis.setGender(1);
-//                dis.setInfo("小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排小飞送鸡排");
-//                UserPos userPos = new UserPos(new LatLng(31.2304, 121.462489), "上海市，上海电视台");
-//                dis.setUserPos(userPos);
-//                dis.setDiscoveryKind(kind);
-//                if (kind == Constants.OUTGO) {
-//                    dis.setJoinCount(3);
-//                    dis.setTotalCount(5);
-//                }
-//                if (gender != 2)
-//                    discoveryList.add(dis);
-//                dis = new Discovery();
-//                dis.setNickName("鸡排侠");
-//                dis.setGender(2);
-//                dis.setInfo("鸡排不用飞哥送");
-//                UserPos userPos1 = new UserPos(new LatLng(31.229189, 121.468207), "上海市，和平影院");
-//                dis.setUserPos(userPos1);
-//                dis.setDiscoveryKind(kind);
-//                if (kind == Constants.OUTGO) {
-//                    dis.setJoinCount(2);
-//                    dis.setTotalCount(6);
-//                }
-//                if (gender != 1)
-//                    discoveryList.add(dis);
-//                adapter.setScope(scope);
-//                adapter.setDataList(discoveryList);
-//                vp_discoveryList.setCurrentItem(0);
-//                if (!isTrack) {
-//                    AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vpTransY, 0, 500);
-//                    mapUtils.addMarker(discoveryList.get(vp_discoveryList.getCurrentItem()).getUserPos().getLatlng());
-//                }
-//            }
-//        }, 1000);
-
     }
 
     @Override

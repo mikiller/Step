@@ -131,8 +131,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
         });
         //for test
 
-        vpAdapter = new DetailImgVpAdapter(this, createImgs());
-        vp_img.setAdapter(vpAdapter);
+
         vp_img.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             int minHeight = DisplayUtil.getScreenWidth(DiscoveryDetailActivity.this) / 4 * 3;
             int maxHeight = DisplayUtil.getScreenHeight(DiscoveryDetailActivity.this) / 3 * 4;
@@ -140,11 +139,11 @@ public class DiscoveryDetailActivity extends SuperActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 ImgDetail img = vpAdapter.getImgs().get(position);
-                int fromHeight = getHeight(img.getHeight());
+                int fromHeight = getHeight(img.getImgHeight());
                 int nextHeight = fromHeight;
                 if (position < vpAdapter.getCount() - 1) {
                     ImgDetail img1 = vpAdapter.getImgs().get(position + 1);
-                    nextHeight = getHeight(img1.getHeight());
+                    nextHeight = getHeight(img1.getImgHeight());
                 }
                 int height = (int) (fromHeight * (1 - positionOffset) + nextHeight * positionOffset);
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) vp_img.getLayoutParams();
@@ -166,6 +165,13 @@ public class DiscoveryDetailActivity extends SuperActivity {
 
             }
         });
+        vpAdapter = new DetailImgVpAdapter(this, discovery.getImgList());
+        vp_img.setAdapter(vpAdapter);
+        if(vpAdapter.getCount() == 0){
+            startAlpha(0, 1f);
+            vp_img.getLayoutParams().height = 0;
+//            startScroll(rcv_detail, rcv_detail.getTranslationY(), 0f);
+        }
         setImgNum(0);
 
         rcvMgr = new MyLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -197,15 +203,6 @@ public class DiscoveryDetailActivity extends SuperActivity {
         });
 
         getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(glListener = new CommitGlobalLayoutListener(this, rl_commitInput, edt_commit, btn_send));
-    }
-
-    private List<ImgDetail> createImgs() {
-        List<ImgDetail> imgs = new ArrayList<>();
-        ImgDetail img1 = new ImgDetail("http://gj.yuanlin.com/UploadFiles/201404/2014413143943688.jpg", 240, 750);
-        imgs.add(img1);
-        ImgDetail img2 = new ImgDetail("http://images2015.cnblogs.com/blog/652828/201509/652828-20150901135305419-1201699534.jpg", 1280, 960);
-        imgs.add(img2);
-        return imgs;
     }
 
     private void setImgNum(int position) {

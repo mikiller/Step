@@ -21,13 +21,14 @@ public class Discovery implements Parcelable {
     private String headUrl;
     private String info;
     private UserPos userPos;
-    private List<String> imgList;
+    private List<ImgDetail> imgList;
     private long pushTime;
     private long endTime;
     private int totalCount;
     private int joinCount;
 
     public Discovery(){}
+
 
     protected Discovery(Parcel in) {
         discoveryId = in.readString();
@@ -36,8 +37,8 @@ public class Discovery implements Parcelable {
         gender = in.readInt();
         headUrl = in.readString();
         info = in.readString();
-        userPos = in.readParcelable(LatLng.class.getClassLoader());
-        imgList = in.createStringArrayList();
+        userPos = in.readParcelable(UserPos.class.getClassLoader());
+        imgList = in.createTypedArrayList(ImgDetail.CREATOR);
         pushTime = in.readLong();
         endTime = in.readLong();
         totalCount = in.readInt();
@@ -96,11 +97,11 @@ public class Discovery implements Parcelable {
         this.headUrl = headUrl;
     }
 
-    public List<String> getImgList() {
+    public List<ImgDetail> getImgList() {
         return imgList;
     }
 
-    public void setImgList(List<String> imgList) {
+    public void setImgList(List<ImgDetail> imgList) {
         this.imgList = imgList;
     }
 
@@ -145,7 +146,7 @@ public class Discovery implements Parcelable {
     }
 
     public long getPushTime() {
-        return pushTime;
+        return pushTime * 1000l;
     }
 
     public void setPushTime(long pushTime) {
@@ -166,7 +167,7 @@ public class Discovery implements Parcelable {
         dest.writeString(headUrl);
         dest.writeString(info);
         dest.writeParcelable(userPos, flags);
-        dest.writeStringList(imgList);
+        dest.writeTypedList(imgList);
         dest.writeLong(pushTime);
         dest.writeLong(endTime);
         dest.writeInt(totalCount);
