@@ -3,6 +3,7 @@ package com.westepper.step.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.westepper.step.responses.Discovery;
 import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.MXTimeUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,17 +38,19 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private Context mContext;
     private Discovery discovery;
     private List<Commit> commits;
+    private RecyclerView rcv;
     private OnCommitListener commitListener;
 
     private boolean isDetail = true;
 
 
-    public DisDetailRcvAdapter(Context context) {
+    public DisDetailRcvAdapter(Context context, RecyclerView recyclerView) {
         this.mContext = context;
+        rcv = recyclerView;
     }
 
-    public DisDetailRcvAdapter(Context context, boolean isDetail) {
-        this(context);
+    public DisDetailRcvAdapter(Context context, RecyclerView recyclerView, boolean isDetail) {
+        this(context, recyclerView);
         this.isDetail = isDetail;
     }
 
@@ -91,11 +95,13 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             view.setSubText(String.format(mContext.getString(R.string.commit_title), commits.size()));
             view.setNeedSubText(true);
             view.setNeedNext(true);
-            view.setOnClickListener(new View.OnClickListener() {
+            view.getSubTextView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Map<String, Object> args = new HashMap<>();
                     args.put(Constants.COMMIT_LIST, commits);
+                    args.put(Constants.DIS_KIND, discovery.getDiscoveryKind());
+                    args.put(Constants.DIS_ID, discovery.getDiscoveryId());
                     ActivityManager.startActivity((Activity) mContext, AllCommitsActivity.class, args);
                 }
             });
@@ -117,7 +123,7 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             @Override
             public void onClick(View v) {
                 if(commitListener != null)
-                    commitListener.onCommit(discovery.getDiscoveryId(), discovery.getNickName());
+                    commitListener.onCommit(discovery.getDiscoveryUserId(), discovery.getNickName());
             }
         });
     }
@@ -125,13 +131,13 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private void updateCommitHolder(CommitHolder holder, final Commit commit){
         if(commit == null)
             return;
-        holder.tv_nickName.setText(commit.getNickName().concat(":"));
+        holder.tv_nickName.setText((TextUtils.isEmpty(commit.getNickName()) ? commit.getUserId() : commit.getNickName()).concat(":"));
         holder.tv_commit.setText(commit.getMsg());
         View.OnClickListener itemListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(commitListener != null)
-                    commitListener.onCommit(commit.getCommitId(), commit.getNickName());
+                    commitListener.onCommit(commit.getCommitUserId(), commit.getNickName());
             }
         };
         holder.tv_nickName.setOnClickListener(itemListener);
@@ -141,6 +147,16 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void setCommits(List commits){
         this.commits = commits;
         notifyDataSetChanged();
+    }
+
+    public void addCommit(Commit commit){
+        if(commits == null)
+            commits = new ArrayList<>();
+        this.commits.add(0, commit);
+        notifyItemInserted(isDetail ? 2 : 0);
+        rcv.scrollToPosition(0);
+        if(isDetail)
+            notifyItemChanged(1);
     }
 
     public int getCommitSize(){

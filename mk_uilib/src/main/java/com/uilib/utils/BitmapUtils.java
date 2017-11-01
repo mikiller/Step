@@ -36,6 +36,7 @@ import java.util.concurrent.Executors;
  */
 public class BitmapUtils {
 
+
     public static Bitmap decodeSampleBmpFromFile(String filePath, int dscWidth, int dscHeight){
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -58,6 +59,8 @@ public class BitmapUtils {
         float width = (float) options.outWidth;
         float height = (float) options.outHeight;
         if(dscWidth >= width || dscHeight >= height)
+            return 1;
+        else if(dscWidth < 0 || dscHeight < 0)
             return 1;
         return Math.round((width > height) ? (height / dscHeight) : (width / dscWidth));
     }

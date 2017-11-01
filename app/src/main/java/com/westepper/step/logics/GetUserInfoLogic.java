@@ -7,28 +7,25 @@ import com.netlib.mkokhttp.OkHttpManager;
 import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.BaseModel;
 import com.westepper.step.base.BaseResponse;
-import com.westepper.step.responses.Discovery;
-import com.westepper.step.responses.DiscoveryList;
+import com.westepper.step.responses.UserInfo;
 
 /**
- * Created by Mikiller on 2017/10/27.
+ * Created by Mikiller on 2017/11/1.
  */
 
-public class GetDiscoveryListLogic extends BaseLogic<DiscoveryList> {
-
-
-    public GetDiscoveryListLogic(Context context, BaseModel model) {
+public class GetUserInfoLogic extends BaseLogic<UserInfo> {
+    public GetUserInfoLogic(Context context, BaseModel model) {
         super(context, model);
     }
 
     @Override
     protected void setResponseType() {
-        responseType = new TypeToken<BaseResponse<DiscoveryList>>(){}.getType();
+        responseType = new TypeToken<BaseResponse<UserInfo>>(){}.getType();
     }
 
     @Override
     protected void setUrl() {
-        url = "map/getdiscoverylist";
+        url = "user/getUserInfo";
     }
 
     @Override
@@ -42,12 +39,12 @@ public class GetDiscoveryListLogic extends BaseLogic<DiscoveryList> {
     }
 
     @Override
-    public void onSuccess(DiscoveryList response) {
+    public void onSuccess(UserInfo response) {
 
     }
 
     @Override
-    public void onFailed(String code, String msg, DiscoveryList localData) {
+    public void onFailed(String code, String msg, UserInfo localData) {
 
     }
 }

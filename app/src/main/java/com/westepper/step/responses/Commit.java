@@ -7,27 +7,26 @@ import java.io.Serializable;
  */
 
 public class Commit implements Serializable {
-    private String discoveryId;
-    private String commitId;
-    private String headUrl;
+    private String id;
+    private String userId;
     private String nickName;
     private String msg;
-    private long time;
+    private String commitUserId;
 
-    public String getDiscoveryId() {
-        return discoveryId;
+    public String getCommitUserId() {
+        return commitUserId;
     }
 
-    public void setDiscoveryId(String discoveryId) {
-        this.discoveryId = discoveryId;
+    public void setCommitUserId(String commitUserId) {
+        this.commitUserId = commitUserId;
     }
 
-    public String getCommitId() {
-        return commitId;
+    public String getId() {
+        return id;
     }
 
-    public void setCommitId(String id) {
-        this.commitId = id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getMsg() {
@@ -38,27 +37,19 @@ public class Commit implements Serializable {
         this.msg = msg;
     }
 
-    public long getTime() {
-        return time;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
-    }
-
-    public String getHeadUrl() {
-        return headUrl;
-    }
-
-    public void setHeadUrl(String headUrl) {
-        this.headUrl = headUrl;
-    }
-
     public String getNickName() {
         return nickName;
     }
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

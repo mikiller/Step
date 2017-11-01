@@ -16,6 +16,7 @@ public class Discovery implements Parcelable {
 
     private String discoveryId;
     private int discoveryKind;
+    private String discoveryUserId;
     private String nickName;
     private int gender;
     private String headUrl;
@@ -33,6 +34,7 @@ public class Discovery implements Parcelable {
     protected Discovery(Parcel in) {
         discoveryId = in.readString();
         discoveryKind = in.readInt();
+        discoveryUserId = in.readString();
         nickName = in.readString();
         gender = in.readInt();
         headUrl = in.readString();
@@ -71,6 +73,14 @@ public class Discovery implements Parcelable {
 
     public void setDiscoveryKind(int discoveryKind) {
         this.discoveryKind = discoveryKind;
+    }
+
+    public String getDiscoveryUserId() {
+        return discoveryUserId;
+    }
+
+    public void setDiscoveryUserId(String discoveryUserId) {
+        this.discoveryUserId = discoveryUserId;
     }
 
     public long getEndTime() {
@@ -162,6 +172,7 @@ public class Discovery implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(discoveryId);
         dest.writeInt(discoveryKind);
+        dest.writeString(discoveryUserId);
         dest.writeString(nickName);
         dest.writeInt(gender);
         dest.writeString(headUrl);

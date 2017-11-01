@@ -1,6 +1,7 @@
 package com.westepper.step.logics;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 import com.netlib.mkokhttp.OkHttpManager;
@@ -45,6 +46,9 @@ public class NewDiscoveryLogic extends BaseLogic {
 
     @Override
     public void onFailed(String code, String msg, Object localData) {
-
+        if("0".equals(code)){
+            ((SuperActivity)context).back();
+            Toast.makeText(context, "发布成功！", Toast.LENGTH_SHORT).show();
+        }
     }
 }

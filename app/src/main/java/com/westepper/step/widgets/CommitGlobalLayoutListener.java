@@ -19,73 +19,33 @@ public class CommitGlobalLayoutListener implements ViewTreeObserver.OnGlobalLayo
     Activity mContext;
     int sbHeight, keyboardHeight, screenHeight;
     Rect window = new Rect();
-    String nickName, hint;
-    RelativeLayout rl_commitInput;
-    EditText edt_commit;
-    Button btn_send;
-    View focuceView;
-    boolean needTransY = true;
+    LayoutListener globalListener;
 
-    public CommitGlobalLayoutListener(Activity context, RelativeLayout layout, EditText edt, Button btn) {
-        mContext = context;
-        screenHeight = DisplayUtil.getScreenHeight(context);
-        rl_commitInput = layout;
-        edt_commit = edt;
-        btn_send = btn;
-    }
-
-    public void setCommitHint(String name) {
-        nickName = name;
-    }
-
-    public void setHint(String hint) {
-        this.hint = hint;
-    }
-
-    public boolean isNeedTransY() {
-        return needTransY;
-    }
-
-    public void setNeedTransY(boolean needTransY) {
-        this.needTransY = needTransY;
-    }
-
-
-    public void setFocuceView(View focuceView) {
-        this.focuceView = focuceView;
+    public CommitGlobalLayoutListener(Activity mContext) {
+        this.mContext = mContext;
+        screenHeight = DisplayUtil.getScreenHeight(mContext);
     }
 
     @Override
     public void onGlobalLayout() {
         mContext.getWindow().getDecorView().getWindowVisibleDisplayFrame(window);
         keyboardHeight = screenHeight - window.height();
-        if (keyboardHeight > screenHeight / 3) {
-            rl_commitInput.setVisibility(View.VISIBLE);
-            edt_commit.requestFocus();
-            rl_commitInput.setTranslationY(sbHeight - keyboardHeight);
-            if (!TextUtils.isEmpty(nickName))
-                edt_commit.setHint(String.format("回复%1$s：", nickName));
-            else if(!TextUtils.isEmpty(hint))
-                edt_commit.setHint(hint);
-        } else {
-            sbHeight = keyboardHeight;
-            rl_commitInput.setVisibility(View.GONE);
-            edt_commit.setText("");
-            needTransY = true;
+        if(globalListener!= null) {
+            if (keyboardHeight > screenHeight / 3) {
+                globalListener.onInputMethodShow(sbHeight - keyboardHeight);
+            } else {
+                sbHeight = keyboardHeight;
+                globalListener.onInputMethodHide();
+            }
         }
     }
 
-    public void setOnSendListener(final OnSendListener listener){
-        btn_send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(listener != null)
-                    listener.onSend(focuceView, edt_commit.getText().toString());
-            }
-        });
+    public void setGlobalListener(LayoutListener listener){
+        globalListener = listener;
     }
 
-    public interface OnSendListener{
-        void onSend(View focuseView, String txt);
+    public interface LayoutListener{
+        void onInputMethodShow(int transY);
+        void onInputMethodHide();
     }
 }

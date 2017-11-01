@@ -21,6 +21,7 @@ import com.westepper.step.R;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.uilib.mxmenuitem.MyMenuItem;
+import com.westepper.step.customViews.CommitEditView;
 import com.westepper.step.customViews.TitleBar;
 import com.westepper.step.widgets.CommitGlobalLayoutListener;
 import com.westepper.step.responses.UserInfo;
@@ -54,16 +55,11 @@ public class UserInfoActivity extends SuperActivity implements View.OnClickListe
     TextView tv_sign;
     @BindView(R.id.tv_signNum)
     TextView tv_signNum;
-    @BindView(R.id.rl_commitInput)
-    RelativeLayout rl_commitInput;
-    @BindView(R.id.edt_commit)
-    EditText edt_commit;
-    @BindView(R.id.btn_send)
-    Button btn_send;
+    @BindView(R.id.commitInput)
+    CommitEditView commitInput;
 
     int signNum = 140;
     UserInfo userInfo;
-    CommitGlobalLayoutListener glListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -108,11 +104,9 @@ public class UserInfoActivity extends SuperActivity implements View.OnClickListe
         iv_userHeader.setOnClickListener(this);
         menu_nickname.setOnClickListener(this);
         tv_sign.setOnClickListener(this);
-        getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(glListener = new CommitGlobalLayoutListener(this, rl_commitInput, edt_commit, btn_send));
-        glListener.setOnSendListener(new CommitGlobalLayoutListener.OnSendListener() {
+        commitInput.setOnSendListener(new CommitEditView.OnSendListener() {
             @Override
             public void onSend(View focuseView, String txt) {
-                edt_commit.clearFocus();
                 switch (focuseView.getId()){
                     case R.id.menu_nickname:
                         if(TextUtils.isEmpty(txt)){
@@ -128,7 +122,7 @@ public class UserInfoActivity extends SuperActivity implements View.OnClickListe
                         userInfo.setSign(tv_sign.getText().toString());
                         break;
                 }
-                hideInputMethod();
+                hideInputMethod(commitInput);
                 titleBar.setSubTxtEnabled(true);
             }
         });
@@ -148,26 +142,16 @@ public class UserInfoActivity extends SuperActivity implements View.OnClickListe
                 ActivityManager.startActivityforResult(this, GalleryActivity.class, Constants.CHANGE_HEADER, args);
                 break;
             case R.id.menu_nickname:
-                glListener.setFocuceView(v);
-                glListener.setHint("输入新昵称");
-                showInputMethod();
+                commitInput.setFocuceView(v);
+                commitInput.setHint("输入新昵称");
+                showInputMethod(commitInput);
                 break;
             case R.id.tv_sign:
-                glListener.setHint("写下你的个性签名");
-                glListener.setFocuceView(v);
-                showInputMethod();
+                commitInput.setHint("写下你的个性签名");
+                commitInput.setFocuceView(v);
+                showInputMethod(commitInput);
                 break;
         }
-    }
-
-    private void showInputMethod(){
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_NOT_ALWAYS);
-    }
-
-    private void hideInputMethod(){
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(edt_commit.getWindowToken(), 0);
     }
 
     @Override
@@ -189,15 +173,5 @@ public class UserInfoActivity extends SuperActivity implements View.OnClickListe
                 titleBar.setSubTxtEnabled(true);
                 break;
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            getWindow().getDecorView().getViewTreeObserver().removeOnGlobalLayoutListener(glListener);
-        } else {
-            getWindow().getDecorView().getViewTreeObserver().removeGlobalOnLayoutListener(glListener);
-        }
-        super.onDestroy();
     }
 }

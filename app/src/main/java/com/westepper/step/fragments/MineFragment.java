@@ -19,10 +19,13 @@ import com.westepper.step.activities.PaihangActivity;
 import com.westepper.step.activities.SettingActivity;
 import com.westepper.step.activities.UserInfoActivity;
 import com.westepper.step.base.BaseFragment;
+import com.westepper.step.base.BaseLogic;
+import com.westepper.step.base.BaseModel;
 import com.westepper.step.base.Constants;
 import com.uilib.mxmenuitem.MyMenuItem;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.uilib.utils.DisplayUtil;
+import com.westepper.step.logics.GetUserInfoLogic;
 import com.westepper.step.responses.UserInfo;
 import com.westepper.step.utils.ActivityManager;
 import com.uilib.mxgallery.utils.CameraGalleryUtils;
@@ -108,8 +111,26 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         menu_discovery.setOnClickListener(this);
         menu_acheive.setOnClickListener(this);
 
-        createUserInfo();
-        updateUserInfo();
+//        createUserInfo();
+//        updateUserInfo();
+        getUserInfo();
+    }
+
+    private void getUserInfo(){
+        GetUserInfoLogic logic = new GetUserInfoLogic(getActivity(), new BaseModel());
+        logic.setCallback(new BaseLogic.LogicCallback<UserInfo>() {
+            @Override
+            public void onSuccess(UserInfo response) {
+                userInfo = response;
+                updateUserInfo();
+            }
+
+            @Override
+            public void onFailed(String code, String msg, UserInfo localData) {
+
+            }
+        });
+        logic.sendRequest();
     }
 
     private void updateUserInfo(){
@@ -121,6 +142,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             iv_header_bg.setScaleType(ImageView.ScaleType.CENTER_CROP);
             GlideImageLoader.getInstance().loadImage(getActivity(), userInfo.getCover(), R.mipmap.ic_addcover, iv_header_bg, 0);
         }
+        tv_city.setText(userInfo.getCity());
     }
 
     //test user info

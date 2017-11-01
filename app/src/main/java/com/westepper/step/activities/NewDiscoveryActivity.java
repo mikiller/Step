@@ -161,23 +161,22 @@ public class NewDiscoveryActivity extends SuperActivity {
     private void sendNewDiscovery(){
         NewDiscoveryModel model = new NewDiscoveryModel(2, disKind, adapter.getInfo(), "0", System.currentTimeMillis());
         model.setPoiTitle(adapter.getPoiItem().getTitle());
-
+        model.setLatitude(adapter.getPoiItem().getLatLonPoint().getLatitude());
+        model.setLongitude(adapter.getPoiItem().getLatLonPoint().getLongitude());
         String img = "data:image/jpeg;base64,";
         ArrayList<String> imgList = new ArrayList<>();
         if(!TextUtils.isEmpty(tmpFile)) {
             img = img.concat(BitmapUtils.getBmpBase64Str(tmpFile,
-                    DisplayUtil.getScreenWidth(this) * 2 / 3, DisplayUtil.getScreenHeight(this) / 3));
+                    DisplayUtil.getScreenWidth(this), DisplayUtil.getScreenHeight(this) * 9 / 16));
             imgList.add(img);
         }else{
             for(String path : adapter.getItems()){
                 String tmp = img.concat(BitmapUtils.getBmpBase64Str(path,
-                        DisplayUtil.getScreenWidth(this) * 2 / 3, DisplayUtil.getScreenHeight(this) / 3));
+                        DisplayUtil.getScreenWidth(this), DisplayUtil.getScreenHeight(this) * 9 / 16));
                 imgList.add(tmp);
             }
         }
         model.setImgList(imgList);
-        String json = new Gson().toJson(model);
-        Log.e(TAG, json);
         NewDiscoveryLogic logic = new NewDiscoveryLogic(this, model);
         logic.sendRequest();
     }
@@ -201,8 +200,8 @@ public class NewDiscoveryActivity extends SuperActivity {
     }
 
     private void createPrivacyPicker(final MyMenuItem menu){
-        final String[] values = new String[]{"公开", "好友可见", "", "", "", "", "", ""};
-        createPicker(values, menu, 2, false);
+        final String[] values = new String[]{"公开", "好友可见", "仅陌生人可见", "", "", "", "", ""};
+        createPicker(values, menu, 3, false);
     }
 
     private void createPicker(final String[] values, final MyMenuItem menu, int maxValue, final boolean isDate){
@@ -241,9 +240,8 @@ public class NewDiscoveryActivity extends SuperActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode != Activity.RESULT_OK)
             return;
-        String filePath = "";
         if(data.getSerializableExtra(CameraGalleryUtils.TMP_FILE) != null) {
-            filePath = (String) data.getSerializableExtra(CameraGalleryUtils.TMP_FILE);
+            String filePath = (String) data.getSerializableExtra(CameraGalleryUtils.TMP_FILE);
             adapter.addItem(filePath);
         }
         else if( data.getSerializableExtra(CameraGalleryUtils.THUMB_FILE) != null) {

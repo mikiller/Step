@@ -16,7 +16,10 @@ import com.westepper.step.R;
 import com.westepper.step.adapters.DisDetailRcvAdapter;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
+import com.westepper.step.customViews.CommitEditView;
 import com.westepper.step.customViews.TitleBar;
+import com.westepper.step.logics.CommitLogic;
+import com.westepper.step.models.CommitModel;
 import com.westepper.step.widgets.CommitGlobalLayoutListener;
 import com.westepper.step.responses.Commit;
 
@@ -34,14 +37,8 @@ public class AllCommitsActivity extends SuperActivity {
     TitleBar titleBar;
     @BindView(R.id.rcv_commitList)
     RecyclerView rcv_commitList;
-    @BindView(R.id.rl_commitInput)
-    RelativeLayout rl_commitInput;
-    @BindView(R.id.edt_commit)
-    EditText edt_commit;
-    @BindView(R.id.btn_send)
-    Button btn_send;
-
-    CommitGlobalLayoutListener glListener;
+    @BindView(R.id.commitInput)
+    CommitEditView commitInput;
 
     DisDetailRcvAdapter adapter;
     List<Commit> commitList;
@@ -71,34 +68,31 @@ public class AllCommitsActivity extends SuperActivity {
             }
         });
         rcv_commitList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        adapter = new DisDetailRcvAdapter(this, false);
+        adapter = new DisDetailRcvAdapter(this, rcv_commitList, false);
         rcv_commitList.setAdapter(adapter);
         adapter.setCommits(commitList);
         adapter.setCommitListener(new DisDetailRcvAdapter.OnCommitListener() {
             @Override
-            public void onCommit(String id, String nickName) {
-                if (rl_commitInput.getVisibility() == View.GONE) {
-                    glListener.setCommitHint(nickName);
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_NOT_ALWAYS);
+            public void onCommit(final String id, String nickName) {
+                if (!commitInput.isVisible()) {
+                    commitInput.setHint(String.format("回复: %1$s", nickName));
+                    showInputMethod(commitInput);
+                    commitInput.setOnSendListener(new CommitEditView.OnSendListener() {
+                        @Override
+                        public void onSend(View focuseView, String txt) {
+                            //send logic
+                            CommitLogic logic = new CommitLogic(AllCommitsActivity.this, new CommitModel(id, getIntent().getStringExtra(Constants.DIS_ID), getIntent().getIntExtra(Constants.DIS_KIND, 1), txt));
+                            logic.setCallbackObject(commitInput, adapter).sendRequest();
+                            hideInputMethod(commitInput);
+                        }
+                    });
                 }
             }
         });
-        getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(glListener = new CommitGlobalLayoutListener(this, rl_commitInput, edt_commit, btn_send));
     }
 
     @Override
     protected void initData() {
 
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            getWindow().getDecorView().getViewTreeObserver().removeOnGlobalLayoutListener(glListener);
-        } else {
-            getWindow().getDecorView().getViewTreeObserver().removeGlobalOnLayoutListener(glListener);
-        }
-        super.onDestroy();
     }
 }

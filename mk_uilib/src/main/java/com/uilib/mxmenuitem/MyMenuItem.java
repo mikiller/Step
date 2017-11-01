@@ -78,6 +78,10 @@ public class MyMenuItem extends RelativeLayout {
         return needSubText;
     }
 
+    public TextView getSubTextView(){
+        return tv_info;
+    }
+
     public void setNeedSubText(boolean needSubText) {
         this.needSubText = needSubText;
         tv_info.setVisibility(needSubText ? VISIBLE : GONE);

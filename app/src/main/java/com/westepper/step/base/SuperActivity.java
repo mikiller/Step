@@ -1,6 +1,7 @@
 package com.westepper.step.base;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
@@ -9,9 +10,11 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 
 import com.westepper.step.utils.ActivityManager;
@@ -87,6 +90,16 @@ public abstract class SuperActivity extends AppCompatActivity {
         PermissionUtils.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 
+    protected void showInputMethod(View view){
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInputFromWindow(view.getWindowToken(), InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    public void hideInputMethod(View view){
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode){
@@ -98,7 +111,7 @@ public abstract class SuperActivity extends AppCompatActivity {
     }
 
     public void back(){
-        ActivityManager.hideInputMethod(this);
+        hideInputMethod(getWindow().getDecorView());
         this.finish();
     }
 

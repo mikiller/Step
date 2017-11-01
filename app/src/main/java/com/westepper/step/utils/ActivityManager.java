@@ -91,11 +91,4 @@ public class ActivityManager {
         ActivityCompat.startActivity(act, intent, optCmpt.toBundle());
     }
 
-    public static void hideInputMethod(Activity context){
-        if(context.getCurrentFocus() != null && context.getCurrentFocus().getWindowToken() != null) {
-            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(context.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
-
 }

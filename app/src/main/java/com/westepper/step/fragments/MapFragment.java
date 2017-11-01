@@ -204,12 +204,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
     private void getDiscoveryList(final int scope, final int kind, final int gender) {
         if (!isTrack) {
-            AnimUtils.startObjectAnim(vp_discoveryList, "translationY", 0, vpTransY, 300, new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    Log.e(TAG, "anim 1 " + animation.getAnimatedValue());
-                }
-            });
+            AnimUtils.startObjectAnim(vp_discoveryList, "translationY", 0, vpTransY, 300);
             mapUtils.removeMarker();
         }
         //test create discovery list
@@ -221,12 +216,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
                 adapter.setDataList(response.getDiscoveryList());
                 vp_discoveryList.setCurrentItem(0);
                 if (!isTrack) {
-                    AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vpTransY, 0, 500, new ValueAnimator.AnimatorUpdateListener() {
-                        @Override
-                        public void onAnimationUpdate(ValueAnimator animation) {
-                            Log.e(TAG, "anim 2 " + animation.getAnimatedValue());
-                        }
-                    });
+                    AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vpTransY, 0, 500);
                     if(response.getDiscoveryList().size() > 0)
                     mapUtils.addMarker(response.getDiscoveryList().get(0).getUserPos().getLatlng());
                 }

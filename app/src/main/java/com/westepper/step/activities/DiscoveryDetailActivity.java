@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -23,9 +24,14 @@ import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
 import com.westepper.step.adapters.DetailImgVpAdapter;
 import com.westepper.step.adapters.DisDetailRcvAdapter;
+import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
+import com.westepper.step.customViews.CommitEditView;
 import com.westepper.step.customViews.TitleBar;
+import com.westepper.step.logics.CommitLogic;
+import com.westepper.step.logics.GetCommitListLogic;
+import com.westepper.step.models.CommitModel;
 import com.westepper.step.widgets.CommitGlobalLayoutListener;
 import com.westepper.step.responses.Commit;
 import com.westepper.step.responses.Discovery;
@@ -61,12 +67,8 @@ public class DiscoveryDetailActivity extends SuperActivity {
     TextView tv_joinNum;
     @BindView(R.id.tv_joinOpt)
     TextView tv_joinOpt;
-    @BindView(R.id.rl_commitInput)
-    RelativeLayout rl_commitInput;
-    @BindView(R.id.edt_commit)
-    EditText edt_commit;
-    @BindView(R.id.btn_send)
-    Button btn_send;
+    @BindView(R.id.commitInput)
+    CommitEditView commitInput;
 
     DetailImgVpAdapter vpAdapter;
 
@@ -77,12 +79,10 @@ public class DiscoveryDetailActivity extends SuperActivity {
     Discovery discovery;
     int scope;
 
-    CommitGlobalLayoutListener glListener;
-
     private float ActDownX, ActDownY, rcvDY, imgDy, titleDA;
     float maxRcvTransY, maxImgTransY;
     float rcvTransY, rlImgTransY;
-    boolean isAnimRunning = false;//, needTransY = true;
+    boolean isAnimRunning = false;
     //    int rcvFirstPos;
     float titleAlpha = 0.01f;
 
@@ -170,27 +170,44 @@ public class DiscoveryDetailActivity extends SuperActivity {
         if(vpAdapter.getCount() == 0){
             startAlpha(0, 1f);
             vp_img.getLayoutParams().height = 0;
-//            startScroll(rcv_detail, rcv_detail.getTranslationY(), 0f);
         }
         setImgNum(0);
 
         rcvMgr = new MyLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rcv_detail.setLayoutManager(rcvMgr);
-        rcvAdapter = new DisDetailRcvAdapter(this);
+        rcvAdapter = new DisDetailRcvAdapter(this, rcv_detail);
+        rcvAdapter.setDiscovery(discovery);
         rcvAdapter.setCommitListener(new DisDetailRcvAdapter.OnCommitListener() {
             @Override
-            public void onCommit(String id, String nickName) {
-                if (rl_commitInput.getVisibility() == View.GONE) {
-//                    needTransY = false;
-                    glListener.setNeedTransY(false);
-                    glListener.setCommitHint(nickName);
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_NOT_ALWAYS);
+            public void onCommit(final String id, String nickName) {
+                if(!commitInput.isVisible()){
+                    commitInput.setNeedTransY(false);
+                    commitInput.setHint(String.format("回复:%1$s", nickName));
+                    showInputMethod(commitInput);
+                    commitInput.setOnSendListener(new CommitEditView.OnSendListener() {
+                        @Override
+                        public void onSend(View focuseView, String txt) {
+                            CommitLogic logic = new CommitLogic(DiscoveryDetailActivity.this, new CommitModel(id, discovery.getDiscoveryId(), discovery.getDiscoveryKind(), txt));
+                            logic.setCallbackObject(commitInput, rcvAdapter).sendRequest();
+
+                        }
+                    });
                 }
             }
         });
         rcv_detail.setAdapter(rcvAdapter);
-
+        rcv_detail.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int visibleItemPos = rcvMgr.findFirstVisibleItemPosition();
+                if(visibleItemPos <= 1){
+                    titleBar.setTitle(discovery.getNickName());
+                }else{
+                    titleBar.setTitle("留言");
+                }
+            }
+        });
         ll_joinOtp.setVisibility(discovery.getDiscoveryKind() == Constants.MOOD ? View.GONE : View.VISIBLE);
         if (discovery.getDiscoveryKind() == Constants.OUTGO) {
             tv_joinNum.setText(String.format(getString(R.string.join_num), discovery.getJoinCount(), discovery.getTotalCount()));
@@ -202,7 +219,16 @@ public class DiscoveryDetailActivity extends SuperActivity {
             }
         });
 
-        getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(glListener = new CommitGlobalLayoutListener(this, rl_commitInput, edt_commit, btn_send));
+        vp_img.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if(!commitInput.isNeedTransY())
+                    return;
+                maxRcvTransY = vp_img.getMeasuredHeight() - titleBar.getHeight();
+                maxImgTransY = (titleBar.getHeight() - rl_img.getHeight()) * 0.4f;
+                rcv_detail.setTranslationY(vp_img.getHeight() - titleBar.getHeight());
+            }
+        });
     }
 
     private void setImgNum(int position) {
@@ -212,86 +238,10 @@ public class DiscoveryDetailActivity extends SuperActivity {
 
     @Override
     protected void initData() {
-        if (scope == Constants.FRIEND)
-            rcvAdapter.setCommits(createCommits());
-        rcvAdapter.setDiscovery(discovery);
-        vp_img.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                if (!glListener.isNeedTransY())
-                    return;
-                maxRcvTransY = vp_img.getMeasuredHeight() - titleBar.getHeight();
-                maxImgTransY = (titleBar.getHeight() - rl_img.getHeight()) * 0.4f;
-                rcv_detail.setTranslationY(vp_img.getHeight() - titleBar.getHeight());
-
-            }
-        });
-    }
-
-    //test create commits
-    private List<Commit> createCommits() {
-        List<Commit> commits = new ArrayList<>();
-        Commit commit = new Commit();
-        commit.setHeadUrl("http://tse2.mm.bing.net/th?id=OIP.q53c9FWOXGvw00Xr-a162wD6D6&w=198&h=198&c=7&qlt=90&o=4&dpr=1.25&pid=1.7");
-        commit.setMsg("哈哈哈哈哈或");
-        commit.setNickName("donghua");
-        commits.add(commit);
-        Commit commit1 = new Commit();
-        commit1.setHeadUrl("http://tse2.mm.bing.net/th?id=OIP.kwrzMA37JwCYw9jlfN1QEgEsEa&w=229&h=204&c=7&qlt=90&o=4&dpr=1.25&pid=1.7");
-        commit1.setMsg("巴巴爸爸不不不不不不");
-        commit1.setNickName("按到");
-        commits.add(commit1);
-        Commit commit2 = new Commit();
-        commit2.setHeadUrl("http://tse2.mm.bing.net/th?id=OIP.scCB3oW9MAoZj84PRRrAAgEsEs&pid=15.1");
-        commit2.setMsg("飞机撒了几分几分");
-        commit2.setNickName("大打发斯蒂芬");
-        commits.add(commit2);
-        Commit commit3 = new Commit();
-        commit3.setHeadUrl("http://img1.3lian.com/img2012/12/49/d/54.jpg");
-        commit3.setMsg("范德萨附近咖啡了");
-        commit3.setNickName("大耳环");
-        commits.add(commit3);
-        Commit commit4 = new Commit();
-        commit4.setHeadUrl("http://tse2.mm.bing.net/th?id=OIP.q53c9FWOXGvw00Xr-a162wD6D6&w=198&h=198&c=7&qlt=90&o=4&dpr=1.25&pid=1.7");
-        commit4.setMsg("哈哈哈哈哈或");
-        commit4.setNickName("donghua");
-        commits.add(commit4);
-        Commit commit11 = new Commit();
-        commit11.setHeadUrl("http://tse2.mm.bing.net/th?id=OIP.kwrzMA37JwCYw9jlfN1QEgEsEa&w=229&h=204&c=7&qlt=90&o=4&dpr=1.25&pid=1.7");
-        commit11.setMsg("巴巴爸爸不不不不不不");
-        commit11.setNickName("按到");
-        commits.add(commit11);
-        Commit commit21 = new Commit();
-        commit21.setHeadUrl("http://tse2.mm.bing.net/th?id=OIP.scCB3oW9MAoZj84PRRrAAgEsEs&pid=15.1");
-        commit21.setMsg("飞机撒了几分几分");
-        commit21.setNickName("大打发斯蒂芬");
-        commits.add(commit21);
-        Commit commit31 = new Commit();
-        commit31.setHeadUrl("http://img1.3lian.com/img2012/12/49/d/54.jpg");
-        commit31.setMsg("范德萨附近咖啡了");
-        commit31.setNickName("大耳环");
-        commits.add(commit31);
-        Commit commit22 = new Commit();
-        commit22.setHeadUrl("http://tse2.mm.bing.net/th?id=OIP.q53c9FWOXGvw00Xr-a162wD6D6&w=198&h=198&c=7&qlt=90&o=4&dpr=1.25&pid=1.7");
-        commit22.setMsg("哈哈哈哈哈或");
-        commit22.setNickName("donghua");
-        commits.add(commit22);
-        Commit commit13 = new Commit();
-        commit13.setHeadUrl("http://tse2.mm.bing.net/th?id=OIP.kwrzMA37JwCYw9jlfN1QEgEsEa&w=229&h=204&c=7&qlt=90&o=4&dpr=1.25&pid=1.7");
-        commit13.setMsg("巴巴爸爸不不不不不不");
-        commit13.setNickName("按到");
-        commits.add(commit13);
-        Commit commit23 = new Commit();
-        commit23.setHeadUrl("http://tse2.mm.bing.net/th?id=OIP.scCB3oW9MAoZj84PRRrAAgEsEs&pid=15.1");
-        commit23.setMsg("飞机撒了几分几分");
-        commit23.setNickName("大打发斯蒂芬");
-        commits.add(commit23);
-        Commit commit33 = new Commit();
-        commit33.setHeadUrl("http://img1.3lian.com/img2012/12/49/d/54.jpg");
-        commit33.setMsg("范德萨附近咖啡了");
-        commit33.setNickName("大耳环");
-        commits.add(commit33);
-        return commits;
+        if (scope == Constants.FRIEND){
+            GetCommitListLogic logic = new GetCommitListLogic(this, new CommitModel(discovery.getDiscoveryId(), discovery.getDiscoveryKind()));
+            logic.setAdapter(rcvAdapter).sendRequest();
+        }
     }
 
     @Override
@@ -304,6 +254,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
 
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
+
                 rcvTransY = rcv_detail.getTranslationY();
                 rlImgTransY = rl_img.getTranslationY();
                 titleAlpha = titleBar.getBgAlpha();
@@ -363,18 +314,19 @@ public class DiscoveryDetailActivity extends SuperActivity {
     private boolean canMove() {
         boolean rst = true;
 
-        if (rl_commitInput.getVisibility() == View.VISIBLE) {
+        if(commitInput.isVisible()){
             Rect rect = new Rect();
-            rl_commitInput.getGlobalVisibleRect(rect);
+            commitInput.getGlobalVisibleRect(rect);
             if (ActDownY > rect.top) {
                 rcvDY = 0;
                 return false;
             }
         }
-        if (rcvMgr.findLastVisibleItemPosition() == rcvAdapter.getItemCount() - 1) {
-            rcvDY = 0;
-            rst = false;
-        } else if (isAnimRunning || rcvMgr.findFirstCompletelyVisibleItemPosition() != 0 || ActDownY < 0) {
+//        if (rcvMgr.findLastVisibleItemPosition() == rcvAdapter.getItemCount() - 1) {
+//            rcvDY = 0;
+//            rst = false;
+//        } else
+        if (isAnimRunning || rcvMgr.findFirstCompletelyVisibleItemPosition() != 0 || ActDownY < 0) {
             rcvDY = 0;
             rst = false;
         } else if (isMaxY() || isMinY()) {
@@ -415,16 +367,6 @@ public class DiscoveryDetailActivity extends SuperActivity {
 
     private float getImgDeltaY(float srcY, float dY) {
         return (srcY + dY) >= 0 ? 0 : ((srcY + dY) <= maxImgTransY ? maxImgTransY : (srcY + dY));
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            getWindow().getDecorView().getViewTreeObserver().removeOnGlobalLayoutListener(glListener);
-        } else {
-            getWindow().getDecorView().getViewTreeObserver().removeGlobalOnLayoutListener(glListener);
-        }
-        super.onDestroy();
     }
 
     private class MyLinearLayoutManager extends LinearLayoutManager {
