@@ -163,16 +163,16 @@ public class NewDiscoveryActivity extends SuperActivity {
         model.setPoiTitle(adapter.getPoiItem().getTitle());
         model.setLatitude(adapter.getPoiItem().getLatLonPoint().getLatitude());
         model.setLongitude(adapter.getPoiItem().getLatLonPoint().getLongitude());
-        String img = "data:image/jpeg;base64,";
+//        String img = "data:image/jpeg;base64,";
         ArrayList<String> imgList = new ArrayList<>();
         if(!TextUtils.isEmpty(tmpFile)) {
-            img = img.concat(BitmapUtils.getBmpBase64Str(tmpFile,
-                    DisplayUtil.getScreenWidth(this), DisplayUtil.getScreenHeight(this) * 9 / 16));
+            String img = BitmapUtils.getBmpBase64Str(tmpFile,
+                    DisplayUtil.getScreenWidth(this), DisplayUtil.getScreenHeight(this) * 9 / 16);
             imgList.add(img);
         }else{
             for(String path : adapter.getItems()){
-                String tmp = img.concat(BitmapUtils.getBmpBase64Str(path,
-                        DisplayUtil.getScreenWidth(this), DisplayUtil.getScreenHeight(this) * 9 / 16));
+                String tmp = BitmapUtils.getBmpBase64Str(path,
+                        DisplayUtil.getScreenWidth(this), DisplayUtil.getScreenHeight(this) * 9 / 16);
                 imgList.add(tmp);
             }
         }

@@ -82,14 +82,14 @@ public class BitmapUtils {
     public static String getBmpBase64Str(String path, int width, int height){
         Bitmap bmp = BitmapUtils.decodeSampleBmpFromFile(path, width, height);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        String rst = "";
+        String rst = "data:image/jpeg;base64,";
         try {
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             baos.flush();
 
             baos.close();
             byte[] bmpBytes = baos.toByteArray();
-            rst = Base64.encodeToString(bmpBytes, Base64.DEFAULT);
+            rst = rst.concat(Base64.encodeToString(bmpBytes, Base64.DEFAULT));
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -137,9 +137,8 @@
         </LinearLayout>
     </LinearLayout>
 
-    <include
+    <com.westepper.step.customViews.CityListLayout
         android:id="@+id/layout_citylist"
-        layout="@layout/layout_citylist"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"

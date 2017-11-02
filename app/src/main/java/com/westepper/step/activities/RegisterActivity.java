@@ -33,6 +33,7 @@ import com.uilib.joooonho.SelectableRoundedImageView;
 import com.westepper.step.R;
 import com.westepper.step.adapters.CityAdapter;
 import com.westepper.step.base.SuperActivity;
+import com.westepper.step.customViews.CityListLayout;
 import com.westepper.step.logics.RegistLogic;
 import com.westepper.step.models.CityBean;
 import com.westepper.step.models.SignModel;
@@ -65,19 +66,9 @@ public class RegisterActivity extends SuperActivity implements View.OnClickListe
     @BindView(R.id.ll_regist)
     LinearLayout ll_regist;
     @BindView(R.id.layout_citylist)
-    LinearLayout layout_citylist;
+    CityListLayout layout_citylist;
     @BindView(R.id.btn_close)
     ImageButton btn_close;
-    @BindView(R.id.rdg_mainCity)
-    RadioGroup rdg_mainCity;
-    @BindView(R.id.rcv_city)
-    RecyclerView rcv_city;
-    @BindView(R.id.indexBar)
-    IndexBar indexBar;
-
-    List<CityBean> mDatas;
-    CityAdapter adapter;
-    LinearLayoutManager llMgr;
 
     String headUrl;
     @Override
@@ -94,29 +85,11 @@ public class RegisterActivity extends SuperActivity implements View.OnClickListe
         headUrl = getIntent().getStringExtra("iconurl");
         edt_nickName.setText(getIntent().getStringExtra("name"));
         GlideImageLoader.getInstance().loadImage(this, headUrl, R.mipmap.ic_default_head, iv_header, 0);
-        if(getIntent().getStringExtra("gender").equals("男")){
+        if("男".equals(getIntent().getStringExtra("gender"))){
             rdg_gender.check(R.id.rdb_male);
-        }else if(getIntent().getStringExtra("gender").equals("女"))
+        }else if("女".equals(getIntent().getStringExtra("gender")))
             rdg_gender.check(R.id.rdb_female);
-        rdg_mainCity.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId){
-                    case R.id.rdb_Shanghai:
-                        setCity("上海");
-                        break;
-                    case R.id.rdb_Beijing:
-                        setCity("北京");
-                        break;
-                    case R.id.rdb_Guangzhou:
-                        setCity("广州");
-                        break;
-                    case R.id.rdb_Hangzhou:
-                        setCity("杭州");
-                        break;
-                }
-            }
-        });
+
         btn_signup.setOnClickListener(this);
         ckb_protocol.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -124,46 +97,23 @@ public class RegisterActivity extends SuperActivity implements View.OnClickListe
                 btn_signup.setEnabled(isChecked);
             }
         });
-        rcv_city.setLayoutManager(llMgr = new LinearLayoutManager(this));
+
+        layout_citylist.setOnSelectedCityListener(new CityListLayout.onSelectedCityListener() {
+            @Override
+            public void onCitySelected(String city) {
+                setCity(city);
+            }
+        });
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     private void setCity(String city){
         hideCityList();
         tv_city.setText(city);
-    }
-
-    @Override
-    protected void initData() {
-        getCitysFromFile();
-    }
-
-    private void getCitysFromFile(){
-        try {
-            InputStream is = getAssets().open("city.txt");
-            byte[] txt = new byte[is.available()];
-            is.read(txt);
-            String cityjson = new String(txt);
-            mDatas = new Gson().fromJson(cityjson, new TypeToken<List<CityBean>>(){}.getType());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        indexBar.setmLayoutManager(llMgr).setNeedRealIndex(true).setmSourceDatas(mDatas).invalidate();
-        String lastTag = "";
-        for(CityBean city : mDatas){
-            if(!city.getBaseIndexTag().equals(lastTag)){
-                city.setTop(true);
-                lastTag = city.getBaseIndexTag();
-            }
-        }
-        adapter = new CityAdapter(this, mDatas);
-        adapter.setListener(new CityAdapter.CityClickListener() {
-            @Override
-            public void onCityClick(String city) {
-                hideCityList();
-                tv_city.setText(city);
-            }
-        });
-        rcv_city.setAdapter(adapter);
     }
 
     @Override

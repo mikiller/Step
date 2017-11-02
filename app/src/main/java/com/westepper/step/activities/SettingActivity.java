@@ -1,5 +1,6 @@
 package com.westepper.step.activities;
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -9,20 +10,29 @@ import android.support.v4.app.ActivityCompat;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.coremedia.iso.boxes.apple.AppleReferenceMovieDescriptorBox;
+import com.google.gson.Gson;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.auth.AuthService;
 import com.uilib.customdialog.CustomDialog;
 import com.westepper.step.R;
+import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.uilib.mxmenuitem.MyMenuItem;
 import com.westepper.step.customViews.TitleBar;
 import com.westepper.step.customViews.ToggleBox;
+import com.westepper.step.logics.SetPrivacyLogic;
+import com.westepper.step.models.Privacy;
+import com.westepper.step.responses.UserInfo;
 import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.AnimUtils;
+import com.westepper.step.utils.MXPreferenceUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,7 +71,18 @@ public class SettingActivity extends SuperActivity implements View.OnClickListen
     MyMenuItem menu_contact;
     @BindView(R.id.layout_privacy)
     LinearLayout layout_privacy;
+    @BindView(R.id.ckb_needVerif)
+    ToggleBox ckb_needVerif;
+    @BindView(R.id.rdg_moodScope)
+    RadioGroup rdg_moodScope;
+    @BindView(R.id.rdg_outgoScope)
+    RadioGroup rdg_outgoScope;
 
+    UserInfo userInfo;
+    Privacy privacy;
+    Gson gson  = new Gson();
+    int[] moodScope = new int[]{R.id.rdb_moodScopeSelf, R.id.rdb_moodScopeAll, R.id.rdb_moodScopeFriend};
+    int[] outgoScope = new int[]{R.id.rdb_outgoScopeAll, R.id.rdb_outgoScopeFriend};
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +90,16 @@ public class SettingActivity extends SuperActivity implements View.OnClickListen
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(Constants.PRIVACY, privacy);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     protected void initView() {
+        String infoStr = MXPreferenceUtils.getInstance().getString(MXPreferenceUtils.getInstance().getString("account"));
+        userInfo = gson.fromJson(infoStr, UserInfo.class);
+        privacy = userInfo.getPrivacy_info();
         titleBar.setTitleListener(new TitleBar.TitleListener() {
             @Override
             protected void onBackClicked() {
@@ -79,8 +109,40 @@ public class SettingActivity extends SuperActivity implements View.OnClickListen
                 } else if(layout_privacy.getVisibility() == View.VISIBLE){
                     AnimUtils.startAlphaAnim(layout_privacy, 1, 0, 300);
                     titleBar.setTitle("设置");
+                    setPrivacyLogic();
                 }else
                     back();
+            }
+        });
+
+        ckb_needVerif.setChecked(privacy.getNeedFriendVerifi() == 1);
+        ckb_needVerif.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                privacy.setNeedFriendVerifi(isChecked ? 1 : 0);
+            }
+        });
+        rdg_moodScope.check(moodScope[privacy.getMoodScope()]);
+        rdg_moodScope.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                for(int i = 0; i < 3; i++){
+                    if(moodScope[i] == checkedId){
+                        privacy.setMoodScope(i);
+                        break;
+                    }
+                }
+            }
+        });
+        rdg_outgoScope.check(outgoScope[privacy.getOutgoScope() - 1]);
+        rdg_outgoScope.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(checkedId == outgoScope[0]){
+                    privacy.setOutgoScope(1);
+                }else{
+                    privacy.setOutgoScope(2);
+                }
             }
         });
 
@@ -92,6 +154,25 @@ public class SettingActivity extends SuperActivity implements View.OnClickListen
         menu_grade.setOnClickListener(this);
         menu_service.setOnClickListener(this);
         menu_contact.setOnClickListener(this);
+    }
+
+    private void setPrivacyLogic(){
+        SetPrivacyLogic logic = new SetPrivacyLogic(SettingActivity.this, new Privacy(privacy));
+        logic.setCallback(new BaseLogic.LogicCallback() {
+            @Override
+            public void onSuccess(Object response) {
+
+            }
+
+            @Override
+            public void onFailed(String code, String msg, Object localData) {
+                if("0".equals(code)){
+                    userInfo.setPrivacy_info(privacy);
+                    MXPreferenceUtils.getInstance().setString(userInfo.getUserId(), gson.toJson(userInfo));
+                }
+            }
+        });
+        logic.sendRequest();
     }
 
     @Override

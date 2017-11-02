@@ -5,13 +5,19 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.RadioGroup;
 
+import com.google.gson.Gson;
 import com.westepper.step.R;
 import com.westepper.step.adapters.MainFragmentAdapter;
+import com.westepper.step.base.BaseLogic;
+import com.westepper.step.base.BaseModel;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.UntouchableViewPager;
+import com.westepper.step.logics.GetUserInfoLogic;
 import com.westepper.step.responses.MapData;
+import com.westepper.step.responses.UserInfo;
 import com.westepper.step.utils.FileUtils;
+import com.westepper.step.utils.MXPreferenceUtils;
 
 import butterknife.BindView;
 
@@ -65,6 +71,25 @@ public class MainActivity extends SuperActivity {
 //            createTestData();
 //            mapData = FileUtils.getDataFromLocal(FileUtils.getFilePath(getActivity(), "area.data"), MapData.class);
         }
+
+        getUserInfo();
+    }
+
+    private void getUserInfo(){
+        GetUserInfoLogic logic = new GetUserInfoLogic(this, new BaseModel());
+        logic.setCallback(new BaseLogic.LogicCallback<UserInfo>() {
+            @Override
+            public void onSuccess(UserInfo response) {
+                MXPreferenceUtils.getInstance().setString(response.getUserId(), new Gson().toJson(response));
+                adapter.getItem(2).fragmentCallback(Constants.CHANGE_HEADER, new Intent().putExtra(Constants.USERINFO, response));
+            }
+
+            @Override
+            public void onFailed(String code, String msg, UserInfo localData) {
+
+            }
+        });
+        logic.sendRequest();
     }
 
     @Override

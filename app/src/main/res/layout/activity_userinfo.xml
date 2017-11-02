@@ -6,9 +6,10 @@
     android:background="@color/cancel_btn_bg">
 
     <LinearLayout
+        android:id="@+id/ll_info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical" >
 
         <com.westepper.step.customViews.TitleBar xmlns:bar="http://schemas.android.com/apk/res-auto"
             android:id="@+id/titleBar"
@@ -149,4 +150,13 @@
         android:id="@+id/commitInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+    <com.westepper.step.customViews.CityListLayout
+        android:id="@+id/layout_citylist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:visibility="gone"/>
 </RelativeLayout>

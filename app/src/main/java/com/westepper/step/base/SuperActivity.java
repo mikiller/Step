@@ -90,7 +90,7 @@ public abstract class SuperActivity extends AppCompatActivity {
         PermissionUtils.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 
-    protected void showInputMethod(View view){
+    public void showInputMethod(View view){
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInputFromWindow(view.getWindowToken(), InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_NOT_ALWAYS);
     }

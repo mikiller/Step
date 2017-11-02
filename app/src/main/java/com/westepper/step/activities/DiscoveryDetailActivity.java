@@ -75,6 +75,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
     DisDetailRcvAdapter rcvAdapter;
     MyLinearLayoutManager rcvMgr;
     boolean isTouchImgVp = false;
+    GetCommitListLogic logic;
 
     Discovery discovery;
     int scope;
@@ -239,8 +240,10 @@ public class DiscoveryDetailActivity extends SuperActivity {
     @Override
     protected void initData() {
         if (scope == Constants.FRIEND){
-            GetCommitListLogic logic = new GetCommitListLogic(this, new CommitModel(discovery.getDiscoveryId(), discovery.getDiscoveryKind()));
-            logic.setAdapter(rcvAdapter).sendRequest();
+            if(logic == null) {
+                logic = new GetCommitListLogic(this, new CommitModel(discovery.getDiscoveryId(), discovery.getDiscoveryKind())).setAdapter(rcvAdapter);
+            }
+            logic.sendRequest();
         }
     }
 

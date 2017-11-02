@@ -23,6 +23,10 @@ import com.uilib.joooonho.SelectableRoundedImageView;
 import com.westepper.step.R;
 import com.westepper.step.activities.DiscoveryDetailActivity;
 import com.westepper.step.base.Constants;
+import com.westepper.step.base.SuperActivity;
+import com.westepper.step.customViews.CommitEditView;
+import com.westepper.step.logics.CommitLogic;
+import com.westepper.step.models.CommitModel;
 import com.westepper.step.responses.Discovery;
 import com.westepper.step.responses.ImgDetail;
 import com.westepper.step.utils.ActivityManager;
@@ -42,9 +46,20 @@ public class DiscoveryAdapter extends PagerAdapter {
     private Context mContext;
     private int scope;
 
+    CommitEditView commitInput;
+    OnCommitListener listener;
+
     public DiscoveryAdapter(List<Discovery> dataList, Context mContext) {
         this.dataList = dataList;
         this.mContext = mContext;
+    }
+
+    public void setCommitListener(OnCommitListener listener){
+        this.listener = listener;
+    }
+
+    public void setCommitInput(CommitEditView view){
+        commitInput = view;
     }
 
     @Override
@@ -61,6 +76,24 @@ public class DiscoveryAdapter extends PagerAdapter {
         holder.setScope(scope);
         holder.setImgs(discover.getImgList());
         holder.setTime(discover.getPushTime());
+        holder.setOnCommitListener(discover.getDiscoveryUserId(), discover.getNickName(), new OnCommitListener() {
+            @Override
+            public void onCommit(final String id, final String nickName) {
+                if(!commitInput.isVisible()){
+                    commitInput.setNeedTransY(false);
+                    commitInput.setHint(String.format("回复:%1$s", nickName));
+                    ((SuperActivity)container.getContext()).showInputMethod(commitInput);
+                    commitInput.setOnSendListener(new CommitEditView.OnSendListener() {
+                        @Override
+                        public void onSend(View focuseView, String txt) {
+                            CommitLogic logic = new CommitLogic(container.getContext(), new CommitModel(id, discover.getDiscoveryId(), discover.getDiscoveryKind(), txt));
+                            logic.setCallbackObject(commitInput, null).sendRequest();
+
+                        }
+                    });
+                }
+            }
+        });
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,5 +200,20 @@ public class DiscoveryAdapter extends PagerAdapter {
                 GlideImageLoader.getInstance().loadImage(mContext, imgList.get(i).getImg_url(), R.mipmap.placeholder, iv_imgList[i], 0);
             }
         }
+
+        public void setOnCommitListener(final String id, final String nickName, final OnCommitListener listener){
+            if(listener != null){
+                btn_discuss.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onCommit(id, nickName);
+                    }
+                });
+            }
+        }
+    }
+
+    public interface OnCommitListener{
+        void onCommit(String id, String nickName);
     }
 }

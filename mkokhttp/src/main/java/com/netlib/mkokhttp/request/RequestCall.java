@@ -89,7 +89,7 @@ public class RequestCall
                 public void onFailure(Call call, final IOException e)
                 {
                     OkHttpUtils.getInstance().sendFailResultCallback(call,
-                            new IOException("-3,网络无连接"),
+                            new IOException("-3:网络无连接"),
                             finalCallback,
                             id);
                 }
@@ -107,7 +107,7 @@ public class RequestCall
 
                         if (!finalCallback.validateReponse(response, id))
                         {
-                            OkHttpUtils.getInstance().sendFailResultCallback(call, new IOException(response.code() + ",request failed"), finalCallback, id);
+                            OkHttpUtils.getInstance().sendFailResultCallback(call, new IOException(response.code() + ":request failed"), finalCallback, id);
                             return;
                         }
 

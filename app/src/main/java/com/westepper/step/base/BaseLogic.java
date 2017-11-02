@@ -139,7 +139,7 @@ public abstract class BaseLogic<P> extends Callback<P> {
         try {
             BaseResponse<P> logicResp = parse(respStr);
             if (!logicResp.getCode().equals("0") || logicResp.getData() == null) {
-                throw new Exception(logicResp.getCode().concat(", ").concat(logicResp.getMessage()));
+                throw new Exception(logicResp.getCode().concat(":").concat(logicResp.getMessage()));
 //            } else if (logicResp.getData() == null) {
 //                throw new Exception(logicResp.getCode().concat(",").concat(logicResp.getMessage()));
             } else {
@@ -149,10 +149,10 @@ public abstract class BaseLogic<P> extends Callback<P> {
             }
         } catch (JsonParseException e) {
             e.printStackTrace();
-            throw new JsonParseException("-2,".concat(parseError));
+            throw new JsonParseException("-2:".concat(parseError));
         } catch (SocketException e) {
             e.printStackTrace();
-            throw new ConnectException("-3,".concat(networkError));
+            throw new ConnectException("-3:".concat(networkError));
         }
         return result;
 
@@ -163,7 +163,7 @@ public abstract class BaseLogic<P> extends Callback<P> {
         if (networkDlg != null && networkDlg.isShowing())
             networkDlg.dismiss();
         BaseResponse<P> localData = null;
-        String[] err = e.getMessage().split(",");
+        String[] err = e.getMessage().split(":");
         String code = "-9", msg;
         if(err.length == 2){
             code = err[0];

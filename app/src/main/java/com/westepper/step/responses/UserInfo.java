@@ -1,5 +1,7 @@
 package com.westepper.step.responses;
 
+import com.uilib.utils.BitmapUtils;
+import com.westepper.step.models.Privacy;
 import com.westepper.step.models.SignModel;
 
 import java.io.Serializable;
@@ -9,13 +11,11 @@ import java.io.Serializable;
  */
 
 public class UserInfo extends SignModel {
+    public static int HEADIMG = 1, COVER = 2, ALL = 0;
 
-    private String cover;
+    protected String cover;
     private String sign;
-    private int needFriendVerifi;
-    private int moodScope;
-    private int outgoScope;
-
+    private Privacy privacy_info;
     public String getCover() {
         return cover;
     }
@@ -32,27 +32,19 @@ public class UserInfo extends SignModel {
         this.sign = sign;
     }
 
-    public int getNeedFriendVerifi() {
-        return needFriendVerifi;
+    public Privacy getPrivacy_info() {
+        return privacy_info;
     }
 
-    public void setNeedFriendVerifi(int needFriendVerifi) {
-        this.needFriendVerifi = needFriendVerifi;
+    public void setPrivacy_info(Privacy privacy_info) {
+        this.privacy_info = privacy_info;
     }
 
-    public int getMoodScope() {
-        return moodScope;
+    public void getBase64Img(int type){
+        if(type != COVER)
+            headImg = BitmapUtils.getBmpBase64Str(headImg, -1, -1);
+        if(type != HEADIMG)
+            cover = BitmapUtils.getBmpBase64Str(cover, -1, -1);
     }
 
-    public void setMoodScope(int moodScope) {
-        this.moodScope = moodScope;
-    }
-
-    public int getOutgoScope() {
-        return outgoScope;
-    }
-
-    public void setOutgoScope(int outgoScope) {
-        this.outgoScope = outgoScope;
-    }
 }

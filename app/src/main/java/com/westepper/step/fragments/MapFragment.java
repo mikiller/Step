@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.model.LatLng;
@@ -23,9 +24,13 @@ import com.westepper.step.adapters.DiscoveryAdapter;
 import com.westepper.step.base.BaseFragment;
 import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.Constants;
+import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.AcheiveSettingLayout;
+import com.westepper.step.customViews.CommitEditView;
 import com.westepper.step.customViews.SearchView;
+import com.westepper.step.logics.CommitLogic;
 import com.westepper.step.logics.GetDiscoveryListLogic;
+import com.westepper.step.models.CommitModel;
 import com.westepper.step.models.DiscoveryListModel;
 import com.westepper.step.responses.Achieve;
 import com.westepper.step.responses.AchieveArea;
@@ -81,15 +86,14 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
     RadioGroup rdg_kind;
     @BindView(R.id.vp_discoveryList)
     ViewPager vp_discoveryList;
+    @BindView(R.id.commitInput)
+    CommitEditView commitInput;
 
     DiscoveryAdapter adapter;
-    //    MapData mapData;
     MapUtils mapUtils;
-    //    BroadcastReceiver geoReceiver;
-//    String path;
     private boolean isTrack = true;
     float searchHeight, headTransY, vpTransY, optTransY;
-    int gender = 0;
+    int scope = Constants.FRIEND, disKind = Constants.MOOD, gender = 0;
 
     @Override
     protected void setLayoutRes() {
@@ -113,6 +117,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
         btn_refresh.setOnClickListener(this);
 
         adapter = new DiscoveryAdapter(null, getActivity());
+        adapter.setCommitInput(commitInput);
         vp_discoveryList.setAdapter(adapter);
         vp_discoveryList.setOffscreenPageLimit(3);
         vp_discoveryList.setPageMargin(DisplayUtil.dip2px(getActivity(), 15));
@@ -133,7 +138,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
             }
         });
-        getDiscoveryList(1, 1, gender);
+        getDiscoveryList();
     }
 
     private void initMapUtil() {
@@ -202,13 +207,13 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
     }
 
-    private void getDiscoveryList(final int scope, final int kind, final int gender) {
+    private void getDiscoveryList() {
         if (!isTrack) {
-            AnimUtils.startObjectAnim(vp_discoveryList, "translationY", 0, vpTransY, 300);
+            if(vp_discoveryList.getTranslationY() == 0)
+                AnimUtils.startObjectAnim(vp_discoveryList, "translationY", 0, vpTransY, 400);
             mapUtils.removeMarker();
         }
-        //test create discovery list
-        GetDiscoveryListLogic logic = new GetDiscoveryListLogic(getActivity(), new DiscoveryListModel(gender, kind, scope, mapUtils.getMapLocation().getLatitude(), mapUtils.getMapLocation().getLongitude()));
+        GetDiscoveryListLogic logic = new GetDiscoveryListLogic(getActivity(), new DiscoveryListModel(scope == Constants.FRIEND ? 0 : gender, disKind, scope, mapUtils.getMapLocation().getLatitude(), mapUtils.getMapLocation().getLongitude()));
         logic.setCallback(new BaseLogic.LogicCallback<DiscoveryList>() {
             @Override
             public void onSuccess(DiscoveryList response) {
@@ -224,7 +229,9 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
             @Override
             public void onFailed(String code, String msg, DiscoveryList localData) {
-
+                if("0".equals(code)){
+                    Toast.makeText(getActivity(), "未搜到您想要的结果，".concat(msg), Toast.LENGTH_SHORT).show();
+                }
             }
         });
         logic.sendRequest();
@@ -269,7 +276,6 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_acheivement:
-//                layout_achSetting.setVisibility(View.VISIBLE);
                 layout_achSetting.show();
                 break;
             case R.id.btn_new:
@@ -320,7 +326,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
                     }
 
                 }
-                getDiscoveryList(getDisScope(), getDisKind(), gender);
+                getDiscoveryList();
             }
         });
         dlg.show();
@@ -328,34 +334,28 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
     private void refreshDiscoveryList() {
         AnimUtils.startRotateAnim(btn_refresh, 360, 0, 1000);
-        getDiscoveryList(getDisScope(), getDisKind(), gender);
+        getDiscoveryList();
     }
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
+
         switch (checkedId) {
             case R.id.rdb_friend:
                 btn_selection.setVisibility(View.GONE);
-                getDiscoveryList(Constants.FRIEND, getDisKind(), gender);
+                scope = Constants.FRIEND;
                 break;
             case R.id.rdb_near:
                 btn_selection.setVisibility(View.VISIBLE);
-                getDiscoveryList(Constants.NEARBY, getDisKind(), gender);
+                scope = Constants.NEARBY;
                 break;
             case R.id.rdb_mood:
-                getDiscoveryList(getDisScope(), Constants.MOOD, gender);
+                disKind = Constants.MOOD;
                 break;
             case R.id.rdb_join:
-                getDiscoveryList(getDisScope(), Constants.OUTGO, gender);
+                disKind = Constants.OUTGO;
                 break;
         }
-    }
-
-    private int getDisKind() {
-        return rdg_kind.getCheckedRadioButtonId() == R.id.rdb_mood ? Constants.MOOD : Constants.OUTGO;
-    }
-
-    private int getDisScope() {
-        return rdg_scope.getCheckedRadioButtonId() == R.id.rdb_friend ? Constants.FRIEND : Constants.NEARBY;
+        getDiscoveryList();
     }
 }

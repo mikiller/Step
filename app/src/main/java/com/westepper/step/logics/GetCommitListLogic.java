@@ -17,6 +17,7 @@ import com.westepper.step.responses.CommitList;
 
 public class GetCommitListLogic extends BaseLogic<CommitList> {
     DisDetailRcvAdapter rcvAdapter;
+    boolean hasTips = false;
 
     public GetCommitListLogic(Context context, BaseModel model) {
         super(context, model);
@@ -54,8 +55,9 @@ public class GetCommitListLogic extends BaseLogic<CommitList> {
 
     @Override
     public void onFailed(String code, String msg, CommitList localData) {
-        if("0".equals(code)){
+        if("0".equals(code) && !hasTips){
             Toast.makeText(context, msg.concat(", 赶紧抢个沙发吧！"), Toast.LENGTH_SHORT).show();
+            hasTips = true;
         }
     }
 }

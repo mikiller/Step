@@ -1,5 +1,6 @@
 package com.westepper.step.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,11 +20,16 @@ import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.uilib.mxgallery.utils.CameraGalleryUtils;
 import com.westepper.step.R;
+import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.uilib.mxmenuitem.MyMenuItem;
+import com.westepper.step.customViews.CityListLayout;
 import com.westepper.step.customViews.CommitEditView;
 import com.westepper.step.customViews.TitleBar;
+import com.westepper.step.logics.UpdateUserInfoLogic;
+import com.westepper.step.models.SignModel;
+import com.westepper.step.utils.AnimUtils;
 import com.westepper.step.widgets.CommitGlobalLayoutListener;
 import com.westepper.step.responses.UserInfo;
 import com.westepper.step.utils.ActivityManager;
@@ -57,6 +64,10 @@ public class UserInfoActivity extends SuperActivity implements View.OnClickListe
     TextView tv_signNum;
     @BindView(R.id.commitInput)
     CommitEditView commitInput;
+    @BindView(R.id.ll_info)
+    LinearLayout ll_info;
+    @BindView(R.id.layout_citylist)
+    CityListLayout layout_citylist;
 
     int signNum = 140;
     UserInfo userInfo;
@@ -87,22 +98,20 @@ public class UserInfoActivity extends SuperActivity implements View.OnClickListe
 
             @Override
             protected void onSubClicked() {
-                Intent data = new Intent();
-                data.putExtra(Constants.USERINFO, userInfo);
-                setResult(RESULT_OK, data);
-                back();
+                updateUserInfo();
             }
         });
         GlideImageLoader.getInstance().loadImage(this, userInfo.getHeadImg(), R.mipmap.ic_default_head, iv_userHeader, 0);
         menu_nickname.setSubText(userInfo.getNickName());
         menu_gender.setSubText(userInfo.getGender() == 1 ? "男" : "女");
         menu_city.setSubText(userInfo.getCity());
-        menu_id.setSubText(userInfo.getUuid());
+        menu_id.setSubText(userInfo.getUserId());
         tv_sign.setText(userInfo.getSign());
         tv_signNum.setText(String.valueOf(signNum - tv_sign.getText().length()));
 
         iv_userHeader.setOnClickListener(this);
         menu_nickname.setOnClickListener(this);
+        menu_city.setOnClickListener(this);
         tv_sign.setOnClickListener(this);
         commitInput.setOnSendListener(new CommitEditView.OnSendListener() {
             @Override
@@ -126,6 +135,36 @@ public class UserInfoActivity extends SuperActivity implements View.OnClickListe
                 titleBar.setSubTxtEnabled(true);
             }
         });
+
+        layout_citylist.setOnSelectedCityListener(new CityListLayout.onSelectedCityListener() {
+            @Override
+            public void onCitySelected(String city) {
+                hideCityList();
+                userInfo.setCity(city);
+                menu_city.setSubText(city);
+                titleBar.setSubTxtEnabled(true);
+            }
+        });
+    }
+
+    private void updateUserInfo(){
+        UpdateUserInfoLogic logic = new UpdateUserInfoLogic(this, userInfo);
+        logic.setCallback(new BaseLogic.LogicCallback<UserInfo>() {
+            @Override
+            public void onSuccess(UserInfo response) {
+                userInfo.setHeadImg(response.getHeadImg());
+                Intent intent = new Intent();
+                intent.putExtra(Constants.USERINFO, userInfo);
+                setResult(Activity.RESULT_OK, intent);
+                back();
+            }
+
+            @Override
+            public void onFailed(String code, String msg, UserInfo localData) {
+
+            }
+        });
+        logic.sendRequest();
     }
 
     @Override
@@ -146,12 +185,25 @@ public class UserInfoActivity extends SuperActivity implements View.OnClickListe
                 commitInput.setHint("输入新昵称");
                 showInputMethod(commitInput);
                 break;
+            case R.id.menu_city:
+                showCityList();
+                break;
             case R.id.tv_sign:
                 commitInput.setHint("写下你的个性签名");
                 commitInput.setFocuceView(v);
                 showInputMethod(commitInput);
                 break;
         }
+    }
+
+    private void showCityList(){
+        AnimUtils.startAlphaAnim(ll_info, 1.0f, 0.0f, 300);
+        AnimUtils.startAlphaAnim(layout_citylist, 0.0f, 1.0f, 200);
+    }
+
+    private void hideCityList(){
+        AnimUtils.startAlphaAnim(ll_info, 0.0f, 1.0f, 200);
+        AnimUtils.startAlphaAnim(layout_citylist, 1.0f, 0.0f, 300);
     }
 
     @Override
@@ -170,6 +222,7 @@ public class UserInfoActivity extends SuperActivity implements View.OnClickListe
                 }
                 userInfo.setHeadImg(filePath);
                 GlideImageLoader.getInstance().loadImage(this, filePath, R.mipmap.ic_default_head, iv_userHeader, 0);
+                userInfo.getBase64Img(UserInfo.HEADIMG);
                 titleBar.setSubTxtEnabled(true);
                 break;
         }

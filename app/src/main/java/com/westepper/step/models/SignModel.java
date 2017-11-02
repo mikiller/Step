@@ -1,6 +1,9 @@
 package com.westepper.step.models;
 
+import com.netease.nim.uikit.common.media.picker.util.BitmapUtil;
+import com.uilib.utils.BitmapUtils;
 import com.westepper.step.base.BaseModel;
+import com.westepper.step.base.Constants;
 
 import java.io.Serializable;
 
@@ -16,6 +19,7 @@ public class SignModel extends BaseModel {
     protected int gender;
     protected String city;
     protected String headImg;
+
 
     public SignModel() {
     }
@@ -69,4 +73,6 @@ public class SignModel extends BaseModel {
     public void setCity(String city) {
         this.city = city;
     }
+
+
 }

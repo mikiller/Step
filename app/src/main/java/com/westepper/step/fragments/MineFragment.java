@@ -1,15 +1,18 @@
 package com.westepper.step.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
 import com.westepper.step.R;
 import com.westepper.step.activities.GalleryActivity;
@@ -26,9 +29,12 @@ import com.uilib.mxmenuitem.MyMenuItem;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.logics.GetUserInfoLogic;
+import com.westepper.step.logics.UpdateUserInfoLogic;
+import com.westepper.step.models.Privacy;
 import com.westepper.step.responses.UserInfo;
 import com.westepper.step.utils.ActivityManager;
 import com.uilib.mxgallery.utils.CameraGalleryUtils;
+import com.westepper.step.utils.MXPreferenceUtils;
 
 
 import java.io.File;
@@ -97,9 +103,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         lp.height = DisplayUtil.getScreenWidth(getActivity()) *9 / 16;
         iv_header_bg.setLayoutParams(lp);
 
-//        lp = (RelativeLayout.LayoutParams) iv_header.getLayoutParams();
-//        lp.width = lp.height = DisplayUtil.getScreenWidth(getActivity()) / 5;
-//        iv_header.setLayoutParams(lp);
         iv_header_bg.setOnClickListener(this);
         iv_header.setOnClickListener(this);
         btn_setting.setOnClickListener(this);
@@ -111,31 +114,16 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         menu_discovery.setOnClickListener(this);
         menu_acheive.setOnClickListener(this);
 
-//        createUserInfo();
-//        updateUserInfo();
-        getUserInfo();
+        String infoStr = MXPreferenceUtils.getInstance().getString(MXPreferenceUtils.getInstance().getString("account"));
+        userInfo = new Gson().fromJson(infoStr, UserInfo.class);
+        setUserInfo();
     }
 
-    private void getUserInfo(){
-        GetUserInfoLogic logic = new GetUserInfoLogic(getActivity(), new BaseModel());
-        logic.setCallback(new BaseLogic.LogicCallback<UserInfo>() {
-            @Override
-            public void onSuccess(UserInfo response) {
-                userInfo = response;
-                updateUserInfo();
-            }
-
-            @Override
-            public void onFailed(String code, String msg, UserInfo localData) {
-
-            }
-        });
-        logic.sendRequest();
-    }
-
-    private void updateUserInfo(){
+    private void setUserInfo(){
+        if(userInfo == null)
+            return;
         tv_user_name.setText(userInfo.getNickName());
-        tv_userId.setText(userInfo.getUuid());
+        tv_userId.setText("ID: ".concat(userInfo.getUserId()));
         tv_signature.setText(userInfo.getSign());
         GlideImageLoader.getInstance().loadImage(getActivity(), userInfo.getHeadImg(), R.mipmap.ic_default_head, iv_header, 0);
         if(!TextUtils.isEmpty(userInfo.getCover())){
@@ -145,25 +133,17 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         tv_city.setText(userInfo.getCity());
     }
 
-    //test user info
-    private void createUserInfo(){
-        userInfo = new UserInfo();
-        userInfo.setNickName("小西瓜");
-        userInfo.setGender(1);
-        userInfo.setHeadImg("http://www.ld12.com/upimg358/20160130/17080388096933.jpg");
-        userInfo.setCover("http://img1.3lian.com/img2013/1/33/d/61.jpg");
-        userInfo.setCity("上海");
-        userInfo.setNeedFriendVerifi(0);
-        userInfo.setSign("这是一段屁话");
-        userInfo.setMoodScope(0);
-        userInfo.setOutgoScope(2);
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 
     @Override
     public void fragmentCallback(int type, Intent data) {
         if(type == Constants.CHANGE_HEADER){
             userInfo = (UserInfo) data.getSerializableExtra(Constants.USERINFO);
-            updateUserInfo();
+            setUserInfo();
         }else if(type == Constants.CHANGE_USER_BG){
             String filePath = "";
             if(data.getSerializableExtra(CameraGalleryUtils.TMP_FILE) != null)
@@ -174,55 +154,15 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             }
             iv_header_bg.setScaleType(ImageView.ScaleType.CENTER_CROP);
             GlideImageLoader.getInstance().loadImage(getActivity(), filePath, R.mipmap.ic_addcover, iv_header_bg, 0);
+            updateCover(filePath);
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-//        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_default_head);
-//        BitmapUtils.blur(getActivity(), bmp, iv_header_bg);
-//        user = ((BaseActivity) getActivity()).fetchUser();
-//        if (!((BaseActivity) getActivity()).isLogin() || TextUtils.isEmpty(user.getAccesstoken())) {
-//            iv_user_edit.setVisibility(View.GONE);
-//            tv_user_name.setText("点击登录");
-//            tv_user_name.setTextColor(Color.BLACK);
-//            tv_user_name.setEnabled(true);
-//            tv_user_name.setClickable(true);
-//            iv_header.setImageResource(R.mipmap.icon_user_header);
-//            iv_header.setEnabled(false);
-//            iv_header_bg.setImageResource(R.mipmap.my);
-//        } else {
-//            iv_user_edit.setVisibility(View.VISIBLE);
-//            tv_user_name.setText(TextUtils.isEmpty(user.getShowname()) ? user.getTel() : user.getShowname());
-//            tv_user_name.setTextColor(Color.WHITE);
-//            tv_user_name.setEnabled(false);
-//            tv_user_name.setClickable(false);
-//            iv_header.setEnabled(true);
-//            tv_user_name.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_user_name));
-//            GlideImageLoader.getInstance().loadImage(mContext, user.getAvator(), R.mipmap.icon_user_header, iv_header, 0l);
-//            GlideImageLoader.getInstance().loadImage(mContext, user.getAvator(), R.mipmap.my, iv_header_bg, 0l, new ImageLoader.ImageLoadListener() {
-//
-//                @Override
-//                public void onLoadFailed(ImageView imageView) {
-//                    if(!TextUtils.isEmpty(user.localPath) && new File(user.localPath).exists()){
-//                        GlideImageLoader.getInstance().loadImage(mContext, user.localPath, R.mipmap.icon_user_header, iv_header, 0l);
-//                        GlideImageLoader.getInstance().loadImage(mContext, user.localPath, R.mipmap.my, imageView, 0l, this);
-//                    }
-//                }
-//
-//                @Override
-//                public void onLoadSuccess(Bitmap bmp, ImageView imageView) {
-//                    BitmapUtils.blur(mContext, bmp, imageView);
-//                }
-//            });
-//        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-//        EventBus.getDefault().unregister(this);
+    private void updateCover(String filePath){
+        userInfo.setCover(filePath);
+        userInfo.getBase64Img(UserInfo.COVER);
+        UpdateUserInfoLogic logic = new UpdateUserInfoLogic(getActivity(), userInfo);
+        logic.sendRequest();
     }
 
     @Override
@@ -240,6 +180,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 ActivityManager.startActivityforResult(getActivity(), UserInfoActivity.class, Constants.CHANGE_HEADER, args);
                 break;
             case R.id.btn_setting:
+//                args = new HashMap<>();
+//                Privacy privacy = userInfo.getPrivacy_info();
+//                privacy.setUserId(userInfo.getUserId());
+//                privacy.setToken(userInfo.getToken());
+//                args.put(Constants.PRIVACY, privacy);
                 ActivityManager.startActivity(getActivity(), SettingActivity.class);
                 break;
             case R.id.menu_paihang:
@@ -283,19 +228,5 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 //                break;
         }
     }
-
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onChangeAvatorEvent(User event) {
-//        //iv_header.setImageURI(Uri.parse("file://" + event.getAvator()));
-//        //iv_header.setImageBitmap(decodeSampledBitmapFromFd(event.getAvator(), DensityUtils.dp2Px(60), DensityUtils.dp2Px(60)));
-//        iv_header.setImageBitmap(doRotate(event.getAvator(), decodeSampledBitmapFromFd(event.getAvator(), DensityUtils.dp2Px(60), DensityUtils.dp2Px(60))));
-//    }
-
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onGetCodeEvent(User event) {
-//        /* Do something */
-//        //Toast.makeText(getContext(),event.getTel(),Toast.LENGTH_LONG).showPolygon();
-//        tv_user_name.setText(event.getTel());
-//    }
 
 }

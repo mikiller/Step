@@ -13,12 +13,14 @@ public class Constants {
     public static final int ADD_PHOTO = 0X103;
     public static final int SEARCH_POI = 0x104;
     public static final int SHOW_ACHIEVE_AREA = 0x201;
+    public static final int SAVE_USERINFO = 0x105;
     public static final String DIS_ID = "DIS_ID";
     public static final String DIS_KIND = "DIS_KIND";
     public static final String DIS_SCOPE = "DIS_SCOPE";
     public static final String MAX_SELECT = "MAX_SELECT";
     public static final String ACH_KIND = "ACH_KIND";
     public static final String BADGE_KIND = "BADGE_KIND";
+    public static final String PRIVACY = "PRIVACY";
     public static final int MOOD = 1;
     public static final int OUTGO = 2;
     public static final int FRIEND = 1;

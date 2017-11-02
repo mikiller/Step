@@ -55,7 +55,8 @@ public class CommitLogic extends BaseLogic<Commit> {
     @Override
     public void onSuccess(Commit response) {
         ((SuperActivity)context).hideInputMethod(inputView);
-        rcvAdapter.addCommit(response);
+        if(rcvAdapter != null)
+            rcvAdapter.addCommit(response);
     }
 
     @Override
