@@ -2,37 +2,35 @@ package com.westepper.step.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.util.TimeUtils;
 import android.support.v4.view.PagerAdapter;
-import android.support.v7.view.menu.MenuView;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
-import com.netease.nim.uikit.common.util.sys.TimeUtil;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.westepper.step.R;
 import com.westepper.step.activities.DiscoveryDetailActivity;
+import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.CommitEditView;
 import com.westepper.step.logics.CommitLogic;
+import com.westepper.step.logics.GoodLogic;
 import com.westepper.step.models.CommitModel;
+import com.westepper.step.models.DisModel;
 import com.westepper.step.responses.Discovery;
+import com.westepper.step.responses.GoodCount;
 import com.westepper.step.responses.ImgDetail;
 import com.westepper.step.utils.ActivityManager;
+import com.westepper.step.utils.MXPreferenceUtils;
 import com.westepper.step.utils.MXTimeUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +74,25 @@ public class DiscoveryAdapter extends PagerAdapter {
         holder.setScope(scope);
         holder.setImgs(discover.getImgList());
         holder.setTime(discover.getPushTime());
+        holder.setGoodListener(getHasGood(discover.getDiscoveryId() + MXPreferenceUtils.getInstance().getString("account")), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setEnabled(false);
+                GoodLogic logic = new GoodLogic(mContext, new DisModel(discover.getDiscoveryId(), discover.getDiscoveryKind()));
+                logic.setCallback(new BaseLogic.LogicCallback<GoodCount>() {
+                    @Override
+                    public void onSuccess(GoodCount response) {
+                        discover.setGoodNum(response.getCount());
+                    }
+
+                    @Override
+                    public void onFailed(String code, String msg, GoodCount localData) {
+
+                    }
+                });
+                logic.sendRequest();
+            }
+        } );
         holder.setOnCommitListener(discover.getDiscoveryUserId(), discover.getNickName(), new OnCommitListener() {
             @Override
             public void onCommit(final String id, final String nickName) {
@@ -104,6 +121,10 @@ public class DiscoveryAdapter extends PagerAdapter {
             }
         });
         return view;
+    }
+
+    private boolean getHasGood(String key){
+        return !MXPreferenceUtils.getInstance().getBoolean(key);
     }
 
     public void setDataList(List<Discovery> dataList) {
@@ -144,7 +165,7 @@ public class DiscoveryAdapter extends PagerAdapter {
         private TextView tv_nickName, tv_msg, tv_time;
         private ImageView iv_gender;
         private SelectableRoundedImageView[] iv_imgList = new SelectableRoundedImageView[3];
-        private CheckBox ckb_good;
+        private ImageButton btn_good;
         private ImageButton btn_discuss, btn_addFriend;
         private LinearLayout ll_join;
         private Button btn_join;
@@ -157,7 +178,7 @@ public class DiscoveryAdapter extends PagerAdapter {
             iv_imgList[0] = (SelectableRoundedImageView) root.findViewById(R.id.iv_img1);
             iv_imgList[1] = (SelectableRoundedImageView) root.findViewById(R.id.iv_img2);
             iv_imgList[2] = (SelectableRoundedImageView) root.findViewById(R.id.iv_img3);
-            ckb_good = (CheckBox) root.findViewById(R.id.ckb_good);
+            btn_good = (ImageButton) root.findViewById(R.id.btn_good);
             btn_discuss = (ImageButton) root.findViewById(R.id.btn_discuss);
             btn_addFriend = (ImageButton) root.findViewById(R.id.btn_addFriend);
             ll_join = (LinearLayout) root.findViewById(R.id.ll_join);
@@ -210,6 +231,11 @@ public class DiscoveryAdapter extends PagerAdapter {
                     }
                 });
             }
+        }
+
+        public void setGoodListener(boolean hasGood, View.OnClickListener listener){
+            btn_good.setEnabled(hasGood);
+            btn_good.setOnClickListener(listener);
         }
     }
 

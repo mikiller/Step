@@ -23,10 +23,13 @@ public class Discovery implements Parcelable {
     private String info;
     private UserPos userPos;
     private List<ImgDetail> imgList;
+    private long goodNum;
+    private long commitNum;
     private long pushTime;
     private long endTime;
     private int totalCount;
     private int joinCount;
+    private String teamId;
 
     public Discovery(){}
 
@@ -41,10 +44,38 @@ public class Discovery implements Parcelable {
         info = in.readString();
         userPos = in.readParcelable(UserPos.class.getClassLoader());
         imgList = in.createTypedArrayList(ImgDetail.CREATOR);
+        goodNum = in.readLong();
+        commitNum = in.readLong();
         pushTime = in.readLong();
         endTime = in.readLong();
         totalCount = in.readInt();
         joinCount = in.readInt();
+        teamId = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(discoveryId);
+        dest.writeInt(discoveryKind);
+        dest.writeString(discoveryUserId);
+        dest.writeString(nickName);
+        dest.writeInt(gender);
+        dest.writeString(headUrl);
+        dest.writeString(info);
+        dest.writeParcelable(userPos, flags);
+        dest.writeTypedList(imgList);
+        dest.writeLong(goodNum);
+        dest.writeLong(commitNum);
+        dest.writeLong(pushTime);
+        dest.writeLong(endTime);
+        dest.writeInt(totalCount);
+        dest.writeInt(joinCount);
+        dest.writeString(teamId);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<Discovery> CREATOR = new Creator<Discovery>() {
@@ -163,25 +194,28 @@ public class Discovery implements Parcelable {
         this.pushTime = pushTime;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public long getCommitNum() {
+        return commitNum;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(discoveryId);
-        dest.writeInt(discoveryKind);
-        dest.writeString(discoveryUserId);
-        dest.writeString(nickName);
-        dest.writeInt(gender);
-        dest.writeString(headUrl);
-        dest.writeString(info);
-        dest.writeParcelable(userPos, flags);
-        dest.writeTypedList(imgList);
-        dest.writeLong(pushTime);
-        dest.writeLong(endTime);
-        dest.writeInt(totalCount);
-        dest.writeInt(joinCount);
+    public void setCommitNum(long commitNum) {
+        this.commitNum = commitNum;
     }
+
+    public long getGoodNum() {
+        return goodNum;
+    }
+
+    public void setGoodNum(long goodNum) {
+        this.goodNum = goodNum;
+    }
+
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
+    }
+
 }

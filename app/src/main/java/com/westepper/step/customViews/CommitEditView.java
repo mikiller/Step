@@ -26,6 +26,7 @@ public class CommitEditView extends RelativeLayout {
 
     String hint;
     View focuceView;
+    int DY = 0;
     boolean needTransY = true;
     CommitGlobalLayoutListener glListener;
 
@@ -54,7 +55,7 @@ public class CommitEditView extends RelativeLayout {
             public void onInputMethodShow(int transY) {
                 rl_commitInput.setVisibility(View.VISIBLE);
                 edt_commit.requestFocus();
-                rl_commitInput.setTranslationY(transY);
+                rl_commitInput.setTranslationY(transY + DY);
                 if (!TextUtils.isEmpty(hint))
                     edt_commit.setHint(hint);
             }
@@ -92,6 +93,10 @@ public class CommitEditView extends RelativeLayout {
 
     public void setFocuceView(View focuceView) {
         this.focuceView = focuceView;
+    }
+
+    public void setDY(int dy) {
+        DY = dy;
     }
 
     public boolean isVisible(){

@@ -138,7 +138,7 @@ public abstract class BaseLogic<P> extends Callback<P> {
         }
         try {
             BaseResponse<P> logicResp = parse(respStr);
-            if (!logicResp.getCode().equals("0") || logicResp.getData() == null) {
+            if (!"0".equals(logicResp.getCode()) || logicResp.getData() == null) {
                 throw new Exception(logicResp.getCode().concat(":").concat(logicResp.getMessage()));
 //            } else if (logicResp.getData() == null) {
 //                throw new Exception(logicResp.getCode().concat(",").concat(logicResp.getMessage()));

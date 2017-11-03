@@ -18,8 +18,10 @@ import com.westepper.step.R;
 import com.westepper.step.base.Constants;
 import com.westepper.step.responses.Discovery;
 import com.westepper.step.responses.DiscoveryList;
+import com.westepper.step.responses.ImgDetail;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -33,10 +35,19 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
     Context mContext;
     List<Discovery> discoveryList;
     int disKind;
+    int[] ids = new int[]{R.id.iv_img1, R.id.iv_img2, R.id.iv_img3};
 
     public void setDiscoveryList(List<Discovery> discoveryList) {
         this.discoveryList = discoveryList;
         notifyDataSetChanged();
+    }
+
+    public void addDiscoveryList(List<Discovery> discoveryList){
+        if(this.discoveryList == null)
+            this.discoveryList = new ArrayList<>();
+        int startPos = this.discoveryList.size();
+        this.discoveryList.addAll(discoveryList);
+        notifyItemRangeChanged(startPos, discoveryList.size());
     }
 
     public MyDiscoveryRcvAdapter(Context mContext, int disKind) {
@@ -62,9 +73,12 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
         }
         holder.tv_msg.setText(discovery.getInfo());
         holder.tv_pos.setText(discovery.getUserPos().getPoiTitle());
-        GlideImageLoader.getInstance().loadImage(mContext, discovery.getImgList().get(0).getImg_url(), R.mipmap.placeholder, holder.iv_img1, 0);
-        GlideImageLoader.getInstance().loadImage(mContext, discovery.getImgList().get(1).getImg_url(), R.mipmap.placeholder, holder.iv_img2, 0);
-        GlideImageLoader.getInstance().loadImage(mContext, discovery.getImgList().get(2).getImg_url(), R.mipmap.placeholder, holder.iv_img3, 0);
+        int i = 0;
+        for(ImgDetail img : discovery.getImgList()){
+            if(i >= 3)
+                break;
+            GlideImageLoader.getInstance().loadImage(mContext, img.getImg_url(), R.mipmap.placeholder, holder.iv_imgs[i++], 0);
+        }
         if(disKind == Constants.OUTGO) {
             holder.ll_chat.setVisibility(View.VISIBLE );
             holder.tv_joinNum.setText(String.format("邀约%1$s人, 已报名%2$s人", discovery.getTotalCount(), discovery.getJoinCount()));
@@ -90,7 +104,7 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
     protected class DisHolder extends RecyclerView.ViewHolder{
 
         private TextView tv_date1, tv_date2, tv_msg, tv_pos, btn_good, btn_commit, tv_joinNum, tv_chat;
-        private SelectableRoundedImageView iv_img1, iv_img2, iv_img3;
+        private SelectableRoundedImageView[] iv_imgs = new SelectableRoundedImageView[3];
         private LinearLayout ll_chat;
 
         public DisHolder(View itemView) {
@@ -103,9 +117,9 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
             btn_commit = (TextView) itemView.findViewById(R.id.btn_commit);
             tv_joinNum = (TextView) itemView.findViewById(R.id.tv_joinNum);
             tv_chat = (TextView) itemView.findViewById(R.id.tv_chat);
-            iv_img1 = (SelectableRoundedImageView) itemView.findViewById(R.id.iv_img1);
-            iv_img2 = (SelectableRoundedImageView) itemView.findViewById(R.id.iv_img2);
-            iv_img3 = (SelectableRoundedImageView) itemView.findViewById(R.id.iv_img3);
+            for(int i = 0; i < 3; i++) {
+                iv_imgs[i] = (SelectableRoundedImageView) itemView.findViewById(ids[i]);
+            }
             ll_chat = (LinearLayout) itemView.findViewById(R.id.ll_chat);
         }
     }

@@ -30,7 +30,7 @@ public class DetailImgVpAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
 
         ImageView iv_img = new ImageView(mContext);
-        iv_img.setScaleType(ImageView.ScaleType.FIT_XY);
+        iv_img.setScaleType(ImageView.ScaleType.CENTER_CROP);
         GlideImageLoader.getInstance().loadImage(mContext, imgs.get(position).getImg_url(), R.mipmap.placeholder, iv_img, 0);
         container.addView(iv_img);
         return iv_img;

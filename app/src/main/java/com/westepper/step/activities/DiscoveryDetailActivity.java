@@ -135,24 +135,25 @@ public class DiscoveryDetailActivity extends SuperActivity {
 
         vp_img.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             int minHeight = DisplayUtil.getScreenWidth(DiscoveryDetailActivity.this) / 4 * 3;
-            int maxHeight = DisplayUtil.getScreenHeight(DiscoveryDetailActivity.this) / 3 * 4;
-
+            int maxHeight = DisplayUtil.getScreenHeight(DiscoveryDetailActivity.this) / 4 * 3;
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 ImgDetail img = vpAdapter.getImgs().get(position);
-                int fromHeight = getHeight(img.getImgHeight());
+                int fromHeight = getHeight(img.getImgHeight(), img.getImgWidth());
                 int nextHeight = fromHeight;
-                if (position < vpAdapter.getCount() - 1) {
-                    ImgDetail img1 = vpAdapter.getImgs().get(position + 1);
-                    nextHeight = getHeight(img1.getImgHeight());
-                }
+                    if (position < vpAdapter.getCount() - 1) {
+                        ImgDetail img1 = vpAdapter.getImgs().get(position + 1);
+                        nextHeight = getHeight(img1.getImgHeight(), img1.getImgWidth());
+                    }
                 int height = (int) (fromHeight * (1 - positionOffset) + nextHeight * positionOffset);
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) vp_img.getLayoutParams();
                 lp.height = height;
                 vp_img.setLayoutParams(lp);
             }
 
-            private int getHeight(int src) {
+            private int getHeight(int src, int width) {
+                if(width < DisplayUtil.getScreenWidth(DiscoveryDetailActivity.this ))
+                    src = (int) (1.0f * src / width * DisplayUtil.getScreenWidth(DiscoveryDetailActivity.this ));
                 return src < minHeight ? minHeight : (src > maxHeight ? maxHeight : src);
             }
 

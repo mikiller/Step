@@ -55,6 +55,24 @@ public class MXPreferenceUtils {
         editor.remove(key).commit();
     }
 
+    public void setBoolean(String key, boolean value){
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(key, value).commit();
+    }
+
+    public boolean getBoolean(String key){
+        return sp.getBoolean(key, false);
+    }
+
+    public void setInt(String key, int value){
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(key, value).commit();
+    }
+
+    public int getInt(String key){
+        return sp.getInt(key, 0);
+    }
+
     public String getString(String key){
         return sp.getString(key, "");
     }

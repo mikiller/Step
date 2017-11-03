@@ -112,19 +112,19 @@
             android:gravity="right|center_vertical"
             android:orientation="horizontal">
 
-            <CheckBox
-                android:id="@+id/ckb_good"
+            <ImageButton
+                android:id="@+id/btn_good"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="25dp"
-                android:background="@drawable/selector_discovery_good"
-                android:button="@null" />
+                android:padding="10dp"
+                android:src="@drawable/selector_discovery_good"
+                android:background="@null" />
 
             <ImageButton
                 android:id="@+id/btn_discuss"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
+                android:padding="15dp"
                 android:background="@null"
                 android:src="@mipmap/ic_discuss" />
 
@@ -132,7 +132,7 @@
                 android:id="@+id/btn_addFriend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
+                android:padding="15dp"
                 android:background="@null"
                 android:src="@mipmap/ic_addfriend"
                 android:visibility="gone" />

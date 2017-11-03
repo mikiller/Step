@@ -16,11 +16,16 @@ import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.westepper.step.R;
 import com.westepper.step.activities.AllCommitsActivity;
+import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.Constants;
 import com.uilib.mxmenuitem.MyMenuItem;
+import com.westepper.step.logics.GoodLogic;
+import com.westepper.step.models.DisModel;
 import com.westepper.step.responses.Commit;
 import com.westepper.step.responses.Discovery;
+import com.westepper.step.responses.GoodCount;
 import com.westepper.step.utils.ActivityManager;
+import com.westepper.step.utils.MXPreferenceUtils;
 import com.westepper.step.utils.MXTimeUtils;
 
 import java.util.ArrayList;
@@ -111,10 +116,11 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    private void updateDetailHolder(DetailHolder holder){
+    private void updateDetailHolder(final DetailHolder holder){
         holder.tv_nickName.setText(discovery.getNickName());
         GlideImageLoader.getInstance().loadImage(mContext, discovery.getHeadUrl(), R.mipmap.ic_default_head, holder.iv_header, 0);
         holder.iv_gender.setImageResource(discovery.getGender() == 1 ? R.mipmap.male : R.mipmap.female);
+        holder.tv_goodNum.setText(getGoodNum());
         holder.tv_detailMsg.setText(discovery.getInfo());
         holder.tv_detailPos.setText(discovery.getUserPos().getPoiTitle());
         holder.rl_join.setVisibility(discovery.getDiscoveryKind() == 1 ? View.GONE : View.VISIBLE);
@@ -126,6 +132,34 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     commitListener.onCommit(discovery.getDiscoveryUserId(), discovery.getNickName());
             }
         });
+        holder.btn_good.setEnabled(!MXPreferenceUtils.getInstance().getBoolean(discovery.getDiscoveryId() + MXPreferenceUtils.getInstance().getString("account")));
+        holder.btn_good.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setEnabled(false);
+                GoodLogic logic = new GoodLogic(mContext, new DisModel(discovery.getDiscoveryId(), discovery.getDiscoveryKind()));
+                logic.setCallback(new BaseLogic.LogicCallback<GoodCount>() {
+                    @Override
+                    public void onSuccess(GoodCount response) {
+                        holder.tv_goodNum.setText(String.valueOf(response.getCount()));
+                    }
+
+                    @Override
+                    public void onFailed(String code, String msg, GoodCount localData) {
+
+                    }
+                });
+                logic.sendRequest();
+            }
+        });
+    }
+
+    private String getGoodNum(){
+        int num = MXPreferenceUtils.getInstance().getInt(discovery.getDiscoveryId() + "goodNum");
+        if(num <= 0){
+            num = (int) discovery.getGoodNum();
+        }
+        return String.valueOf(num);
     }
 
     private void updateCommitHolder(CommitHolder holder, final Commit commit){

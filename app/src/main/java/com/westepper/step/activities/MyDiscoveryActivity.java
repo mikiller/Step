@@ -5,18 +5,26 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
 
 import com.uilib.mxgallery.listeners.GalleryTabListener;
 import com.uilib.mxgallery.widgets.GalleryTabGroup;
+import com.uilib.swipetoloadlayout.OnLoadMoreListener;
+import com.uilib.swipetoloadlayout.OnRefreshListener;
+import com.uilib.swipetoloadlayout.SwipeToLoadLayout;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
 import com.westepper.step.adapters.MyDiscoveryRcvAdapter;
+import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.TitleBar;
+import com.westepper.step.logics.GetMyDiscoveryLogic;
+import com.westepper.step.models.DisModel;
 import com.westepper.step.responses.Discovery;
+import com.westepper.step.responses.DiscoveryList;
 import com.westepper.step.responses.ImgDetail;
 import com.westepper.step.responses.UserPos;
 import com.westepper.step.utils.ActivityManager;
@@ -41,10 +49,12 @@ public class MyDiscoveryActivity extends SuperActivity {
     TitleBar titleBar;
     @BindView(R.id.tab)
     GalleryTabGroup tab;
-    @BindView(R.id.rcv_mydis)
+    @BindView(R.id.swipeLayout)
+    SwipeToLoadLayout  swipeLayout;
+//    @BindView(R.id.rcv_mydis)
     RecyclerView rcv_mydis;
 
-    int disKind;
+    int disKind, page = 1, type = 0;
     MyDiscoveryRcvAdapter adapter;
 
     @Override
@@ -86,7 +96,8 @@ public class MyDiscoveryActivity extends SuperActivity {
             tab.setTabNames(new GalleryTabListener() {
                 @Override
                 public void onTabChecked(RadioButton tab, int id) {
-
+                    type = id + 1;
+                    getMyDiscovery(page = 1);
                 }
 
                 @Override
@@ -97,6 +108,19 @@ public class MyDiscoveryActivity extends SuperActivity {
             tab.checkTab(0);
         }
 
+        swipeLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                getMyDiscovery(++page);
+            }
+        });
+        swipeLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getMyDiscovery(page = 1);
+            }
+        });
+        rcv_mydis = (RecyclerView) swipeLayout.getTargetView();
         rcv_mydis.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new MyDiscoveryRcvAdapter(this, disKind);
         rcv_mydis.setAdapter(adapter);
@@ -111,32 +135,31 @@ public class MyDiscoveryActivity extends SuperActivity {
 
     @Override
     protected void initData() {
-        adapter.setDiscoveryList(createMyDiscoverys());
+        getMyDiscovery(page);
     }
 
-    private List<Discovery> createMyDiscoverys(){
-        List<Discovery> dislist = new ArrayList<>();
-        for(int i = 0; i < 10; i++){
-            Discovery discovery = new Discovery();
-            discovery.setDiscoveryKind(disKind);
-            discovery.setInfo("机场已成我家，一周天天回家。好心人给我送口外卖吧。鸡排侠又饿了。");
-            discovery.setUserPos(new UserPos(null, "上海市，上海电视台"));
-            long stemp = 1507786461l*1000l - (long)(i*100000000l);
-            String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(stemp));
-            discovery.setPushTime(stemp);
-            List<ImgDetail> imgs = new ArrayList<>();
-            imgs.add(new ImgDetail("http://pic1.win4000.com/pic/c/09/8b8f408807.jpg", 300, 200));
-            imgs.add(new ImgDetail("http://tse2.mm.bing.net/th?id=OIP.yIi9TwH7EiIlIbsgvwTdHwFNC7&pid=15.1", 400, 260));
-            imgs.add(new ImgDetail("http://photocdn.sohu.com/20130909/Img386224746.jpg", 300, 200));
-            imgs.add(new ImgDetail("http://pic4.nipic.com/20090826/1412106_020349894777_2.jpg", 450, 300));
-            discovery.setImgList(imgs);
-            if(disKind == Constants.OUTGO){
-                Random random = new Random(System.currentTimeMillis() * i);
-                discovery.setJoinCount(random.nextInt(5));
-                discovery.setTotalCount(discovery.getJoinCount() + random.nextInt(10));
+    private void getMyDiscovery(final int page) {
+        GetMyDiscoveryLogic logic = new GetMyDiscoveryLogic(this, disKind == Constants.OUTGO ? new DisModel(disKind, page, type) : new DisModel(disKind, page));
+        logic.setCallback(new BaseLogic.LogicCallback<DiscoveryList>() {
+            @Override
+            public void onSuccess(DiscoveryList response) {
+                if(page == 1) {
+                    adapter.setDiscoveryList(response.getDiscoveryList());
+                    swipeLayout.setRefreshing(false);
+                }
+                else {
+                    adapter.addDiscoveryList(response.getDiscoveryList());
+                    swipeLayout.setLoadingMore(false);
+                }
             }
-            dislist.add(discovery);
-        }
-        return dislist;
+
+            @Override
+            public void onFailed(String code, String msg, DiscoveryList localData) {
+                Log.e(TAG, code + ", " + msg);
+                swipeLayout.setRefreshing(false);
+                swipeLayout.setLoadingMore(false);
+            }
+        });
+        logic.sendRequest();
     }
 }

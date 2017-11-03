@@ -27,6 +27,7 @@ import com.westepper.step.customViews.TitleBar;
 import com.westepper.step.logics.NewDiscoveryLogic;
 import com.westepper.step.models.NewDiscoveryModel;
 import com.westepper.step.utils.ActivityManager;
+import com.westepper.step.utils.MapUtils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -160,9 +161,15 @@ public class NewDiscoveryActivity extends SuperActivity {
 
     private void sendNewDiscovery(){
         NewDiscoveryModel model = new NewDiscoveryModel(2, disKind, adapter.getInfo(), "0", System.currentTimeMillis());
-        model.setPoiTitle(adapter.getPoiItem().getTitle());
-        model.setLatitude(adapter.getPoiItem().getLatLonPoint().getLatitude());
-        model.setLongitude(adapter.getPoiItem().getLatLonPoint().getLongitude());
+        if(adapter.getPoiItem() != null && adapter.getPoiItem().getLatLonPoint() != null) {
+            model.setPoiTitle(adapter.getPoiItem().getTitle());
+            model.setLatitude(adapter.getPoiItem().getLatLonPoint().getLatitude());
+            model.setLongitude(adapter.getPoiItem().getLatLonPoint().getLongitude());
+        }else{
+            model.setPoiTitle(MapUtils.getInstance().getMapLocation().getPoiName());
+            model.setLatitude(MapUtils.getInstance().getMapLocation().getLatitude());
+            model.setLongitude(MapUtils.getInstance().getMapLocation().getLongitude());
+        }
 //        String img = "data:image/jpeg;base64,";
         ArrayList<String> imgList = new ArrayList<>();
         if(!TextUtils.isEmpty(tmpFile)) {

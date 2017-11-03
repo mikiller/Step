@@ -16,6 +16,7 @@ public class MXTimeUtils {
         int days = (int) (dt / 86400000);
         int hours = (int) ((dt - days * 86400000)/3600000);
         int minutes = (int) ((dt - days * 86400000 - hours * 3600000)/60000);
+        int seconds = (int)(dt - days * 86400000 - hours * 3600000 - minutes * 600000) / 1000;
         if(days > 0){
             if(days >= 30){
                 return getFormatTime("yyyy年MM月dd日", time);
@@ -23,8 +24,10 @@ public class MXTimeUtils {
             return days + "天前";
         }else if(hours > 0){
             return hours + "小时前";
-        }else{
+        }else if(minutes > 0){
             return minutes + "分钟前";
+        }else{
+            return seconds + "秒前";
         }
 
     }

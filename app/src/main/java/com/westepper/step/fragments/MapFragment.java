@@ -116,6 +116,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
         btn_selection.setOnClickListener(this);
         btn_refresh.setOnClickListener(this);
 
+        commitInput.setDY(DisplayUtil.dip2px(getActivity(), 50));
         adapter = new DiscoveryAdapter(null, getActivity());
         adapter.setCommitInput(commitInput);
         vp_discoveryList.setAdapter(adapter);

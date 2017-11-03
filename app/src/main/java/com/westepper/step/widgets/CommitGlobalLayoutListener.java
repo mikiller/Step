@@ -3,6 +3,7 @@ package com.westepper.step.widgets;
 import android.app.Activity;
 import android.graphics.Rect;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
