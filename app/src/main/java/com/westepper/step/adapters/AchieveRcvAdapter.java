@@ -18,6 +18,7 @@ import com.westepper.step.base.Constants;
 import com.westepper.step.customViews.AchieveBadge;
 import com.westepper.step.responses.AchieveArea;
 import com.westepper.step.responses.AchieveProgress;
+import com.westepper.step.responses.MyAchievements;
 import com.westepper.step.utils.ActivityManager;
 
 import java.util.HashMap;
@@ -34,13 +35,15 @@ import static android.view.View.VISIBLE;
 
 public class AchieveRcvAdapter extends RecyclerView.Adapter {
     private final int HEADER = 0, PROGRESS = 1;
+    private final int[] achIcons = new int[]{R.mipmap.ic_ach_step, R.mipmap.ic_ach_dis, R.mipmap.ic_ach_sh, R.mipmap.ic_ach_pos, R.mipmap.ic_ach_timer};
     private Context mContext;
     private boolean needHead = true;
     private int achKind;
 
 //    private View.OnClickListener listener;
     private OnMenuClickListener listener;
-    private List<AchieveProgress> pgsList;
+//    private List<AchieveProgress> pgsList;
+    private MyAchievements myAchieve = new MyAchievements();
 
     public AchieveRcvAdapter(Context mContext, int achKind) {
         this.mContext = mContext;
@@ -55,12 +58,22 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
         this.needHead = needHead;
     }
 
-    public List<AchieveProgress> getPgsList() {
-        return pgsList;
+//    public List<AchieveProgress> getPgsList() {
+//        return pgsList;
+//    }
+
+//    public void setPgsList(List<AchieveProgress> pgsList) {
+//        this.pgsList = pgsList;
+//        notifyDataSetChanged();
+//    }
+
+
+    public MyAchievements getMyAchieve() {
+        return myAchieve;
     }
 
-    public void setPgsList(List<AchieveProgress> pgsList) {
-        this.pgsList = pgsList;
+    public void setMyAchieve(MyAchievements myAchieve) {
+        this.myAchieve = myAchieve;
         notifyDataSetChanged();
     }
 
@@ -84,28 +97,29 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof HeadHolder){
             ((HeadHolder)holder).setBgColor();
+            ((HeadHolder)holder).setTv_score(myAchieve.getCredit());
             ((HeadHolder)holder).setBadgeTitle();
-            ((HeadHolder)holder).setBadge();
-            ((HeadHolder)holder).setAchTitle(2);
+            ((HeadHolder)holder).setBadge(myAchieve.getL1(), myAchieve.getL2(), myAchieve.getL3(), myAchieve.getL4());
+            ((HeadHolder)holder).setAchTitle();
         }else if(holder instanceof AchProgressHolder){
-            final AchieveProgress achPgs = pgsList.get(holder.getAdapterPosition() - (needHead ? 1 : 0));
+            final AchieveProgress achPgs = myAchieve.getPercentList().get(holder.getAdapterPosition() - (needHead ? 1 : 0));
             if (achPgs.getType() == Constants.ACH_BADGE) {
-                ((AchProgressHolder)holder).setMenu_icon(achPgs.getIconId());
-                ((AchProgressHolder)holder).setSubTitle(achPgs.getName());
+                ((AchProgressHolder)holder).setMenu_icon(achIcons[achPgs.getCategoryId()]);
+                ((AchProgressHolder)holder).setSubTitle(achPgs.getCategoryName());
                 ((AchProgressHolder)holder).setNeedSubTitle(true);
 
             } else {
-                ((AchProgressHolder)holder).setTitle(achPgs.getName());
+                ((AchProgressHolder)holder).setTitle(achPgs.getCategoryName());
                 ((AchProgressHolder)holder).setNeedSubTitle(false);
                 ((AchProgressHolder)holder).setNeedNext(achPgs.getType() == Constants.ACH_AREA ? false : true);
             }
             ((AchProgressHolder)holder).setPgs(achPgs.getPercent());
-            if(listener != null && ((AchProgressHolder) holder).canClick() && !achPgs.getName().equals("初识STEP")){
+            if(listener != null && ((AchProgressHolder) holder).canClick() && !"初识STEP".equals(achPgs.getCategoryName())){
                 ((AchProgressHolder)holder).setAchMenuClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         setNeedHead(false);
-                        listener.onMenuClicked(achPgs.getName(), achPgs.getType());
+                        listener.onMenuClicked(achPgs.getCategoryName(), achPgs.getType());
                     }
                 });
             }
@@ -114,7 +128,7 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return (needHead ? 1 : 0) + (pgsList == null ? 0 : pgsList.size());
+        return (needHead ? 1 : 0) + (myAchieve == null ? 0 : (myAchieve.getPercentList() == null ? 0 : myAchieve.getPercentList().size()));
     }
 
     @Override
@@ -127,7 +141,6 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
         TextView tv_score;
         TextView tv_badgeTitle;
         TextView tv_achTitle;
-        TextView tv_achNum;
         AchieveBadge myAchCity, myAchL1, myAchL2, myAchL3;
         public HeadHolder(View itemView) {
             super(itemView);
@@ -135,7 +148,6 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
             tv_score = (TextView) itemView.findViewById(R.id.tv_score);
             tv_badgeTitle = (TextView) itemView.findViewById(R.id.tv_badgeTitle);
             tv_achTitle = (TextView) itemView.findViewById(R.id.tv_achTitle);
-            tv_achNum = (TextView) itemView.findViewById(R.id.tv_achNum);
             myAchCity = (AchieveBadge) itemView.findViewById(R.id.myAchCity);
             myAchL1 = (AchieveBadge) itemView.findViewById(R.id.myAchL1);
             myAchL2 = (AchieveBadge) itemView.findViewById(R.id.myAchL2);
@@ -146,11 +158,15 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
             rl_scoreBg.setBackgroundColor(achKind == Constants.ACH_CITY ? mContext.getResources().getColor(R.color.splash_label) : mContext.getResources().getColor(R.color.colorPrimary));
         }
 
-        public void setBadgeTitle(){
-            tv_badgeTitle.setText(achKind == Constants.ACH_CITY ? "城市徽章" : "探索等级");
+        public void setTv_score(int score){
+            tv_score.setText(String.valueOf(score));
         }
 
-        public void setBadge(){
+        public void setBadgeTitle(){
+            tv_badgeTitle.setText(achKind == Constants.ACH_CITY ? "城市徽章" : "成就等级");
+        }
+
+        public void setBadge(int l1, int l2, int l3, int l4){
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -169,24 +185,22 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
             }
             myAchCity.setBadgeImg(achKind == Constants.ACH_CITY ? R.mipmap.ic_dis_city : R.mipmap.ic_ach_l1);
             myAchCity.setBadgeKind(0);
-            myAchCity.setBadgeNum(1);
+            myAchCity.setBadgeNum(l1);
             myAchL1.setBadgeImg(achKind == Constants.ACH_CITY ? R.mipmap.ic_dis_l1 : R.mipmap.ic_ach_l2);
             myAchL1.setBadgeKind(1);
-            myAchL1.setBadgeNum(1);
+            myAchL1.setBadgeNum(l2);
             myAchL2.setBadgeImg(achKind == Constants.ACH_CITY ? R.mipmap.ic_dis_l2 : R.mipmap.ic_ach_l3);
             myAchL2.setBadgeKind(2);
-            myAchL2.setBadgeNum(1);
+            myAchL2.setBadgeNum(l3);
             myAchL3.setBadgeImg(achKind == Constants.ACH_CITY ? R.mipmap.ic_dis_l3 : R.mipmap.ic_ach_l4);
             myAchL3.setBadgeKind(3);
-            myAchL3.setBadgeNum(1);
+            myAchL3.setBadgeNum(l4);
 
 
         }
 
-        public void setAchTitle(int num){
+        public void setAchTitle(){
             tv_achTitle.setText(achKind == Constants.ACH_CITY ? "发现城市" : "获得成就");
-            tv_achNum.setText(String.valueOf(num));
-            tv_achNum.setVisibility(achKind == Constants.ACH_CITY ? GONE : VISIBLE);
         }
     }
 

@@ -90,11 +90,5 @@
             android:text="发现城市"
             android:textColor="@color/text_color_black"
             android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/tv_achNum"
-            style="@style/hint_text_style2"
-            android:text="0"
-            android:visibility="gone" />
     </LinearLayout>
 </LinearLayout>

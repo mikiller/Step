@@ -8,16 +8,25 @@ import java.io.Serializable;
 
 public class AchieveProgress implements Serializable {
     private int type;
-    private String name;
+    private int categoryId;
+    private String categoryName;
     private int percent;
-    private int iconId;
+//    private int iconId;
 
-    public String getName() {
-        return name;
+    public int getCategoryId() {
+        return categoryId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public int getPercent() {
@@ -36,11 +45,11 @@ public class AchieveProgress implements Serializable {
         this.type = type;
     }
 
-    public int getIconId() {
-        return iconId;
-    }
-
-    public void setIconId(int iconId) {
-        this.iconId = iconId;
-    }
+//    public int getIconId() {
+//        return iconId;
+//    }
+//
+//    public void setIconId(int iconId) {
+//        this.iconId = iconId;
+//    }
 }

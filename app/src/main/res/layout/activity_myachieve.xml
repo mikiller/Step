@@ -18,110 +18,110 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
 
-        <LinearLayout
-            android:id="@+id/ll_achMenus"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+        <!--<LinearLayout-->
+            <!--android:id="@+id/ll_achMenus"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="vertical">-->
 
-            <RelativeLayout
-                android:id="@+id/rl_scoreBg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary">
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/rl_scoreBg"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@color/colorPrimary">-->
 
-                <TextView
-                    android:id="@+id/tv_score"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginBottom="34dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="34dp"
-                    android:text="0"
-                    android:textColor="@android:color/white"
-                    android:textSize="72sp" />
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_score"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_centerInParent="true"-->
+                    <!--android:layout_marginBottom="34dp"-->
+                    <!--android:layout_marginRight="10dp"-->
+                    <!--android:layout_marginTop="34dp"-->
+                    <!--android:text="0"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="72sp" />-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/tv_score"
-                    android:layout_toRightOf="@+id/tv_score"
-                    android:text="分"
-                    android:textColor="@color/colorPrimaryLight"
-                    android:textSize="12sp" />
-            </RelativeLayout>
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignBaseline="@+id/tv_score"-->
+                    <!--android:layout_toRightOf="@+id/tv_score"-->
+                    <!--android:text="分"-->
+                    <!--android:textColor="@color/colorPrimaryLight"-->
+                    <!--android:textSize="12sp" />-->
+            <!--</RelativeLayout>-->
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:orientation="vertical">
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@android:color/white"-->
+                <!--android:orientation="vertical">-->
 
-                <TextView
-                    android:id="@+id/tv_badgeTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="12dp"
-                    android:text="城市徽章"
-                    android:textColor="@color/text_color_black"
-                    android:textSize="15dp" />
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_badgeTitle"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="15dp"-->
+                    <!--android:layout_marginTop="12dp"-->
+                    <!--android:text="城市徽章"-->
+                    <!--android:textColor="@color/text_color_black"-->
+                    <!--android:textSize="15dp" />-->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="22dp"
-                    android:orientation="horizontal">
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="22dp"-->
+                    <!--android:orientation="horizontal">-->
 
-                    <com.westepper.step.customViews.AchieveBadge
-                        android:id="@+id/myAchCity"
-                        style="@style/my_ach_badge"/>
+                    <!--<com.westepper.step.customViews.AchieveBadge-->
+                        <!--android:id="@+id/myAchCity"-->
+                        <!--style="@style/my_ach_badge"/>-->
 
-                    <com.westepper.step.customViews.AchieveBadge
-                        android:id="@+id/myAchL1"
-                        style="@style/my_ach_badge"/>
+                    <!--<com.westepper.step.customViews.AchieveBadge-->
+                        <!--android:id="@+id/myAchL1"-->
+                        <!--style="@style/my_ach_badge"/>-->
 
-                    <com.westepper.step.customViews.AchieveBadge
-                        android:id="@+id/myAchL2"
-                        style="@style/my_ach_badge"/>
+                    <!--<com.westepper.step.customViews.AchieveBadge-->
+                        <!--android:id="@+id/myAchL2"-->
+                        <!--style="@style/my_ach_badge"/>-->
 
-                    <com.westepper.step.customViews.AchieveBadge
-                        android:id="@+id/myAchL3"
-                        style="@style/my_ach_badge"/>
-                </LinearLayout>
-            </LinearLayout>
+                    <!--<com.westepper.step.customViews.AchieveBadge-->
+                        <!--android:id="@+id/myAchL3"-->
+                        <!--style="@style/my_ach_badge"/>-->
+                <!--</LinearLayout>-->
+            <!--</LinearLayout>-->
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/white"
-                android:orientation="horizontal"
-                android:paddingBottom="12dp"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingTop="12dp">
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:background="@android:color/white"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:paddingBottom="12dp"-->
+                <!--android:paddingLeft="15dp"-->
+                <!--android:paddingRight="15dp"-->
+                <!--android:paddingTop="12dp">-->
 
-                <TextView
-                    android:id="@+id/tv_achTitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="发现城市"
-                    android:textColor="@color/text_color_black"
-                    android:textSize="15sp" />
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_achTitle"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="发现城市"-->
+                    <!--android:textColor="@color/text_color_black"-->
+                    <!--android:textSize="15sp" />-->
 
-                <TextView
-                    android:id="@+id/tv_achNum"
-                    style="@style/hint_text_style2"
-                    android:text="0"
-                    android:visibility="gone" />
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_achNum"-->
+                    <!--style="@style/hint_text_style2"-->
+                    <!--android:text="0"-->
+                    <!--android:visibility="gone" />-->
+            <!--</LinearLayout>-->
+        <!--</LinearLayout>-->
+    <!--</ScrollView>-->
 </LinearLayout>
