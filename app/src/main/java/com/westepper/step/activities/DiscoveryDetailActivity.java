@@ -25,13 +25,18 @@ import com.westepper.step.R;
 import com.westepper.step.adapters.DetailImgVpAdapter;
 import com.westepper.step.adapters.DisDetailRcvAdapter;
 import com.westepper.step.base.BaseLogic;
+import com.westepper.step.base.BaseModel;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.CommitEditView;
 import com.westepper.step.customViews.TitleBar;
 import com.westepper.step.logics.CommitLogic;
 import com.westepper.step.logics.GetCommitListLogic;
+import com.westepper.step.logics.JoinLogic;
 import com.westepper.step.models.CommitModel;
+import com.westepper.step.models.JoinModel;
+import com.westepper.step.responses.JoinResponse;
+import com.westepper.step.utils.MXTimeUtils;
 import com.westepper.step.widgets.CommitGlobalLayoutListener;
 import com.westepper.step.responses.Commit;
 import com.westepper.step.responses.Discovery;
@@ -43,6 +48,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 
@@ -67,6 +74,14 @@ public class DiscoveryDetailActivity extends SuperActivity {
     TextView tv_joinNum;
     @BindView(R.id.tv_joinOpt)
     TextView tv_joinOpt;
+    @BindView(R.id.ll_leftTime)
+    LinearLayout ll_leftTime;
+    @BindView(R.id.tv_hour)
+    TextView tv_hour;
+    @BindView(R.id.tv_min)
+    TextView tv_min;
+    @BindView(R.id.tv_sec)
+    TextView tv_sec;
     @BindView(R.id.commitInput)
     CommitEditView commitInput;
 
@@ -79,6 +94,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
 
     Discovery discovery;
     int scope;
+    Timer timer;
 
     private float ActDownX, ActDownY, rcvDY, imgDy, titleDA;
     float maxRcvTransY, maxImgTransY;
@@ -212,14 +228,69 @@ public class DiscoveryDetailActivity extends SuperActivity {
         });
         ll_joinOtp.setVisibility(discovery.getDiscoveryKind() == Constants.MOOD ? View.GONE : View.VISIBLE);
         if (discovery.getDiscoveryKind() == Constants.OUTGO) {
-            tv_joinNum.setText(String.format(getString(R.string.join_num), discovery.getJoinCount(), discovery.getTotalCount()));
+            tv_joinNum.setText(String.format(getString(R.string.join_num), discovery.getTotalCount(), discovery.getJoinCount()));
+            tv_joinOpt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //show dlg for input join words
+                    //after get team id from yunxin send request
+                    CustomDialog dlg = new CustomDialog(DiscoveryDetailActivity.this);
+                    dlg.setTitle("已报名参加约行").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
+                        @Override
+                        public void onCancel() {
+
+                        }
+
+                        @Override
+                        public void onSure() {
+                            JoinLogic logic = new JoinLogic(DiscoveryDetailActivity.this, new JoinModel(discovery.getDiscoveryId(), "0"));
+                            logic.setCallback(new BaseLogic.LogicCallback<JoinResponse>() {
+                                @Override
+                                public void onSuccess(JoinResponse response) {
+                                    tv_joinNum.setText(String.format(getString(R.string.join_num), discovery.getTotalCount(), response.getJoinCount()));
+                                    tv_joinOpt.setText("已报名");
+                                    tv_joinOpt.setEnabled(false);
+                                }
+
+                                @Override
+                                public void onFailed(String code, String msg, JoinResponse localData) {
+
+                                }
+                            });
+                            logic.sendRequest();
+                        }
+                    }).show();
+
+                }
+            });
+
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if(ll_joinOtp == null)
+                        return;
+                    ll_joinOtp.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(!MXTimeUtils.isOutofLimit(discovery.getPushTime(), MXTimeUtils.DAY)) {
+                                String time = MXTimeUtils.getLeftTime("HH:mm:ss", discovery.getPushTime(), MXTimeUtils.DAY);
+                                String[] times = time.split(":");
+                                tv_hour.setText(times[0]);
+                                tv_min.setText(times[1]);
+                                tv_sec.setText(times[2]);
+                            }else{
+                                ll_leftTime.setVisibility(View.GONE);
+                                tv_joinOpt.setEnabled(false);
+                                tv_joinOpt.setText("约行已结束");
+                            }
+                        }
+                    });
+
+                }
+            }, 0, 1000);
         }
-        tv_joinOpt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.setEnabled(false);
-            }
-        });
+
 
         vp_img.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
@@ -240,7 +311,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
 
     @Override
     protected void initData() {
-        if (scope == Constants.FRIEND){
+        if (scope == Constants.FRIEND && discovery.getCommitNum() > 0){
             if(logic == null) {
                 logic = new GetCommitListLogic(this, new CommitModel(discovery.getDiscoveryId(), discovery.getDiscoveryKind())).setAdapter(rcvAdapter);
             }
@@ -251,6 +322,15 @@ public class DiscoveryDetailActivity extends SuperActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+        super.onDestroy();
     }
 
     @Override

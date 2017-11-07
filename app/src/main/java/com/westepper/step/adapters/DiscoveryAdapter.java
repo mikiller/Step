@@ -2,7 +2,9 @@ package com.westepper.step.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +36,8 @@ import com.westepper.step.utils.MXTimeUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Mikiller on 2017/9/4.
@@ -44,16 +48,15 @@ public class DiscoveryAdapter extends PagerAdapter {
     private Context mContext;
     private int scope;
 
+    DiscoveryHolder currentHolder;
     CommitEditView commitInput;
-    OnCommitListener listener;
+    getCurrentHolderListener currentHolderListener;
+    Timer timer = new Timer();
+    TimerTask timerTask;
 
     public DiscoveryAdapter(List<Discovery> dataList, Context mContext) {
         this.dataList = dataList;
         this.mContext = mContext;
-    }
-
-    public void setCommitListener(OnCommitListener listener){
-        this.listener = listener;
     }
 
     public void setCommitInput(CommitEditView view){
@@ -64,7 +67,7 @@ public class DiscoveryAdapter extends PagerAdapter {
     public Object instantiateItem(final ViewGroup container, final int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_discovery, null);
         container.addView(view);
-        ViewHolder holder = new ViewHolder(view);
+        DiscoveryHolder holder = new DiscoveryHolder(view);
         final Discovery discover = dataList.get(position);
         holder.setUserHeader(discover.getHeadUrl());
         holder.setNickName(discover.getNickName());
@@ -120,6 +123,14 @@ public class DiscoveryAdapter extends PagerAdapter {
                 ActivityManager.startActivity((Activity) mContext, DiscoveryDetailActivity.class, args);
             }
         });
+
+        if(discover.getDiscoveryKind() == Constants.OUTGO) {
+            if(MXTimeUtils.isOutofLimit(discover.getPushTime(), MXTimeUtils.DAY))
+                holder.setBtnJoinEnabled(false, "已结束");
+            else
+                holder.setBtnJoinEnabled(true, "参加约行 ".concat(MXTimeUtils.getLeftTime(discover.getPushTime(), MXTimeUtils.DAY)));
+        }
+        view.setTag(holder);
         return view;
     }
 
@@ -150,6 +161,29 @@ public class DiscoveryAdapter extends PagerAdapter {
         return POSITION_NONE;
     }
 
+
+    @Override
+    public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        if(object != null) {
+            currentHolder = (DiscoveryHolder) ((View) object).getTag();
+            if(currentHolderListener != null) {
+                currentHolderListener.getCurrentHolder(currentHolder);
+                currentHolderListener = null;
+            }
+        }
+    }
+
+    public void cancelTask(){
+        if(timerTask != null){
+            timerTask.cancel();
+            timerTask = null;
+        }
+    }
+
+    public void setCurrentHolderListener(getCurrentHolderListener listener){
+        currentHolderListener = listener;
+    }
+
     @Override
     public boolean isViewFromObject(View view, Object object) {
         return view == object;
@@ -160,7 +194,7 @@ public class DiscoveryAdapter extends PagerAdapter {
         container.removeView((View) object);
     }
 
-    protected class ViewHolder{
+    public class DiscoveryHolder{
         private SelectableRoundedImageView iv_userHeader;
         private TextView tv_nickName, tv_msg, tv_time;
         private ImageView iv_gender;
@@ -169,7 +203,7 @@ public class DiscoveryAdapter extends PagerAdapter {
         private ImageButton btn_discuss, btn_addFriend;
         private LinearLayout ll_join;
         private Button btn_join;
-        public ViewHolder(View root) {
+        public DiscoveryHolder(View root) {
             iv_userHeader = (SelectableRoundedImageView) root.findViewById(R.id.iv_userHeader);
             tv_nickName = (TextView) root.findViewById(R.id.tv_nickName);
             tv_msg = (TextView) root.findViewById(R.id.tv_msg);
@@ -237,9 +271,38 @@ public class DiscoveryAdapter extends PagerAdapter {
             btn_good.setEnabled(hasGood);
             btn_good.setOnClickListener(listener);
         }
+
+        public void updateLeftTime(final long time){
+            timer.schedule(timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    btn_join.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(!MXTimeUtils.isOutofLimit(time, MXTimeUtils.DAY)) {
+                                btn_join.setText("参加约行 ".concat(MXTimeUtils.getLeftTime(time, MXTimeUtils.DAY)));
+                                Log.e("dis adapter", btn_join.getText().toString());
+                            }else{
+                                setBtnJoinEnabled(false, "已结束");
+                            }
+                        }
+                    });
+                }
+            }, 0, 60000);
+
+        }
+
+        public void setBtnJoinEnabled(boolean enabled, String txt){
+            btn_join.setEnabled(enabled);
+            btn_join.setText(txt);
+        }
     }
 
     public interface OnCommitListener{
         void onCommit(String id, String nickName);
+    }
+
+    public interface getCurrentHolderListener{
+        void getCurrentHolder(DiscoveryHolder holder);
     }
 }

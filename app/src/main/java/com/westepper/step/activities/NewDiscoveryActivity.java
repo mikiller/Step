@@ -26,7 +26,9 @@ import com.uilib.mxmenuitem.MyMenuItem;
 import com.westepper.step.customViews.TitleBar;
 import com.westepper.step.logics.NewDiscoveryLogic;
 import com.westepper.step.models.NewDiscoveryModel;
+import com.westepper.step.models.Privacy;
 import com.westepper.step.utils.ActivityManager;
+import com.westepper.step.utils.MXTimeUtils;
 import com.westepper.step.utils.MapUtils;
 
 import java.io.File;
@@ -45,6 +47,7 @@ import butterknife.BindView;
  */
 
 public class NewDiscoveryActivity extends SuperActivity {
+    private final int PICKTYPE_PEOPLE = 0, PICKTYPE_DATE = 1, PICKTYPE_PRIVACY = 2;
     @BindView(R.id.titleBar)
     TitleBar titleBar;
     @BindView(R.id.rcv_photo)
@@ -60,7 +63,9 @@ public class NewDiscoveryActivity extends SuperActivity {
     String tmpFile;
     List<File> fileList;
     DisPhotoRcvAdapter adapter;
-    int dateNum, peopleNum;
+    int dateNum, peopleNum, privacyNum;
+    long date;
+    int privacy;
 
 
     @Override
@@ -160,7 +165,11 @@ public class NewDiscoveryActivity extends SuperActivity {
     }
 
     private void sendNewDiscovery(){
-        NewDiscoveryModel model = new NewDiscoveryModel(2, disKind, adapter.getInfo(), "0", System.currentTimeMillis());
+        NewDiscoveryModel model;
+        if(disKind == Constants.MOOD)
+            model = new NewDiscoveryModel(disKind, adapter.getInfo(), System.currentTimeMillis());
+        else
+            model = new NewDiscoveryModel(privacy, disKind, adapter.getInfo(), "0", System.currentTimeMillis(), date, peopleNum);
         if(adapter.getPoiItem() != null && adapter.getPoiItem().getLatLonPoint() != null) {
             model.setPoiTitle(adapter.getPoiItem().getTitle());
             model.setLatitude(adapter.getPoiItem().getLatLonPoint().getLatitude());
@@ -170,7 +179,7 @@ public class NewDiscoveryActivity extends SuperActivity {
             model.setLatitude(MapUtils.getInstance().getMapLocation().getLatitude());
             model.setLongitude(MapUtils.getInstance().getMapLocation().getLongitude());
         }
-//        String img = "data:image/jpeg;base64,";
+        Log.e(TAG, "model: " + new Gson().toJson(model));
         ArrayList<String> imgList = new ArrayList<>();
         if(!TextUtils.isEmpty(tmpFile)) {
             String img = BitmapUtils.getBmpBase64Str(tmpFile,
@@ -190,45 +199,80 @@ public class NewDiscoveryActivity extends SuperActivity {
 
     private void createPeoplePicker(final MyMenuItem menu){
         final String[] values = new String[]{"不限", "1", "2", "3", "4", "", "", ""};
-        createPicker(values, menu, 4, false);
+        createPicker(values, menu, 4, PICKTYPE_PEOPLE);
     }
 
     private void createDatePicker(final MyMenuItem menu){
         String[] dates = new String[8];
         dates[0] = "不限";
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        for(int i = 1; i < dates.length; i++) {
-            calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 1);
-            dates[i] = sdf.format(calendar.getTime());
-        }
-        createPicker(dates, menu, 7, true);
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(new Date());
+//        for(int i = 1; i < dates.length; i++) {
+//            calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 1);
+//            dates[i] = sdf.format(calendar.getTime());
+//        }
+        MXTimeUtils.getNextDates("yyyy年MM月dd日", dates, 1);
+        createPicker(dates, menu, 7, PICKTYPE_DATE);
     }
 
     private void createPrivacyPicker(final MyMenuItem menu){
         final String[] values = new String[]{"公开", "好友可见", "仅陌生人可见", "", "", "", "", ""};
-        createPicker(values, menu, 3, false);
+        createPicker(values, menu, 2, PICKTYPE_PRIVACY);
     }
 
-    private void createPicker(final String[] values, final MyMenuItem menu, int maxValue, final boolean isDate){
+    private void createPicker(final String[] values, final MyMenuItem menu, int maxValue, final int pickType){
         picker.setDisplayedValues(values);
         picker.setMaxValue(maxValue);
-        picker.setValue(isDate ? dateNum : peopleNum);
+        //picker.setValue(isDate ? dateNum : peopleNum);
+        switch (pickType){
+            case PICKTYPE_DATE:
+                picker.setValue(dateNum);
+                break;
+            case PICKTYPE_PEOPLE:
+                picker.setValue(peopleNum);
+                break;
+            case PICKTYPE_PRIVACY:
+                picker.setValue(privacyNum);
+                break;
+        }
         picker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
         picker.setOnScrollListener(new NumberPicker.OnScrollListener() {
             @Override
             public void onScrollStateChange(NumberPicker view, int scrollState) {
                 if(scrollState == SCROLL_STATE_IDLE){
-                    if(isDate)
-                        dateNum = view.getValue();
-                    else
-                        peopleNum = view.getValue();
+                    switch (pickType) {
+                        case PICKTYPE_DATE:
+                            dateNum = view.getValue();
+                            setDate(values[dateNum]);
+                        break;
+                        case PICKTYPE_PEOPLE:
+                            peopleNum = view.getValue();
+                            break;
+                        case PICKTYPE_PRIVACY:
+                            privacyNum = view.getValue();
+                            setPrivacy();
+                            break;
+                    }
                     menu.setSubText(values[view.getValue()]);
                     ll_pick.setVisibility(View.GONE);
                 }
             }
         });
+    }
+
+    private void setDate(String time){
+        date = MXTimeUtils.getTimeFromFormat("yyyy年MM月dd日", time);
+    }
+
+    private void setPrivacy(){
+        if(privacyNum == 0){
+            privacy = 2;
+        }else if(privacyNum == 2){
+            privacy = 3;
+        }else{
+            privacy = privacyNum;
+        }
     }
 
     @Override

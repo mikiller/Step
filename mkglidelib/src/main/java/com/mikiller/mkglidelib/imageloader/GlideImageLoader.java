@@ -162,6 +162,18 @@ public class GlideImageLoader implements ImageLoader {
             loadLocalImage(context, uri, null, placeholder, target);
     }
 
+    public void clearCache(final Context context){
+        Glide.get(context).clearMemory();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                Glide.get(context).clearDiskCache();
+            }
+        }).start();
+
+    }
+
     public static GlideImageLoader getInstance() {
         return Nested.instance;
     }

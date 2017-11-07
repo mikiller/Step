@@ -44,6 +44,7 @@ import com.westepper.step.responses.UserPos;
 import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.AnimUtils;
 import com.westepper.step.utils.FileUtils;
+import com.westepper.step.utils.MXTimeUtils;
 import com.westepper.step.utils.MapUtils;
 
 import java.io.File;
@@ -51,6 +52,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 
@@ -123,6 +126,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
         vp_discoveryList.setOffscreenPageLimit(3);
         vp_discoveryList.setPageMargin(DisplayUtil.dip2px(getActivity(), 15));
         vp_discoveryList.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -130,13 +134,22 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
             @Override
             public void onPageSelected(int position) {
-                Discovery disc = adapter.getItem(position);
+                final Discovery disc = adapter.getItem(position);
                 mapUtils.addMarker(disc.getUserPos().getLatlng());
+
+                adapter.cancelTask();
+                if (!MXTimeUtils.isOutofLimit(disc.getPushTime(), MXTimeUtils.DAY)) {
+                    adapter.setCurrentHolderListener(new DiscoveryAdapter.getCurrentHolderListener() {
+                        @Override
+                        public void getCurrentHolder(DiscoveryAdapter.DiscoveryHolder holder) {
+                            holder.updateLeftTime(disc.getPushTime());
+                        }
+                    });
+                }
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
         getDiscoveryList();
@@ -152,7 +165,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
                 mapUtils.addArea(area, Graphics.MAP);
             }
         }
-        for(Area area : MainActivity.mapData.getAchievementAreaList()){
+        for (Area area : MainActivity.mapData.getAchievementAreaList()) {
             mapUtils.addAchieveArea(area);
         }
     }
@@ -201,7 +214,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
             AnimUtils.startObjectAnim(rl_head, "translationY", headTransY, 0, 300);
             AnimUtils.startObjectAnim(ll_discovery_opt, "translationY", optTransY, 0, 400);
             AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vpTransY, 0, 500);
-            if(adapter.getCount() > 0)
+            if (adapter.getCount() > 0)
                 mapUtils.addMarker(adapter.getItem(vp_discoveryList.getCurrentItem()).getUserPos().getLatlng());
             mapUtils.setIsNeedArea(false);
         }
@@ -210,7 +223,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
     private void getDiscoveryList() {
         if (!isTrack) {
-            if(vp_discoveryList.getTranslationY() == 0)
+            if (vp_discoveryList.getTranslationY() == 0)
                 AnimUtils.startObjectAnim(vp_discoveryList, "translationY", 0, vpTransY, 400);
             mapUtils.removeMarker();
         }
@@ -223,14 +236,14 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
                 vp_discoveryList.setCurrentItem(0);
                 if (!isTrack) {
                     AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vpTransY, 0, 500);
-                    if(response.getDiscoveryList().size() > 0)
-                    mapUtils.addMarker(response.getDiscoveryList().get(0).getUserPos().getLatlng());
+                    if (response.getDiscoveryList().size() > 0)
+                        mapUtils.addMarker(response.getDiscoveryList().get(0).getUserPos().getLatlng());
                 }
             }
 
             @Override
             public void onFailed(String code, String msg, DiscoveryList localData) {
-                if("0".equals(code)){
+                if ("0".equals(code)) {
                     Toast.makeText(getActivity(), "未搜到您想要的结果，".concat(msg), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -249,6 +262,14 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
         super.onResume();
         mapView.onResume();
 
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!isVisibleToUser && adapter != null) {
+            adapter.cancelTask();
+        }
     }
 
     @Override

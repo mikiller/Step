@@ -22,12 +22,18 @@ public class NewDiscoveryModel extends BaseModel {
     private int totalCount;
     private String teamId;
 
-    public NewDiscoveryModel(int scope, int discoveryKind, String info, String teamId, long pushTime) {
-        this.scope = scope;
+    public NewDiscoveryModel(int discoveryKind, String info, long pushTime) {
         this.discoveryKind = discoveryKind;
         this.info = info;
+        this.pushTime = pushTime/1000;
+    }
+
+    public NewDiscoveryModel(int scope, int discoveryKind, String info, String teamId, long pushTime, long endTime, int totalCount) {
+        this(discoveryKind, info, pushTime);
+        this.scope = scope;
         this.teamId = teamId;
-        this.pushTime = pushTime;
+        this.endTime = endTime;
+        this.totalCount = totalCount;
     }
 
     public int getDiscoveryKind() {

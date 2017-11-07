@@ -27,4 +27,5 @@
     <color name="dir_img_count">#a0a0a0</color>
     <color name="gallery_camera_bg">#ebf3f8</color>
     <color name="discovery_kind_unchecked">#a0bed2</color>
+    <color name="custom_dlg_edt_bg">#f0f6fa</color>
 </resources>

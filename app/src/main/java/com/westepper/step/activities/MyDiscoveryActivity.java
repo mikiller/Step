@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import com.uilib.mxgallery.listeners.GalleryTabListener;
 import com.uilib.mxgallery.widgets.GalleryTabGroup;
@@ -54,7 +55,7 @@ public class MyDiscoveryActivity extends SuperActivity {
 //    @BindView(R.id.rcv_mydis)
     RecyclerView rcv_mydis;
 
-    int disKind, page = 1, type = 0;
+    int disKind, page = 1, type = 1;
     MyDiscoveryRcvAdapter adapter;
 
     @Override
@@ -93,19 +94,23 @@ public class MyDiscoveryActivity extends SuperActivity {
         });
         if(disKind == Constants.OUTGO) {
             tab.setVisibility(View.VISIBLE);
-            tab.setTabNames(new GalleryTabListener() {
+
+            tab.setTabNames("我发布的", "我报名的");
+            tab.checkTab(0);
+            tab.setTabListener(new GalleryTabListener() {
                 @Override
                 public void onTabChecked(RadioButton tab, int id) {
                     type = id + 1;
                     getMyDiscovery(page = 1);
+                    swipeLayout.setRefreshing(true);
                 }
 
                 @Override
                 public void onTabUpdated(GalleryTabGroup galleryTab, int tabCount, int itemCount) {
 
                 }
-            }, "我发布的", "我报名的");
-            tab.checkTab(0);
+            });
+
         }
 
         swipeLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -136,6 +141,7 @@ public class MyDiscoveryActivity extends SuperActivity {
     @Override
     protected void initData() {
         getMyDiscovery(page);
+        swipeLayout.setRefreshing(true);
     }
 
     private void getMyDiscovery(final int page) {
@@ -156,8 +162,16 @@ public class MyDiscoveryActivity extends SuperActivity {
             @Override
             public void onFailed(String code, String msg, DiscoveryList localData) {
                 Log.e(TAG, code + ", " + msg);
-                swipeLayout.setRefreshing(false);
-                swipeLayout.setLoadingMore(false);
+                if(!"0".equals(code)){
+                    Toast.makeText(MyDiscoveryActivity.this, msg, Toast.LENGTH_SHORT).show();
+                }else if(swipeLayout.isRefreshing()){
+                    swipeLayout.setRefreshing(false);
+                    adapter.setDiscoveryList(new ArrayList<Discovery>());
+                    Toast.makeText(MyDiscoveryActivity.this, "没有你的相关约行", Toast.LENGTH_SHORT).show();
+                }else if(swipeLayout.isLoadingMore()){
+                    swipeLayout.setLoadingMore(false);
+                    Toast.makeText(MyDiscoveryActivity.this, "没有更多了", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         logic.sendRequest();

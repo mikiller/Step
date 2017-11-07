@@ -69,6 +69,10 @@ public class GalleryTabGroup extends RelativeLayout {
         addTabToGroup(listener, lastId, names);
     }
 
+    public void setTabNames(String...names){
+        setTabNames(null, names);
+    }
+
     public void addTabNames(GalleryTabListener listener, String... names){
         if(names == null || names.length == 0)
             return;
@@ -92,7 +96,12 @@ public class GalleryTabGroup extends RelativeLayout {
         lp.width = screenWidth / count;
         lp.leftMargin = screenWidth / count * rdg_tab.getCheckedRadioButtonId();
         tabLine.setLayoutParams(lp);
-        rdg_tab.check(lastId = id - 1);
+        if(listener != null)
+            rdg_tab.check(lastId = id - 1);
+        setTabListener(listener);
+    }
+
+    public void setTabListener(GalleryTabListener listener){
         tabListener = listener;
     }
 

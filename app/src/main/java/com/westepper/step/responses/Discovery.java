@@ -115,7 +115,7 @@ public class Discovery implements Parcelable {
     }
 
     public long getEndTime() {
-        return endTime;
+        return endTime * 1000l;
     }
 
     public void setEndTime(long endTime) {

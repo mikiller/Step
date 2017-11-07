@@ -120,12 +120,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void setUserInfo(){
-        if(userInfo == null)
+        if(userInfo == null || tv_user_name == null)
             return;
         tv_user_name.setText(userInfo.getNickName());
         tv_userId.setText("ID: ".concat(userInfo.getUserId()));
         tv_signature.setText(userInfo.getSign());
-        GlideImageLoader.getInstance().loadImage(getActivity(), userInfo.getHeadImg(), R.mipmap.ic_default_head, iv_header, 0);
+        GlideImageLoader.getInstance().loadImage(getActivity(), userInfo.getHeadImg(), R.mipmap.ic_default_head, iv_header, 100);
         if(!TextUtils.isEmpty(userInfo.getCover())){
             iv_header_bg.setScaleType(ImageView.ScaleType.CENTER_CROP);
             GlideImageLoader.getInstance().loadImage(getActivity(), userInfo.getCover(), R.mipmap.ic_addcover, iv_header_bg, 0);
