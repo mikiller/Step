@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 
 public class AchieveProgress implements Serializable {
-    private int type;
+
     private int categoryId;
     private String categoryName;
     private int percent;
@@ -37,13 +37,7 @@ public class AchieveProgress implements Serializable {
         this.percent = percent;
     }
 
-    public int getType() {
-        return type;
-    }
 
-    public void setType(int type) {
-        this.type = type;
-    }
 
 //    public int getIconId() {
 //        return iconId;

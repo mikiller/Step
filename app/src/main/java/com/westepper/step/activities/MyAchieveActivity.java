@@ -14,11 +14,15 @@ import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.TitleBar;
 import com.westepper.step.logics.GetMyAchievementsLogic;
+import com.westepper.step.logics.GetMyDiscoverBaseInfoLogic;
+import com.westepper.step.models.BaseInfoModel;
 import com.westepper.step.responses.Achieve;
 import com.westepper.step.responses.AchieveProgress;
+import com.westepper.step.responses.DiscoveryBaseInfo;
 import com.westepper.step.responses.MyAchievements;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -86,81 +90,44 @@ public class MyAchieveActivity extends SuperActivity {
             @Override
             public void onMenuClicked(String title, int kind) {
                 if(kind == Constants.ACH_CITY){
-                    //createAreaData();
-//                    adapter.setPgsList(createAreas());
-                    //get sub area percent from server
-
                     titleBar.setTitle(title);
+                    GetMyDiscoverBaseInfoLogic logic = new GetMyDiscoverBaseInfoLogic(MyAchieveActivity.this, new BaseInfoModel(5));
+                    logic.setCallback(new BaseLogic.LogicCallback<DiscoveryBaseInfo>() {
+                        @Override
+                        public void onSuccess(DiscoveryBaseInfo response) {
+                            adapter.getMyAchieve().setType(Constants.ACH_AREA);
+                            adapter.getMyAchieve().setL2percent(response.getL2percent());
+                            adapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onFailed(String code, String msg, DiscoveryBaseInfo localData) {
+
+                        }
+                    });
+                    logic.sendRequest();
+
                 }else{
                     //goto sub ach
                     titleBar.setTitle(title);
                     reachedAdapter = new ReachedAchRcvAdapter(MyAchieveActivity.this);
                     for(Achieve achieve: MainActivity.mapData.getAchievementList()){
                         if(achieve.getAchieveKind().equals(title)){
-                            if(title.equals("城市探索")) {
-                                List<String> ids = new ArrayList<String>();
-                                ids.add("3");
-                                ids.add("4");
-                                reachedAdapter.setReachIds(ids);
-                            }
                             reachedAdapter.setAchAreaList(achieve.getAchieveAreaList());
                             rcv_ach.setAdapter(reachedAdapter);
                             break;
                         }
                     }
-//                    List<String> reachList = new ArrayList<String>();
-//                    reachList.add("1");
-//                    reachList.add("2");
-//                    reachedAdapter.setAchAreaList(reachList);
-//                    rcv_ach.setAdapter(reachedAdapter);
                 }
             }
         });
-//        adapter.setPgsList(createData());
         getMyAchieves();
     }
 
-//    private List<AchieveProgress> createData() {
-//        List<AchieveProgress> data = new ArrayList<>();
-//        if (achKind == Constants.ACH_CITY) {
-//            createCities(data);
-//        } else {
-//            createAchieves(data);
-//        }
-//        return data;
-//    }
-
-//    private List<AchieveProgress> createAreas(){
-//        List<AchieveProgress> data = new ArrayList<>();
-//        data.add(createAchMenu("静安区", 0, 0, Constants.ACH_AREA));
-//        data.add(createAchMenu("黄浦区", 0, 0, Constants.ACH_AREA));
-//        data.add(createAchMenu("虹口区", 0, 0, Constants.ACH_AREA));
-//        return data;
-//    }
-//
-//    private void createCities(List<AchieveProgress> data) {
-//        data.add(createAchMenu("上海", 0, 0, achKind));
-//        data.add(createAchMenu("杭州", 0, 0, achKind));
-//        data.add(createAchMenu("北京", 0, 0, achKind));
-//        data.add(createAchMenu("广州", 0, 0, achKind));
-//    }
-//
-//    private void createAchieves(List<AchieveProgress> data) {
-//
-//        data.add(createAchMenu("初识STEP", R.mipmap.ic_ach_step, 0, achKind));
-//        data.add(createAchMenu("城市探索", R.mipmap.ic_ach_dis, 0, achKind));
-//        data.add(createAchMenu("我爱上海", R.mipmap.ic_ach_sh, 0, achKind));
-//        data.add(createAchMenu("地标名胜", R.mipmap.ic_ach_pos, 0, achKind));
-//        data.add(createAchMenu("限时成就", R.mipmap.ic_ach_timer, 0, achKind));
-//
-//    }
-
-    private AchieveProgress createAchMenu(String title, int pgs, int type) {
+    private AchieveProgress createAchMenu(int id, String title, int pgs) {
         AchieveProgress achPgs = new AchieveProgress();
-        achPgs.setType(type);
         achPgs.setCategoryName(title);
-        achPgs.setCategoryId(0);
-//        achPgs.setName(title);
+        achPgs.setCategoryId(id);
         achPgs.setPercent(pgs);
         return achPgs;
     }
@@ -171,11 +138,23 @@ public class MyAchieveActivity extends SuperActivity {
     }
 
     private void getMyAchieves(){
+        final AchieveProgress[] achList = new AchieveProgress[5];
+        achList[0] = createAchMenu(0, "初识STEP", 0);
+        achList[1] = createAchMenu(1, "城市探索", 0);
+        achList[2] = createAchMenu(2, "我爱上海", 0);
+        achList[3] = createAchMenu(3, "地标名胜", 0);
+        achList[4] = createAchMenu(4, "限时成就", 0);
         GetMyAchievementsLogic logic = new GetMyAchievementsLogic(this, new BaseModel());
+        logic.setType(achKind);
         logic.setCallback(new BaseLogic.LogicCallback<MyAchievements>() {
             @Override
             public void onSuccess(MyAchievements response) {
-                response.getPercentList().add(0, createAchMenu("初识STEP", 0, achKind));
+                if(achKind == Constants.ACH_BADGE) {
+                    for (AchieveProgress ap : response.getPercentList()) {
+                        achList[ap.getCategoryId()] = ap;
+                    }
+                    response.setPercentList(Arrays.asList(achList));
+                }
                 adapter.setMyAchieve(response);
             }
 

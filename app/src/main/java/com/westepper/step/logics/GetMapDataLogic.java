@@ -48,7 +48,7 @@ public class GetMapDataLogic extends BaseLogic<MapData> {
     @Override
     public void onSuccess(MapData response) {
         if(response.getAchievementList().size() < 4){
-            String[] kinds = new String[]{"2,城市探索", "3,我爱上海", "4,地标名胜", "5,限时成就"};
+            String[] kinds = new String[]{"1,城市探索", "2,我爱上海", "3,地标名胜", "4,限时成就"};
 //            int i = 0;
 //            List<Achieve> tmp = response.getAchievementList();
             for(int i = 0; i < kinds.length; i++) {

@@ -7,6 +7,7 @@ import com.netlib.mkokhttp.OkHttpManager;
 import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.BaseModel;
 import com.westepper.step.base.BaseResponse;
+import com.westepper.step.base.Constants;
 import com.westepper.step.responses.MyAchievements;
 
 /**
@@ -14,8 +15,14 @@ import com.westepper.step.responses.MyAchievements;
  */
 
 public class GetMyAchievementsLogic extends BaseLogic<MyAchievements> {
+    int type = Constants.ACH_CITY;
     public GetMyAchievementsLogic(Context context, BaseModel model) {
         super(context, model);
+    }
+
+    public void setType(int type) {
+        this.type = type;
+        setUrl();
     }
 
     @Override
@@ -25,7 +32,7 @@ public class GetMyAchievementsLogic extends BaseLogic<MyAchievements> {
 
     @Override
     protected void setUrl() {
-        url = "user/achievementInfo";
+        url = type == Constants.ACH_BADGE ? "user/achievementInfo" : "user/discoverInfo";
     }
 
     @Override
@@ -40,7 +47,7 @@ public class GetMyAchievementsLogic extends BaseLogic<MyAchievements> {
 
     @Override
     public void onSuccess(MyAchievements response) {
-
+        response.setType(type);
     }
 
     @Override

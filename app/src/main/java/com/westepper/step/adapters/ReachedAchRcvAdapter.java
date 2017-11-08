@@ -46,6 +46,8 @@ public class ReachedAchRcvAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public void setAchAreaList(List<AchieveArea> achAreaList) {
         this.achAreaList = new ArrayList<>(achAreaList);
+        if(achAreaList.size() == 0)
+            return;
         int j = 0;
         for(String id : reachIds){
             for(int i = 0; i < achAreaList.size(); i++){
