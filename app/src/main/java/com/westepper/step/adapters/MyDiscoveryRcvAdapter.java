@@ -73,6 +73,8 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
         }
         holder.tv_msg.setText(discovery.getInfo());
         holder.tv_pos.setText(discovery.getUserPos().getPoiTitle());
+        holder.btn_good.setText(String.valueOf(discovery.getGoodNum()));
+        holder.btn_commit.setText(String.valueOf(discovery.getCommitNum()));
         int i = 0;
         for(ImgDetail img : discovery.getImgList()){
             if(i >= 3)

@@ -1,11 +1,6 @@
 package com.westepper.step.models;
 
-import com.netease.nim.uikit.common.media.picker.util.BitmapUtil;
-import com.uilib.utils.BitmapUtils;
 import com.westepper.step.base.BaseModel;
-import com.westepper.step.base.Constants;
-
-import java.io.Serializable;
 
 /**
  * Created by Mikiller on 2017/9/1.

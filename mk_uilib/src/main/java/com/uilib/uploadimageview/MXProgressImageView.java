@@ -7,11 +7,9 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.drawable.GradientDrawable;
 import android.media.ThumbnailUtils;
-import android.media.audiofx.NoiseSuppressor;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -19,11 +17,10 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.uilib.utils.BitmapUtils;
+import com.mikiller.mkglidelib.utils.BitmapUtils;
 import com.uilib.R;
 import com.uilib.mxprogressbar.MXProgressbar;
 
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

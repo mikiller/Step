@@ -21,10 +21,13 @@ import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.animation.DrawableCrossFadeFactory;
 import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.animation.ViewPropertyAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -81,7 +84,7 @@ public class GlideImageLoader implements ImageLoader {
                     public void run() {
                         if(listener == null) {
                             imageView.setImageBitmap(resource);
-                            imageView.setBackground(null);
+                            imageView.setBackgroundDrawable(null);
                         }
                         else
                             listener.onLoadSuccess(resource, imageView);
@@ -90,7 +93,7 @@ public class GlideImageLoader implements ImageLoader {
             }
         };
 
-        BitmapRequestBuilder request = Glide.with(context).load(path).asBitmap().skipMemoryCache(true).centerCrop().listener(reqListener);
+        BitmapRequestBuilder request = Glide.with(context).load(path).asBitmap().centerCrop().listener(reqListener).diskCacheStrategy(DiskCacheStrategy.RESULT);
 
         if(defaultImg != View.NO_ID){
             request.error(defaultImg).placeholder(defaultImg);

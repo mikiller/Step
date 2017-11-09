@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -115,7 +116,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
         String infoStr = MXPreferenceUtils.getInstance().getString(MXPreferenceUtils.getInstance().getString("account"));
         userInfo = new Gson().fromJson(infoStr, UserInfo.class);
-        setUserInfo();
+//        setUserInfo();
     }
 
     private void setUserInfo(){
@@ -135,14 +136,23 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
+        if(getUserVisibleHint())
+            setUserInfo();
+    }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser){
+            setUserInfo();
+        }
     }
 
     @Override
     public void fragmentCallback(int type, Intent data) {
         if(type == Constants.CHANGE_HEADER){
             userInfo = (UserInfo) data.getSerializableExtra(Constants.USERINFO);
-            setUserInfo();
+            //setUserInfo();
         }else if(type == Constants.CHANGE_USER_BG){
             String filePath = "";
             if(data.getSerializableExtra(CameraGalleryUtils.TMP_FILE) != null)

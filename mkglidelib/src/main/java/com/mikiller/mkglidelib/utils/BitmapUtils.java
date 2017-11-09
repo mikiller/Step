@@ -1,11 +1,10 @@
-package com.uilib.utils;
+package com.mikiller.mkglidelib.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
@@ -27,9 +26,6 @@ import android.widget.ImageView;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.concurrent.Executors;
 
 /**
  * Created by Mikiller on 2016/8/5.
@@ -86,13 +82,14 @@ public class BitmapUtils {
         try {
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             baos.flush();
-
             baos.close();
             byte[] bmpBytes = baos.toByteArray();
             rst = rst.concat(Base64.encodeToString(bmpBytes, Base64.DEFAULT));
 
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            bmp.recycle();
         }
         return rst;
     }

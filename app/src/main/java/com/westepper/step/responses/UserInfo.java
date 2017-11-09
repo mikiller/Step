@@ -1,10 +1,8 @@
 package com.westepper.step.responses;
 
-import com.uilib.utils.BitmapUtils;
+import com.mikiller.mkglidelib.utils.BitmapUtils;
 import com.westepper.step.models.Privacy;
 import com.westepper.step.models.SignModel;
-
-import java.io.Serializable;
 
 /**
  * Created by Mikiller on 2017/10/10.
@@ -42,7 +40,7 @@ public class UserInfo extends SignModel {
 
     public void getBase64Img(int type){
         if(type != COVER)
-            headImg = BitmapUtils.getBmpBase64Str(headImg, -1, -1);
+            headImg = BitmapUtils.getBmpBase64Str(headImg, 120, 120);
         if(type != HEADIMG)
             cover = BitmapUtils.getBmpBase64Str(cover, -1, -1);
     }
