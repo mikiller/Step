@@ -14,7 +14,10 @@ import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.UntouchableViewPager;
 import com.westepper.step.logics.GetUserInfoLogic;
+import com.westepper.step.logics.RankListLogic;
+import com.westepper.step.models.RankModel;
 import com.westepper.step.responses.MapData;
+import com.westepper.step.responses.RankList;
 import com.westepper.step.responses.UserInfo;
 import com.westepper.step.utils.FileUtils;
 import com.westepper.step.utils.MXPreferenceUtils;
@@ -51,6 +54,7 @@ public class MainActivity extends SuperActivity {
                         break;
                     case R.id.rdb_mine:
                         vp_content.setCurrentItem(2);
+                        getRankList();
                         break;
                     default:
                         vp_content.setCurrentItem(1);
@@ -86,6 +90,24 @@ public class MainActivity extends SuperActivity {
 
             @Override
             public void onFailed(String code, String msg, UserInfo localData) {
+
+            }
+        });
+        logic.sendRequest();
+    }
+
+    private void getRankList(){
+        RankListLogic logic = new RankListLogic(this, new RankModel(Constants.RANK_ALL));
+        logic.setCallback(new BaseLogic.LogicCallback<RankList>() {
+            @Override
+            public void onSuccess(RankList response) {
+                Intent intent = new Intent();
+                intent.putExtra(Constants.RANKLIST2, response);
+                adapter.getItem(2).fragmentCallback(Constants.GET_RANK, intent);
+            }
+
+            @Override
+            public void onFailed(String code, String msg, RankList localData) {
 
             }
         });

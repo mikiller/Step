@@ -8,7 +8,7 @@
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="昵称"
+        android:text="虚位以待"
         android:layout_centerHorizontal="true"/>
 
     <LinearLayout
@@ -33,7 +33,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="17sp"
-            android:text="000000"
+            android:text="0"
+            android:textColor="@color/text_color_black"
             android:layout_marginLeft="10dp"/>
     </LinearLayout>
 
@@ -60,7 +61,7 @@
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:textColor="@color/mainTabTxt"
-            android:text="2225555"
+            android:text="0"
             android:layout_marginLeft="10dp"/>
     </LinearLayout>
 </RelativeLayout>

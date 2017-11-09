@@ -1,11 +1,9 @@
 package com.westepper.step.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -22,15 +20,12 @@ import com.westepper.step.activities.PaihangActivity;
 import com.westepper.step.activities.SettingActivity;
 import com.westepper.step.activities.UserInfoActivity;
 import com.westepper.step.base.BaseFragment;
-import com.westepper.step.base.BaseLogic;
-import com.westepper.step.base.BaseModel;
 import com.westepper.step.base.Constants;
 import com.uilib.mxmenuitem.MyMenuItem;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.uilib.utils.DisplayUtil;
-import com.westepper.step.logics.GetUserInfoLogic;
 import com.westepper.step.logics.UpdateUserInfoLogic;
-import com.westepper.step.models.Privacy;
+import com.westepper.step.responses.RankList;
 import com.westepper.step.responses.UserInfo;
 import com.westepper.step.utils.ActivityManager;
 import com.uilib.mxgallery.utils.CameraGalleryUtils;
@@ -43,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.BindViews;
 
 
 /**
@@ -65,6 +61,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     TextView tv_signature;
     @BindView(R.id.iv_gender)
     ImageView iv_gender;
+    @BindViews({R.id.iv_first, R.id.iv_second, R.id.iv_third})
+    SelectableRoundedImageView[] rankHeads;
     @BindView(R.id.menu_paihang)
     MyMenuItem menu_paihang;
     @BindView(R.id.menu_mood)
@@ -77,6 +75,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     MyMenuItem menu_acheive;
 
     UserInfo userInfo;
+    RankList rankList;
 
     public MineFragment() {
         // Required empty public constructor
@@ -155,6 +154,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             iv_header_bg.setScaleType(ImageView.ScaleType.CENTER_CROP);
             GlideImageLoader.getInstance().loadImage(getActivity(), filePath, R.mipmap.ic_addcover, iv_header_bg, 0);
             updateCover(filePath);
+        }else if(type == Constants.GET_RANK){
+            rankList = (RankList) data.getSerializableExtra(Constants.RANKLIST2);
+            menu_paihang.setSubText("NO." + rankList.getUserRank());
+            for(int i = 0; i < ((rankList.getRankList().size() < 3) ? rankList.getRankList().size() : 3); i++){
+                GlideImageLoader.getInstance().loadImage(getActivity(), rankList.getRankList().get(i).getHeadUrl(), R.mipmap.ic_default_head, rankHeads[i], 0);
+            }
         }
     }
 
@@ -188,7 +193,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 ActivityManager.startActivity(getActivity(), SettingActivity.class);
                 break;
             case R.id.menu_paihang:
-                ActivityManager.startActivity(getActivity(), PaihangActivity.class);
+                args = new HashMap<>();
+                args.put(Constants.RANKLIST2, rankList);
+                ActivityManager.startActivity(getActivity(), PaihangActivity.class, args);
                 break;
             case R.id.menu_mood:
                 args = new HashMap<>();

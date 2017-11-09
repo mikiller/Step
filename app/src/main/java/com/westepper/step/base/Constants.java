@@ -14,6 +14,7 @@ public class Constants {
     public static final int SEARCH_POI = 0x104;
     public static final int SHOW_ACHIEVE_AREA = 0x201;
     public static final int SAVE_USERINFO = 0x105;
+    public static final int GET_RANK = 0x106;
     public static final String DIS_ID = "DIS_ID";
     public static final String DIS_KIND = "DIS_KIND";
     public static final String DIS_SCOPE = "DIS_SCOPE";
@@ -21,6 +22,8 @@ public class Constants {
     public static final String ACH_KIND = "ACH_KIND";
     public static final String BADGE_KIND = "BADGE_KIND";
     public static final String PRIVACY = "PRIVACY";
+    public static final String RANKLIST1 = "rank_friend";
+    public static final String RANKLIST2 = "rank_all";
     public static final int MOOD = 1;
     public static final int OUTGO = 2;
     public static final int FRIEND = 1;
@@ -30,6 +33,8 @@ public class Constants {
     public static final int ACH_AREA = 3;
     public static final int CITY = 1;
     public static final int LEVEL = 2;
+    public static final int RANK_FRIEND = 1;
+    public static final int RANK_ALL = 2;
     public static final String GALLERY_TYPE = "gallery_type";
     public static final String ISMULTIPLE = "sMultiple";
     public static final String DISCOVERY_DETAIL = "discovery_detail";

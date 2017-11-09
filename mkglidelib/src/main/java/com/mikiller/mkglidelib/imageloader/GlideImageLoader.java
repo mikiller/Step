@@ -56,6 +56,7 @@ public class GlideImageLoader implements ImageLoader {
             public boolean onException(Exception e, Object model, Target target, boolean isFirstResource) {
                 if (e != null)
                     Log.e(context.getClass().getSimpleName() + " in imageload", e.toString());
+                imageView.setImageResource(View.NO_ID);
                 if(defaultImg == View.NO_ID)
                     imageView.setBackgroundColor(context.getResources().getColor(R.color.gray_bg));
                 else

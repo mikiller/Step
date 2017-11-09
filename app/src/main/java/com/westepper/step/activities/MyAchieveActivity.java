@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 
 import com.westepper.step.R;
 import com.westepper.step.adapters.AchieveRcvAdapter;
@@ -66,16 +67,17 @@ public class MyAchieveActivity extends SuperActivity {
         titleBar.setTitleListener(new TitleBar.TitleListener() {
             @Override
             protected void onBackClicked() {
-                if(adapter.isNeedHead())
-                    back();
-                else{
-                    adapter.setNeedHead(true);
-//                    adapter.setPgsList(createData());
-                    getMyAchieves();
-                    if(rcv_ach.getAdapter() instanceof ReachedAchRcvAdapter)
-                        rcv_ach.setAdapter(adapter);
-                    titleBar.setTitle(achKind == Constants.ACH_CITY ? "探索" : "成就");
-                }
+//                if(adapter.isNeedHead())
+//                    back();
+//                else{
+//                    adapter.setNeedHead(true);
+////                    adapter.setPgsList(createData());
+//                    getMyAchieves();
+//                    if(rcv_ach.getAdapter() instanceof ReachedAchRcvAdapter)
+//                        rcv_ach.setAdapter(adapter);
+//                    titleBar.setTitle(achKind == Constants.ACH_CITY ? "探索" : "成就");
+//                }
+                back();
             }
 
             @Override
@@ -164,5 +166,19 @@ public class MyAchieveActivity extends SuperActivity {
             }
         });
         logic.sendRequest();
+    }
+
+    @Override
+    public void back(){
+        if(adapter.isNeedHead())
+            super.back();
+        else{
+            adapter.setNeedHead(true);
+//                    adapter.setPgsList(createData());
+            getMyAchieves();
+            if(rcv_ach.getAdapter() instanceof ReachedAchRcvAdapter)
+                rcv_ach.setAdapter(adapter);
+            titleBar.setTitle(achKind == Constants.ACH_CITY ? "探索" : "成就");
+        }
     }
 }

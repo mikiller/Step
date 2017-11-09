@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:riv="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <com.westepper.step.customViews.TitleBar
@@ -10,8 +10,48 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         title:backStyle="ARROW"
-        title:titleTxt="排行榜" />
-    
+        title:titleTxt=" " />
+
+    <RadioGroup
+        android:id="@+id/rdg_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="25dp"
+        android:layout_alignBottom="@+id/titleBar"
+        android:layout_alignTop="@+id/titleBar">
+
+        <RadioButton
+            android:id="@+id/rdb_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:textColor="@color/selector_discovery_scope"
+            android:textSize="15sp"
+            android:text="好友榜"
+            android:padding="10dp"/>
+
+        <RadioButton
+            android:id="@+id/rdb_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:textColor="@color/selector_discovery_scope"
+            android:textSize="15sp"
+            android:text="总排行"
+            android:padding="10dp"
+            android:checked="true"/>
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/titleBar">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="234dp"
@@ -43,17 +83,19 @@
 
                 <com.uilib.joooonho.SelectableRoundedImageView
                     android:id="@+id/iv_second"
-                    android:layout_width="match_parent"
+                    android:layout_width="61dp"
                     android:layout_height="61dp"
                     android:src="@mipmap/ic_default_head"
+                    android:scaleType="centerCrop"
+                    android:layout_centerInParent="true"
                     riv:sriv_oval="true" />
 
                 <TextView
                     android:text="NO.2"
                     style="@style/paihang_txt_no"
                     android:background="@mipmap/ic_second"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
+                    android:paddingLeft="22dp"
+                    android:paddingRight="22dp"
                     android:paddingBottom="0dp"/>
             </RelativeLayout>
 
@@ -64,17 +106,19 @@
 
                 <com.uilib.joooonho.SelectableRoundedImageView
                     android:id="@+id/iv_first"
-                    android:layout_width="match_parent"
+                    android:layout_width="81dp"
                     android:layout_height="81dp"
                     android:src="@mipmap/ic_default_head"
+                    android:scaleType="centerCrop"
+                    android:layout_centerInParent="true"
                     riv:sriv_oval="true" />
 
                 <TextView
                     android:text="NO.1"
                     style="@style/paihang_txt_no"
                     android:background="@mipmap/ic_first"
-                    android:paddingLeft="25dp"
-                    android:paddingRight="25dp"
+                    android:paddingLeft="27dp"
+                    android:paddingRight="27dp"
                     android:paddingBottom="0dp"/>
             </RelativeLayout>
 
@@ -85,17 +129,19 @@
 
                 <com.uilib.joooonho.SelectableRoundedImageView
                     android:id="@+id/iv_third"
-                    android:layout_width="match_parent"
+                    android:layout_width="61dp"
                     android:layout_height="61dp"
                     android:src="@mipmap/ic_default_head"
+                    android:scaleType="centerCrop"
+                    android:layout_centerInParent="true"
                     riv:sriv_oval="true" />
 
                 <TextView
                     android:text="NO.3"
                     style="@style/paihang_txt_no"
                     android:background="@mipmap/ic_third"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
+                    android:paddingLeft="22dp"
+                    android:paddingRight="22dp"
                     android:paddingBottom="0dp"/>
             </RelativeLayout>
         </LinearLayout>
@@ -135,4 +181,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"/>
-</LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

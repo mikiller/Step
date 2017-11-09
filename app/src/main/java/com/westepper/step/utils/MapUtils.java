@@ -47,7 +47,6 @@ import java.util.TimerTask;
 
 public class MapUtils {
     private static final String TAG = MapUtils.class.getSimpleName();
-    //    private Context mContext;
     private AMap aMap;
     private MyLocationStyle locationStyle;
     private AMapLocationClient locationClient;
@@ -383,7 +382,8 @@ public class MapUtils {
                         Log.e(TAG, "map location: " + aMapLocation.getLatitude() + ", " + aMapLocation.getLongitude());
                         mapLocation.setLatitude(aMapLocation.getLatitude());
                         mapLocation.setLongitude(aMapLocation.getLongitude());
-                        mapLocation.setAddress(aMapLocation.getAddress());
+                        mapLocation.setCity(aMapLocation.getCity());
+                        mapLocation.setPoiName(aMapLocation.getPoiName());
                     }
                 }
             });

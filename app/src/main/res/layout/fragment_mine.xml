@@ -173,11 +173,13 @@
 
                         <com.uilib.joooonho.SelectableRoundedImageView
                             android:id="@+id/iv_first"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:layout_marginBottom="5dp"
                             android:layout_marginTop="10dp"
+                            android:layout_centerInParent="true"
                             android:src="@mipmap/ic_default_head"
+                            android:scaleType="centerCrop"
                             menu:sriv_oval="true" />
 
                         <TextView
@@ -194,11 +196,13 @@
 
                         <com.uilib.joooonho.SelectableRoundedImageView
                             android:id="@+id/iv_second"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:layout_marginBottom="5dp"
                             android:layout_marginTop="10dp"
+                            android:layout_centerInParent="true"
                             android:src="@mipmap/ic_default_head"
+                            android:scaleType="centerCrop"
                             menu:sriv_oval="true" />
 
                         <TextView
@@ -215,11 +219,13 @@
 
                         <com.uilib.joooonho.SelectableRoundedImageView
                             android:id="@+id/iv_third"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:layout_marginBottom="5dp"
                             android:layout_marginTop="10dp"
+                            android:layout_centerInParent="true"
                             android:src="@mipmap/ic_default_head"
+                            android:scaleType="centerCrop"
                             menu:sriv_oval="true" />
 
                         <TextView
@@ -257,7 +263,7 @@
                     android:id="@+id/menu_acheive"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    menu:menuIcon="@mipmap/ic_acheive_selected"
+                    menu:menuIcon="@mipmap/icon_acheive_selected"
                     menu:menuTitle="@string/menu_acheive"
                     menu:needNext="true" />
             </LinearLayout>
