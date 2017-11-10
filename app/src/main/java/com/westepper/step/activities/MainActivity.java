@@ -97,12 +97,12 @@ public class MainActivity extends SuperActivity {
     }
 
     private void getRankList(){
-        RankListLogic logic = new RankListLogic(this, new RankModel(Constants.RANK_ALL));
+        RankListLogic logic = new RankListLogic(this, new RankModel(Constants.RANK_FRIEND));
         logic.setCallback(new BaseLogic.LogicCallback<RankList>() {
             @Override
             public void onSuccess(RankList response) {
                 Intent intent = new Intent();
-                intent.putExtra(Constants.RANKLIST2, response);
+                intent.putExtra(Constants.RANKLIST1, response);
                 adapter.getItem(2).fragmentCallback(Constants.GET_RANK, intent);
             }
 

@@ -74,18 +74,18 @@ public class PaihangActivity extends SuperActivity {
         adapter = new PaihangRcvAdapter();
         rcv_paihang.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rcv_paihang.setAdapter(adapter);
-        updateRankList(allRankList);
+        updateRankList(friendRankList);
         rdg_title.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if(checkedId == R.id.rdb_friend) {
-                    if(friendRankList == null)
-                        getRankListLogic(Constants.RANK_FRIEND);
+                if(checkedId == R.id.rdb_all) {
+                    if(allRankList == null)
+                        getRankListLogic(Constants.RANK_ALL);
                     else
-                        updateRankList(friendRankList);
+                        updateRankList(allRankList);
 
                 }else{
-                    updateRankList(allRankList);
+                    updateRankList(friendRankList);
                 }
 
             }
@@ -113,8 +113,8 @@ public class PaihangActivity extends SuperActivity {
         logic.setCallback(new BaseLogic.LogicCallback<RankList>() {
             @Override
             public void onSuccess(RankList response) {
-                friendRankList = response;
-                updateRankList(friendRankList);
+                allRankList = response;
+                updateRankList(allRankList);
             }
 
             @Override

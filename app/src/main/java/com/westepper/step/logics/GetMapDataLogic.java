@@ -49,8 +49,6 @@ public class GetMapDataLogic extends BaseLogic<MapData> {
     public void onSuccess(MapData response) {
         if(response.getAchievementList().size() < 4){
             String[] kinds = new String[]{"1,城市探索", "2,我爱上海", "3,地标名胜", "4,限时成就"};
-//            int i = 0;
-//            List<Achieve> tmp = response.getAchievementList();
             for(int i = 0; i < kinds.length; i++) {
                 String[] achName = kinds[i].split(",");
                 if(i < response.getAchievementList().size()){
@@ -65,7 +63,6 @@ public class GetMapDataLogic extends BaseLogic<MapData> {
             }
         }
         String data = new Gson().toJson(response);
-//        Log.e(TAG, data);
         FileUtils.saveToLocal(data, FileUtils.getFilePath(context, Constants.MAP_DATA));
     }
 

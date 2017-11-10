@@ -8,7 +8,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -54,6 +56,8 @@ public class NewDiscoveryActivity extends SuperActivity {
     LinearLayout ll_pick;
     @BindView(R.id.picker)
     NumberPicker picker;
+    @BindView(R.id.btn_pick_sure)
+    Button btn_pick_sure;
 
     int disKind;
     String tmpFile;
@@ -194,26 +198,19 @@ public class NewDiscoveryActivity extends SuperActivity {
     }
 
     private void createPeoplePicker(final MyMenuItem menu){
-        final String[] values = new String[]{"不限", "1", "2", "3", "4", "", "", ""};
-        createPicker(values, menu, 4, PICKTYPE_PEOPLE);
+        final String[] values = new String[]{"不限", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+        createPicker(values, menu, 10, PICKTYPE_PEOPLE);
     }
 
     private void createDatePicker(final MyMenuItem menu){
-        String[] dates = new String[8];
+        String[] dates = new String[11];
         dates[0] = "不限";
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTime(new Date());
-//        for(int i = 1; i < dates.length; i++) {
-//            calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 1);
-//            dates[i] = sdf.format(calendar.getTime());
-//        }
         MXTimeUtils.getNextDates("yyyy年MM月dd日", dates, 1);
         createPicker(dates, menu, 7, PICKTYPE_DATE);
     }
 
     private void createPrivacyPicker(final MyMenuItem menu){
-        final String[] values = new String[]{"公开", "好友可见", "仅陌生人可见", "", "", "", "", ""};
+        final String[] values = new String[]{"公开", "好友可见", "仅陌生人可见", "", "", "", "", "", "", "", "", ""};
         createPicker(values, menu, 2, PICKTYPE_PRIVACY);
     }
 
@@ -233,28 +230,49 @@ public class NewDiscoveryActivity extends SuperActivity {
                 break;
         }
         picker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-        picker.setOnScrollListener(new NumberPicker.OnScrollListener() {
+        btn_pick_sure.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onScrollStateChange(NumberPicker view, int scrollState) {
-                if(scrollState == SCROLL_STATE_IDLE){
-                    switch (pickType) {
-                        case PICKTYPE_DATE:
-                            dateNum = view.getValue();
-                            setDate(values[dateNum]);
+            public void onClick(View v) {
+                switch (pickType) {
+                    case PICKTYPE_DATE:
+                        dateNum = picker.getValue();
+                        setDate(values[dateNum]);
                         break;
-                        case PICKTYPE_PEOPLE:
-                            peopleNum = view.getValue();
-                            break;
-                        case PICKTYPE_PRIVACY:
-                            privacyNum = view.getValue();
-                            setPrivacy();
-                            break;
-                    }
-                    menu.setSubText(values[view.getValue()]);
-                    ll_pick.setVisibility(View.GONE);
+                    case PICKTYPE_PEOPLE:
+                        peopleNum = picker.getValue();
+                        break;
+                    case PICKTYPE_PRIVACY:
+                        privacyNum = picker.getValue();
+                        setPrivacy();
+                        break;
                 }
+                menu.setSubText(values[picker.getValue()]);
+                ll_pick.setVisibility(View.GONE);
             }
         });
+//        picker.setOnScrollListener(new NumberPicker.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChange(NumberPicker view, int scrollState) {
+//                Log.e(TAG, "scrollstate: " + scrollState);
+//                if(scrollState == SCROLL_STATE_IDLE){
+//                    switch (pickType) {
+//                        case PICKTYPE_DATE:
+//                            dateNum = view.getValue();
+//                            setDate(values[dateNum]);
+//                        break;
+//                        case PICKTYPE_PEOPLE:
+//                            peopleNum = view.getValue();
+//                            break;
+//                        case PICKTYPE_PRIVACY:
+//                            privacyNum = view.getValue();
+//                            setPrivacy();
+//                            break;
+//                    }
+//                    menu.setSubText(values[view.getValue()]);
+//                    ll_pick.setVisibility(View.GONE);
+//                }
+//            }
+//        });
     }
 
     private void setDate(String time){
@@ -298,5 +316,14 @@ public class NewDiscoveryActivity extends SuperActivity {
             adapter.setPoiItem((PoiItem) data.getParcelableExtra(Constants.POIITEM));
         }
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK&& ll_pick.getVisibility() == View.VISIBLE) {
+            ll_pick.setVisibility(View.GONE);
+            return true;
+        }else
+            return super.onKeyDown(keyCode, event);
     }
 }

@@ -95,7 +95,7 @@ public class MapUtils {
 
     public void init(Context context, AMap aMap) {
         this.aMap = aMap;
-        initLocationStyle(context, 2000);
+        initLocationStyle(context, 4000);
         initLocationClient(context);
         initGeoClient(context);
     }
@@ -127,8 +127,6 @@ public class MapUtils {
         aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
             @Override
             public void onTouch(MotionEvent motionEvent) {
-                if(motionEvent.getPointerCount() == 2 )
-                    return;
                 if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
                     relocationTimer.cancel();
                     aMap.setMyLocationEnabled(false);
@@ -142,7 +140,7 @@ public class MapUtils {
                                 aMap.setMyLocationEnabled(true);
                             }
                         }
-                    }, 5000);
+                    }, 8000);
                 }
             }
         });

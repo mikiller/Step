@@ -106,12 +106,10 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
     @Override
     protected void initView() {
         mapView.onCreate(saveBundle);
-
-
         initMapUtil();
         initAcheiveSetting();
 
-
+        search.setOnClickListener(this);
         btn_acheivement.setOnClickListener(this);
         rdg_scope.setOnCheckedChangeListener(this);
         rdg_kind.setOnCheckedChangeListener(this);
@@ -243,9 +241,9 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
             @Override
             public void onFailed(String code, String msg, DiscoveryList localData) {
-                if ("0".equals(code)) {
+                    adapter.setDataList(localData == null ? null : localData.getDiscoveryList());
                     Toast.makeText(getActivity(), "未搜到您想要的结果，".concat(msg), Toast.LENGTH_SHORT).show();
-                }
+
             }
         });
         logic.sendRequest();
@@ -297,6 +295,9 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.edt_search:
+                commitInput.setNeedShow(false);
+                break;
             case R.id.btn_acheivement:
                 layout_achSetting.show();
                 break;

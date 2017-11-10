@@ -36,6 +36,7 @@ import com.westepper.step.logics.JoinLogic;
 import com.westepper.step.models.CommitModel;
 import com.westepper.step.models.JoinModel;
 import com.westepper.step.responses.JoinResponse;
+import com.westepper.step.utils.MXPreferenceUtils;
 import com.westepper.step.utils.MXTimeUtils;
 import com.westepper.step.widgets.CommitGlobalLayoutListener;
 import com.westepper.step.responses.Commit;
@@ -146,21 +147,20 @@ public class DiscoveryDetailActivity extends SuperActivity {
                 }, R.id.btn_mood, R.id.btn_outgo).setCustomBtnText("举报", "报错").show();
             }
         });
-        //for test
-
 
         vp_img.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             int minHeight = DisplayUtil.getScreenWidth(DiscoveryDetailActivity.this) / 4 * 3;
             int maxHeight = DisplayUtil.getScreenHeight(DiscoveryDetailActivity.this) / 4 * 3;
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 ImgDetail img = vpAdapter.getImgs().get(position);
                 int fromHeight = getHeight(img.getImgHeight(), img.getImgWidth());
                 int nextHeight = fromHeight;
-                    if (position < vpAdapter.getCount() - 1) {
-                        ImgDetail img1 = vpAdapter.getImgs().get(position + 1);
-                        nextHeight = getHeight(img1.getImgHeight(), img1.getImgWidth());
-                    }
+                if (position < vpAdapter.getCount() - 1) {
+                    ImgDetail img1 = vpAdapter.getImgs().get(position + 1);
+                    nextHeight = getHeight(img1.getImgHeight(), img1.getImgWidth());
+                }
                 int height = (int) (fromHeight * (1 - positionOffset) + nextHeight * positionOffset);
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) vp_img.getLayoutParams();
                 lp.height = height;
@@ -168,8 +168,8 @@ public class DiscoveryDetailActivity extends SuperActivity {
             }
 
             private int getHeight(int src, int width) {
-                if(width < DisplayUtil.getScreenWidth(DiscoveryDetailActivity.this ))
-                    src = (int) (1.0f * src / width * DisplayUtil.getScreenWidth(DiscoveryDetailActivity.this ));
+                if (width < DisplayUtil.getScreenWidth(DiscoveryDetailActivity.this))
+                    src = (int) (1.0f * src / width * DisplayUtil.getScreenWidth(DiscoveryDetailActivity.this));
                 return src < minHeight ? minHeight : (src > maxHeight ? maxHeight : src);
             }
 
@@ -185,7 +185,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
         });
         vpAdapter = new DetailImgVpAdapter(this, discovery.getImgList());
         vp_img.setAdapter(vpAdapter);
-        if(vpAdapter.getCount() == 0){
+        if (vpAdapter.getCount() == 0) {
             startAlpha(0, 1f);
             vp_img.getLayoutParams().height = 0;
         }
@@ -198,7 +198,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
         rcvAdapter.setCommitListener(new DisDetailRcvAdapter.OnCommitListener() {
             @Override
             public void onCommit(final String id, String nickName) {
-                if(!commitInput.isVisible()){
+                if (!commitInput.isVisible()) {
                     commitInput.setNeedTransY(false);
                     commitInput.setHint(String.format("回复:%1$s", nickName));
                     showInputMethod(commitInput);
@@ -219,83 +219,24 @@ public class DiscoveryDetailActivity extends SuperActivity {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int visibleItemPos = rcvMgr.findFirstVisibleItemPosition();
-                if(visibleItemPos <= 1){
+                if (visibleItemPos <= 1) {
                     titleBar.setTitle(discovery.getNickName());
-                }else{
+                } else {
                     titleBar.setTitle("留言");
                 }
             }
         });
+
         ll_joinOtp.setVisibility(discovery.getDiscoveryKind() == Constants.MOOD ? View.GONE : View.VISIBLE);
         if (discovery.getDiscoveryKind() == Constants.OUTGO) {
-            tv_joinNum.setText(String.format(getString(R.string.join_num), discovery.getTotalCount(), discovery.getJoinCount()));
-            tv_joinOpt.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //show dlg for input join words
-                    //after get team id from yunxin send request
-                    CustomDialog dlg = new CustomDialog(DiscoveryDetailActivity.this);
-                    dlg.setTitle("已报名参加约行").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
-                        @Override
-                        public void onCancel() {
-
-                        }
-
-                        @Override
-                        public void onSure() {
-                            JoinLogic logic = new JoinLogic(DiscoveryDetailActivity.this, new JoinModel(discovery.getDiscoveryId(), "0"));
-                            logic.setCallback(new BaseLogic.LogicCallback<JoinResponse>() {
-                                @Override
-                                public void onSuccess(JoinResponse response) {
-                                    tv_joinNum.setText(String.format(getString(R.string.join_num), discovery.getTotalCount(), response.getJoinCount()));
-                                    tv_joinOpt.setText("已报名");
-                                    tv_joinOpt.setEnabled(false);
-                                }
-
-                                @Override
-                                public void onFailed(String code, String msg, JoinResponse localData) {
-
-                                }
-                            });
-                            logic.sendRequest();
-                        }
-                    }).show();
-
-                }
-            });
-
-            timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    if(ll_joinOtp == null)
-                        return;
-                    ll_joinOtp.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(!MXTimeUtils.isOutofLimit(discovery.getPushTime(), MXTimeUtils.DAY)) {
-                                String time = MXTimeUtils.getLeftTime("HH:mm:ss", discovery.getPushTime(), MXTimeUtils.DAY);
-                                String[] times = time.split(":");
-                                tv_hour.setText(times[0]);
-                                tv_min.setText(times[1]);
-                                tv_sec.setText(times[2]);
-                            }else{
-                                ll_leftTime.setVisibility(View.GONE);
-                                tv_joinOpt.setEnabled(false);
-                                tv_joinOpt.setText("约行已结束");
-                            }
-                        }
-                    });
-
-                }
-            }, 0, 1000);
+            initJoinOpt();
         }
 
 
         vp_img.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                if(!commitInput.isNeedTransY())
+                if (!commitInput.isNeedTransY())
                     return;
                 maxRcvTransY = vp_img.getMeasuredHeight() - titleBar.getHeight();
                 maxImgTransY = (titleBar.getHeight() - rl_img.getHeight()) * 0.4f;
@@ -309,10 +250,75 @@ public class DiscoveryDetailActivity extends SuperActivity {
         tv_imgNum.setText(imgCount);
     }
 
+    private void initJoinOpt() {
+        tv_joinNum.setText(String.format(getString(R.string.join_num), discovery.getTotalCount(), discovery.getJoinCount()));
+        tv_joinOpt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //show dlg for input join words
+                //after get team id from yunxin send request
+                CustomDialog dlg = new CustomDialog(DiscoveryDetailActivity.this);
+                dlg.setTitle("已报名参加约行").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
+                    @Override
+                    public void onCancel() {
+
+                    }
+
+                    @Override
+                    public void onSure() {
+                        JoinLogic logic = new JoinLogic(DiscoveryDetailActivity.this, new JoinModel(discovery.getDiscoveryId(), "0"));
+                        logic.setCallback(new BaseLogic.LogicCallback<JoinResponse>() {
+                            @Override
+                            public void onSuccess(JoinResponse response) {
+                                tv_joinNum.setText(String.format(getString(R.string.join_num), discovery.getTotalCount(), response.getJoinCount()));
+                                tv_joinOpt.setText("已报名");
+                                tv_joinOpt.setEnabled(false);
+                            }
+
+                            @Override
+                            public void onFailed(String code, String msg, JoinResponse localData) {
+
+                            }
+                        });
+                        logic.sendRequest();
+                    }
+                }).show();
+
+            }
+        });
+        tv_joinOpt.setEnabled(!discovery.getDiscoveryUserId().equals(MXPreferenceUtils.getInstance().getString("account")));
+
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (ll_joinOtp == null)
+                    return;
+                ll_joinOtp.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!MXTimeUtils.isOutofLimit(discovery.getPushTime(), MXTimeUtils.DAY)) {
+                            String time = MXTimeUtils.getLeftTime("HH:mm:ss", discovery.getPushTime(), MXTimeUtils.DAY);
+                            String[] times = time.split(":");
+                            tv_hour.setText(times[0]);
+                            tv_min.setText(times[1]);
+                            tv_sec.setText(times[2]);
+                        } else {
+                            ll_leftTime.setVisibility(View.GONE);
+                            tv_joinOpt.setEnabled(false);
+                            tv_joinOpt.setText("约行已结束");
+                        }
+                    }
+                });
+
+            }
+        }, 0, 1000);
+    }
+
     @Override
     protected void initData() {
-        if (scope == Constants.FRIEND && discovery.getCommitNum() > 0){
-            if(logic == null) {
+        if (scope == Constants.FRIEND && discovery.getCommitNum() > 0) {
+            if (logic == null) {
                 logic = new GetCommitListLogic(this, new CommitModel(discovery.getDiscoveryId(), discovery.getDiscoveryKind())).setAdapter(rcvAdapter);
             }
             logic.sendRequest();
@@ -326,7 +332,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
 
     @Override
     protected void onDestroy() {
-        if(timer != null) {
+        if (timer != null) {
             timer.cancel();
             timer = null;
         }
@@ -398,7 +404,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
     private boolean canMove() {
         boolean rst = true;
 
-        if(commitInput.isVisible()){
+        if (commitInput.isVisible()) {
             Rect rect = new Rect();
             commitInput.getGlobalVisibleRect(rect);
             if (ActDownY > rect.top) {

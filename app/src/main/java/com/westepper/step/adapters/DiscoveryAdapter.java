@@ -127,6 +127,8 @@ public class DiscoveryAdapter extends PagerAdapter {
         if(discover.getDiscoveryKind() == Constants.OUTGO) {
             if(MXTimeUtils.isOutofLimit(discover.getPushTime(), MXTimeUtils.DAY))
                 holder.setBtnJoinEnabled(false, "已结束");
+            else if(discover.getDiscoveryUserId().equals(MXPreferenceUtils.getInstance().getString("account")))
+                holder.setBtnJoinEnabled(false, "参加约行");
             else
                 holder.setBtnJoinEnabled(true, "参加约行 ".concat(MXTimeUtils.getLeftTime(discover.getPushTime(), MXTimeUtils.DAY)));
         }

@@ -30,7 +30,8 @@
             android:textColor="@color/selector_discovery_scope"
             android:textSize="15sp"
             android:text="好友榜"
-            android:padding="10dp"/>
+            android:padding="10dp"
+            android:checked="true"/>
 
         <RadioButton
             android:id="@+id/rdb_all"
@@ -40,8 +41,7 @@
             android:textColor="@color/selector_discovery_scope"
             android:textSize="15sp"
             android:text="总排行"
-            android:padding="10dp"
-            android:checked="true"/>
+            android:padding="10dp" />
     </RadioGroup>
 
     <LinearLayout

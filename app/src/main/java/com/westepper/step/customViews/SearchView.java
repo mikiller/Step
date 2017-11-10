@@ -46,4 +46,8 @@ public class SearchView extends LinearLayout {
     public void setHeader(String url){
 //        GlideImageLoader.getInstance().loadImage(getContext(), url, R.mipmap.ic_default_head, iv_header, 0);
     }
+
+    public void setOnClickListener(OnClickListener listener){
+        edt_search.setOnClickListener(listener);
+    }
 }

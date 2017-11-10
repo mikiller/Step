@@ -95,10 +95,11 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:drawableLeft="@mipmap/ic_city3"
+                android:drawablePadding="5dp"
                 android:text="上海市"/>
 
             <TextView
-                android:id="@+id/btn_good"
+                android:id="@+id/tv_good"
                 style="@style/hint_text_style2"
                 android:text="0"
                 android:drawableLeft="@mipmap/ic_good2"
@@ -106,7 +107,7 @@
                 android:layout_marginRight="18dp"/>
 
             <TextView
-                android:id="@+id/btn_commit"
+                android:id="@+id/tv_commit"
                 style="@style/hint_text_style2"
                 android:drawableLeft="@mipmap/ic_commit1"
                 android:drawablePadding="5dp"

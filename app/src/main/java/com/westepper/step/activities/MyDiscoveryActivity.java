@@ -140,7 +140,7 @@ public class MyDiscoveryActivity extends SuperActivity {
 
     @Override
     protected void initData() {
-        getMyDiscovery(page);
+        //getMyDiscovery(page);
         swipeLayout.setRefreshing(true);
     }
 
@@ -162,12 +162,11 @@ public class MyDiscoveryActivity extends SuperActivity {
             @Override
             public void onFailed(String code, String msg, DiscoveryList localData) {
                 Log.e(TAG, code + ", " + msg);
-                if(!"0".equals(code)){
-                    Toast.makeText(MyDiscoveryActivity.this, msg, Toast.LENGTH_SHORT).show();
-                }else if(swipeLayout.isRefreshing()){
+                if(swipeLayout.isRefreshing()){
                     swipeLayout.setRefreshing(false);
                     adapter.setDiscoveryList(new ArrayList<Discovery>());
-                    Toast.makeText(MyDiscoveryActivity.this, "没有你的相关约行", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MyDiscoveryActivity.this, msg, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MyDiscoveryActivity.this, "没有你的相关约行", Toast.LENGTH_SHORT).show();
                 }else if(swipeLayout.isLoadingMore()){
                     swipeLayout.setLoadingMore(false);
                     Toast.makeText(MyDiscoveryActivity.this, "没有更多了", Toast.LENGTH_SHORT).show();

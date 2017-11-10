@@ -165,7 +165,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             GlideImageLoader.getInstance().loadImage(getActivity(), filePath, R.mipmap.ic_addcover, iv_header_bg, 0);
             updateCover(filePath);
         }else if(type == Constants.GET_RANK){
-            rankList = (RankList) data.getSerializableExtra(Constants.RANKLIST2);
+            rankList = (RankList) data.getSerializableExtra(Constants.RANKLIST1);
             menu_paihang.setSubText("NO." + rankList.getUserRank());
             for(int i = 0; i < ((rankList.getRankList().size() < 3) ? rankList.getRankList().size() : 3); i++){
                 GlideImageLoader.getInstance().loadImage(getActivity(), rankList.getRankList().get(i).getHeadUrl(), R.mipmap.ic_default_head, rankHeads[i], 0);
@@ -195,16 +195,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 ActivityManager.startActivityforResult(getActivity(), UserInfoActivity.class, Constants.CHANGE_HEADER, args);
                 break;
             case R.id.btn_setting:
-//                args = new HashMap<>();
-//                Privacy privacy = userInfo.getPrivacy_info();
-//                privacy.setUserId(userInfo.getUserId());
-//                privacy.setToken(userInfo.getToken());
-//                args.put(Constants.PRIVACY, privacy);
                 ActivityManager.startActivity(getActivity(), SettingActivity.class);
                 break;
             case R.id.menu_paihang:
                 args = new HashMap<>();
-                args.put(Constants.RANKLIST2, rankList);
+                args.put(Constants.RANKLIST1, rankList);
                 ActivityManager.startActivity(getActivity(), PaihangActivity.class, args);
                 break;
             case R.id.menu_mood:
