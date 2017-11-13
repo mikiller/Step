@@ -26,6 +26,7 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.autonavi.amap.mapcore.Inner_3dMap_location;
 import com.westepper.step.R;
+import com.westepper.step.base.Constants;
 import com.westepper.step.responses.Area;
 import com.westepper.step.responses.Graphics;
 
@@ -66,7 +67,7 @@ public class MapUtils {
 
     private MapUtils() {
         markerImg = BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker);
-        mapLocation = new Inner_3dMap_location("");
+        //mapLocation = new Inner_3dMap_location("");
 //        pos_selected = BitmapDescriptorFactory.fromResource(R.mipmap.icon_pos_selected);
 //        isMatched = new HashMap<>();
     }
@@ -93,10 +94,14 @@ public class MapUtils {
         aMap.animateCamera(new CameraUpdateFactory().newCameraPosition(new CameraPosition(latLng, currentZoom, 0, 0)));
     }
 
+    public void moveToUserPos(){
+        moveCamera(new LatLng(mapLocation.getLatitude(), mapLocation.getLongitude()));
+    }
+
     public void init(Context context, AMap aMap) {
         this.aMap = aMap;
-        initLocationStyle(context, 4000);
-        initLocationClient(context);
+        initLocationStyle(context, 2000);
+//        initLocationClient(context);
         initGeoClient(context);
     }
 
@@ -104,7 +109,7 @@ public class MapUtils {
         setCustomStyle(context);
         createLocalStyle(interval);
         aMap.getUiSettings().setZoomControlsEnabled(false);
-        aMap.moveCamera(CameraUpdateFactory.zoomTo(currentZoom));
+        //aMap.animateCamera(CameraUpdateFactory.zoomTo(currentZoom));
 
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
             @Override
@@ -116,7 +121,7 @@ public class MapUtils {
             public void onCameraChangeFinish(CameraPosition cameraPosition) {
                 if (!needArea)
                     return;
-                if (currentZoom < 10) {
+                if (currentZoom < 11) {
                     hideArea();
                 } else {
                     showArea();
@@ -124,26 +129,41 @@ public class MapUtils {
             }
         });
 
-        aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
+        aMap.setOnMyLocationChangeListener(new AMap.OnMyLocationChangeListener() {
             @Override
-            public void onTouch(MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-                    relocationTimer.cancel();
-                    aMap.setMyLocationEnabled(false);
-                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP ) {
-                    relocationTimer = new Timer();
-                    relocationTimer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            if(needArea) {
-                                aMap.setMyLocationStyle(locationStyle);
-                                aMap.setMyLocationEnabled(true);
-                            }
-                        }
-                    }, 8000);
+            public void onMyLocationChange(Location location) {
+                if(mapLocation == null) {
+                    moveCamera(new LatLng(location.getLatitude(), location.getLongitude()));
+                    if (getLocationListener != null){
+                        getLocationListener.onGetLocation(location.getLatitude(), location.getLongitude());
+                    }
                 }
+                mapLocation = (Inner_3dMap_location) location;
+//                Log.e(TAG, String.format("relocation: %1$f, %2$f", mapLocation.getLatitude(), mapLocation.getLongitude()));
+
             }
         });
+
+//        aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
+//            @Override
+//            public void onTouch(MotionEvent motionEvent) {
+//                if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+//                    relocationTimer.cancel();
+//                    aMap.setMyLocationEnabled(false);
+//                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP ) {
+//                    relocationTimer = new Timer();
+//                    relocationTimer.schedule(new TimerTask() {
+//                        @Override
+//                        public void run() {
+//                            if(needArea) {
+//                                aMap.setMyLocationStyle(locationStyle);
+//                                aMap.setMyLocationEnabled(true);
+//                            }
+//                        }
+//                    }, 8000);
+//                }
+//            }
+//        });
 
     }
 
@@ -178,13 +198,9 @@ public class MapUtils {
         }
     }
 
-    public void stopLocalStyle() {
-        aMap.setMyLocationEnabled(false);
-    }
-
     private MyLocationStyle createLocalStyle(long interval) {
         locationStyle = new MyLocationStyle();
-        locationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW);
+        locationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
         locationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_loaction));
         locationStyle.anchor(0.5f, 0.5f);
         locationStyle.radiusFillColor(Color.TRANSPARENT);
@@ -193,6 +209,7 @@ public class MapUtils {
         locationStyle.interval(interval);
         aMap.setMyLocationStyle(locationStyle);
         aMap.setMyLocationEnabled(true);
+
         return locationStyle;
     }
 
@@ -228,60 +245,27 @@ public class MapUtils {
         needArea = isNeed;
         if (needArea) {
             showArea();
-            aMap.setMyLocationStyle(locationStyle);
+            moveToUserPos();
+//            moveCamera(new LatLng(mapLocation.getLatitude(), mapLocation.getLongitude()));
         } else
             hideArea();
-        aMap.setMyLocationEnabled(needArea);
+        locationStyle.showMyLocation(needArea);
     }
 
-    public void setAMapListeners() {
-        aMap.setOnMyLocationChangeListener(new AMap.OnMyLocationChangeListener() {
-            @Override
-            public void onMyLocationChange(Location location) {
-                mapLocation = (Inner_3dMap_location) location;
-                Log.e(TAG, String.format("relocation: %1$f, %2$f", mapLocation.getLatitude(), mapLocation.getLongitude()));
-                if (getLocationListener != null)
-                    getLocationListener.onGetLocation(mapLocation.getLatitude(), mapLocation.getLongitude());
-            }
-        });
-        aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
-            float lastX, lastY;
-
-            @Override
-            public void onTouch(MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-//                        if(locationTimer != null) {
-//                            locationTimer.cancel();
-//                            locationTimer = null;
-//                        }
-                        //aMap.setMyLocationEnabled(false);
-                        lastX = motionEvent.getRawX();
-                        lastY = motionEvent.getRawY();
-//                        Log.e(TAG, "click map");
-//                        if(hasMarkerChecked) {
-//                            onMarkerUnchecked();
-//                        }
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-//                        if (hasMarkerChecked) {
-//                            if (Math.abs(motionEvent.getRawX() - lastX) > 10.0f || Math.abs(motionEvent.getRawY() - lastY) > 10.0f) {
-//                                onMarkerUnchecked();
-//                            }
-//                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-//                        locationTimer = new Timer(false);
-//                        locationTimer.schedule(new TimerTask() {
-//                            @Override
-//                            public void run() {
-//                                initLocationStyle(CommonConstanse.TIMER_TASK_DELAY);
-//                            }
-//                        }, CommonConstanse.RELOCATION_DELAY);
-                        break;
-                }
-            }
-        });
+    public LatLng getCenterLatLng(String id){
+        if(achieveAreas.get(id) != null){
+            if(achieveAreas.get(id).getAreaType() == Area.POLYGON)
+                return achieveAreas.get(id).getBorderList().get(0);
+            else
+                return achieveAreas.get(id).getCircle().getLatlng();
+        }else if(areas.get(id) != null){
+            if(areas.get(id).getAreaType() == Area.POLYGON)
+                return areas.get(id).getBorderList().get(0);
+            else
+                return areas.get(id).getCircle().getLatlng();
+        } else{
+            return new LatLng(mapLocation.getLatitude(), mapLocation.getLongitude());
+        }
     }
 
     public void clearAll() {
@@ -446,6 +430,10 @@ public class MapUtils {
         poiSearch.setOnPoiSearchListener(listener);
         poiSearch.setBound(new PoiSearch.SearchBound(new LatLonPoint(mapLocation.getLatitude(), mapLocation.getLongitude()), 3000));
         poiSearch.searchPOIAsyn();
+    }
+
+    public void clearMapLocation(){
+        mapLocation = null;
     }
 
     public void destory() {

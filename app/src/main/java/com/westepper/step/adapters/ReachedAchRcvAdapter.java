@@ -99,9 +99,10 @@ public class ReachedAchRcvAdapter extends RecyclerView.Adapter<RecyclerView.View
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent();
-                    intent.putExtra(Constants.ACH_KIND, area.getAchieveAreaId());
+                    intent.putExtra(Constants.ACH_ID, area.getAchieveAreaId());
+                    intent.putExtra(Constants.ACH_CATEGORY, area.getCategory_id());
                     ((SuperActivity)mContext).setResult(Activity.RESULT_OK, intent);
-                    ((SuperActivity)mContext).back();
+                    ((SuperActivity)mContext).finish();
                 }
             });
         }

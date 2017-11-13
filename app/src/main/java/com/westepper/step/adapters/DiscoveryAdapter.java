@@ -26,6 +26,7 @@ import com.westepper.step.logics.CommitLogic;
 import com.westepper.step.logics.GoodLogic;
 import com.westepper.step.models.CommitModel;
 import com.westepper.step.models.DisModel;
+import com.westepper.step.responses.Commit;
 import com.westepper.step.responses.Discovery;
 import com.westepper.step.responses.GoodCount;
 import com.westepper.step.responses.ImgDetail;
@@ -107,6 +108,17 @@ public class DiscoveryAdapter extends PagerAdapter {
                         @Override
                         public void onSend(View focuseView, String txt) {
                             CommitLogic logic = new CommitLogic(container.getContext(), new CommitModel(id, discover.getDiscoveryId(), discover.getDiscoveryKind(), txt));
+                            logic.setCallback(new BaseLogic.LogicCallback<Commit>() {
+                                @Override
+                                public void onSuccess(Commit response) {
+                                    discover.setCommitNum(discover.getCommitNum() + 1);
+                                }
+
+                                @Override
+                                public void onFailed(String code, String msg, Commit localData) {
+
+                                }
+                            });
                             logic.setCallbackObject(commitInput, null).sendRequest();
 
                         }

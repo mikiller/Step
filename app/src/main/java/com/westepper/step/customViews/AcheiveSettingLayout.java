@@ -60,7 +60,7 @@ public class AcheiveSettingLayout extends RelativeLayout {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
-                    onItemChecked(btn_ach_map, null, "探索地图");
+                    onItemChecked(btn_ach_map, null, "探索地图", "-1");
                     if (lastPkg != null)
                         lastPkg.hideAchieveItems();
                 }
@@ -81,7 +81,7 @@ public class AcheiveSettingLayout extends RelativeLayout {
 //        for(int i = 0; i < icons.length; i++){
         for(Achieve ach : achieveList){
             AcheivePackage achPkg = new AcheivePackage(getContext());
-            achPkg.setTag(ach.getAchieveKind());
+            achPkg.setTag(ach.getAchieveCategory_id());
             achPkg.setAchIcon(getContext().getResources().getDrawable(icons[i++]));
             achPkg.setAchieve(ach);
             achPkg.setAchieveClickListener(new AcheivePackage.AchieveClickListener() {
@@ -100,8 +100,8 @@ public class AcheiveSettingLayout extends RelativeLayout {
                 }
 
                 @Override
-                public void onCheckAchieveArea(RadioButton item, String[] areaId, String achieveKind) {
-                    onItemChecked(item, areaId, achieveKind);
+                public void onCheckAchieveArea(RadioButton item, String[] areaId, String achieveKind, String centerId) {
+                    onItemChecked(item, areaId, achieveKind, centerId);
                 }
             });
             ll_ach.addView(achPkg);
@@ -115,14 +115,14 @@ public class AcheiveSettingLayout extends RelativeLayout {
         }
     }
 
-    private void onItemChecked(RadioButton item, String[] areaId, String achieveKind){
+    private void onItemChecked(RadioButton item, String[] areaId, String achieveKind, String centerId){
         if(!item.equals(lastItem)){
             lastItem.setChecked(false);
             lastItem = item;
         }
         hide();
         if(achieveSettingListener != null)
-            achieveSettingListener.onAchieveSelected(areaId, achieveKind);
+            achieveSettingListener.onAchieveSelected(areaId, achieveKind, centerId);
     }
 
     public void show(){
@@ -145,6 +145,6 @@ public class AcheiveSettingLayout extends RelativeLayout {
     }
 
     public interface onAchieveSettingListener{
-        void onAchieveSelected(String[] areaId, String achieveKind);
+        void onAchieveSelected(String[] areaId, String achieveKind, String centerId);
     }
 }

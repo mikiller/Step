@@ -24,6 +24,8 @@ public class Constants {
     public static final String PRIVACY = "PRIVACY";
     public static final String RANKLIST1 = "rank_friend";
     public static final String RANKLIST2 = "rank_all";
+    public static final String ACH_ID = "ach_ID";
+    public static final String ACH_CATEGORY = "ach_category";
     public static final int MOOD = 1;
     public static final int OUTGO = 2;
     public static final int FRIEND = 1;

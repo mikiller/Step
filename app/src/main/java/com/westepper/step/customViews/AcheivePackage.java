@@ -156,7 +156,7 @@ public class AcheivePackage extends LinearLayout {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked && achieveClickListener != null){
-                    achieveClickListener.onCheckAchieveArea(achItem, achieveArea.getAreaIds(), achieveArea.getAchieveAreaName());
+                    achieveClickListener.onCheckAchieveArea(achItem, achieveArea.getAreaIds(), achieveArea.getAchieveAreaName(), achieveArea.getAchievementCenter());
                 }
             }
         });
@@ -192,7 +192,7 @@ public class AcheivePackage extends LinearLayout {
 
     public interface AchieveClickListener{
         void onPackageClick(AcheivePackage pkg);
-        void onCheckAchieveArea(RadioButton item, String[] areaId, String achieveKind);
+        void onCheckAchieveArea(RadioButton item, String[] areaId, String achieveKind, String centerId);
     }
 
     @Override

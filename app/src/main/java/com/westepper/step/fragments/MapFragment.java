@@ -48,6 +48,7 @@ import com.westepper.step.utils.MXTimeUtils;
 import com.westepper.step.utils.MapUtils;
 
 import java.io.File;
+import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -150,7 +151,8 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
             public void onPageScrollStateChanged(int state) {
             }
         });
-        getDiscoveryList();
+
+
     }
 
     private void initMapUtil() {
@@ -173,11 +175,14 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
         layout_achSetting.setAchievementList(MainActivity.mapData.getAchievementList());
         layout_achSetting.setAchieveSettingListener(new AcheiveSettingLayout.onAchieveSettingListener() {
             @Override
-            public void onAchieveSelected(String[] areaId, String achieveKind) {
+            public void onAchieveSelected(String[] areaId, String achieveKind, String centerId) {
                 if (achieveKind.equals("探索地图")) {
                     mapUtils.setAreaType(Graphics.MAP);
+                    mapUtils.moveToUserPos();
                 } else {
                     mapUtils.setAreaType(Graphics.ACHEIVE, areaId);
+
+                    mapUtils.moveCamera(mapUtils.getCenterLatLng(centerId));
                 }
                 mapUtils.setShowAreaIds(areaId);
             }
@@ -204,17 +209,15 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
             AnimUtils.startObjectAnim(ll_search, "translationY", -searchHeight, 0, 300);
             AnimUtils.startObjectAnim(rl_head, "translationY", 0, headTransY, 300);
             AnimUtils.startObjectAnim(ll_discovery_opt, "translationY", 0, optTransY, 400);
-            AnimUtils.startObjectAnim(vp_discoveryList, "translationY", 0, vpTransY, 800);
+            AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vp_discoveryList.getTranslationY(), vpTransY, 800);
             mapUtils.removeMarker();
             mapUtils.setIsNeedArea(true);
         } else {
             AnimUtils.startObjectAnim(ll_search, "translationY", 0, -searchHeight, 300);
             AnimUtils.startObjectAnim(rl_head, "translationY", headTransY, 0, 300);
             AnimUtils.startObjectAnim(ll_discovery_opt, "translationY", optTransY, 0, 400);
-            AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vpTransY, 0, 500);
-            if (adapter.getCount() > 0)
-                mapUtils.addMarker(adapter.getItem(vp_discoveryList.getCurrentItem()).getUserPos().getLatlng());
             mapUtils.setIsNeedArea(false);
+            getDiscoveryList();
         }
 
     }
@@ -281,15 +284,20 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
         mapView.onDestroy();
 //        mapUtils.destory();
         mapUtils.setShowAreaIds(null);
+        mapUtils.clearMapLocation();
         super.onDestroyView();
     }
 
     @Override
     public void fragmentCallback(int type, Intent data) {
         if (type == Constants.SHOW_ACHIEVE_AREA) {
-            layout_achSetting.checkAchItem("城市探索", data.getStringExtra(Constants.ACH_KIND));
+            String achId = data.getStringExtra(Constants.ACH_ID);
+            String cateId = data.getStringExtra(Constants.ACH_CATEGORY);
+            layout_achSetting.checkAchItem(cateId, achId);
+//            layout_achSetting.checkAchItem("我爱上海", data.getStringExtra(Constants.ACH_KIND));
         } else
             setIsTrack(type == R.id.rdb_track);
+
     }
 
     @Override
