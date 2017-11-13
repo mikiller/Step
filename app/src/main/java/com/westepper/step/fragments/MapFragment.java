@@ -29,13 +29,16 @@ import com.westepper.step.customViews.AcheiveSettingLayout;
 import com.westepper.step.customViews.CommitEditView;
 import com.westepper.step.customViews.SearchView;
 import com.westepper.step.logics.CommitLogic;
+import com.westepper.step.logics.DiscoverCityLogic;
 import com.westepper.step.logics.GetDiscoveryListLogic;
 import com.westepper.step.models.CommitModel;
+import com.westepper.step.models.DiscoverCityModel;
 import com.westepper.step.models.DiscoveryListModel;
 import com.westepper.step.responses.Achieve;
 import com.westepper.step.responses.AchieveArea;
 import com.westepper.step.responses.Area;
 import com.westepper.step.responses.City;
+import com.westepper.step.responses.DiscoveredCities;
 import com.westepper.step.responses.DiscoveryList;
 import com.westepper.step.responses.MapData;
 import com.westepper.step.responses.Discovery;
@@ -44,6 +47,7 @@ import com.westepper.step.responses.UserPos;
 import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.AnimUtils;
 import com.westepper.step.utils.FileUtils;
+import com.westepper.step.utils.MXPreferenceUtils;
 import com.westepper.step.utils.MXTimeUtils;
 import com.westepper.step.utils.MapUtils;
 
@@ -168,6 +172,36 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
         for (Area area : MainActivity.mapData.getAchievementAreaList()) {
             mapUtils.addAchieveArea(area);
         }
+        mapUtils.setGetLocationListener(new MapUtils.OnGetLocationListener() {
+            @Override
+            public void onGetLocation(String cityName) {
+                DiscoverCityModel model = new DiscoverCityModel(cityName);
+                final String tmp = MXPreferenceUtils.getInstance().getString(model.getUserId() + "_discities");
+                DiscoveredCities disCity = new Gson().fromJson(tmp, DiscoveredCities.class);
+                if(disCity != null) {
+                    for (DiscoveredCities.DiscoverCity city : disCity.getDiscoverCitys()) {
+                        if (cityName.equals(city.getCity_name()))
+                            return;
+                    }
+                }
+                DiscoverCityLogic logic = new DiscoverCityLogic(getActivity(), new DiscoverCityModel(cityName));
+                logic.setCallback(new BaseLogic.LogicCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        CustomDialog dlg = new CustomDialog(getActivity());
+                        dlg.setLayoutRes(R.layout.layout_congratulation).setCancelable(true);
+                        dlg.show();
+                    }
+
+                    @Override
+                    public void onFailed(String code, String msg, Object localData) {
+
+                    }
+                });
+                logic.sendRequest();
+            }
+        });
+
     }
 
 

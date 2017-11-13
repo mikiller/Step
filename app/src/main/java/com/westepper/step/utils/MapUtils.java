@@ -135,7 +135,7 @@ public class MapUtils {
                 if(mapLocation == null) {
                     moveCamera(new LatLng(location.getLatitude(), location.getLongitude()));
                     if (getLocationListener != null){
-                        getLocationListener.onGetLocation(location.getLatitude(), location.getLongitude());
+                        getLocationListener.onGetLocation( ((Inner_3dMap_location) location).getCity());
                     }
                 }
                 mapLocation = (Inner_3dMap_location) location;
@@ -463,6 +463,6 @@ public class MapUtils {
     }
 
     public interface OnGetLocationListener {
-        void onGetLocation(double lat, double lon);
+        void onGetLocation(String cityName);
     }
 }
