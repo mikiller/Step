@@ -78,7 +78,7 @@ public class DiscoveryAdapter extends PagerAdapter {
         holder.setScope(scope);
         holder.setImgs(discover.getImgList());
         holder.setTime(discover.getPushTime());
-        holder.setGoodListener(getHasGood(discover.getDiscoveryId() + MXPreferenceUtils.getInstance().getString("account")), new View.OnClickListener() {
+        holder.setGoodListener(getHasGood(discover.getDiscoveryId() + SuperActivity.userInfo.getUserId()), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 v.setEnabled(false);

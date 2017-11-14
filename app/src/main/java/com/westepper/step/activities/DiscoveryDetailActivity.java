@@ -286,7 +286,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
 
             }
         });
-        tv_joinOpt.setEnabled(!discovery.getDiscoveryUserId().equals(MXPreferenceUtils.getInstance().getString("account")));
+        tv_joinOpt.setEnabled(!discovery.getDiscoveryUserId().equals(SuperActivity.userInfo.getUserId()));
 
         timer = new Timer();
         timer.schedule(new TimerTask() {

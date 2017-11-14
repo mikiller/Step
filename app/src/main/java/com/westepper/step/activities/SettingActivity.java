@@ -78,7 +78,7 @@ public class SettingActivity extends SuperActivity implements View.OnClickListen
     @BindView(R.id.rdg_outgoScope)
     RadioGroup rdg_outgoScope;
 
-    UserInfo userInfo;
+    //UserInfo userInfo;
     Privacy privacy;
     Gson gson  = new Gson();
     int[] moodScope = new int[]{R.id.rdb_moodScopeSelf, R.id.rdb_moodScopeAll, R.id.rdb_moodScopeFriend};
@@ -97,8 +97,6 @@ public class SettingActivity extends SuperActivity implements View.OnClickListen
 
     @Override
     protected void initView() {
-        String infoStr = MXPreferenceUtils.getInstance().getString(MXPreferenceUtils.getInstance().getString("account"));
-        userInfo = gson.fromJson(infoStr, UserInfo.class);
         privacy = userInfo.getPrivacy_info();
         titleBar.setTitleListener(new TitleBar.TitleListener() {
             @Override

@@ -14,6 +14,7 @@ import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.DPoint;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
@@ -109,7 +110,7 @@ public class MapUtils {
         setCustomStyle(context);
         createLocalStyle(interval);
         aMap.getUiSettings().setZoomControlsEnabled(false);
-        //aMap.animateCamera(CameraUpdateFactory.zoomTo(currentZoom));
+//        aMap.animateCamera(CameraUpdateFactory.zoomTo(currentZoom));
 
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
             @Override

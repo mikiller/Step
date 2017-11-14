@@ -96,7 +96,7 @@ public class Area implements Parcelable{
 
     public void setGraphicsType(int type){
         graphics.setGraphicsType(type);
-        graphics.setReached(reached);
+        //graphics.setReached(reached);
     }
 
     public void createGraphics(AMap aMap, int graphicType){
@@ -106,6 +106,7 @@ public class Area implements Parcelable{
             graphics = new Graphics(aMap, circle.getLatlng(), circle.getRadius());
         }
         setGraphicsType(graphicType);
+        setReached(false);
     }
 
     public void hide(){

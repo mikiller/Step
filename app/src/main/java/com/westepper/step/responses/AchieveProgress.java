@@ -10,7 +10,7 @@ public class AchieveProgress implements Serializable {
 
     private int categoryId;
     private String categoryName;
-    private int percent;
+    private double percent;
 //    private int iconId;
 
     public int getCategoryId() {
@@ -29,11 +29,11 @@ public class AchieveProgress implements Serializable {
         this.categoryName = categoryName;
     }
 
-    public int getPercent() {
+    public double getPercent() {
         return percent;
     }
 
-    public void setPercent(int percent) {
+    public void setPercent(double percent) {
         this.percent = percent;
     }
 

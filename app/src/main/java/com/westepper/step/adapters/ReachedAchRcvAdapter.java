@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Dimension;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.netlib.mkokhttp.builder.PostStringBuilder;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
 import com.westepper.step.activities.MainActivity;
@@ -46,21 +48,29 @@ public class ReachedAchRcvAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public void setAchAreaList(List<AchieveArea> achAreaList) {
         this.achAreaList = new ArrayList<>(achAreaList);
-        if(achAreaList.size() == 0)
+        if(achAreaList.size() == 0) {
+            reachIds.clear();
             return;
+        }
         int j = 0;
+        List<String> tmp = new ArrayList<>();
         for(String id : reachIds){
             for(int i = 0; i < achAreaList.size(); i++){
                 if(achAreaList.get(i).getAchieveAreaId().equals(id) && i != j){
                     Collections.swap(this.achAreaList, i, j++);
+                    tmp.add(id);
                     break;
                 }
             }
         }
+        reachIds.retainAll(tmp);
     }
 
     public void setReachIds(List<String> reachIds) {
-        this.reachIds = reachIds;
+
+        this.reachIds = new ArrayList<>(reachIds);
+
+        reachIds.add("19");
     }
 
     @Override
@@ -83,10 +93,10 @@ public class ReachedAchRcvAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
-        if(getItemViewType(position) == REACHTITLE || getItemViewType(position) == UNREACHTITLE){
-            dataOffset++;
-        }
+        if(position <= reachIds.size())
+            dataOffset = 1;
+        else
+            dataOffset = 2;
         if(holder instanceof AchieveHolder){
             int pos = holder.getAdapterPosition() - dataOffset;
             final AchieveArea area = achAreaList.get(pos);
@@ -115,12 +125,13 @@ public class ReachedAchRcvAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemViewType(int position) {
-        if(position == 0)
+        if(position == 0) {
             return reachIds.size() == 0 ? UNREACHTITLE : REACHTITLE;
-        else if(reachIds.size() > 0 && position == reachIds.size() + 1)
+        }else if(reachIds.size() > 0 && position == reachIds.size() + 1) {
             return UNREACHTITLE;
-        else
+        }else {
             return ACHIEVE;
+        }
     }
 
     protected class TitleHolder extends RecyclerView.ViewHolder{

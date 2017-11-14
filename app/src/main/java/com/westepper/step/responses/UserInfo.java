@@ -40,7 +40,7 @@ public class UserInfo extends SignModel {
 
     public void getBase64Img(int type){
         if(type != COVER)
-            headImg = BitmapUtils.getBmpBase64Str(headImg, 120, 120);
+            headImg = BitmapUtils.getBmpBase64Str(headImg, 240, 240);
         if(type != HEADIMG)
             cover = BitmapUtils.getBmpBase64Str(cover, -1, -1);
     }

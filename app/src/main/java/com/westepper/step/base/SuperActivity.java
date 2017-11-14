@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
 
+import com.westepper.step.responses.UserInfo;
 import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.PermissionUtils;
 
@@ -31,6 +32,7 @@ public abstract class SuperActivity extends AppCompatActivity {
     protected final String TAG = this.getClass().getSimpleName();
     Unbinder unbinder;
     protected int statusBarColor = Color.BLUE;
+    public static UserInfo userInfo;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

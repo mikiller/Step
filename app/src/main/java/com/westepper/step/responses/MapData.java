@@ -2,6 +2,7 @@ package com.westepper.step.responses;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class MapData implements Parcelable {
     private List<City> cityList = new ArrayList<>();
     private List<Area> achievementAreaList = new ArrayList<>();
     private List<Achieve> achievementList = new ArrayList<>();
+    private List<String> reachedAchieveIdList = new ArrayList<>();
 
     public MapData() {
     }
@@ -68,6 +70,30 @@ public class MapData implements Parcelable {
 
     public void setAchieve(Achieve area){
         achievementList.add(area);
+    }
+
+    public void setReachedAchieveIdList(List<String> ids){
+        this.reachedAchieveIdList = ids;
+    }
+
+    public List<String> getReachedAchieveIdList() {
+        return reachedAchieveIdList;
+    }
+
+    public void setAchieveMap(){
+        for(Achieve ach : achievementList){
+            ach.setAchieveAreaMap();
+        }
+    }
+
+    public AchieveArea getAchieveName(String id){
+        AchieveArea area = null;
+        for(Achieve ach : achievementList){
+            if((area = ach.getAchieveName(id)) != null)
+                break;
+        }
+
+        return area;
     }
 
     @Override

@@ -62,8 +62,7 @@ public class GetMapDataLogic extends BaseLogic<MapData> {
                 }
             }
         }
-        String data = new Gson().toJson(response);
-        FileUtils.saveToLocal(data, FileUtils.getFilePath(context, Constants.MAP_DATA));
+
     }
 
     @Override

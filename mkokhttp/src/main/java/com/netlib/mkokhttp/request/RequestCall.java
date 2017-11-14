@@ -107,7 +107,7 @@ public class RequestCall
 
                         if (!finalCallback.validateReponse(response, id))
                         {
-                            OkHttpUtils.getInstance().sendFailResultCallback(call, new IOException(response.code() + ":request failed"), finalCallback, id);
+                            OkHttpUtils.getInstance().sendFailResultCallback(call, new IOException(response.code() + ":request failed," + response.message()), finalCallback, id);
                             return;
                         }
 

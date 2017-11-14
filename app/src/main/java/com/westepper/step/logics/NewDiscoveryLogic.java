@@ -49,6 +49,8 @@ public class NewDiscoveryLogic extends BaseLogic {
         if("0".equals(code)){
             ((SuperActivity)context).back();
             Toast.makeText(context, "发布成功！", Toast.LENGTH_SHORT).show();
+        } else{
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
         }
     }
 }

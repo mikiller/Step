@@ -115,6 +115,7 @@ public class MyAchieveActivity extends SuperActivity {
                     reachedAdapter = new ReachedAchRcvAdapter(MyAchieveActivity.this);
                     for(Achieve achieve: MainActivity.mapData.getAchievementList()){
                         if(achieve.getAchieveKind().equals(title)){
+                            reachedAdapter.setReachIds(MainActivity.mapData.getReachedAchieveIdList());
                             reachedAdapter.setAchAreaList(achieve.getAchieveAreaList());
                             rcv_ach.setAdapter(reachedAdapter);
                             break;

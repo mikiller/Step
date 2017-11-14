@@ -118,41 +118,43 @@ public class Graphics {
 
     public void show(boolean reached){
         if(polygon != null)
-            showPolygon(reached);
+            polygon.setVisible(true);
         else if(circle != null)
-            showCircle(reached);
+            circle.setVisible(true);
+        setReached(reached);
     }
 
-    private void showPolygon(boolean reached){
-        polygon.setVisible(true);
-        if(reached){
-            if(graphicsType == MAP)
-                polygon.setFillColor(NORMAL_FILL);
-            else if(graphicsType == ACHEIVE){
-                polygon.setFillColor(ACHEIVE_FILL_REACHED);
-            }
-        }else{
-            if(graphicsType == MAP) {
-                polygon.setStrokeWidth(4);
-            }else if(graphicsType == ACHEIVE){
-                polygon.setFillColor(ACHEIVE_FILL);
-            }
-        }
-    }
+//    private void showPolygon(boolean reached){
+//        polygon.setVisible(true);
+//
+//        if(reached){
+//            if(graphicsType == MAP)
+//                polygon.setFillColor(NORMAL_FILL);
+//            else if(graphicsType == ACHEIVE){
+//                polygon.setFillColor(ACHEIVE_FILL_REACHED);
+//            }
+//        }else{
+//            if(graphicsType == MAP) {
+//                polygon.setStrokeWidth(4);
+//            }else if(graphicsType == ACHEIVE){
+//                polygon.setFillColor(ACHEIVE_FILL);
+//            }
+//        }
+//    }
 
-    private void showCircle(boolean reached){
-        circle.setVisible(true);
-        if(reached){
-            if(graphicsType == MAP)
-                circle.setFillColor(NORMAL_FILL);
-            else if(graphicsType == ACHEIVE)
-                circle.setFillColor(ACHEIVE_FILL_REACHED);
-        }else{
-            if(graphicsType == MAP) {
-                circle.setStrokeWidth(4);
-            }else if(graphicsType == ACHEIVE){
-                circle.setFillColor(ACHEIVE_FILL);
-            }
-        }
-    }
+//    private void showCircle(boolean reached){
+//        circle.setVisible(true);
+//        if(reached){
+//            if(graphicsType == MAP)
+//                circle.setFillColor(NORMAL_FILL);
+//            else if(graphicsType == ACHEIVE)
+//                circle.setFillColor(ACHEIVE_FILL_REACHED);
+//        }else{
+//            if(graphicsType == MAP) {
+//                circle.setStrokeWidth(4);
+//            }else if(graphicsType == ACHEIVE){
+//                circle.setFillColor(ACHEIVE_FILL);
+//            }
+//        }
+//    }
 }

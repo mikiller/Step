@@ -13,14 +13,18 @@ import com.westepper.step.base.BaseModel;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.UntouchableViewPager;
+import com.westepper.step.logics.GetReachedListLogic;
 import com.westepper.step.logics.GetUserInfoLogic;
 import com.westepper.step.logics.RankListLogic;
 import com.westepper.step.models.RankModel;
+import com.westepper.step.models.ReachedModel;
 import com.westepper.step.responses.MapData;
 import com.westepper.step.responses.RankList;
+import com.westepper.step.responses.ReachedList;
 import com.westepper.step.responses.UserInfo;
 import com.westepper.step.utils.FileUtils;
 import com.westepper.step.utils.MXPreferenceUtils;
+import com.westepper.step.utils.MapUtils;
 
 import butterknife.BindView;
 
@@ -74,7 +78,8 @@ public class MainActivity extends SuperActivity {
             //for test
 //            createTestData();
 //            mapData = FileUtils.getDataFromLocal(FileUtils.getFilePath(getActivity(), "area.data"), MapData.class);
-        }
+        }else
+            mapData.setAchieveMap();
 
         getUserInfo();
     }
@@ -84,7 +89,7 @@ public class MainActivity extends SuperActivity {
         logic.setCallback(new BaseLogic.LogicCallback<UserInfo>() {
             @Override
             public void onSuccess(UserInfo response) {
-                MXPreferenceUtils.getInstance().setString(response.getUserId(), new Gson().toJson(response));
+                SuperActivity.userInfo = response;
                 adapter.getItem(2).fragmentCallback(Constants.CHANGE_HEADER, new Intent().putExtra(Constants.USERINFO, response));
             }
 

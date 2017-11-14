@@ -31,9 +31,11 @@ import com.westepper.step.customViews.SearchView;
 import com.westepper.step.logics.CommitLogic;
 import com.westepper.step.logics.DiscoverCityLogic;
 import com.westepper.step.logics.GetDiscoveryListLogic;
+import com.westepper.step.logics.GetReachedListLogic;
 import com.westepper.step.models.CommitModel;
 import com.westepper.step.models.DiscoverCityModel;
 import com.westepper.step.models.DiscoveryListModel;
+import com.westepper.step.models.ReachedModel;
 import com.westepper.step.responses.Achieve;
 import com.westepper.step.responses.AchieveArea;
 import com.westepper.step.responses.Area;
@@ -43,6 +45,7 @@ import com.westepper.step.responses.DiscoveryList;
 import com.westepper.step.responses.MapData;
 import com.westepper.step.responses.Discovery;
 import com.westepper.step.responses.Graphics;
+import com.westepper.step.responses.ReachedList;
 import com.westepper.step.responses.UserPos;
 import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.AnimUtils;
@@ -156,7 +159,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
             }
         });
 
-
+        getReachedList();
     }
 
     private void initMapUtil() {
@@ -204,6 +207,25 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
     }
 
+    private void getReachedList(){
+        GetReachedListLogic logic = new GetReachedListLogic(getActivity(), new ReachedModel(""));
+        logic.setCallback(new BaseLogic.LogicCallback<ReachedList>() {
+            @Override
+            public void onSuccess(ReachedList response) {
+                for(String id : response.getReachedLists()){
+                    mapUtils.setAreaChecked(id);
+                    MainActivity.mapData.setReachedAchieveIdList(response.getReachedAchievementIds());
+                }
+
+            }
+
+            @Override
+            public void onFailed(String code, String msg, ReachedList localData) {
+
+            }
+        });
+        logic.sendRequest();
+    }
 
     private void initAcheiveSetting() {
         layout_achSetting.setAchievementList(MainActivity.mapData.getAchievementList());

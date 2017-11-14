@@ -19,6 +19,7 @@ import com.westepper.step.activities.AllCommitsActivity;
 import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.Constants;
 import com.uilib.mxmenuitem.MyMenuItem;
+import com.westepper.step.base.SuperActivity;
 import com.westepper.step.logics.GoodLogic;
 import com.westepper.step.models.DisModel;
 import com.westepper.step.responses.Commit;
@@ -132,7 +133,7 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     commitListener.onCommit(discovery.getDiscoveryUserId(), discovery.getNickName());
             }
         });
-        holder.btn_good.setEnabled(!MXPreferenceUtils.getInstance().getBoolean(discovery.getDiscoveryId() + MXPreferenceUtils.getInstance().getString("account")));
+        holder.btn_good.setEnabled(!MXPreferenceUtils.getInstance().getBoolean(discovery.getDiscoveryId() + SuperActivity.userInfo.getUserId()));
         holder.btn_good.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

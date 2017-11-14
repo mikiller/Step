@@ -10,7 +10,9 @@ import android.support.v4.util.Pair;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.netease.nim.uikit.NimUIKit;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
@@ -18,13 +20,21 @@ import com.netease.nimlib.sdk.StatusCode;
 import com.netease.nimlib.sdk.auth.AuthServiceObserver;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.westepper.step.R;
+import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.MyApplication;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.logics.GetMapDataLogic;
+import com.westepper.step.logics.GetReachedListLogic;
 import com.westepper.step.models.MapDataModel;
+import com.westepper.step.models.ReachedModel;
+import com.westepper.step.responses.MapData;
+import com.westepper.step.responses.ReachedList;
 import com.westepper.step.utils.ActivityManager;
+import com.westepper.step.utils.FileUtils;
 import com.westepper.step.utils.MXPreferenceUtils;
+
+import java.util.Map;
 
 import butterknife.BindView;
 
@@ -89,8 +99,20 @@ public class SplashActivity extends SuperActivity {
 
     private void getMapData(){
         try {
-            MapDataModel model = new MapDataModel(String.valueOf(getPackageManager().getPackageInfo(getPackageName(), 0).versionCode));
+            MapDataModel model = new MapDataModel(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
             GetMapDataLogic logic = new GetMapDataLogic(this, model);
+            logic.setCallback(new BaseLogic.LogicCallback<MapData>() {
+                @Override
+                public void onSuccess(MapData response) {
+                    String data = new Gson().toJson(response);
+                    FileUtils.saveToLocal(data, FileUtils.getFilePath(SplashActivity.this, Constants.MAP_DATA));
+                }
+
+                @Override
+                public void onFailed(String code, String msg, MapData localData) {
+                    Toast.makeText(SplashActivity.this, msg, Toast.LENGTH_SHORT).show();
+                }
+            });
             logic.sendRequest();
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

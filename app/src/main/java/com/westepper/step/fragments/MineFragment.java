@@ -25,6 +25,7 @@ import com.westepper.step.base.Constants;
 import com.uilib.mxmenuitem.MyMenuItem;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.uilib.utils.DisplayUtil;
+import com.westepper.step.base.SuperActivity;
 import com.westepper.step.logics.UpdateUserInfoLogic;
 import com.westepper.step.responses.RankList;
 import com.westepper.step.responses.UserInfo;
@@ -46,6 +47,7 @@ import butterknife.BindViews;
  * A simple {@link Fragment} subclass.
  */
 public class MineFragment extends BaseFragment implements View.OnClickListener {
+    private String TAG = this.getClass().getSimpleName();
     @BindView(R.id.iv_header)
     SelectableRoundedImageView iv_header;
     @BindView(R.id.iv_header_bg)
@@ -77,6 +79,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     UserInfo userInfo;
     RankList rankList;
+    boolean isVisible = false;
 
     public MineFragment() {
         // Required empty public constructor
@@ -114,9 +117,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         menu_discovery.setOnClickListener(this);
         menu_acheive.setOnClickListener(this);
 
-        String infoStr = MXPreferenceUtils.getInstance().getString(MXPreferenceUtils.getInstance().getString("account"));
-        userInfo = new Gson().fromJson(infoStr, UserInfo.class);
-//        setUserInfo();
+        userInfo = SuperActivity.userInfo;
     }
 
     private void setUserInfo(){
@@ -136,14 +137,14 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        if(getUserVisibleHint())
+        if(isVisible)
             setUserInfo();
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser){
+        if(isVisible = getUserVisibleHint()){
             setUserInfo();
         }
     }
@@ -152,7 +153,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     public void fragmentCallback(int type, Intent data) {
         if(type == Constants.CHANGE_HEADER){
             userInfo = (UserInfo) data.getSerializableExtra(Constants.USERINFO);
-            //setUserInfo();
         }else if(type == Constants.CHANGE_USER_BG){
             String filePath = "";
             if(data.getSerializableExtra(CameraGalleryUtils.TMP_FILE) != null)
