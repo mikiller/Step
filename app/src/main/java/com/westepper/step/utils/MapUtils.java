@@ -28,8 +28,10 @@ import com.amap.api.services.poisearch.PoiSearch;
 import com.autonavi.amap.mapcore.Inner_3dMap_location;
 import com.westepper.step.R;
 import com.westepper.step.base.Constants;
+import com.westepper.step.responses.AchieveArea;
 import com.westepper.step.responses.Area;
 import com.westepper.step.responses.Graphics;
+import com.westepper.step.responses.MapData;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -55,8 +57,10 @@ public class MapUtils {
     private GeoFenceClient geoFenceClient;
     private Inner_3dMap_location mapLocation;
 
+    public MapData mapData;
     Map<String, Area> areas = new HashMap<>();
     Map<String, Area> achieveAreas = new HashMap<>();
+    Map<String, AchieveArea> achievements = new HashMap<>();
     List<String> showAreaIds = new ArrayList();
     boolean needArea = true;
     float currentZoom = 15;
@@ -67,7 +71,7 @@ public class MapUtils {
     private Timer relocationTimer = new Timer();
 
     private MapUtils() {
-        markerImg = BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker);
+
         //mapLocation = new Inner_3dMap_location("");
 //        pos_selected = BitmapDescriptorFactory.fromResource(R.mipmap.icon_pos_selected);
 //        isMatched = new HashMap<>();
@@ -298,6 +302,16 @@ public class MapUtils {
         }
     }
 
+    public void addAchievement(AchieveArea ach){
+        if(achievements.get(ach.getAchieveAreaId()) == null){
+            achievements.put(ach.getAchieveAreaId(), ach);
+        }
+    }
+
+    public AchieveArea getAchievement(String id){
+        return achievements.get(id);
+    }
+
     public void setAreaChecked(String id) {
         if (areas.get(id) != null)
             areas.get(id).setReached(true);
@@ -334,6 +348,8 @@ public class MapUtils {
     }
 
     public void addMarker(LatLng lbs) {
+        if(markerImg == null)
+            markerImg = BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker);
         removeMarker();
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(lbs)

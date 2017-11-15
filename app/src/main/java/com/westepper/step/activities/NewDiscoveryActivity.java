@@ -175,7 +175,7 @@ public class NewDiscoveryActivity extends SuperActivity {
             model.setLatitude(adapter.getPoiItem().getLatLonPoint().getLatitude());
             model.setLongitude(adapter.getPoiItem().getLatLonPoint().getLongitude());
         }else{
-            model.setPoiTitle(MapUtils.getInstance().getMapLocation().getPoiName());
+            model.setPoiTitle(MapUtils.getInstance().getMapLocation().getCity());
             model.setLatitude(MapUtils.getInstance().getMapLocation().getLatitude());
             model.setLongitude(MapUtils.getInstance().getMapLocation().getLongitude());
         }

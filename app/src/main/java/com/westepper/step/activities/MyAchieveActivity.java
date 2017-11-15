@@ -21,6 +21,7 @@ import com.westepper.step.responses.Achieve;
 import com.westepper.step.responses.AchieveProgress;
 import com.westepper.step.responses.DiscoveryBaseInfo;
 import com.westepper.step.responses.MyAchievements;
+import com.westepper.step.utils.MapUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -113,9 +114,10 @@ public class MyAchieveActivity extends SuperActivity {
                     //goto sub ach
                     titleBar.setTitle(title);
                     reachedAdapter = new ReachedAchRcvAdapter(MyAchieveActivity.this);
-                    for(Achieve achieve: MainActivity.mapData.getAchievementList()){
+//                    for(Achieve achieve: MainActivity.mapData.getAchievementList()){
+                    for(Achieve achieve : MapUtils.getInstance().mapData.getAchievementList()){
                         if(achieve.getAchieveKind().equals(title)){
-                            reachedAdapter.setReachIds(MainActivity.mapData.getReachedAchieveIdList());
+                            reachedAdapter.setReachIds(MapUtils.getInstance().mapData.getReachedAchieveIdList());
                             reachedAdapter.setAchAreaList(achieve.getAchieveAreaList());
                             rcv_ach.setAdapter(reachedAdapter);
                             break;
@@ -142,11 +144,11 @@ public class MyAchieveActivity extends SuperActivity {
 
     private void getMyAchieves(){
         final AchieveProgress[] achList = new AchieveProgress[5];
-        achList[0] = createAchMenu(0, "初识STEP", 0);
-        achList[1] = createAchMenu(1, "城市探索", 0);
-        achList[2] = createAchMenu(2, "我爱上海", 0);
-        achList[3] = createAchMenu(3, "地标名胜", 0);
-        achList[4] = createAchMenu(4, "限时成就", 0);
+        achList[0] = createAchMenu(1, "初识STEP", 0);
+        achList[1] = createAchMenu(2, "我爱上海", 0);
+        achList[2] = createAchMenu(3, "探索世界", 0);
+        achList[3] = createAchMenu(4, "地标名胜", 0);
+        achList[4] = createAchMenu(5, "限时成就", 0);
         GetMyAchievementsLogic logic = new GetMyAchievementsLogic(this, new BaseModel());
         logic.setType(achKind);
         logic.setCallback(new BaseLogic.LogicCallback<MyAchievements>() {
@@ -154,7 +156,7 @@ public class MyAchieveActivity extends SuperActivity {
             public void onSuccess(MyAchievements response) {
                 if(achKind == Constants.ACH_BADGE) {
                     for (AchieveProgress ap : response.getPercentList()) {
-                        achList[ap.getCategoryId()] = ap;
+                        achList[ap.getCategoryId() - 1] = ap;
                     }
                     response.setPercentList(Arrays.asList(achList));
                 }

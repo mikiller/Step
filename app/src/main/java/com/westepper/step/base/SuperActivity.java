@@ -1,7 +1,10 @@
 package com.westepper.step.base;
 
 import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
@@ -10,15 +13,23 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
+import com.uilib.customdialog.CustomDialog;
+import com.westepper.step.R;
+import com.westepper.step.responses.AchieveArea;
+import com.westepper.step.responses.ReachedList;
 import com.westepper.step.responses.UserInfo;
 import com.westepper.step.utils.ActivityManager;
+import com.westepper.step.utils.MapUtils;
 import com.westepper.step.utils.PermissionUtils;
 
 import butterknife.ButterKnife;
@@ -32,7 +43,8 @@ public abstract class SuperActivity extends AppCompatActivity {
     protected final String TAG = this.getClass().getSimpleName();
     Unbinder unbinder;
     protected int statusBarColor = Color.BLUE;
-    public static UserInfo userInfo;
+    public static UserInfo userInfo = new UserInfo();
+    protected OnGetGeoFenceReceiver geoReceiver;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -84,7 +96,17 @@ public abstract class SuperActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        if(geoReceiver == null)
+            geoReceiver = new OnGetGeoFenceReceiver();
+        IntentFilter intentFilter = new IntentFilter(getString(R.string.geo_receiver));
+        registerReceiver(geoReceiver, intentFilter);
         super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        unregisterReceiver(geoReceiver);
+        super.onPause();
     }
 
     @Override
@@ -119,7 +141,49 @@ public abstract class SuperActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         unbinder.unbind();
+        super.onDestroy();
+    }
+
+    public class OnGetGeoFenceReceiver extends BroadcastReceiver{
+        ReachedList reachedList;
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent != null)
+                reachedList = (ReachedList) intent.getSerializableExtra(Constants.REACHED_LIST);
+            showCongraDlg("点亮L1区域", R.mipmap.ic_dis_l1);
+
+            if(!TextUtils.isEmpty(reachedList.getReachedL2Id())){
+                showCongraDlg(reachedList.getReachedL2Id(), R.mipmap.ic_dis_l2);
+            }
+            if(!TextUtils.isEmpty(reachedList.getReachedL3Id())){
+                showCongraDlg(reachedList.getReachedL3Id(), R.mipmap.ic_dis_l3);
+            }
+            if(reachedList.getReachedAchievementIds() != null && reachedList.getReachedAchievementIds().size() > 0){
+                for(String id : reachedList.getReachedAchievementIds()) {
+                    AchieveArea ach = MapUtils.getInstance().getAchievement(id);
+                    if(ach != null){
+                        showCongraDlg("达成"+ach.getAchieveAreaName()+"成就", ach.getImgId());
+                    }
+                }
+            }
+        }
+
+        private void showCongraDlg(String txt, int imgId){
+            final CustomDialog dlg = new CustomDialog(SuperActivity.this).setLayoutRes(R.layout.layout_congratulation);
+            dlg.setCancelable(true);
+
+            TextView tv = (TextView) dlg.getCustomView().findViewById(R.id.tv_con_txt);
+            tv.setText(txt);
+            ImageView iv = (ImageView) dlg.getCustomView().findViewById(R.id.iv_con_icon);
+            iv.setImageResource(imgId);
+            dlg.getCustomView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dlg.dismiss();
+                }
+            });
+            dlg.show();
+        }
     }
 }

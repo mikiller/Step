@@ -3,6 +3,7 @@ package com.westepper.step.fragments;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintSet;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -114,9 +115,10 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
     @Override
     protected void initView() {
         mapView.onCreate(saveBundle);
+
         initMapUtil();
         initAcheiveSetting();
-
+        getReachedList();
         search.setOnClickListener(this);
         btn_acheivement.setOnClickListener(this);
         rdg_scope.setOnCheckedChangeListener(this);
@@ -148,7 +150,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
                     adapter.setCurrentHolderListener(new DiscoveryAdapter.getCurrentHolderListener() {
                         @Override
                         public void getCurrentHolder(DiscoveryAdapter.DiscoveryHolder holder) {
-                            holder.updateLeftTime(disc.getPushTime());
+                            holder.updateLeftTime(disc.getDiscoveryUserId(), disc.getPushTime());
                         }
                     });
                 }
@@ -159,21 +161,40 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
             }
         });
 
-        getReachedList();
+//        getReachedList();
     }
 
     private void initMapUtil() {
         mapUtils = MapUtils.getInstance();
         mapUtils.init(getActivity().getApplicationContext(), mapView.getMap());
-        for (City city : MainActivity.mapData.getCityList()) {
+        for (City city : mapUtils.mapData.getCityList()) {
             if (!city.getCityName().equals("上海"))
                 continue;
             for (Area area : city.getAreaList()) {
                 mapUtils.addArea(area, Graphics.MAP);
             }
         }
-        for (Area area : MainActivity.mapData.getAchievementAreaList()) {
+        for (Area area : mapUtils.mapData.getAchievementAreaList()) {
             mapUtils.addAchieveArea(area);
+        }
+        for (Achieve achieve : mapUtils.mapData.getAchievementList()) {
+            for (AchieveArea achArea : achieve.getAchieveAreaList()) {
+                switch (achArea.getCredit_level()) {
+                    case "1":
+                        achArea.setImgId(R.mipmap.ic_ach_l1);
+                        break;
+                    case "10":
+                        achArea.setImgId(R.mipmap.ic_ach_l2);
+                        break;
+                    case "100":
+                        achArea.setImgId(R.mipmap.ic_ach_l3);
+                        break;
+                    case "1000":
+                        achArea.setImgId(R.mipmap.ic_ach_l4);
+                        break;
+                }
+                mapUtils.addAchievement(achArea);
+            }
         }
         mapUtils.setGetLocationListener(new MapUtils.OnGetLocationListener() {
             @Override
@@ -181,7 +202,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
                 DiscoverCityModel model = new DiscoverCityModel(cityName);
                 final String tmp = MXPreferenceUtils.getInstance().getString(model.getUserId() + "_discities");
                 DiscoveredCities disCity = new Gson().fromJson(tmp, DiscoveredCities.class);
-                if(disCity != null) {
+                if (disCity != null) {
                     for (DiscoveredCities.DiscoverCity city : disCity.getDiscoverCitys()) {
                         if (cityName.equals(city.getCity_name()))
                             return;
@@ -207,16 +228,15 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
     }
 
-    private void getReachedList(){
+    private void getReachedList() {
         GetReachedListLogic logic = new GetReachedListLogic(getActivity(), new ReachedModel(""));
         logic.setCallback(new BaseLogic.LogicCallback<ReachedList>() {
             @Override
             public void onSuccess(ReachedList response) {
-                for(String id : response.getReachedLists()){
+                for (String id : response.getReachedLists()) {
                     mapUtils.setAreaChecked(id);
-                    MainActivity.mapData.setReachedAchieveIdList(response.getReachedAchievementIds());
                 }
-
+                mapUtils.mapData.setReachedAchieveIdList(response.getReachedAchievementIds());
             }
 
             @Override
@@ -228,7 +248,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
     }
 
     private void initAcheiveSetting() {
-        layout_achSetting.setAchievementList(MainActivity.mapData.getAchievementList());
+        layout_achSetting.setAchievementList(mapUtils.mapData.getAchievementList());
         layout_achSetting.setAchieveSettingListener(new AcheiveSettingLayout.onAchieveSettingListener() {
             @Override
             public void onAchieveSelected(String[] areaId, String achieveKind, String centerId) {
@@ -300,8 +320,8 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
             @Override
             public void onFailed(String code, String msg, DiscoveryList localData) {
-                    adapter.setDataList(localData == null ? null : localData.getDiscoveryList());
-                    Toast.makeText(getActivity(), "未搜到您想要的结果，".concat(msg), Toast.LENGTH_SHORT).show();
+                adapter.setDataList(localData == null ? null : localData.getDiscoveryList());
+                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
 
             }
         });

@@ -182,7 +182,9 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private void bindFootHolder(FootHolder holder){
         if(poiItem == null) {
-            poiItem = new PoiItem("未选择", null, "", "");
+            poiItem = new PoiItem("default",
+                    new LatLonPoint(MapUtils.getInstance().getMapLocation().getLatitude(), MapUtils.getInstance().getMapLocation().getLongitude()),
+                    MapUtils.getInstance().getMapLocation().getCity(), "");
             holder.tv_pos.setText("未选择");
         }else {
             String city = TextUtils.isEmpty(poiItem.getCityName()) ? poiItem.getTitle() : poiItem.getCityName() + ", " + poiItem.getTitle();

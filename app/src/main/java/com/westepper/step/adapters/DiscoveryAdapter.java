@@ -13,8 +13,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
+import com.uilib.customdialog.CustomDialog;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.westepper.step.R;
 import com.westepper.step.activities.DiscoveryDetailActivity;
@@ -24,12 +26,15 @@ import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.CommitEditView;
 import com.westepper.step.logics.CommitLogic;
 import com.westepper.step.logics.GoodLogic;
+import com.westepper.step.logics.JoinLogic;
 import com.westepper.step.models.CommitModel;
 import com.westepper.step.models.DisModel;
+import com.westepper.step.models.JoinModel;
 import com.westepper.step.responses.Commit;
 import com.westepper.step.responses.Discovery;
 import com.westepper.step.responses.GoodCount;
 import com.westepper.step.responses.ImgDetail;
+import com.westepper.step.responses.JoinResponse;
 import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.MXPreferenceUtils;
 import com.westepper.step.utils.MXTimeUtils;
@@ -68,7 +73,7 @@ public class DiscoveryAdapter extends PagerAdapter {
     public Object instantiateItem(final ViewGroup container, final int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_discovery, null);
         container.addView(view);
-        DiscoveryHolder holder = new DiscoveryHolder(view);
+        final DiscoveryHolder holder = new DiscoveryHolder(view);
         final Discovery discover = dataList.get(position);
         holder.setUserHeader(discover.getHeadUrl());
         holder.setNickName(discover.getNickName());
@@ -137,12 +142,37 @@ public class DiscoveryAdapter extends PagerAdapter {
         });
 
         if(discover.getDiscoveryKind() == Constants.OUTGO) {
-            if(MXTimeUtils.isOutofLimit(discover.getPushTime(), MXTimeUtils.DAY))
-                holder.setBtnJoinEnabled(false, "已结束");
-            else if(discover.getDiscoveryUserId().equals(MXPreferenceUtils.getInstance().getString("account")))
-                holder.setBtnJoinEnabled(false, "参加约行");
-            else
-                holder.setBtnJoinEnabled(true, "参加约行 ".concat(MXTimeUtils.getLeftTime(discover.getPushTime(), MXTimeUtils.DAY)));
+            holder.setJoinBtn(discover.getDiscoveryUserId(), discover.getPushTime());
+            holder.btn_join.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final CustomDialog dlg = new CustomDialog(mContext);
+                    dlg.setTitle("已报名参加约行").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
+                        @Override
+                        public void onCancel() {
+                            ((SuperActivity)mContext).hideInputMethod(dlg.getCurrentFocus());
+                        }
+
+                        @Override
+                        public void onSure() {
+                            JoinLogic logic = new JoinLogic(mContext, new JoinModel(discover.getDiscoveryId(), "0"));
+                            logic.setCallback(new BaseLogic.LogicCallback<JoinResponse>() {
+                                @Override
+                                public void onSuccess(JoinResponse response) {
+                                    holder.setBtnJoinEnabled(false, "已报名");
+                                }
+
+                                @Override
+                                public void onFailed(String code, String msg, JoinResponse localData) {
+                                    Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            logic.sendRequest();
+                            ((SuperActivity)mContext).hideInputMethod(dlg.getCurrentFocus());
+                        }
+                    }).show();
+                }
+            });
         }
         view.setTag(holder);
         return view;
@@ -266,7 +296,7 @@ public class DiscoveryAdapter extends PagerAdapter {
             for(int i = 0; i < 3; i++) {
                 if(i >= imgList.size())
                     return;
-                GlideImageLoader.getInstance().loadImage(mContext, imgList.get(i).getImg_url(), R.mipmap.placeholder, iv_imgList[i], 0);
+                GlideImageLoader.getInstance().loadImage(mContext, imgList.get(i).getThumb_url(), R.mipmap.placeholder, iv_imgList[i], 0);
             }
         }
 
@@ -286,19 +316,14 @@ public class DiscoveryAdapter extends PagerAdapter {
             btn_good.setOnClickListener(listener);
         }
 
-        public void updateLeftTime(final long time){
+        public void updateLeftTime(final String id, final long time){
             timer.schedule(timerTask = new TimerTask() {
                 @Override
                 public void run() {
                     btn_join.post(new Runnable() {
                         @Override
                         public void run() {
-                            if(!MXTimeUtils.isOutofLimit(time, MXTimeUtils.DAY)) {
-                                btn_join.setText("参加约行 ".concat(MXTimeUtils.getLeftTime(time, MXTimeUtils.DAY)));
-                                Log.e("dis adapter", btn_join.getText().toString());
-                            }else{
-                                setBtnJoinEnabled(false, "已结束");
-                            }
+                            setJoinBtn(id, time);
                         }
                     });
                 }
@@ -309,6 +334,15 @@ public class DiscoveryAdapter extends PagerAdapter {
         public void setBtnJoinEnabled(boolean enabled, String txt){
             btn_join.setEnabled(enabled);
             btn_join.setText(txt);
+        }
+
+        private void setJoinBtn(String id, long time){
+            if(MXTimeUtils.isOutofLimit(time, MXTimeUtils.DAY))
+                setBtnJoinEnabled(false, "已结束");
+            else if(id.equals(MXPreferenceUtils.getInstance().getString("account")))
+                setBtnJoinEnabled(false, "参加约行");
+            else
+                setBtnJoinEnabled(true, "参加约行 ".concat(MXTimeUtils.getLeftTime(time, MXTimeUtils.DAY)));
         }
     }
 

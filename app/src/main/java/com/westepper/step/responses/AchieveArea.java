@@ -21,6 +21,7 @@ public class AchieveArea implements Parcelable {
     private String credit_coefficient;
     private String category_id;
     private String areaIds;
+    private int imgId;
 
     public AchieveArea() {
     }
@@ -35,6 +36,7 @@ public class AchieveArea implements Parcelable {
         credit_coefficient = in.readString();
         category_id = in.readString();
         areaIds = in.readString();
+        imgId = in.readInt();
     }
 
     public static final Creator<AchieveArea> CREATOR = new Creator<AchieveArea>() {
@@ -129,6 +131,14 @@ public class AchieveArea implements Parcelable {
         return Integer.parseInt(credit_level) * Integer.parseInt(credit_coefficient);
     }
 
+    public int getImgId() {
+        return imgId;
+    }
+
+    public void setImgId(int imgId) {
+        this.imgId = imgId;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -145,5 +155,6 @@ public class AchieveArea implements Parcelable {
         dest.writeString(credit_coefficient);
         dest.writeString(category_id);
         dest.writeString(areaIds);
+        dest.writeInt(imgId);
     }
 }

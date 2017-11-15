@@ -24,8 +24,11 @@
     <string name="menu_setting">设置</string>
 
     <string name="join_num">邀约%1$d人, 已报名%2$d人</string>
+    <string name="join_num1">邀约不限, 已报名%1$d人</string>
     <string name="commit_title">共%1$d条留言</string>
     <string name="contact_phone"><![CDATA[联系电话 <font color="#00a8ff">021-12345678</font>]]></string>
     <string name="email"><![CDATA[联系邮箱 <font color="#00a8ff">step@163.com</font>]]></string>
     <string name="protocol"><u>用户使用协议</u></string>
+
+    <string name="geo_receiver">com.westepper.step.geofencereceiver</string>
 </resources>

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.westepper.step.R;
@@ -39,7 +40,7 @@ public class MainActivity extends SuperActivity {
     RadioGroup rdg_guideBar;
 
     MainFragmentAdapter adapter;
-    public static MapData mapData;
+//    public static MapData mapData;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,16 +73,22 @@ public class MainActivity extends SuperActivity {
         vp_content.setOffscreenPageLimit(1);
         vp_content.setAdapter(adapter = new MainFragmentAdapter(getSupportFragmentManager()));
         rdg_guideBar.check(R.id.rdb_track);
-        mapData = FileUtils.getDataFromLocal(FileUtils.getFilePath(this, Constants.MAP_DATA), MapData.class);
-        if (mapData == null) {
-            mapData = new MapData();
-            //for test
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+                MapUtils.getInstance().mapData = FileUtils.getDataFromLocal(FileUtils.getFilePath(MainActivity.this, Constants.MAP_DATA), MapData.class);
+                if (MapUtils.getInstance().mapData == null) {
+                    MapUtils.getInstance().mapData = new MapData();
+                    //for test
 //            createTestData();
 //            mapData = FileUtils.getDataFromLocal(FileUtils.getFilePath(getActivity(), "area.data"), MapData.class);
-        }else
-            mapData.setAchieveMap();
+                }
+//                adapter.getItem(1).fragmentCallback(Constants.GET_MAPDATA, null);
+//            }
+//        }).start();
 
         getUserInfo();
+
     }
 
     private void getUserInfo(){
@@ -113,7 +120,7 @@ public class MainActivity extends SuperActivity {
 
             @Override
             public void onFailed(String code, String msg, RankList localData) {
-
+                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
             }
         });
         logic.sendRequest();

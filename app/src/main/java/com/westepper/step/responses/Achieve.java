@@ -17,7 +17,6 @@ public class Achieve implements Parcelable {
     private String achieveCategory_id;
     private String achieveKind;
     private List<AchieveArea> achieveAreaList = new ArrayList<>();
-    private Map<String, AchieveArea> achieveAreaMap;
 
     public Achieve(String id, String achieveKind) {
         this.achieveCategory_id = id;
@@ -28,7 +27,6 @@ public class Achieve implements Parcelable {
         achieveCategory_id = in.readString();
         achieveKind = in.readString();
         achieveAreaList = in.createTypedArrayList(AchieveArea.CREATOR);
-        achieveAreaMap = in.readHashMap(HashMap.class.getClassLoader());
     }
 
     public static final Creator<Achieve> CREATOR = new Creator<Achieve>() {
@@ -44,7 +42,7 @@ public class Achieve implements Parcelable {
     };
 
     public List<AchieveArea> getAchieveAreaList() {
-        return achieveAreaList;
+        return achieveAreaList == null ? achieveAreaList = new ArrayList<AchieveArea>() : achieveAreaList;
     }
 
     public void setAchieveAreaList(List<AchieveArea> achieveAreaList) {
@@ -71,18 +69,6 @@ public class Achieve implements Parcelable {
         this.achieveKind = achieveKind;
     }
 
-    public void setAchieveAreaMap() {
-        achieveAreaMap = new HashMap<>();
-        for (AchieveArea achArea : achieveAreaList) {
-            achieveAreaMap.put(achArea.getAchieveAreaId(), achArea);
-        }
-
-    }
-
-    public AchieveArea getAchieveName(String id) {
-        return achieveAreaMap.get(id);
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -93,6 +79,5 @@ public class Achieve implements Parcelable {
         dest.writeString(achieveCategory_id);
         dest.writeString(achieveKind);
         dest.writeTypedList(achieveAreaList);
-        dest.writeMap(achieveAreaMap);
     }
 }

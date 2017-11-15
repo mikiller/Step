@@ -78,7 +78,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     MyMenuItem menu_acheive;
 
     UserInfo userInfo;
-    RankList rankList;
+    RankList rankList = new RankList();
     boolean isVisible = false;
 
     public MineFragment() {

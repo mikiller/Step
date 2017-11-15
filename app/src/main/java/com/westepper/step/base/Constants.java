@@ -15,6 +15,7 @@ public class Constants {
     public static final int SHOW_ACHIEVE_AREA = 0x201;
     public static final int SAVE_USERINFO = 0x105;
     public static final int GET_RANK = 0x106;
+    public static final int GET_MAPDATA = 0X107;
     public static final String DIS_ID = "DIS_ID";
     public static final String DIS_KIND = "DIS_KIND";
     public static final String DIS_SCOPE = "DIS_SCOPE";
@@ -43,6 +44,7 @@ public class Constants {
     public static final String COMMIT_LIST = "commit_list";
     public static final String USERINFO = "userinfo";
     public static final String ISREPORT = "ISREPORT";
+    public static final String REACHED_LIST = "reachedlist";
 
     private final String wxkey="9ab30dbefd4be514ffa7950d497438a3";
     public static final int WX_LOGIN = 0X10;

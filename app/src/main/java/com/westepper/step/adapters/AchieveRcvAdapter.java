@@ -106,7 +106,7 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
             final String title;
             if (myAchieve.getType() == Constants.ACH_BADGE) {
                 final AchieveProgress achPgs = myAchieve.getPercentList().get(holder.getAdapterPosition() - (needHead ? 1 : 0));
-                ((AchProgressHolder)holder).setMenu_icon(achIcons[achPgs.getCategoryId()]);
+                ((AchProgressHolder)holder).setMenu_icon(achIcons[achPgs.getCategoryId() - 1]);
                 ((AchProgressHolder)holder).setSubTitle(achPgs.getCategoryName());
                 ((AchProgressHolder)holder).setNeedSubTitle(true);
                 ((AchProgressHolder)holder).setPgs(achPgs.getPercent());
@@ -213,7 +213,7 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
     protected class AchProgressHolder extends RecyclerView.ViewHolder{
         private TextView menu_title, tv_subAchTitle, tv_pgs;
         private ProgressBar pgs;
-        private ImageButton btn_next;
+        private ImageView iv_next;
         private ImageView menu_icon;
         public AchProgressHolder(View itemView) {
             super(itemView);
@@ -222,7 +222,7 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
             tv_subAchTitle = (TextView) itemView.findViewById(R.id.tv_subAchTitle);
             tv_pgs = (TextView) itemView.findViewById(R.id.tv_pgs);
             pgs = (ProgressBar) itemView.findViewById(R.id.pgs);
-            btn_next = (ImageButton) itemView.findViewById(R.id.btn_next);
+            iv_next = (ImageView) itemView.findViewById(R.id.iv_next);
         }
 
         public void setTitle(String title){
@@ -243,11 +243,11 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
         }
 
         public void setNeedNext(boolean isNeed){
-            btn_next.setVisibility(isNeed ? VISIBLE : GONE);
+            iv_next.setVisibility(isNeed ? VISIBLE : GONE);
         }
 
         public boolean canClick(){
-            return btn_next.getVisibility() == VISIBLE;
+            return iv_next.getVisibility() == VISIBLE;
         }
 
         public void setMenu_icon(int resId){

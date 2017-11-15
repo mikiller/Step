@@ -18,21 +18,31 @@ import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.StatusCode;
 import com.netease.nimlib.sdk.auth.AuthServiceObserver;
+import com.uilib.customdialog.CustomDialog;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.westepper.step.R;
 import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.MyApplication;
 import com.westepper.step.base.SuperActivity;
+import com.westepper.step.logics.DiscoverCityLogic;
 import com.westepper.step.logics.GetMapDataLogic;
 import com.westepper.step.logics.GetReachedListLogic;
+import com.westepper.step.models.DiscoverCityModel;
 import com.westepper.step.models.MapDataModel;
 import com.westepper.step.models.ReachedModel;
+import com.westepper.step.responses.Achieve;
+import com.westepper.step.responses.AchieveArea;
+import com.westepper.step.responses.Area;
+import com.westepper.step.responses.City;
+import com.westepper.step.responses.DiscoveredCities;
+import com.westepper.step.responses.Graphics;
 import com.westepper.step.responses.MapData;
 import com.westepper.step.responses.ReachedList;
 import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.FileUtils;
 import com.westepper.step.utils.MXPreferenceUtils;
+import com.westepper.step.utils.MapUtils;
 
 import java.util.Map;
 
@@ -78,21 +88,7 @@ public class SplashActivity extends SuperActivity {
         getWindow().getDecorView().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (!MyApplication.isLogin) {
-                    //显示微信按钮
-                    Intent intent = new Intent(SplashActivity.this, WelcomeActivity.class);
-                    ActivityOptionsCompat option = ActivityOptionsCompat.makeSceneTransitionAnimation(SplashActivity.this,
-                            Pair.create((View)iv_logo, getString(R.string.splash_trans)),
-                            Pair.create((View)iv_label, getString(R.string.splash_label)));
-                    ActivityCompat.startActivity(SplashActivity.this, intent, option.toBundle());
-                    back();
-                } else {
-                    //进入主页
-                    NimUIKit.setAccount(MXPreferenceUtils.getInstance().getString("account"));
-                    ActivityManager.startActivity(SplashActivity.this, MainActivity.class);
-                    overridePendingTransition(R.anim.alpha_in, R.anim.alpha_out);
-                    back();
-                }
+                startApp();
             }
         }, 3000);
     }
@@ -104,18 +100,39 @@ public class SplashActivity extends SuperActivity {
             logic.setCallback(new BaseLogic.LogicCallback<MapData>() {
                 @Override
                 public void onSuccess(MapData response) {
+//                    MapUtils.getInstance().mapData = response;
                     String data = new Gson().toJson(response);
                     FileUtils.saveToLocal(data, FileUtils.getFilePath(SplashActivity.this, Constants.MAP_DATA));
+//                    startApp();
                 }
 
                 @Override
                 public void onFailed(String code, String msg, MapData localData) {
+//                    MapUtils.getInstance().mapData = FileUtils.getDataFromLocal(FileUtils.getFilePath(SplashActivity.this, Constants.MAP_DATA), MapData.class);
                     Toast.makeText(SplashActivity.this, msg, Toast.LENGTH_SHORT).show();
                 }
             });
             logic.sendRequest();
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void startApp(){
+        if (!MyApplication.isLogin) {
+            //显示微信按钮
+            Intent intent = new Intent(SplashActivity.this, WelcomeActivity.class);
+            ActivityOptionsCompat option = ActivityOptionsCompat.makeSceneTransitionAnimation(SplashActivity.this,
+                    Pair.create((View)iv_logo, getString(R.string.splash_trans)),
+                    Pair.create((View)iv_label, getString(R.string.splash_label)));
+            ActivityCompat.startActivity(SplashActivity.this, intent, option.toBundle());
+            back();
+        } else {
+            //进入主页
+            NimUIKit.setAccount(MXPreferenceUtils.getInstance().getString("account"));
+            ActivityManager.startActivity(SplashActivity.this, MainActivity.class);
+            overridePendingTransition(R.anim.alpha_in, R.anim.alpha_out);
+            back();
         }
     }
 

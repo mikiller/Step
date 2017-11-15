@@ -8,6 +8,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.amap.api.fence.GeoFence;
+import com.westepper.step.logics.GeoFanceLogic;
+import com.westepper.step.models.GeoModel;
+import com.westepper.step.models.ReachedModel;
+import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.MapUtils;
 
 /**
@@ -24,6 +28,12 @@ public class GeoReceiver extends BroadcastReceiver {
         String id = bundle.getString(GeoFence.BUNDLE_KEY_CUSTOMID);
         if (status == 1) {
             MapUtils.getInstance().setAreaChecked(id);
+            startGeoFenceLogic(context, id);
         }
+    }
+
+    private void startGeoFenceLogic(Context context, String id){
+        GeoFanceLogic logic = new GeoFanceLogic(context, new GeoModel(id));
+        logic.sendRequest();
     }
 }

@@ -155,7 +155,7 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         });
 
         if(discovery.getDiscoveryKind() == Constants.OUTGO){
-            holder.tv_joinTime.setText(MXTimeUtils.getFormatTime("MM月dd日", discovery.getEndTime()));
+            holder.tv_joinTime.setText(discovery.getEndTime() == 0 ? "不限" : MXTimeUtils.getFormatTime("yyyy年MM月dd日", discovery.getEndTime()));
         }
     }
 

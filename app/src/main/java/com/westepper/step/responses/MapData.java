@@ -80,22 +80,6 @@ public class MapData implements Parcelable {
         return reachedAchieveIdList;
     }
 
-    public void setAchieveMap(){
-        for(Achieve ach : achievementList){
-            ach.setAchieveAreaMap();
-        }
-    }
-
-    public AchieveArea getAchieveName(String id){
-        AchieveArea area = null;
-        for(Achieve ach : achievementList){
-            if((area = ach.getAchieveName(id)) != null)
-                break;
-        }
-
-        return area;
-    }
-
     @Override
     public int describeContents() {
         return 0;

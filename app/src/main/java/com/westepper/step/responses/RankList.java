@@ -1,6 +1,7 @@
 package com.westepper.step.responses;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ import java.util.List;
 
 public class RankList implements Serializable {
     private int userRank;
-    List<Rank> rankList;
+    List<Rank> rankList = new ArrayList<>();
 
     public List<Rank> getRankList() {
         return rankList;

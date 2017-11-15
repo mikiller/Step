@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 
 public class ImgDetail implements Parcelable {
-    String img_url;
+    String img_url, thumb_url;
     int imgWidth, imgHeight;
 
     public ImgDetail(String url, int height, int width) {
@@ -23,6 +23,7 @@ public class ImgDetail implements Parcelable {
         img_url = in.readString();
         imgWidth = in.readInt();
         imgHeight = in.readInt();
+        thumb_url = in.readString();
     }
 
     public static final Creator<ImgDetail> CREATOR = new Creator<ImgDetail>() {
@@ -43,6 +44,14 @@ public class ImgDetail implements Parcelable {
 
     public void setImgHeight(int height) {
         this.imgHeight = height;
+    }
+
+    public String getThumb_url() {
+        return thumb_url;
+    }
+
+    public void setThumb_url(String thumb_url) {
+        this.thumb_url = thumb_url;
     }
 
     public String getImg_url() {
@@ -71,5 +80,6 @@ public class ImgDetail implements Parcelable {
         dest.writeString(img_url);
         dest.writeInt(imgWidth);
         dest.writeInt(imgHeight);
+        dest.writeString(thumb_url);
     }
 }

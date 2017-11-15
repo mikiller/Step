@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.uilib.customdialog.CustomDialog;
 import com.uilib.utils.DisplayUtil;
@@ -251,17 +252,20 @@ public class DiscoveryDetailActivity extends SuperActivity {
     }
 
     private void initJoinOpt() {
-        tv_joinNum.setText(String.format(getString(R.string.join_num), discovery.getTotalCount(), discovery.getJoinCount()));
+        if(discovery.getTotalCount() == 0)
+            tv_joinNum.setText(String.format(getString(R.string.join_num1), discovery.getJoinCount()));
+        else
+            tv_joinNum.setText(String.format(getString(R.string.join_num), discovery.getTotalCount(), discovery.getJoinCount()));
         tv_joinOpt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //show dlg for input join words
                 //after get team id from yunxin send request
-                CustomDialog dlg = new CustomDialog(DiscoveryDetailActivity.this);
+                final CustomDialog dlg = new CustomDialog(DiscoveryDetailActivity.this);
                 dlg.setTitle("已报名参加约行").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
                     @Override
                     public void onCancel() {
-
+                        hideInputMethod(dlg.getCurrentFocus());
                     }
 
                     @Override
@@ -270,17 +274,21 @@ public class DiscoveryDetailActivity extends SuperActivity {
                         logic.setCallback(new BaseLogic.LogicCallback<JoinResponse>() {
                             @Override
                             public void onSuccess(JoinResponse response) {
-                                tv_joinNum.setText(String.format(getString(R.string.join_num), discovery.getTotalCount(), response.getJoinCount()));
+                                if(discovery.getTotalCount() == 0)
+                                    tv_joinNum.setText(String.format(getString(R.string.join_num1), response.getJoinCount()));
+                                else
+                                    tv_joinNum.setText(String.format(getString(R.string.join_num), discovery.getTotalCount(), response.getJoinCount()));
                                 tv_joinOpt.setText("已报名");
                                 tv_joinOpt.setEnabled(false);
                             }
 
                             @Override
                             public void onFailed(String code, String msg, JoinResponse localData) {
-
+                                Toast.makeText(DiscoveryDetailActivity.this, msg, Toast.LENGTH_SHORT).show();
                             }
                         });
                         logic.sendRequest();
+                        hideInputMethod(dlg.getCurrentFocus());
                     }
                 }).show();
 
