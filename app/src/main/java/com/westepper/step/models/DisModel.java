@@ -6,42 +6,23 @@ import com.westepper.step.base.BaseModel;
  * Created by Mikiller on 2017/11/3.
  */
 
-public class DisModel extends BaseModel {
-    private String discoveryId;
-    private int discoveryKind;
+public class DisModel extends DisBase {
     private int page;
     private int type;
 
     public DisModel(String discoveryId, int discoveryKind) {
-        this.discoveryId = discoveryId;
-        this.discoveryKind = discoveryKind;
+        super(discoveryId, discoveryKind);
     }
 
     public DisModel(int discoveryKind, int page) {
-        this.discoveryKind = discoveryKind;
+        super(discoveryKind);
         this.page = page;
     }
 
     public DisModel(int discoveryKind, int page, int type) {
-        this.discoveryKind = discoveryKind;
+        super(discoveryKind);
         this.page = page;
         this.type = type;
-    }
-
-    public String getDiscoveryId() {
-        return discoveryId;
-    }
-
-    public void setDiscoveryId(String discoveryId) {
-        this.discoveryId = discoveryId;
-    }
-
-    public int getDiscoveryKind() {
-        return discoveryKind;
-    }
-
-    public void setDiscoveryKind(int discoveryKind) {
-        this.discoveryKind = discoveryKind;
     }
 
     public int getPage() {

@@ -151,7 +151,7 @@ public class MyDiscoveryActivity extends SuperActivity {
             public void onSuccess(DiscoveryList response) {
                 if(page == 1) {
                     adapter.setDiscoveryList(response.getDiscoveryList());
-                    adapter.setUserInfo(SuperActivity.userInfo.getUserId(), SuperActivity.userInfo.getNickName() );
+                    adapter.setUserInfo(SuperActivity.userInfo);
                     swipeLayout.setRefreshing(false);
                 }
                 else {

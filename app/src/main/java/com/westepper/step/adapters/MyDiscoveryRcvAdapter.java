@@ -42,7 +42,7 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
 
     Context mContext;
     List<Discovery> discoveryList;
-    String userId, userName;
+    UserInfo userInfo;
     int disKind;
     int[] ids = new int[]{R.id.iv_img1, R.id.iv_img2, R.id.iv_img3};
 
@@ -59,9 +59,8 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
         notifyItemRangeChanged(startPos, discoveryList.size());
     }
 
-    public void setUserInfo(String userId, String userName) {
-        this.userId = userId;
-        this.userName = userName;
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
     }
 
     public MyDiscoveryRcvAdapter(Context mContext, int disKind) {
@@ -107,8 +106,7 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
             @Override
             public void onClick(View v) {
                 Map<String, Object> args = new HashMap<>();
-                discovery.setNickName(userName);
-                discovery.setDiscoveryUserId(userId);
+                discovery.setUserInfo(userInfo);
                 args.put(Constants.DISCOVERY_DETAIL, discovery);
                 args.put(Constants.DIS_SCOPE, Constants.FRIEND);
                 ActivityManager.startActivity((Activity) mContext, DiscoveryDetailActivity.class, args);

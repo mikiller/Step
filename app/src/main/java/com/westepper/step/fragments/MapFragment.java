@@ -212,8 +212,14 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
                 logic.setCallback(new BaseLogic.LogicCallback() {
                     @Override
                     public void onSuccess(Object response) {
-                        CustomDialog dlg = new CustomDialog(getActivity());
+                        final CustomDialog dlg = new CustomDialog(getActivity());
                         dlg.setLayoutRes(R.layout.layout_congratulation).setCancelable(true);
+                        dlg.getCustomView().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dlg.dismiss();
+                            }
+                        });
                         dlg.show();
                     }
 

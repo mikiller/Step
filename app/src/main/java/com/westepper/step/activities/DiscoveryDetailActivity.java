@@ -33,9 +33,13 @@ import com.westepper.step.customViews.CommitEditView;
 import com.westepper.step.customViews.TitleBar;
 import com.westepper.step.logics.CommitLogic;
 import com.westepper.step.logics.GetCommitListLogic;
+import com.westepper.step.logics.GetDisDetailInfoLogic;
+import com.westepper.step.logics.GetDiscoveryListLogic;
 import com.westepper.step.logics.JoinLogic;
 import com.westepper.step.models.CommitModel;
+import com.westepper.step.models.DisBase;
 import com.westepper.step.models.JoinModel;
+import com.westepper.step.responses.DiscoveryDetailInfo;
 import com.westepper.step.responses.JoinResponse;
 import com.westepper.step.utils.MXPreferenceUtils;
 import com.westepper.step.utils.MXTimeUtils;
@@ -92,7 +96,8 @@ public class DiscoveryDetailActivity extends SuperActivity {
     DisDetailRcvAdapter rcvAdapter;
     MyLinearLayoutManager rcvMgr;
     boolean isTouchImgVp = false;
-    GetCommitListLogic logic;
+    GetCommitListLogic commitLogic;
+    GetDisDetailInfoLogic detailLogic;
 
     Discovery discovery;
     int scope;
@@ -252,10 +257,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
     }
 
     private void initJoinOpt() {
-        if(discovery.getTotalCount() == 0)
-            tv_joinNum.setText(String.format(getString(R.string.join_num1), discovery.getJoinCount()));
-        else
-            tv_joinNum.setText(String.format(getString(R.string.join_num), discovery.getTotalCount(), discovery.getJoinCount()));
+        setJoinNum(discovery.getJoinCount());
         tv_joinOpt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -274,10 +276,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
                         logic.setCallback(new BaseLogic.LogicCallback<JoinResponse>() {
                             @Override
                             public void onSuccess(JoinResponse response) {
-                                if(discovery.getTotalCount() == 0)
-                                    tv_joinNum.setText(String.format(getString(R.string.join_num1), response.getJoinCount()));
-                                else
-                                    tv_joinNum.setText(String.format(getString(R.string.join_num), discovery.getTotalCount(), response.getJoinCount()));
+                                setJoinNum(response.getJoinCount());
                                 tv_joinOpt.setText("已报名");
                                 tv_joinOpt.setEnabled(false);
                             }
@@ -323,14 +322,39 @@ public class DiscoveryDetailActivity extends SuperActivity {
         }, 0, 1000);
     }
 
+    private void setJoinNum(int joinCount){
+        if(discovery.getTotalCount() == 0)
+            tv_joinNum.setText(String.format(getString(R.string.join_num1), joinCount));
+        else
+            tv_joinNum.setText(String.format(getString(R.string.join_num), discovery.getTotalCount(), joinCount));
+    }
+
     @Override
     protected void initData() {
-        if (scope == Constants.FRIEND && discovery.getCommitNum() > 0) {
-            if (logic == null) {
-                logic = new GetCommitListLogic(this, new CommitModel(discovery.getDiscoveryId(), discovery.getDiscoveryKind())).setAdapter(rcvAdapter);
+        if (scope == Constants.FRIEND) {
+            if (commitLogic == null) {
+                commitLogic = new GetCommitListLogic(this, new CommitModel(discovery.getDiscoveryId(), discovery.getDiscoveryKind())).setAdapter(rcvAdapter);
             }
-            logic.sendRequest();
+            commitLogic.sendRequest();
         }
+
+        if(detailLogic == null){
+            detailLogic = new GetDisDetailInfoLogic(this, new DisBase(discovery.getDiscoveryId(), discovery.getDiscoveryKind())).setRcvAdapter(rcvAdapter);
+            detailLogic.setCallback(new BaseLogic.LogicCallback<DiscoveryDetailInfo>() {
+                @Override
+                public void onSuccess(DiscoveryDetailInfo response) {
+                    setJoinNum(response.getJoinCount());
+                    tv_joinOpt.setEnabled(!response.isJoin());
+                    tv_joinOpt.setText(response.isJoin() ? "已报名" : "参加约行");
+                }
+
+                @Override
+                public void onFailed(String code, String msg, DiscoveryDetailInfo localData) {
+
+                }
+            });
+        }
+        detailLogic.sendRequest();
     }
 
     @Override

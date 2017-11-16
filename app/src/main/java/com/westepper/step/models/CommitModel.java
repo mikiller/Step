@@ -6,38 +6,18 @@ import com.westepper.step.base.BaseModel;
  * Created by Mikiller on 2017/11/1.
  */
 
-public class CommitModel extends BaseModel {
-    private int discoveryKind;
-    private String discoveryId;
+public class CommitModel extends DisBase {
     private String commitUserId;
     private String msg;
 
     public CommitModel(String discoveryId, int discoveryKind) {
-        this.discoveryId = discoveryId;
-        this.discoveryKind = discoveryKind;
+        super(discoveryId, discoveryKind);
     }
 
     public CommitModel(String commitUserId, String discoveryId, int discoveryKind, String msg) {
+        super(discoveryId, discoveryKind);
         this.commitUserId = commitUserId;
-        this.discoveryId = discoveryId;
-        this.discoveryKind = discoveryKind;
         this.msg = msg;
-    }
-
-    public String getDiscoveryId() {
-        return discoveryId;
-    }
-
-    public void setDiscoveryId(String discoveryId) {
-        this.discoveryId = discoveryId;
-    }
-
-    public int getDiscoveryKind() {
-        return discoveryKind;
-    }
-
-    public void setDiscoveryKind(int discoveryKind) {
-        this.discoveryKind = discoveryKind;
     }
 
     public String getCommitUserId() {

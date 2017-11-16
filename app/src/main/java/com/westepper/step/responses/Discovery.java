@@ -218,4 +218,11 @@ public class Discovery implements Parcelable {
         this.teamId = teamId;
     }
 
+    public void setUserInfo(UserInfo userInfo){
+        setNickName(userInfo.getNickName());
+        setGender(userInfo.getGender());
+        setHeadUrl(userInfo.getHeadImg());
+        setDiscoveryUserId(userInfo.getUserId());
+    }
+
 }
