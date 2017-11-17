@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
+    android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical">
 
-    <com.uilib.joooonho.SelectableRoundedImageView
+    <ImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"/>
+        android:src="@drawable/ic_myfriend"
+        android:layout_margin="15dp"/>
 
     <TextView
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:layout_marginRight="6dp"
-        android:ellipsize="end"
-        android:includeFontPadding="false"
         android:text="我的好友"
+        android:textSize="16dp"
         android:textColor="@color/color_black_333333"
-        android:textSize="16sp"/>
+        android:layout_margin="5dp"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/nim_arrow_right"
+        android:layout_margin="15dp"/>
 </LinearLayout>

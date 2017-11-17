@@ -1,5 +1,6 @@
 package com.netease.nim.uikit.recent;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,7 +21,9 @@ import com.netease.nim.uikit.common.badger.Badger;
 import com.netease.nim.uikit.common.fragment.TFragment;
 import com.netease.nim.uikit.common.ui.dialog.CustomAlertDialog;
 import com.netease.nim.uikit.common.ui.drop.DropCover;
+import com.netease.nim.uikit.common.ui.drop.DropFake;
 import com.netease.nim.uikit.common.ui.drop.DropManager;
+import com.netease.nim.uikit.common.ui.imageview.HeadImageView;
 import com.netease.nim.uikit.common.ui.recyclerview.listener.SimpleClickListener;
 import com.netease.nim.uikit.recent.adapter.RecentContactAdapter;
 import com.netease.nim.uikit.uinfo.UserInfoHelper;
@@ -31,6 +35,8 @@ import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.ResponseCode;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
+import com.netease.nimlib.sdk.msg.SystemMessageObserver;
+import com.netease.nimlib.sdk.msg.SystemMessageService;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
@@ -38,11 +44,12 @@ import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.netease.nimlib.sdk.team.model.Team;
 import com.netease.nimlib.sdk.team.model.TeamMember;
-import com.uilib.mxmenuitem.MyMenuItem;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -83,6 +90,12 @@ public class RecentContactsFragment extends TFragment {
 
     private UserInfoObservable.UserInfoObserver userInfoObserver;
 
+    private View.OnClickListener myFirendClickListener;
+
+    public void setMyFirendClickListener(View.OnClickListener listener){
+        myFirendClickListener = listener;
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -93,6 +106,7 @@ public class RecentContactsFragment extends TFragment {
         registerObservers(true);
         registerDropCompletedListener(true);
         registerOnlineStateChangeListener(true);
+        registerSystemMessageObservers(true);
     }
 
     @Override
@@ -113,6 +127,7 @@ public class RecentContactsFragment extends TFragment {
         registerObservers(false);
         registerDropCompletedListener(false);
         registerOnlineStateChangeListener(false);
+        registerSystemMessageObservers(false);
     }
 
     /**
@@ -135,13 +150,30 @@ public class RecentContactsFragment extends TFragment {
         adapter = new RecentContactAdapter(recyclerView, items);
         initCallBack();
         adapter.setCallback(callback);
-        MyMenuItem header = new MyMenuItem(getActivity());
-        header.setMenuIcon(getResources().getDrawable(R.drawable.ic_myfriend));
-        header.setMenuName("我的好友");
-        header.setNeedNext(true);
-        adapter.addHeaderView(header);
+        LinearLayout myFriends = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_myfriend, null);
+        if(myFirendClickListener != null)
+            myFriends.setOnClickListener(myFirendClickListener);
+        adapter.addHeaderView(myFriends);
+
+        LinearLayout verif = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.nim_recent_contact_list_item, null);
+        verif.setId(R.id.System_verif);
+        HeadImageView img = (HeadImageView) verif.findViewById(R.id.img_head);
+        img.setImageResource(R.drawable.ic_verif);
+        TextView tv = (TextView) verif.findViewById(R.id.tv_nickname);
+        tv.setText("系统通知");
+        //test
+        verif.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NIMClient.getService(SystemMessageService.class).resetSystemMessageUnreadCount();
+            }
+        });
+        adapter.addHeaderView(verif);
+        int unread = NIMClient.getService(SystemMessageService.class).querySystemMessageUnreadCountBlock();
+        updateSystemVerifCount(unread);
+
         adapter.setHeaderAndEmpty(true);
-        adapter.setEmptyView(new View(getActivity()));
+        //adapter.setEmptyView(new View(getActivity()));
 
         // recyclerView
         recyclerView.setAdapter(adapter);
@@ -728,5 +760,31 @@ public class RecentContactsFragment extends TFragment {
             }
         });
 
+    }
+
+    /**
+     * 注册/注销系统消息未读数变化
+     *
+     * @param register
+     */
+    private void registerSystemMessageObservers(boolean register) {
+        NIMClient.getService(SystemMessageObserver.class).observeUnreadCountChange(sysMsgUnreadCountChangedObserver,
+                register);
+    }
+
+    private Observer<Integer> sysMsgUnreadCountChangedObserver = new Observer<Integer>() {
+        @Override
+        public void onEvent(Integer unreadCount) {
+            updateSystemVerifCount(unreadCount);
+        }
+    };
+
+    private void updateSystemVerifCount(int unreadCount){
+        LinearLayout verif = (LinearLayout) adapter.getHeaderLayout().findViewById(R.id.System_verif);
+        DropFake tip = (DropFake) verif.findViewById(R.id.unread_number_tip);
+        tip.setVisibility(unreadCount > 0 ? View.VISIBLE : View.GONE);
+        tip.setText("" + unreadCount);
+        ((TextView)verif.findViewById(R.id.tv_message)).setText(unreadCount > 0 ? "您有新的系统消息" : "");
+        ((TextView)verif.findViewById(R.id.tv_date_time)).setText(unreadCount > 0 ? new SimpleDateFormat("a hh:mm").format(new Date()) : "");
     }
 }

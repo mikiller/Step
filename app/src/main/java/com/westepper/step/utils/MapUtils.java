@@ -24,6 +24,8 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.geocoder.GeocodeQuery;
+import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.autonavi.amap.mapcore.Inner_3dMap_location;
 import com.westepper.step.R;
@@ -447,6 +449,12 @@ public class MapUtils {
         poiSearch.setOnPoiSearchListener(listener);
         poiSearch.setBound(new PoiSearch.SearchBound(new LatLonPoint(mapLocation.getLatitude(), mapLocation.getLongitude()), 3000));
         poiSearch.searchPOIAsyn();
+    }
+
+    public void searchMapAddress(Context context, String keyWord, String city, GeocodeSearch.OnGeocodeSearchListener listener){
+        GeocodeSearch geoSearch = new GeocodeSearch(context);
+        geoSearch.setOnGeocodeSearchListener(listener);
+        geoSearch.getFromLocationNameAsyn(new GeocodeQuery(keyWord, city));
     }
 
     public void clearMapLocation(){

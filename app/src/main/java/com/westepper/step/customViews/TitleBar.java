@@ -23,7 +23,7 @@ import com.westepper.step.utils.AnimUtils;
  */
 
 public class TitleBar extends RelativeLayout {
-    public final static int FORK = 0, ARROW = 1, NORMAL = 0, MENU = 1, HEADER = 2, NONE = 0, IMG = 1, TXT = 2;
+    public final static int FORK = 1, ARROW = 2, NORMAL = 0, MENU = 1, HEADER = 2, NONE = 0, IMG = 1, TXT = 2;
     private View view_bg;
     private ImageButton btn_back, btn_more;
     private TextView tv_menu, tv_act_title, tv_act_sure;
@@ -66,6 +66,7 @@ public class TitleBar extends RelativeLayout {
             setBgColor(ta.getColor(R.styleable.TitleBar_titleBgColor, getResources().getColor(R.color.colorPrimary)));
 //            view_bg.setBackgroundColor(ta.getColor(R.styleable.TitleBar_titleBgColor, getResources().getColor(R.color.colorPrimary)));
             backStyle = ta.getInt(R.styleable.TitleBar_backStyle, ARROW);
+            btn_back.setVisibility(backStyle == NONE ? GONE : VISIBLE);
             btn_back.setImageResource(backStyle == ARROW ? R.mipmap.ic_back : R.mipmap.ic_close1);
             setSubStyle(ta.getInt(R.styleable.TitleBar_subStyle, NONE));
             titleStyle = ta.getInt(R.styleable.TitleBar_titleStyle, NORMAL);

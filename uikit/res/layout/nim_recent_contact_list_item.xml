@@ -19,8 +19,9 @@
 
         <FrameLayout
             android:id="@+id/portrait_panel"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginRight="5dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true">
 
@@ -28,9 +29,7 @@
                 android:id="@+id/img_head"
                 android:layout_width="@dimen/avatar_size_default"
                 android:layout_height="@dimen/avatar_size_default"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="12dp"/>
+                android:layout_gravity="center"/>
         </FrameLayout>
 
         <TextView

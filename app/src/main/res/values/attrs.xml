@@ -5,8 +5,9 @@
         <attr name="titleTxt" format="string|reference"/>
         <attr name="subTxt" format="string|reference"/>
         <attr name="backStyle">
-            <enum name="FORK" value="0" />
-            <enum name="ARROW" value="1" />
+            <enum name="NONE" value="0" />
+            <enum name="FORK" value="1" />
+            <enum name="ARROW" value="2" />
         </attr>
         <attr name="titleStyle">
             <enum name="NORMAL" value="0" />

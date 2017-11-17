@@ -21,11 +21,12 @@ public abstract class BaseFragment extends Fragment {
     protected int layoutRes;
     protected Bundle saveBundle;
 
+    protected View view;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         setLayoutRes();
-        View view = inflater.inflate(layoutRes, container, false);
+        view = inflater.inflate(layoutRes, container, false);
         unbinder = ButterKnife.bind(this, view);
         saveBundle = savedInstanceState;
         initView();

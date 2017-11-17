@@ -42,5 +42,4 @@ dependencies {
     compile 'jp.wasabeef:glide-transformations:2.0.2'
     //compile 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1' // if you want to use the Glide GPU Filters
     compile 'me.leolin:ShortcutBadger:1.1.17@aar'
-    compile project(':mk_uilib')
 }

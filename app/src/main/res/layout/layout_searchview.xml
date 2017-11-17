@@ -39,5 +39,6 @@
         android:hint="搜地点"
         android:singleLine="true"
         android:maxLines="1"
-        android:background="@android:color/transparent"/>
+        android:background="@android:color/transparent"
+        android:imeOptions="actionSearch"/>
 </LinearLayout>

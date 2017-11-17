@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.netease.nim.uikit.NimUIKit;
+import com.netease.nim.uikit.cache.DataCacheManager;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.StatusCode;
@@ -130,6 +131,8 @@ public class SplashActivity extends SuperActivity {
         } else {
             //进入主页
             NimUIKit.setAccount(MXPreferenceUtils.getInstance().getString("account"));
+            DataCacheManager.buildDataCacheAsync();
+            NimUIKit.getImageLoaderKit().buildImageCache();
             ActivityManager.startActivity(SplashActivity.this, MainActivity.class);
             overridePendingTransition(R.anim.alpha_in, R.anim.alpha_out);
             back();

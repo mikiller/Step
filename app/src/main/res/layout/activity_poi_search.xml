@@ -11,34 +11,40 @@
         bar:backStyle="FORK"
         bar:titleTxt="地点" />
 
-    <RelativeLayout
+    <include
         android:id="@+id/rl_search"
+        layout="@layout/layout_inner_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:layout_below="@+id/titleBar">
+        android:layout_below="@+id/titleBar"/>
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/rl_search"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:paddingTop="8dp"-->
+        <!--android:paddingBottom="8dp"-->
+        <!--android:paddingLeft="15dp"-->
+        <!--android:paddingRight="15dp"-->
+        <!--android:layout_below="@+id/titleBar">-->
 
-        <EditText
-            android:id="@+id/edt_search"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/shape_dis_btn_bg"
-            android:padding="6dp" />
+        <!--<EditText-->
+            <!--android:id="@+id/edt_search"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@drawable/shape_dis_btn_bg"-->
+            <!--android:padding="6dp" />-->
 
-        <TextView
-            android:id="@+id/tv_search_hint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:drawableLeft="@mipmap/ic_search"
-            android:drawablePadding="10dp"
-            android:textColor="@color/discovery_kind_unchecked"
-            android:text="你在哪里？"
-            android:gravity="center"/>
-    </RelativeLayout>
+        <!--<TextView-->
+            <!--android:id="@+id/tv_search_hint"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:drawableLeft="@mipmap/ic_search"-->
+            <!--android:drawablePadding="10dp"-->
+            <!--android:textColor="@color/discovery_kind_unchecked"-->
+            <!--android:text="你在哪里？"-->
+            <!--android:gravity="center"/>-->
+    <!--</RelativeLayout>-->
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rcv_poi"

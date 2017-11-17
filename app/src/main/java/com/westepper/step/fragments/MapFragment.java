@@ -1,26 +1,37 @@
 package com.westepper.step.fragments;
 
-import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.constraint.ConstraintSet;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.services.core.AMapException;
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.core.PoiItem;
+import com.amap.api.services.geocoder.GeocodeAddress;
+import com.amap.api.services.geocoder.GeocodeResult;
+import com.amap.api.services.geocoder.GeocodeSearch;
+import com.amap.api.services.geocoder.RegeocodeResult;
+import com.amap.api.services.poisearch.PoiResult;
+import com.amap.api.services.poisearch.PoiSearch;
 import com.google.gson.Gson;
 import com.uilib.customdialog.CustomDialog;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
 import com.westepper.step.activities.GalleryActivity;
-import com.westepper.step.activities.MainActivity;
 import com.westepper.step.adapters.DiscoveryAdapter;
 import com.westepper.step.base.BaseFragment;
 import com.westepper.step.base.BaseLogic;
@@ -29,11 +40,9 @@ import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.AcheiveSettingLayout;
 import com.westepper.step.customViews.CommitEditView;
 import com.westepper.step.customViews.SearchView;
-import com.westepper.step.logics.CommitLogic;
 import com.westepper.step.logics.DiscoverCityLogic;
 import com.westepper.step.logics.GetDiscoveryListLogic;
 import com.westepper.step.logics.GetReachedListLogic;
-import com.westepper.step.models.CommitModel;
 import com.westepper.step.models.DiscoverCityModel;
 import com.westepper.step.models.DiscoveryListModel;
 import com.westepper.step.models.ReachedModel;
@@ -43,26 +52,17 @@ import com.westepper.step.responses.Area;
 import com.westepper.step.responses.City;
 import com.westepper.step.responses.DiscoveredCities;
 import com.westepper.step.responses.DiscoveryList;
-import com.westepper.step.responses.MapData;
 import com.westepper.step.responses.Discovery;
 import com.westepper.step.responses.Graphics;
 import com.westepper.step.responses.ReachedList;
-import com.westepper.step.responses.UserPos;
 import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.AnimUtils;
-import com.westepper.step.utils.FileUtils;
 import com.westepper.step.utils.MXPreferenceUtils;
 import com.westepper.step.utils.MXTimeUtils;
 import com.westepper.step.utils.MapUtils;
 
-import java.io.File;
-import java.nio.charset.CharsetEncoder;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 
@@ -126,6 +126,30 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
         btn_new.setOnClickListener(this);
         btn_selection.setOnClickListener(this);
         btn_refresh.setOnClickListener(this);
+
+        search.setSearchListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(final TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_SEARCH){
+                    ((SuperActivity)getActivity()).hideInputMethod(search);
+                    mapUtils.searchMapAddress(getActivity(), v.getText().toString(), mapUtils.getMapLocation().getCity(), new GeocodeSearch.OnGeocodeSearchListener() {
+                        @Override
+                        public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
+
+                        }
+
+                        @Override
+                        public void onGeocodeSearched(GeocodeResult geocodeResult, int rstCode) {
+                            if(rstCode != AMapException.CODE_AMAP_SUCCESS)
+                                return;
+                            LatLonPoint point = geocodeResult.getGeocodeAddressList().get(0).getLatLonPoint();
+                            mapUtils.moveCamera(new LatLng(point.getLatitude(), point.getLongitude()));
+                        }
+                    });
+                }
+                return false;
+            }
+        });
 
         commitInput.setDY(DisplayUtil.dip2px(getActivity(), 50));
         adapter = new DiscoveryAdapter(null, getActivity());
@@ -198,7 +222,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
         }
         mapUtils.setGetLocationListener(new MapUtils.OnGetLocationListener() {
             @Override
-            public void onGetLocation(String cityName) {
+            public void onGetLocation(final String cityName) {
                 DiscoverCityModel model = new DiscoverCityModel(cityName);
                 final String tmp = MXPreferenceUtils.getInstance().getString(model.getUserId() + "_discities");
                 DiscoveredCities disCity = new Gson().fromJson(tmp, DiscoveredCities.class);
@@ -214,7 +238,9 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
                     public void onSuccess(Object response) {
                         final CustomDialog dlg = new CustomDialog(getActivity());
                         dlg.setLayoutRes(R.layout.layout_congratulation).setCancelable(true);
-                        dlg.getCustomView().setOnClickListener(new View.OnClickListener() {
+                        View view = dlg.getCustomView();
+                        ((TextView)view.findViewById(R.id.tv_con_txt)).setText("发现" + cityName);
+                        view.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 dlg.dismiss();

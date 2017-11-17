@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.netease.nim.uikit.NimUIKit;
+import com.netease.nim.uikit.contact.core.query.PinYin;
 import com.netease.nim.uikit.custom.DefaultUserInfoProvider;
 import com.netease.nim.uikit.session.viewholder.MsgViewHolderThumbBase;
 import com.netease.nimlib.sdk.NIMClient;
@@ -138,8 +139,11 @@ public class MyApplication extends Application {
     }
 
     private void initUIKit(){
-        if(inMainProcess())
+        if(inMainProcess()) {
+            PinYin.init(this);
+            PinYin.validate();
             NimUIKit.init(this);
+        }
     }
 
     public boolean inMainProcess() {

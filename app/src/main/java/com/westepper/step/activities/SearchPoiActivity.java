@@ -118,7 +118,7 @@ public class SearchPoiActivity extends SuperActivity {
             public void onPoiSearched(PoiResult poiResult, int rstCode) {
                 if(rstCode != AMapException.CODE_AMAP_SUCCESS)
                     return;
-                poiResult.getPois().add(0, new PoiItem("default", null, "上海市", ""));
+                poiResult.getPois().add(0, new PoiItem("default", null, mapUtils.getMapLocation().getCity(), ""));
                 adapter.setDatas(poiResult.getPois());
             }
 
@@ -131,6 +131,6 @@ public class SearchPoiActivity extends SuperActivity {
 
     @Override
     protected void initData() {
-        mapUtils.searchPoi(this, "", poiItem == null ? "上海市" : poiItem.getCityName(), searchListener);
+        mapUtils.searchPoi(this, "", poiItem == null ? mapUtils.getMapLocation().getCity() : poiItem.getCityName(), searchListener);
     }
 }

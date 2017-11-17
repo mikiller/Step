@@ -238,6 +238,10 @@ public class ContactsFragment extends TFragment {
         }
     }
 
+    public ContactDataAdapter getAdapter(){
+        return adapter;
+    }
+
     /**
      * *********************************** 通讯录加载控制 *******************************
      */

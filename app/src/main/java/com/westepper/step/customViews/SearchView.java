@@ -1,12 +1,14 @@
 package com.westepper.step.customViews;
 
 import android.content.Context;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
 import com.uilib.joooonho.SelectableRoundedImageView;
@@ -49,5 +51,9 @@ public class SearchView extends LinearLayout {
 
     public void setOnClickListener(OnClickListener listener){
         edt_search.setOnClickListener(listener);
+    }
+
+    public void setSearchListener(TextView.OnEditorActionListener listener){
+        edt_search.setOnEditorActionListener(listener);
     }
 }

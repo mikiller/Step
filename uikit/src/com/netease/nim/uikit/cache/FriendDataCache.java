@@ -1,6 +1,7 @@
 package com.netease.nim.uikit.cache;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.netease.nim.uikit.NimUIKit;
 import com.netease.nim.uikit.UIKitLogTag;
