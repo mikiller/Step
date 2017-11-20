@@ -168,6 +168,7 @@
         <activity android:name=".activities.MyAchieveActivity" />
         <activity android:name=".activities.MyCityActivity" />
         <activity android:name=".activities.MyFriendsActivity" />
+        <activity android:name=".activities.SystemMessageActivity" />
     </application>
 
 </manifest>

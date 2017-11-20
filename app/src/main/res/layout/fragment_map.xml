@@ -37,6 +37,16 @@
             android:translationZ="4dp" />
     </LinearLayout>
 
+    <ImageButton
+        android:id="@+id/btn_loc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/selector_btn_location"
+        android:background="@android:color/transparent"
+        android:layout_margin="14dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"/>
+
     <LinearLayout
         android:id="@+id/ll_discovery_opt"
         android:layout_width="wrap_content"
@@ -146,12 +156,12 @@
                 style="@style/discovery_rdb_scope"
                 android:layout_marginRight="9dp"
                 android:checked="true"
-                android:text="好友圈" />
+                android:text="好友" />
 
             <RadioButton
                 android:id="@+id/rdb_near"
                 style="@style/discovery_rdb_scope"
-                android:text="附近的人" />
+                android:text="周边" />
         </RadioGroup>
 
         <ImageButton

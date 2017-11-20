@@ -52,9 +52,10 @@ public class Graphics {
             polygon.setStrokeWidth(0f);
             polygon.setFillColor(NORMAL_FILL);
         }else{
-            polygon.setStrokeWidth(4);
-            polygon.setStrokeColor(NORMAL_STROKE);
-            polygon.setFillColor(Color.TRANSPARENT);
+//            polygon.setStrokeWidth(4);
+//            polygon.setStrokeColor(NORMAL_STROKE);
+//            polygon.setFillColor(Color.TRANSPARENT);
+            polygon.setVisible(false);
         }
     }
 

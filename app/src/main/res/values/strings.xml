@@ -31,4 +31,13 @@
     <string name="protocol"><u>用户使用协议</u></string>
 
     <string name="geo_receiver">com.westepper.step.geofencereceiver</string>
+
+    <string name="team_apply_sending">发送中…</string>
+    <string name="verify_reminder">验证提醒</string>
+    <string name="delete_tip">删除提示</string>
+    <string name="delete_system_message">删除该条系统消息？</string>
+    <string name="delete_success">删除成功</string>
+    <string name="clear_all_success">清空成功</string>
+    <string name="agree">同意</string>
+    <string name="reject">拒绝</string>
 </resources>

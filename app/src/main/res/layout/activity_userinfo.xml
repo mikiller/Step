@@ -127,11 +127,11 @@
                 android:layout_below="@+id/line"
                 android:background="@android:color/white"
                 android:gravity="top"
-                android:hint="这个人很懒，这么都没留下"
-                android:maxLength="140"
-                android:minLines="7"
+                android:hint="添加个性签名，让大家更好地认识你..."
+                android:maxLength="120"
+                android:minLines="6"
                 android:padding="15dp"
-                android:textSize="16sp" />
+                android:textSize="16sp"/>
 
             <TextView
                 android:id="@+id/tv_signNum"
@@ -140,7 +140,7 @@
                 android:layout_alignBottom="@+id/tv_sign"
                 android:layout_alignRight="@+id/tv_sign"
                 android:layout_margin="15dp"
-                android:text="140"
+                android:text="120"
                 android:textColor="@color/discovery_kind_unchecked"
                 android:textSize="13sp" />
         </RelativeLayout>

@@ -11,7 +11,7 @@
         android:layout_height="55dp"
         android:layout_marginBottom="5dp"
         android:src="@mipmap/ic_dis_city"
-        android:scaleType="centerCrop"
+        android:scaleType="centerInside"
         android:background="@null"
         android:transitionName="@string/city_badge"/>
 

@@ -1,13 +1,19 @@
 package com.westepper.step.fragments;
 
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.netease.nim.uikit.recent.RecentContactsFragment;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.msg.SystemMessageService;
 import com.westepper.step.R;
 import com.westepper.step.activities.MyFriendsActivity;
+import com.westepper.step.activities.SystemMessageActivity;
 import com.westepper.step.base.BaseFragment;
 import com.westepper.step.base.SuperActivity;
+import com.westepper.step.customViews.RecentContactsHeader;
 import com.westepper.step.customViews.TitleBar;
 import com.westepper.step.utils.ActivityManager;
 
@@ -37,10 +43,25 @@ public class MsgFragment extends BaseFragment {
             }
         });
         fragment = new RecentContactsFragment();
-        fragment.setMyFirendClickListener(new View.OnClickListener() {
+        final RecentContactsHeader header = new RecentContactsHeader(getActivity());
+        header.setHeaderListener(new RecentContactsHeader.HeaderClickedListener() {
             @Override
-            public void onClick(View v) {
+            public void onMyFriendClick() {
                 ActivityManager.startActivity(getActivity(), MyFriendsActivity.class);
+            }
+
+            @Override
+            public void onSystemMsgClick() {
+                NIMClient.getService(SystemMessageService.class).resetSystemMessageUnreadCount();
+                Intent intent = new Intent(getActivity(), SystemMessageActivity.class);
+                startActivity(intent);
+            }
+        });
+        fragment.setRecentContactsHeader(header);
+        fragment.setUpdateSysCountListener(new RecentContactsFragment.UpdateSystemVerifCountListener() {
+            @Override
+            public void updateSystemVerifCount(int count) {
+                header.toggleTip(count);
             }
         });
         getChildFragmentManager().beginTransaction().replace(R.id.messages_fragment, fragment).commit();

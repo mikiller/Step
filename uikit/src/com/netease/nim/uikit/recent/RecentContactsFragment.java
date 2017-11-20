@@ -90,11 +90,14 @@ public class RecentContactsFragment extends TFragment {
 
     private UserInfoObservable.UserInfoObserver userInfoObserver;
 
-    private View.OnClickListener myFirendClickListener;
+    private UpdateSystemVerifCountListener updateSysCountListener;
 
-    public void setMyFirendClickListener(View.OnClickListener listener){
-        myFirendClickListener = listener;
-    }
+//    private View.OnClickListener myFirendClickListener;
+//
+//    public void setMyFirendClickListener(View.OnClickListener listener){
+//        myFirendClickListener = listener;
+//    }
+    private View headerView;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -150,30 +153,15 @@ public class RecentContactsFragment extends TFragment {
         adapter = new RecentContactAdapter(recyclerView, items);
         initCallBack();
         adapter.setCallback(callback);
-        LinearLayout myFriends = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_myfriend, null);
-        if(myFirendClickListener != null)
-            myFriends.setOnClickListener(myFirendClickListener);
-        adapter.addHeaderView(myFriends);
 
-        LinearLayout verif = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.nim_recent_contact_list_item, null);
-        verif.setId(R.id.System_verif);
-        HeadImageView img = (HeadImageView) verif.findViewById(R.id.img_head);
-        img.setImageResource(R.drawable.ic_verif);
-        TextView tv = (TextView) verif.findViewById(R.id.tv_nickname);
-        tv.setText("系统通知");
-        //test
-        verif.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NIMClient.getService(SystemMessageService.class).resetSystemMessageUnreadCount();
-            }
-        });
-        adapter.addHeaderView(verif);
+        if(headerView != null){
+            adapter.setHeaderAndEmpty(true);
+            adapter.addHeaderView(headerView);
+        }
+
         int unread = NIMClient.getService(SystemMessageService.class).querySystemMessageUnreadCountBlock();
-        updateSystemVerifCount(unread);
-
-        adapter.setHeaderAndEmpty(true);
-        //adapter.setEmptyView(new View(getActivity()));
+        if(updateSysCountListener != null)
+            updateSysCountListener.updateSystemVerifCount(unread);
 
         // recyclerView
         recyclerView.setAdapter(adapter);
@@ -350,6 +338,10 @@ public class RecentContactsFragment extends TFragment {
 
     private boolean isTagSet(RecentContact recent, long tag) {
         return (recent.getTag() & tag) == tag;
+    }
+
+    public void setRecentContactsHeader(View header){
+        headerView = header;
     }
 
     private List<RecentContact> loadedRecents;
@@ -775,16 +767,16 @@ public class RecentContactsFragment extends TFragment {
     private Observer<Integer> sysMsgUnreadCountChangedObserver = new Observer<Integer>() {
         @Override
         public void onEvent(Integer unreadCount) {
-            updateSystemVerifCount(unreadCount);
+            if(updateSysCountListener != null)
+                updateSysCountListener.updateSystemVerifCount(unreadCount);
         }
     };
 
-    private void updateSystemVerifCount(int unreadCount){
-        LinearLayout verif = (LinearLayout) adapter.getHeaderLayout().findViewById(R.id.System_verif);
-        DropFake tip = (DropFake) verif.findViewById(R.id.unread_number_tip);
-        tip.setVisibility(unreadCount > 0 ? View.VISIBLE : View.GONE);
-        tip.setText("" + unreadCount);
-        ((TextView)verif.findViewById(R.id.tv_message)).setText(unreadCount > 0 ? "您有新的系统消息" : "");
-        ((TextView)verif.findViewById(R.id.tv_date_time)).setText(unreadCount > 0 ? new SimpleDateFormat("a hh:mm").format(new Date()) : "");
+    public void setUpdateSysCountListener(UpdateSystemVerifCountListener listener){
+        updateSysCountListener = listener;
+    }
+
+    public interface UpdateSystemVerifCountListener{
+        void updateSystemVerifCount(int count);
     }
 }

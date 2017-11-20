@@ -116,6 +116,7 @@ public class MapUtils {
         setCustomStyle(context);
         createLocalStyle(interval);
         aMap.getUiSettings().setZoomControlsEnabled(false);
+        aMap.getUiSettings().setRotateGesturesEnabled(false);
 //        aMap.animateCamera(CameraUpdateFactory.zoomTo(currentZoom));
 
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {

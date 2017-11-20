@@ -150,10 +150,10 @@ public class MyFriendsActivity extends SuperActivity {
             public void refresh(ContactDataAdapter adapter, int position, FuncItem item) {
                 if(item.type == NEW_FRIEND){
                     tv_item_title.setText("新的好友");
-                    iv_img.setImageResource(R.drawable.ic_addfriend);
+                    iv_img.setImageResource(R.mipmap.ic_addfriend2);
                 }else if(item.type == ADVANCED_TEAM){
                     tv_item_title.setText("群聊");
-                    iv_img.setImageResource(R.drawable.ic_teamchat);
+                    iv_img.setImageResource(R.mipmap.ic_teamchat);
                 }
             }
 

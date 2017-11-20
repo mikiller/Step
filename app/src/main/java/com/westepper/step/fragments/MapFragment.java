@@ -78,6 +78,8 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
     LinearLayout ll_search;
     @BindView(R.id.search)
     SearchView search;
+    @BindView(R.id.btn_loc)
+    ImageButton btn_loc;
     @BindView(R.id.btn_acheivement)
     ImageButton btn_acheivement;
     @BindView(R.id.layout_achSetting)
@@ -104,7 +106,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
     DiscoveryAdapter adapter;
     MapUtils mapUtils;
     private boolean isTrack = true;
-    float searchHeight, headTransY, vpTransY, optTransY;
+    float searchHeight, headTransY, vpTransY, optTransY, locTransY;
     int scope = Constants.FRIEND, disKind = Constants.MOOD, gender = 0;
 
     @Override
@@ -120,6 +122,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
         initAcheiveSetting();
         getReachedList();
         search.setOnClickListener(this);
+        btn_loc.setOnClickListener(this);
         btn_acheivement.setOnClickListener(this);
         rdg_scope.setOnCheckedChangeListener(this);
         rdg_kind.setOnCheckedChangeListener(this);
@@ -312,18 +315,21 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
             headTransY = rl_head.getTranslationY();
             vpTransY = vp_discoveryList.getTranslationY();
             optTransY = (int) ll_discovery_opt.getTranslationY();
+            locTransY = btn_loc.getMeasuredHeight() + DisplayUtil.dip2px(getActivity(), 14);
         }
         if (isTrack) {
             AnimUtils.startObjectAnim(ll_search, "translationY", -searchHeight, 0, 300);
             AnimUtils.startObjectAnim(rl_head, "translationY", 0, headTransY, 300);
             AnimUtils.startObjectAnim(ll_discovery_opt, "translationY", 0, optTransY, 400);
             AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vp_discoveryList.getTranslationY(), vpTransY, 800);
+            AnimUtils.startObjectAnim(btn_loc, "translationY", locTransY, 0, 300);
             mapUtils.removeMarker();
             mapUtils.setIsNeedArea(true);
         } else {
             AnimUtils.startObjectAnim(ll_search, "translationY", 0, -searchHeight, 300);
             AnimUtils.startObjectAnim(rl_head, "translationY", headTransY, 0, 300);
             AnimUtils.startObjectAnim(ll_discovery_opt, "translationY", optTransY, 0, 400);
+            AnimUtils.startObjectAnim(btn_loc, "translationY", 0, locTransY, 300);
             mapUtils.setIsNeedArea(false);
             getDiscoveryList();
         }
@@ -402,10 +408,11 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
             String achId = data.getStringExtra(Constants.ACH_ID);
             String cateId = data.getStringExtra(Constants.ACH_CATEGORY);
             layout_achSetting.checkAchItem(cateId, achId);
-//            layout_achSetting.checkAchItem("我爱上海", data.getStringExtra(Constants.ACH_KIND));
-        } else
+        } else {
             setIsTrack(type == R.id.rdb_track);
-
+            if(layout_achSetting != null && layout_achSetting.isShown())
+                layout_achSetting.hide();
+        }
     }
 
     @Override
@@ -413,6 +420,9 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
         switch (v.getId()) {
             case R.id.edt_search:
                 commitInput.setNeedShow(false);
+                break;
+            case R.id.btn_loc:
+                mapUtils.moveCamera(new LatLng(mapUtils.getMapLocation().getLatitude(), mapUtils.getMapLocation().getLongitude()));
                 break;
             case R.id.btn_acheivement:
                 layout_achSetting.show();
@@ -437,7 +447,6 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
                 Map<String, Object> args = new HashMap<>();
                 args.put(Constants.DIS_KIND, id == R.id.btn_mood ? Constants.MOOD : Constants.OUTGO);
                 args.put(Constants.ISMULTIPLE, true);
-//                ActivityManager.startActivity(getActivity(), NewDiscoveryActivity.class, args);
                 ActivityManager.startActivity(getActivity(), GalleryActivity.class, args);
                 dlg.dismiss();
             }

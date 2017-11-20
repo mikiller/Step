@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/messageActivityLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_message_default_bg"
+    android:orientation="vertical">
+
+    <com.westepper.step.customViews.TitleBar xmlns:bar="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        bar:titleTxt="系统通知" />
+
+    <com.netease.nim.uikit.common.ui.listview.MessageListView
+        android:id="@+id/messageListView"
+        style="@style/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@null"
+        android:fadingEdge="none"
+        android:focusable="false"
+        android:listSelector="@android:color/transparent"
+        android:scrollbars="vertical" />
+</LinearLayout>

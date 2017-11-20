@@ -119,7 +119,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="13dp"
                             android:textColor="@color/user_signature"
-                            android:textSize="12dp" />
+                            android:textSize="12dp"
+                            android:hint="添加个性签名，让大家更好地认识你..."/>
                     </LinearLayout>
 
                     <RelativeLayout

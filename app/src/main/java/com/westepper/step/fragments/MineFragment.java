@@ -125,7 +125,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             return;
         tv_user_name.setText(userInfo.getNickName());
         tv_userId.setText("ID: ".concat(userInfo.getUserId()));
-        tv_signature.setText(userInfo.getSign());
+//        if(TextUtils.isEmpty(userInfo.getSign())){
+//            tv_signature.setText("");
+//        }else
+            tv_signature.setText(userInfo.getSign());
         GlideImageLoader.getInstance().loadImage(getActivity(), userInfo.getHeadImg(), R.mipmap.ic_default_head, iv_header, 100);
         if(!TextUtils.isEmpty(userInfo.getCover())){
             iv_header_bg.setScaleType(ImageView.ScaleType.CENTER_CROP);

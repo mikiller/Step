@@ -133,6 +133,8 @@ public class DiscoveryDetailActivity extends SuperActivity {
     @Override
     protected void initView() {
         titleBar.setBgAlpha(titleAlpha);
+        titleBar.setBackImg(R.mipmap.ic_back2);
+        titleBar.setSubImg(R.mipmap.ic_menu2);
         titleBar.setTitleListener(new TitleBar.TitleListener() {
             @Override
             protected void onBackClicked() {
