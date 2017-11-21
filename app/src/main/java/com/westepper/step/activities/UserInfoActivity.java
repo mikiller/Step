@@ -222,7 +222,7 @@ public class UserInfoActivity extends SuperActivity implements View.OnClickListe
                 }
                 userInfo.setHeadImg(filePath);
                 GlideImageLoader.getInstance().loadImage(this, filePath, R.mipmap.ic_default_head, iv_userHeader, 0);
-                userInfo.getBase64Img(UserInfo.HEADIMG);
+                userInfo.getBase64Img(UserInfo.HEADIMG, 240, 240);
                 titleBar.setSubTxtEnabled(true);
                 break;
         }

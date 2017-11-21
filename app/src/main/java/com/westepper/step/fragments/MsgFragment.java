@@ -5,10 +5,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.netease.nim.uikit.NimUIKit;
+import com.netease.nim.uikit.recent.RecentContactsCallback;
 import com.netease.nim.uikit.recent.RecentContactsFragment;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.SystemMessageService;
+import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.msg.model.RecentContact;
+import com.uilib.customdialog.CustomDialog;
 import com.westepper.step.R;
+import com.westepper.step.activities.AddFriendActivity;
 import com.westepper.step.activities.MyFriendsActivity;
 import com.westepper.step.activities.SystemMessageActivity;
 import com.westepper.step.base.BaseFragment;
@@ -16,6 +23,8 @@ import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.RecentContactsHeader;
 import com.westepper.step.customViews.TitleBar;
 import com.westepper.step.utils.ActivityManager;
+import com.westepper.step.widgets.CustomP2PSessionCustomization;
+import com.westepper.step.widgets.CustomTeamSessionCustomization;
 
 import butterknife.BindView;
 
@@ -39,7 +48,7 @@ public class MsgFragment extends BaseFragment {
 
             @Override
             protected void onMoreClicked() {
-
+                showCreateChattingDlg();
             }
         });
         fragment = new RecentContactsFragment();
@@ -64,7 +73,56 @@ public class MsgFragment extends BaseFragment {
                 header.toggleTip(count);
             }
         });
+        fragment.setCallback(new RecentContactsCallback() {
+            @Override
+            public void onRecentContactsLoaded() {
+
+            }
+
+            @Override
+            public void onUnreadCountChange(int unreadCount) {
+
+            }
+
+            @Override
+            public void onItemClick(RecentContact recent) {
+                if (recent.getSessionType() == SessionTypeEnum.Team) {
+                    NimUIKit.setCommonTeamSessionCustomization(new CustomTeamSessionCustomization());
+                    NimUIKit.startTeamSession(getActivity(), recent.getContactId());
+                } else if (recent.getSessionType() == SessionTypeEnum.P2P) {
+                    NimUIKit.setCommonP2PSessionCustomization(new CustomP2PSessionCustomization());
+                    NimUIKit.startP2PSession(getActivity(), recent.getContactId());
+                }
+            }
+
+            @Override
+            public String getDigestOfAttachment(RecentContact recent, MsgAttachment attachment) {
+                return null;
+            }
+
+            @Override
+            public String getDigestOfTipMsg(RecentContact recent) {
+                return null;
+            }
+        });
         getChildFragmentManager().beginTransaction().replace(R.id.messages_fragment, fragment).commit();
+    }
+
+    private void showCreateChattingDlg(){
+        final CustomDialog dlg = new CustomDialog(getActivity());
+        dlg.setLayoutRes(R.layout.layout_newdis_dlg).setOnCustomBtnClickListener(new CustomDialog.onCustomBtnsClickListener() {
+            @Override
+            public void onBtnClick(int id) {
+                switch (id){
+                    case R.id.btn_mood:
+                        ActivityManager.startActivity(getActivity(), AddFriendActivity.class);
+                        break;
+                    case R.id.btn_outgo:
+                        break;
+                }
+                dlg.dismiss();
+            }
+        }, R.id.btn_mood, R.id.btn_outgo).setCustomBtnText("添加朋友", "发起群聊").show();
     }
 
     @Override

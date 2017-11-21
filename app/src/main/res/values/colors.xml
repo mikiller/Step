@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#00a8ff</color>
-    <color name="colorPrimaryDark">@android:color/transparent</color>
+    <!--<color name="colorPrimaryDark">@android:color/transparent</color>-->
+    <color name="colorPrimaryDark">#33000000</color>
     <color name="colorAccent">#519fff</color>
     <color name="colorPrimaryLight">#a0d2f5</color>
 
     <color name="blackPrimary">#323c46</color>
     <color name="bg_mask">#cc323c46</color>
+    <color name="cover_mask">#33000000</color>
     <color name="congratulation_masktop">#88000000</color>
     <color name="congratulation_maskbottom">#f9000000</color>
     <color name="colorHint">#f0f0f0</color>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:menu="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cancel_btn_bg">
+
+    <com.westepper.step.customViews.TitleBar
+        xmlns:bar="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        bar:titleTxt="聊天详情" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:background="@android:color/white">
+
+        <com.netease.nim.uikit.common.ui.widget.UserLayout
+            android:id="@+id/layout_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.netease.nim.uikit.common.ui.widget.UserLayout
+            xmlns:user="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/layout_createTeam"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            user:headerImg="@drawable/selector_create_team"
+            user:tvName="创建聊天群"/>
+    </LinearLayout>
+
+    <com.uilib.mxmenuitem.MyMenuItem
+        android:id="@+id/menu_find_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        menu:needLine="false"
+        menu:needNext="true"
+        menu:menuTitle="查找聊天内容" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/tv_msg_notify"
+            style="@style/nomal_text_style"
+            android:layout_margin="15dp"
+            android:text="消息提醒" />
+
+        <com.westepper.step.customViews.ToggleBox
+            android:id="@+id/ckb_newNotify"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="6dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/selector_toggle_bg"
+            android:button="@null"
+            android:checked="true"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/tv_notify"
+            android:layout_marginLeft="15dp"
+            android:background="@color/sliptLine" />
+    </RelativeLayout>
+
+    <com.uilib.mxmenuitem.MyMenuItem
+        android:id="@+id/menu_clear_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        menu:menuTitle="清空聊天记录"
+        menu:needNext="false"
+        menu:needLine="false" />
+
+</LinearLayout>

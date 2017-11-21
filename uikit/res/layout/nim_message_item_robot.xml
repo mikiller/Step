@@ -35,7 +35,7 @@
             android:layout_below="@id/robot_out"
             android:layout_marginTop="@dimen/dp_4"
             android:text="继续对话"
-            android:textColor="@color/color_blue_0888ff"
+            android:textColor="@color/color_blue_00a8ff"
             android:textSize="@dimen/text_size_15"
             android:visibility="visible"
             />

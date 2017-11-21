@@ -21,6 +21,7 @@ import com.westepper.step.activities.PaihangActivity;
 import com.westepper.step.activities.SettingActivity;
 import com.westepper.step.activities.UserInfoActivity;
 import com.westepper.step.base.BaseFragment;
+import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.Constants;
 import com.uilib.mxmenuitem.MyMenuItem;
 import com.uilib.joooonho.SelectableRoundedImageView;
@@ -56,6 +57,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     TextView tv_city;
     @BindView(R.id.btn_setting)
     ImageButton btn_setting;
+    @BindView(R.id.btn_info)
+    ImageButton btn_info;
     @BindView(R.id.tv_user_name)
     TextView tv_user_name;
     @BindView(R.id.tv_userId)
@@ -83,14 +86,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     public MineFragment() {
         // Required empty public constructor
-    }
-
-    public static MineFragment newInstance(int num) {
-        MineFragment fragment = new MineFragment();
-        Bundle args = new Bundle();
-        args.putInt("num", num);
-        fragment.setArguments(args);
-        return fragment;
     }
 
 
@@ -130,7 +125,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 //        }else
             tv_signature.setText(userInfo.getSign());
         GlideImageLoader.getInstance().loadImage(getActivity(), userInfo.getHeadImg(), R.mipmap.ic_default_head, iv_header, 100);
-        if(!TextUtils.isEmpty(userInfo.getCover())){
+        if(!TextUtils.isEmpty(userInfo.getCover()) && !userInfo.getCover().contains("data:image/jpeg;base64,")){
             iv_header_bg.setScaleType(ImageView.ScaleType.CENTER_CROP);
             GlideImageLoader.getInstance().loadImage(getActivity(), userInfo.getCover(), R.mipmap.ic_addcover, iv_header_bg, 0);
         }
@@ -178,7 +173,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     private void updateCover(String filePath){
         userInfo.setCover(filePath);
-        userInfo.getBase64Img(UserInfo.COVER);
+        userInfo.getBase64Img(UserInfo.COVER, iv_header_bg.getWidth(), iv_header_bg.getHeight());
         UpdateUserInfoLogic logic = new UpdateUserInfoLogic(getActivity(), userInfo);
         logic.sendRequest();
     }

@@ -6,4 +6,9 @@
         <attr name="civ_border_overlay" format="boolean"/>
         <attr name="civ_fill_color" format="color"/>
     </declare-styleable>
+
+    <declare-styleable name="UserLayout">
+        <attr name="headerImg" format="reference" />
+        <attr name="tvName" format="string|reference" />
+    </declare-styleable>
 </resources>

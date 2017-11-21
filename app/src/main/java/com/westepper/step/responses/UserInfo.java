@@ -38,11 +38,11 @@ public class UserInfo extends SignModel {
         this.privacy_info = privacy_info;
     }
 
-    public void getBase64Img(int type){
+    public void getBase64Img(int type, int width, int height){
         if(type != COVER)
-            headImg = BitmapUtils.getBmpBase64Str(headImg, 240, 240);
+            headImg = BitmapUtils.getBmpBase64Str(headImg, width, height);
         if(type != HEADIMG)
-            cover = BitmapUtils.getBmpBase64Str(cover, -1, -1);
+            cover = BitmapUtils.getBmpBase64Str(cover, width, height);
     }
 
 }

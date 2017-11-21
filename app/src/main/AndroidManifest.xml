@@ -169,6 +169,8 @@
         <activity android:name=".activities.MyCityActivity" />
         <activity android:name=".activities.MyFriendsActivity" />
         <activity android:name=".activities.SystemMessageActivity" />
+        <activity android:name=".activities.P2PSessionDetailActivity" />
+        <activity android:name=".activities.AddFriendActivity" />
     </application>
 
 </manifest>
