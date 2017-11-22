@@ -48,7 +48,6 @@ public class UpdateUserInfoLogic extends BaseLogic<UserInfo> {
 
     @Override
     public void onSuccess(UserInfo response) {
-        SuperActivity.userInfo = response;
         MXPreferenceUtils.getInstance().setString(response.getUserId(), new Gson().toJson(response));
     }
 

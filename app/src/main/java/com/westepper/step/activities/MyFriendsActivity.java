@@ -3,6 +3,7 @@ package com.westepper.step.activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -42,6 +43,8 @@ public class MyFriendsActivity extends SuperActivity {
     TextView tv_search_hint;
 
     ContactsFragment contactsFragment;
+    ContactsFragment teamFragment;
+    boolean isTeam = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,7 +57,10 @@ public class MyFriendsActivity extends SuperActivity {
         titleBar.setTitleListener(new TitleBar.TitleListener() {
             @Override
             protected void onBackClicked() {
-                back();
+                if(isTeam){
+                    replaceFragment();
+                }else
+                    back();
             }
         });
         edt_search.addTextChangedListener(new TextWatcher() {
@@ -68,10 +74,16 @@ public class MyFriendsActivity extends SuperActivity {
                 tv_search_hint.setVisibility(TextUtils.isEmpty(s.toString()) ? View.VISIBLE : View.GONE);
                 if(TextUtils.isEmpty(s.toString())){
                     tv_search_hint.setVisibility(View.VISIBLE);
-                    contactsFragment.getAdapter().load(true);
+                    if(isTeam)
+                        teamFragment.getAdapter().load(true);
+                    else
+                        contactsFragment.getAdapter().load(true);
                 }else {
                     tv_search_hint.setVisibility(View.GONE);
-                    contactsFragment.getAdapter().query(s.toString());
+                    if(isTeam)
+                        teamFragment.getAdapter().query(s.toString());
+                    else
+                        contactsFragment.getAdapter().query(s.toString());
                 }
             }
 
@@ -81,11 +93,17 @@ public class MyFriendsActivity extends SuperActivity {
             }
         });
         tv_search_hint.setText("搜索联系人");
+
+        initContactsFragment();
+        initTeamFragment();
         addContactsFragment();
     }
 
-    private void addContactsFragment(){
+    private void initContactsFragment(){
         contactsFragment = new ContactsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("type", ItemTypes.FRIEND);
+        contactsFragment.setArguments(bundle);
         contactsFragment.setContactsCustomization(new ContactsCustomization() {
             @Override
             public Class<? extends AbsContactViewHolder<? extends AbsContactItem>> onGetFuncViewHolderClass() {
@@ -95,21 +113,34 @@ public class MyFriendsActivity extends SuperActivity {
             @Override
             public List<AbsContactItem> onGetFuncItems() {
                 List<AbsContactItem> items = new ArrayList<>();
-                items.add(new FuncItem(FuncItem.NEW_FRIEND));
-                items.add(new FuncItem(FuncItem.ADVANCED_TEAM));
+                items.add(new FuncItem(ItemTypes.TEAMS.ADVANCED_TEAM));
                 return items;
             }
 
             @Override
             public void onFuncItemClick(AbsContactItem item) {
-                if(((FuncItem)item).type == FuncItem.NEW_FRIEND){
-                    Log.e(TAG, "add new friend");
-                }else if(((FuncItem)item).type == FuncItem.ADVANCED_TEAM){
-                    Log.e(TAG, "start team chat");
+                if(((FuncItem)item).type == ItemTypes.TEAMS.ADVANCED_TEAM){
+                    replaceFragment();
                 }
             }
         });
+    }
+
+    private void initTeamFragment(){
+        teamFragment = new ContactsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("type", ItemTypes.TEAMS.ADVANCED_TEAM);
+        teamFragment.setArguments(bundle);
+    }
+
+    private void addContactsFragment(){
         getSupportFragmentManager().beginTransaction().add(R.id.contact_list_fragment, contactsFragment).commit();
+    }
+
+    private void replaceFragment(){
+        getSupportFragmentManager().beginTransaction().replace(R.id.contact_list_fragment, isTeam ? contactsFragment : teamFragment).commit();
+        isTeam = !isTeam;
+        tv_search_hint.setText(isTeam ? "搜索群组" : "搜索联系人");
     }
 
     @Override
@@ -118,7 +149,6 @@ public class MyFriendsActivity extends SuperActivity {
     }
 
     public static class FuncItem extends AbsContactItem{
-        public static final int NEW_FRIEND = 1, ADVANCED_TEAM = 2;
         private int type;
 
         public FuncItem(int type) {
@@ -148,10 +178,7 @@ public class MyFriendsActivity extends SuperActivity {
             }
             @Override
             public void refresh(ContactDataAdapter adapter, int position, FuncItem item) {
-                if(item.type == NEW_FRIEND){
-                    tv_item_title.setText("新的好友");
-                    iv_img.setImageResource(R.mipmap.ic_addfriend2);
-                }else if(item.type == ADVANCED_TEAM){
+                if(item.type == ItemTypes.TEAMS.ADVANCED_TEAM){
                     tv_item_title.setText("群聊");
                     iv_img.setImageResource(R.mipmap.ic_teamchat);
                 }

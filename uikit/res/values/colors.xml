@@ -27,6 +27,7 @@
     <color name="color_green_disable">#a2efe0</color>
     <color name="color_green_00d3a9">#ff00D3A9</color>
     <color name="color_blue_00a8ff">#00a8ff</color>
+    <color name="color_blue_519fff">#519fff</color>
     <color name="action_bar_black_title_1f1f1f">#1f1f1f</color>
     <color name="action_bar_black_title_color">#252525</color>
     <color name="contact_search_hit">#02d3a9</color>
@@ -63,4 +64,5 @@
 
     <color name="robot_link_element_text_blue">#248DFA</color>
     <color name="create_team_pressed">#a0d2f5</color>
+    <color name="help_color">#ff999999</color>
 </resources>

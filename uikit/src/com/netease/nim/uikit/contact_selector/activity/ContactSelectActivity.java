@@ -3,6 +3,7 @@ package com.netease.nim.uikit.contact_selector.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
@@ -224,6 +225,15 @@ public class ContactSelectActivity extends UI implements View.OnClickListener, a
             }
         });
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        TextView textView = (TextView) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);//14sp
+        textView.setTextColor(getResources().getColor(android.R.color.white));
+        textView.setHintTextColor(getResources().getColor(R.color.color_b3b3b3));
+        textView.setHint("搜索联系人。。。");
+        ImageView btnSearch = (ImageView) searchView.findViewById(android.support.v7.appcompat.R.id.search_button);
+        btnSearch.setImageResource(R.drawable.ic_search);
+        btnSearch = (ImageView) searchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn);
+        btnSearch.setImageResource(R.drawable.nim_icon_edit_delete);
         this.searchView = searchView;
         this.searchView.setVisibility(option.searchVisible ? View.VISIBLE : View.GONE);
         searchView.setOnQueryTextListener(this);

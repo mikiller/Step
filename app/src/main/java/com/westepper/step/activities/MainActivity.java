@@ -7,6 +7,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.netease.nim.uikit.contact_selector.activity.ContactSelectActivity;
 import com.westepper.step.R;
 import com.westepper.step.adapters.MainFragmentAdapter;
 import com.westepper.step.base.BaseLogic;
@@ -26,6 +27,9 @@ import com.westepper.step.responses.UserInfo;
 import com.westepper.step.utils.FileUtils;
 import com.westepper.step.utils.MXPreferenceUtils;
 import com.westepper.step.utils.MapUtils;
+import com.westepper.step.utils.TeamCreateHelper;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 
@@ -145,6 +149,11 @@ public class MainActivity extends SuperActivity {
                 rdg_guideBar.check(R.id.rdb_track);
                 adapter.getItem(1).fragmentCallback(requestCode, data);
                 break;
+            case Constants.REQUEST_CODE_ADVANCED:
+                final ArrayList<String> selected = data.getStringArrayListExtra(ContactSelectActivity.RESULT_DATA);
+                TeamCreateHelper.createAdvancedTeam(MainActivity.this, selected, null);
+                break;
+
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.westepper.step.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
@@ -8,11 +9,14 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.netease.nim.uikit.NimUIKit;
 import com.netease.nim.uikit.cache.NimUserInfoCache;
 import com.netease.nim.uikit.common.ui.imageview.HeadImageView;
 import com.netease.nim.uikit.common.ui.widget.UserLayout;
 import com.netease.nim.uikit.common.util.sys.NetworkUtil;
+import com.netease.nim.uikit.contact_selector.activity.ContactSelectActivity;
 import com.netease.nim.uikit.session.helper.MessageListPanelHelper;
+import com.netease.nim.uikit.team.helper.TeamHelper;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.friend.FriendService;
@@ -26,6 +30,10 @@ import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.TitleBar;
 import com.westepper.step.customViews.ToggleBox;
 import com.westepper.step.utils.ActivityManager;
+import com.westepper.step.utils.TeamCreateHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -79,7 +87,10 @@ public class P2PSessionDetailActivity extends SuperActivity implements View.OnCl
         layout_createTeam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                ArrayList<String> accounts = new ArrayList<String>();
+                accounts.add(account);
+                ContactSelectActivity.Option advancedOption = TeamHelper.getCreateContactSelectOption(accounts, 50);
+                NimUIKit.startContactSelect(P2PSessionDetailActivity.this, advancedOption, Constants.REQUEST_CODE_ADVANCED);
             }
         });
 
@@ -150,5 +161,19 @@ public class P2PSessionDetailActivity extends SuperActivity implements View.OnCl
                 MessageListPanelHelper.getInstance().notifyClearMessages(account);
             }
         }).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode != RESULT_OK)
+            return;
+        switch (requestCode){
+            case Constants.REQUEST_CODE_ADVANCED:
+                final ArrayList<String> selected = data.getStringArrayListExtra(ContactSelectActivity.RESULT_DATA);
+                TeamCreateHelper.createAdvancedTeam(this, selected, null);
+                break;
+
+        }
     }
 }

@@ -18,6 +18,7 @@ import com.netease.nim.uikit.NimUIKit;
 import com.netease.nim.uikit.OnlineStateChangeListener;
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.UIKitLogTag;
+import com.netease.nim.uikit.ait.selector.model.ItemType;
 import com.netease.nim.uikit.cache.FriendDataCache;
 import com.netease.nim.uikit.common.fragment.TFragment;
 import com.netease.nim.uikit.common.ui.liv.LetterIndexView;
@@ -30,6 +31,7 @@ import com.netease.nim.uikit.contact.core.model.ContactDataAdapter;
 import com.netease.nim.uikit.contact.core.model.ContactGroupStrategy;
 import com.netease.nim.uikit.contact.core.provider.ContactDataProvider;
 import com.netease.nim.uikit.contact.core.query.IContactDataProvider;
+import com.netease.nim.uikit.contact.core.viewholder.ContactHolder;
 import com.netease.nim.uikit.contact.core.viewholder.LabelHolder;
 import com.netease.nim.uikit.contact.core.viewholder.OnlineStateContactHolder;
 import com.netease.nim.uikit.uinfo.UserInfoHelper;
@@ -60,6 +62,8 @@ public class ContactsFragment extends TFragment {
 
     private View loadingFrame;
 
+    private int itemType;
+
     private ContactsCustomization customization;
 
     private ReloadFrequencyControl reloadControl = new ReloadFrequencyControl();
@@ -79,8 +83,11 @@ public class ContactsFragment extends TFragment {
      * ***************************************** 生命周期 *****************************************
      */
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Bundle bundle = getArguments();
+        itemType = bundle.getInt("type");
         return inflater.inflate(R.layout.nim_contacts, container, false);
     }
 
@@ -109,7 +116,7 @@ public class ContactsFragment extends TFragment {
     }
 
     private void initAdapter() {
-        IContactDataProvider dataProvider = new ContactDataProvider(ItemTypes.FRIEND);
+        final IContactDataProvider dataProvider = new ContactDataProvider(itemType);
 
         adapter = new ContactDataAdapter(getActivity(), new ContactsGroupStrategy(), dataProvider) {
             @Override
@@ -129,9 +136,11 @@ public class ContactsFragment extends TFragment {
             @Override
             protected void onPostLoad(boolean empty, String queryText, boolean all) {
                 loadingFrame.setVisibility(View.GONE);
-                int userCount = NimUIKit.getContactProvider().getMyFriendsCount();
-                countText.setText("共有好友" + userCount + "名");
-
+                if(itemType == ItemTypes.FRIEND) {
+                    int userCount = NimUIKit.getContactProvider().getMyFriendsCount();
+                    countText.setText("共有好友" + userCount + "名");
+                }
+                countText.setVisibility(itemType == ItemTypes.TEAMS.ADVANCED_TEAM ? View.GONE : View.VISIBLE);
                 onReloadCompleted();
             }
         };
@@ -140,7 +149,10 @@ public class ContactsFragment extends TFragment {
         if (customization != null) {
             adapter.addViewHolder(ItemTypes.FUNC, customization.onGetFuncViewHolderClass());
         }
-        adapter.addViewHolder(ItemTypes.FRIEND, OnlineStateContactHolder.class);
+        if (itemType == ItemTypes.FRIEND)
+            adapter.addViewHolder(itemType, OnlineStateContactHolder.class);
+        else if (itemType == ItemTypes.TEAMS.ADVANCED_TEAM)
+            adapter.addViewHolder(ItemTypes.TEAM, ContactHolder.class);
     }
 
     private void findViews() {
@@ -204,8 +216,12 @@ public class ContactsFragment extends TFragment {
                 return;
             }
 
-            if (type == ItemTypes.FRIEND && item instanceof ContactItem && NimUIKit.getContactEventListener() != null) {
-                NimUIKit.getContactEventListener().onItemClick(getActivity(), (((ContactItem) item).getContact()).getContactId());
+            if (item instanceof ContactItem && NimUIKit.getContactEventListener() != null) {
+                if (type == ItemTypes.FRIEND) {
+                    NimUIKit.getContactEventListener().onItemClick(getActivity(), (((ContactItem) item).getContact()).getContactId());
+                } else if (type == ItemTypes.TEAM) {
+                    NimUIKit.startTeamSession(getActivity(), ((ContactItem) item).getContact().getContactId());
+                }
             }
         }
 
@@ -238,7 +254,7 @@ public class ContactsFragment extends TFragment {
         }
     }
 
-    public ContactDataAdapter getAdapter(){
+    public ContactDataAdapter getAdapter() {
         return adapter;
     }
 

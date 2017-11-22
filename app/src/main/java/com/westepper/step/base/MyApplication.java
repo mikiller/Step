@@ -34,6 +34,7 @@ import com.westepper.step.activities.MainActivity;
 import com.westepper.step.activities.WelcomeActivity;
 import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.MXPreferenceUtils;
+import com.westepper.step.utils.SessionHelper;
 
 
 /**
@@ -143,6 +144,7 @@ public class MyApplication extends Application {
             PinYin.init(this);
             PinYin.validate();
             NimUIKit.init(this);
+            SessionHelper.init();
         }
     }
 

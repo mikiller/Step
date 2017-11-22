@@ -175,6 +175,17 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         userInfo.setCover(filePath);
         userInfo.getBase64Img(UserInfo.COVER, iv_header_bg.getWidth(), iv_header_bg.getHeight());
         UpdateUserInfoLogic logic = new UpdateUserInfoLogic(getActivity(), userInfo);
+        logic.setCallback(new BaseLogic.LogicCallback<UserInfo>() {
+            @Override
+            public void onSuccess(UserInfo response) {
+                SuperActivity.userInfo.setCover(response.getCover());
+            }
+
+            @Override
+            public void onFailed(String code, String msg, UserInfo localData) {
+
+            }
+        });
         logic.sendRequest();
     }
 

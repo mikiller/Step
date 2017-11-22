@@ -31,6 +31,7 @@ import com.westepper.step.models.NewDiscoveryModel;
 import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.MXTimeUtils;
 import com.westepper.step.utils.MapUtils;
+import com.westepper.step.utils.TeamCreateHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -169,7 +170,7 @@ public class NewDiscoveryActivity extends SuperActivity {
         if(disKind == Constants.MOOD)
             model = new NewDiscoveryModel(disKind, adapter.getInfo(), System.currentTimeMillis());
         else
-            model = new NewDiscoveryModel(privacy, disKind, adapter.getInfo(), "0", System.currentTimeMillis(), date, peopleNum);
+            model = new NewDiscoveryModel(privacy, disKind, adapter.getInfo(), System.currentTimeMillis(), date, peopleNum);
         if(adapter.getPoiItem() != null && adapter.getPoiItem().getLatLonPoint() != null) {
             model.setPoiTitle(adapter.getPoiItem().getTitle());
             model.setLatitude(adapter.getPoiItem().getLatLonPoint().getLatitude());
@@ -193,8 +194,12 @@ public class NewDiscoveryActivity extends SuperActivity {
             }
         }
         model.setImgList(imgList);
-        NewDiscoveryLogic logic = new NewDiscoveryLogic(this, model);
-        logic.sendRequest();
+        if(disKind == Constants.MOOD) {
+            NewDiscoveryLogic logic = new NewDiscoveryLogic(this, model);
+            logic.sendRequest();
+        }else{
+            TeamCreateHelper.createAdvancedTeam(this, new ArrayList<String>(), model);
+        }
     }
 
     private void createPeoplePicker(final MyMenuItem menu){

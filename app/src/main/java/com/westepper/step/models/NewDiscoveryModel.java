@@ -28,10 +28,9 @@ public class NewDiscoveryModel extends BaseModel {
         this.pushTime = pushTime/1000;
     }
 
-    public NewDiscoveryModel(int scope, int discoveryKind, String info, String teamId, long pushTime, long endTime, int totalCount) {
+    public NewDiscoveryModel(int scope, int discoveryKind, String info, long pushTime, long endTime, int totalCount) {
         this(discoveryKind, info, pushTime);
         this.scope = scope;
-        this.teamId = teamId;
         this.endTime = endTime;
         this.totalCount = totalCount;
     }

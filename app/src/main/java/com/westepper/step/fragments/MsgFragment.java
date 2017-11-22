@@ -6,8 +6,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.netease.nim.uikit.NimUIKit;
+import com.netease.nim.uikit.contact_selector.activity.ContactSelectActivity;
 import com.netease.nim.uikit.recent.RecentContactsCallback;
 import com.netease.nim.uikit.recent.RecentContactsFragment;
+import com.netease.nim.uikit.team.helper.TeamHelper;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.SystemMessageService;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
@@ -19,6 +21,7 @@ import com.westepper.step.activities.AddFriendActivity;
 import com.westepper.step.activities.MyFriendsActivity;
 import com.westepper.step.activities.SystemMessageActivity;
 import com.westepper.step.base.BaseFragment;
+import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.RecentContactsHeader;
 import com.westepper.step.customViews.TitleBar;
@@ -87,10 +90,8 @@ public class MsgFragment extends BaseFragment {
             @Override
             public void onItemClick(RecentContact recent) {
                 if (recent.getSessionType() == SessionTypeEnum.Team) {
-                    NimUIKit.setCommonTeamSessionCustomization(new CustomTeamSessionCustomization());
                     NimUIKit.startTeamSession(getActivity(), recent.getContactId());
                 } else if (recent.getSessionType() == SessionTypeEnum.P2P) {
-                    NimUIKit.setCommonP2PSessionCustomization(new CustomP2PSessionCustomization());
                     NimUIKit.startP2PSession(getActivity(), recent.getContactId());
                 }
             }
@@ -118,6 +119,8 @@ public class MsgFragment extends BaseFragment {
                         ActivityManager.startActivity(getActivity(), AddFriendActivity.class);
                         break;
                     case R.id.btn_outgo:
+                        ContactSelectActivity.Option advancedOption = TeamHelper.getCreateContactSelectOption(null, 50);
+                        NimUIKit.startContactSelect(getActivity(), advancedOption, Constants.REQUEST_CODE_ADVANCED);
                         break;
                 }
                 dlg.dismiss();

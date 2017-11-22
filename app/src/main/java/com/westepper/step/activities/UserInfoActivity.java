@@ -122,6 +122,7 @@ public class UserInfoActivity extends SuperActivity implements View.OnClickListe
                             Toast.makeText(UserInfoActivity.this, "昵称不能为空！", Toast.LENGTH_SHORT).show();
                             return;
                         }
+                        txt = txt.trim().replace("\n", "");
                         userInfo.setNickName(txt);
                         menu_nickname.setSubText(txt);
                         break;

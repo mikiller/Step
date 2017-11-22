@@ -38,6 +38,7 @@
             android:hint="Step ID"
             android:singleLine="true"
             android:maxLines="1"
+            android:inputType="number"
             android:background="@android:color/transparent"
             android:imeOptions="actionSearch"/>
     </LinearLayout>
