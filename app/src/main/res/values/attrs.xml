@@ -25,4 +25,10 @@
         <attr name="icon" format="reference"/>
         <attr name="achTitle" format="string|reference" />
     </declare-styleable>
+
+    <declare-styleable name="UserInfoLayout">
+        <attr name="needOpt" format="boolean" />
+        <attr name="needGoSession" format="boolean" />
+        <attr name="canEdit" format="boolean" />
+    </declare-styleable>
 </resources>

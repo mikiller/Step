@@ -10,9 +10,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
+import com.netease.nim.uikit.common.ui.widget.UserLayout;
 import com.westepper.step.R;
 import com.westepper.step.activities.GalleryActivity;
 import com.westepper.step.activities.MyAchieveActivity;
@@ -27,6 +29,7 @@ import com.uilib.mxmenuitem.MyMenuItem;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.base.SuperActivity;
+import com.westepper.step.customViews.UserInfoLayout;
 import com.westepper.step.logics.UpdateUserInfoLogic;
 import com.westepper.step.responses.RankList;
 import com.westepper.step.responses.UserInfo;
@@ -49,24 +52,8 @@ import butterknife.BindViews;
  */
 public class MineFragment extends BaseFragment implements View.OnClickListener {
     private String TAG = this.getClass().getSimpleName();
-    @BindView(R.id.iv_header)
-    SelectableRoundedImageView iv_header;
-    @BindView(R.id.iv_header_bg)
-    ImageView iv_header_bg;
-    @BindView(R.id.tv_city)
-    TextView tv_city;
-    @BindView(R.id.btn_setting)
-    ImageButton btn_setting;
-    @BindView(R.id.btn_info)
-    ImageButton btn_info;
-    @BindView(R.id.tv_user_name)
-    TextView tv_user_name;
-    @BindView(R.id.tv_userId)
-    TextView tv_userId;
-    @BindView(R.id.tv_signature)
-    TextView tv_signature;
-    @BindView(R.id.iv_gender)
-    ImageView iv_gender;
+    @BindView(R.id.userLayout)
+    UserInfoLayout userLayout;
     @BindViews({R.id.iv_first, R.id.iv_second, R.id.iv_third})
     SelectableRoundedImageView[] rankHeads;
     @BindView(R.id.menu_paihang)
@@ -96,15 +83,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     protected void initView() {
-        RelativeLayout.LayoutParams lp;
-        lp = (RelativeLayout.LayoutParams) iv_header_bg.getLayoutParams();
-        lp.height = DisplayUtil.getScreenWidth(getActivity()) *9 / 16;
-        iv_header_bg.setLayoutParams(lp);
-
-        iv_header_bg.setOnClickListener(this);
-        iv_header.setOnClickListener(this);
-        btn_setting.setOnClickListener(this);
-
         menu_paihang.setOnClickListener(this);
         menu_paihang.setSubText("NO.");
         menu_mood.setOnClickListener(this);
@@ -115,35 +93,18 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         userInfo = SuperActivity.userInfo;
     }
 
-    private void setUserInfo(){
-        if(userInfo == null || tv_user_name == null)
-            return;
-        tv_user_name.setText(userInfo.getNickName());
-        tv_userId.setText("ID: ".concat(userInfo.getUserId()));
-//        if(TextUtils.isEmpty(userInfo.getSign())){
-//            tv_signature.setText("");
-//        }else
-            tv_signature.setText(userInfo.getSign());
-        GlideImageLoader.getInstance().loadImage(getActivity(), userInfo.getHeadImg(), R.mipmap.ic_default_head, iv_header, 100);
-        if(!TextUtils.isEmpty(userInfo.getCover()) && !userInfo.getCover().contains("data:image/jpeg;base64,")){
-            iv_header_bg.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            GlideImageLoader.getInstance().loadImage(getActivity(), userInfo.getCover(), R.mipmap.ic_addcover, iv_header_bg, 0);
-        }
-        tv_city.setText(userInfo.getCity());
-    }
-
     @Override
     public void onResume() {
         super.onResume();
         if(isVisible)
-            setUserInfo();
+            userLayout.setUserInfo(userInfo);
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(isVisible = getUserVisibleHint()){
-            setUserInfo();
+        if((isVisible = getUserVisibleHint()) && userLayout != null){
+            userLayout.setUserInfo(userInfo);
         }
     }
 
@@ -159,8 +120,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 List<File> files = (List<File>) data.getSerializableExtra(CameraGalleryUtils.THUMB_FILE);
                 filePath = files.get(0).getPath();
             }
-            iv_header_bg.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            GlideImageLoader.getInstance().loadImage(getActivity(), filePath, R.mipmap.ic_addcover, iv_header_bg, 0);
+            userLayout.setCover(filePath);
             updateCover(filePath);
         }else if(type == Constants.GET_RANK){
             rankList = (RankList) data.getSerializableExtra(Constants.RANKLIST1);
@@ -173,7 +133,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     private void updateCover(String filePath){
         userInfo.setCover(filePath);
-        userInfo.getBase64Img(UserInfo.COVER, iv_header_bg.getWidth(), iv_header_bg.getHeight());
+        userInfo.getBase64Img(UserInfo.COVER, userLayout.getBgWidth(), userLayout.getBgHeight());
         UpdateUserInfoLogic logic = new UpdateUserInfoLogic(getActivity(), userInfo);
         logic.setCallback(new BaseLogic.LogicCallback<UserInfo>() {
             @Override
@@ -183,7 +143,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
             @Override
             public void onFailed(String code, String msg, UserInfo localData) {
-
+                Toast.makeText(getActivity(), "上传背景图失败", Toast.LENGTH_SHORT).show();
             }
         });
         logic.sendRequest();
@@ -193,19 +153,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     public void onClick(View v) {
         Map<String, Object> args;
         switch (v.getId()) {
-            case R.id.iv_header_bg:
-                args = new HashMap<>();
-                args.put(Constants.GALLERY_TYPE, Constants.CHANGE_USER_BG);
-                ActivityManager.startActivityforResult(getActivity(), GalleryActivity.class, Constants.CHANGE_USER_BG, args);
-                break;
-            case R.id.iv_header:
-                args = new HashMap<>();
-                args.put(Constants.USERINFO, userInfo);
-                ActivityManager.startActivityforResult(getActivity(), UserInfoActivity.class, Constants.CHANGE_HEADER, args);
-                break;
-            case R.id.btn_setting:
-                ActivityManager.startActivity(getActivity(), SettingActivity.class);
-                break;
             case R.id.menu_paihang:
                 args = new HashMap<>();
                 args.put(Constants.RANKLIST1, rankList);
@@ -231,22 +178,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 args.put(Constants.ACH_KIND, Constants.ACH_BADGE);
                 ActivityManager.startActivityforResult(getActivity(), MyAchieveActivity.class, Constants.SHOW_ACHIEVE_AREA, args);
                 break;
-//            case R.id.tv_user_name:
-//                ((BaseActivity) getActivity()).startToActivity(UserRegisterActivity.class);
-//                break;
-//            case R.id.menu_mood:
-//                if (((BaseActivity) getActivity()).isUserLogin(true, BaseListActivity.class.getName()))
-//                    ((BaseActivity) getActivity()).startToActivity(BaseListActivity.class, BaseListFragment.class.getSimpleName(), OrderListFragment.class.getName());
-//                break;
-//            case R.id.menu_advice:
-//                ((BaseActivity) getActivity()).startToActivity(AdviceActivity.class);
-//                break;
-//            case R.id.menu_contact_us:
-//                ((MainActivity)getActivity()).setEmailMaskVisible(true);
-//                break;
-//            case R.id.menu_setting:
-//                ((BaseActivity) getActivity()).startToActivity(SettingActivity.class, "fragmentName", SettingFragment.class.getName());
-//                break;
         }
     }
 

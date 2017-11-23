@@ -31,7 +31,8 @@ import okhttp3.Response;
  */
 public abstract class BaseLogic<P> extends Callback<P> {
     protected final String TAG = this.getClass().getSimpleName();
-    private String httpBaseIp = "http://47.96.162.218/api/";
+//    private String httpBaseIp = "http://47.96.162.218/api/";
+    private String httpBaseIp = "https://api.westepper.com/api/";
     protected Context context;
 
     OkHttpManager httpMgr;

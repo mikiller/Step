@@ -106,7 +106,7 @@ public class MainActivity extends SuperActivity {
 
             @Override
             public void onFailed(String code, String msg, UserInfo localData) {
-
+                Toast.makeText(MainActivity.this, "获取用户信息失败", Toast.LENGTH_SHORT).show();
             }
         });
         logic.sendRequest();

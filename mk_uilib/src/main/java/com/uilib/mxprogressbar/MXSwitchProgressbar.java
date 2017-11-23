@@ -19,7 +19,7 @@ import com.uilib.R;
 /**
  * Created by Mikiller on 2016/7/29.
  */
-public class MXProgressbar extends View {
+public class MXSwitchProgressbar extends View {
     private final int maxProgress = 100;
     private int progress = 0;
 
@@ -32,17 +32,17 @@ public class MXProgressbar extends View {
     int strokeWidth = 4;
     boolean isRunning = false;
 
-    public MXProgressbar(Context context) {
+    public MXSwitchProgressbar(Context context) {
         super(context);
         initParams(context, null, 0);
     }
 
-    public MXProgressbar(Context context, AttributeSet attrs) {
+    public MXSwitchProgressbar(Context context, AttributeSet attrs) {
         super(context, attrs);
         initParams(context, attrs, 0);
     }
 
-    public MXProgressbar(Context context, AttributeSet attrs, int defStyleAttr) {
+    public MXSwitchProgressbar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initParams(context,attrs, defStyleAttr);
     }

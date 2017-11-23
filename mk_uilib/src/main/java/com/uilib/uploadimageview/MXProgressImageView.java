@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.mikiller.mkglidelib.utils.BitmapUtils;
 import com.uilib.R;
-import com.uilib.mxprogressbar.MXProgressbar;
+import com.uilib.mxprogressbar.MXSwitchProgressbar;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -37,7 +37,7 @@ public class MXProgressImageView extends RelativeLayout implements View.OnClickL
 
     private RelativeLayout rl_background;
     private ProgressBar linePgsBar;
-    private MXProgressbar circlePgsBar;
+    private MXSwitchProgressbar circlePgsBar;
     private View mask;
     private TextView tv_wait;
     private LinearLayout ll_refresh;
@@ -87,7 +87,7 @@ public class MXProgressImageView extends RelativeLayout implements View.OnClickL
         rl_background = (RelativeLayout) findViewById(R.id.rl_background);
         rl_background.setOnClickListener(this);
         linePgsBar = (ProgressBar) findViewById(R.id.pgb_line);
-        circlePgsBar = (MXProgressbar) findViewById(R.id.pgb_circle);
+        circlePgsBar = (MXSwitchProgressbar) findViewById(R.id.pgb_circle);
         circlePgsBar.setOnClickListener(this);
         mask = findViewById(R.id.mask);
         tv_wait = (TextView) findViewById(R.id.tv_wait);

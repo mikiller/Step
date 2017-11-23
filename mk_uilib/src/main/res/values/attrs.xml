@@ -258,4 +258,13 @@
         <attr name="needSubText" format="boolean" />
         <attr name="needNext" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="MXCircleProgressBar">
+        <attr name="startPos" format="integer" />
+        <attr name="endPos" format="integer" />
+        <attr name="backPgsColor" format="color|reference" />
+        <attr name="frontPgsColor" format="color|reference" />
+        <attr name="txtPgsColor" format="color|reference" />
+        <attr name="borderWidth" format="dimension" />
+    </declare-styleable>
 </resources>

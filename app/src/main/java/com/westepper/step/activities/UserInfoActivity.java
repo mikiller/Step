@@ -70,14 +70,13 @@ public class UserInfoActivity extends SuperActivity implements View.OnClickListe
     CityListLayout layout_citylist;
 
     int signNum = 140;
-    UserInfo userInfo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         if(savedInstanceState != null)
             userInfo = (UserInfo) savedInstanceState.getSerializable(Constants.USERINFO);
-        else if(getIntent() != null)
-            userInfo = (UserInfo) getIntent().getSerializableExtra(Constants.USERINFO);
+//        else if(getIntent() != null)
+//            userInfo = (UserInfo) getIntent().getSerializableExtra(Constants.USERINFO);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_userinfo);
     }
@@ -162,7 +161,8 @@ public class UserInfoActivity extends SuperActivity implements View.OnClickListe
 
             @Override
             public void onFailed(String code, String msg, UserInfo localData) {
-
+                Toast.makeText(UserInfoActivity.this, "更新用户信息失败，请稍后重试", Toast.LENGTH_SHORT).show();
+                back();
             }
         });
         logic.sendRequest();

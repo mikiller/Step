@@ -28,4 +28,7 @@
     <color name="gallery_camera_bg">#ebf3f8</color>
     <color name="discovery_kind_unchecked">#a0bed2</color>
     <color name="custom_dlg_edt_bg">#f0f6fa</color>
+    <color name="pgs_back_color">#e8faff</color>
+    <color name="pgs_front_color">#0ca8fc</color>
+    <color name="pgs_text_color">#567188</color>
 </resources>

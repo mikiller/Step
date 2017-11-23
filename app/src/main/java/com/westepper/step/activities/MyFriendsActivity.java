@@ -14,15 +14,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.netease.nim.uikit.NimUIKit;
 import com.netease.nim.uikit.contact.ContactsCustomization;
 import com.netease.nim.uikit.contact.ContactsFragment;
 import com.netease.nim.uikit.contact.core.item.AbsContactItem;
 import com.netease.nim.uikit.contact.core.item.ItemTypes;
 import com.netease.nim.uikit.contact.core.model.ContactDataAdapter;
 import com.netease.nim.uikit.contact.core.viewholder.AbsContactViewHolder;
+import com.netease.nim.uikit.custom.DefaultContactEventListener;
 import com.westepper.step.R;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.TitleBar;
+import com.westepper.step.utils.ActivityManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +100,8 @@ public class MyFriendsActivity extends SuperActivity {
         initContactsFragment();
         initTeamFragment();
         addContactsFragment();
+
+        NimUIKit.setContactEventListener(new MyContactEventListener());
     }
 
     private void initContactsFragment(){
@@ -184,6 +189,13 @@ public class MyFriendsActivity extends SuperActivity {
                 }
             }
 
+        }
+    }
+
+    private class MyContactEventListener extends DefaultContactEventListener{
+        @Override
+        public void onItemClick(Context context, String account) {
+            ActivityManager.startActivity(MyFriendsActivity.this, UserDetailActivity.class);
         }
     }
 }
