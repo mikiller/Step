@@ -11,8 +11,16 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
+import com.netease.nim.uikit.NimUIKit;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.RequestCallback;
+import com.netease.nimlib.sdk.friend.FriendService;
+import com.netease.nimlib.sdk.friend.constant.VerifyType;
+import com.netease.nimlib.sdk.friend.model.AddFriendData;
+import com.uilib.customdialog.CustomDialog;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
@@ -20,8 +28,10 @@ import com.westepper.step.activities.GalleryActivity;
 import com.westepper.step.activities.SettingActivity;
 import com.westepper.step.activities.UserInfoActivity;
 import com.westepper.step.base.Constants;
+import com.westepper.step.base.SuperActivity;
 import com.westepper.step.responses.UserInfo;
 import com.westepper.step.utils.ActivityManager;
+import com.westepper.step.utils.ContactsHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -87,7 +97,6 @@ public class UserInfoLayout extends RelativeLayout implements View.OnClickListen
             iv_header.setOnClickListener(this);
             btn_setting.setOnClickListener(this);
             btn_info.setOnClickListener(this);
-            btn_goSession.setOnClickListener(this);
         }
     }
 
@@ -109,8 +118,6 @@ public class UserInfoLayout extends RelativeLayout implements View.OnClickListen
                 ActivityManager.startActivity((Activity) getContext(), SettingActivity.class);
                 break;
             case R.id.btn_info:
-                break;
-            case R.id.btn_goSession:
                 break;
         }
     }
@@ -135,6 +142,23 @@ public class UserInfoLayout extends RelativeLayout implements View.OnClickListen
     public void setCover(String path){
         iv_header_bg.setScaleType(ImageView.ScaleType.CENTER_CROP);
         GlideImageLoader.getInstance().loadImage(getContext(), path, R.mipmap.ic_addcover, iv_header_bg, 0);
+    }
+
+    public boolean setBtnState(final String account, final int needVerif){
+        final boolean isFriend = NIMClient.getService(FriendService.class).isMyFriend(account);
+        btn_goSession.setText(isFriend ? "发消息" : "加为好友");
+        btn_goSession.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isFriend) {
+                    NimUIKit.startP2PSession(getContext(), account);
+                    ((SuperActivity) getContext()).back();
+                }else{
+                    ContactsHelper.addFriend(btn_goSession, account, needVerif == 1);
+                }
+            }
+        });
+        return isFriend;
     }
 
     public int getBgWidth(){

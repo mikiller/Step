@@ -31,7 +31,7 @@ import com.westepper.step.models.NewDiscoveryModel;
 import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.MXTimeUtils;
 import com.westepper.step.utils.MapUtils;
-import com.westepper.step.utils.TeamCreateHelper;
+import com.westepper.step.utils.ContactsHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -198,7 +198,7 @@ public class NewDiscoveryActivity extends SuperActivity {
             NewDiscoveryLogic logic = new NewDiscoveryLogic(this, model);
             logic.sendRequest();
         }else{
-            TeamCreateHelper.createAdvancedTeam(this, new ArrayList<String>(), model);
+            ContactsHelper.createAdvancedTeam(this, new ArrayList<String>(), model);
         }
     }
 

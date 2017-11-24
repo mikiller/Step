@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:pgs="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:gravity="center">
+
+    <com.uilib.mxprogressbar.MXCircleProgressBar
+        android:id="@+id/pgs"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        pgs:startPos="135"
+        pgs:endPos="270"
+        pgs:borderWidth="3dp" />
+
+    <TextView
+        android:id="@+id/tv_disName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12dp"
+        android:textColor="@color/pgs_text_color"
+        android:text="上海"
+        android:layout_marginTop="6dp"/>
+</LinearLayout>

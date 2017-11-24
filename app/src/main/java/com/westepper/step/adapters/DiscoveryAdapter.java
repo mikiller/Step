@@ -102,6 +102,14 @@ public class DiscoveryAdapter extends PagerAdapter {
                 logic.sendRequest();
             }
         } );
+        holder.setAddFriendListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //getUserinfo from yunxin
+                // get ext info
+                // call contactshelper.addfriend
+            }
+        });
         holder.setOnCommitListener(discover.getDiscoveryUserId(), discover.getNickName(), new OnCommitListener() {
             @Override
             public void onCommit(final String id, final String nickName) {
@@ -243,8 +251,7 @@ public class DiscoveryAdapter extends PagerAdapter {
         private TextView tv_nickName, tv_msg, tv_time;
         private ImageView iv_gender;
         private SelectableRoundedImageView[] iv_imgList = new SelectableRoundedImageView[3];
-        private ImageButton btn_good;
-        private ImageButton btn_discuss, btn_addFriend;
+        private ImageButton btn_good, btn_discuss, btn_addFriend;
         private LinearLayout ll_join;
         private Button btn_join;
         public DiscoveryHolder(View root) {
@@ -314,6 +321,10 @@ public class DiscoveryAdapter extends PagerAdapter {
         public void setGoodListener(boolean hasGood, View.OnClickListener listener){
             btn_good.setEnabled(hasGood);
             btn_good.setOnClickListener(listener);
+        }
+
+        public void setAddFriendListener(View.OnClickListener listener){
+            btn_addFriend.setOnClickListener(listener);
         }
 
         public void updateLeftTime(final String id, final long time){

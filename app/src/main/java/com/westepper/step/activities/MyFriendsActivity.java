@@ -23,12 +23,15 @@ import com.netease.nim.uikit.contact.core.model.ContactDataAdapter;
 import com.netease.nim.uikit.contact.core.viewholder.AbsContactViewHolder;
 import com.netease.nim.uikit.custom.DefaultContactEventListener;
 import com.westepper.step.R;
+import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.TitleBar;
 import com.westepper.step.utils.ActivityManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 
@@ -195,7 +198,10 @@ public class MyFriendsActivity extends SuperActivity {
     private class MyContactEventListener extends DefaultContactEventListener{
         @Override
         public void onItemClick(Context context, String account) {
-            ActivityManager.startActivity(MyFriendsActivity.this, UserDetailActivity.class);
+            Map<String, Object> args = new HashMap<>();
+            args.put(Constants.USERINFO, account);
+            ActivityManager.startActivity(MyFriendsActivity.this, UserDetailActivity.class, args);
         }
+
     }
 }

@@ -137,9 +137,9 @@ public class SettingActivity extends SuperActivity implements View.OnClickListen
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(checkedId == outgoScope[0]){
-                    privacy.setOutgoScope(1);
+                    privacy.setOutgoScope(Privacy.ALL);
                 }else{
-                    privacy.setOutgoScope(2);
+                    privacy.setOutgoScope(Privacy.FRIEND);
                 }
             }
         });

@@ -1,12 +1,15 @@
 package com.westepper.step.utils;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.netease.nim.uikit.NimUIKit;
 import com.netease.nim.uikit.session.SessionEventListener;
 import com.netease.nimlib.sdk.avchat.model.AVChatAttachment;
 import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.westepper.step.activities.UserDetailActivity;
+import com.westepper.step.base.Constants;
 import com.westepper.step.widgets.CustomP2PSessionCustomization;
 import com.westepper.step.widgets.CustomTeamSessionCustomization;
 import com.westepper.step.widgets.sessions.MsgViewHolderFile;
@@ -39,7 +42,9 @@ public class SessionHelper {
             @Override
             public void onAvatarClicked(Context context, IMMessage message) {
                 // 一般用于打开用户资料页面
-                //UserProfileActivity.start(context, message.getFromAccount());
+                Intent intent = new Intent(context, UserDetailActivity.class);
+                intent.putExtra(Constants.USERINFO, message.getFromAccount());
+                context.startActivity(intent);
             }
 
             @Override

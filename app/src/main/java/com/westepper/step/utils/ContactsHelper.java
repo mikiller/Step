@@ -3,12 +3,16 @@ package com.westepper.step.utils;
 import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.netease.nim.uikit.NimUIKit;
 import com.netease.nim.uikit.team.helper.TeamHelper;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallback;
+import com.netease.nimlib.sdk.friend.FriendService;
+import com.netease.nimlib.sdk.friend.constant.VerifyType;
+import com.netease.nimlib.sdk.friend.model.AddFriendData;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
@@ -20,6 +24,9 @@ import com.netease.nimlib.sdk.team.constant.TeamFieldEnum;
 import com.netease.nimlib.sdk.team.constant.TeamTypeEnum;
 import com.netease.nimlib.sdk.team.model.CreateTeamResult;
 import com.netease.nimlib.sdk.team.model.Team;
+import com.uilib.customdialog.CustomDialog;
+import com.westepper.step.R;
+import com.westepper.step.base.SuperActivity;
 import com.westepper.step.logics.NewDiscoveryLogic;
 import com.westepper.step.models.NewDiscoveryModel;
 
@@ -33,8 +40,8 @@ import java.util.Map;
  * Created by Mikiller on 2017/11/22.
  */
 
-public class TeamCreateHelper {
-    private static final String TAG = TeamCreateHelper.class.getSimpleName();
+public class ContactsHelper {
+    private static final String TAG = ContactsHelper.class.getSimpleName();
     private static final int DEFAULT_TEAM_CAPACITY = 200;
 
     /**
@@ -128,5 +135,57 @@ public class TeamCreateHelper {
             NewDiscoveryLogic logic = new NewDiscoveryLogic(context, model);
             logic.sendRequest();
         }
+    }
+
+    public static void addFriend(View addBtn, String account, boolean needVerif){
+        if(needVerif)
+            createVerifDlg(addBtn, account);
+        else
+            addFriend(addBtn, account, VerifyType.DIRECT_ADD, "");
+    }
+
+    private static void createVerifDlg(final View addBtn, final String account){
+        final CustomDialog dlg = new CustomDialog(addBtn.getContext());
+        dlg.setDlgEditable(true).setTitle("添加好友").setDlgButtonListener(new CustomDialog.onButtonClickListener() {
+            @Override
+            public void onCancel() {
+                ((SuperActivity)addBtn.getContext()).hideInputMethod(dlg.getCurrentFocus());
+            }
+
+            @Override
+            public void onSure() {
+                addFriend(addBtn, account, VerifyType.VERIFY_REQUEST, dlg.getMsg());
+            }
+        }).show();
+    }
+
+    private static void addFriend(final View addBtn, String account, final VerifyType verifyType, String msg){
+        NIMClient.getService(FriendService.class).addFriend(new AddFriendData(account, verifyType, msg))
+                .setCallback(new RequestCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void param) {
+                        if (VerifyType.DIRECT_ADD == verifyType) {
+                            Toast.makeText(addBtn.getContext(), "添加好友成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(addBtn.getContext(), "添加好友请求发送成功", Toast.LENGTH_SHORT).show();
+                        }
+                        addBtn.setEnabled(false);
+                    }
+
+                    @Override
+                    public void onFailed(int code) {
+                        if (code == 408) {
+                            Toast.makeText(addBtn.getContext(), R.string.network_is_not_available, Toast
+                                    .LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(addBtn.getContext(), "on failed:" + code, Toast
+                                    .LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onException(Throwable exception) {
+                    }
+                });
     }
 }

@@ -5,9 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import com.uilib.R;
@@ -18,10 +16,10 @@ import com.uilib.R;
 
 public class MXCircleProgressBar extends View {
     private final int maxProgress = 100;
-    private float progress = 0;
+    private double progress = 0;
     private int radius, startPos = -90, endPos = 360;
-    private float borderWidth;
-    private int bgColor, pgsColor, txtColor, txtSize;
+    private float borderWidth, txtSize, txtY;
+    private int bgColor, pgsColor, txtColor;
 
     private RectF ovalPgs;
     private Paint circlePaint, pgsPaint, txtPaint;
@@ -56,7 +54,6 @@ public class MXCircleProgressBar extends View {
 
     }
 
-    //    paint.setTypeface(Typeface.DEFAULT_BOLD);
     private Paint createPaint(Paint.Style style, float width, int color) {
         Paint paint = new Paint();
         paint.setAntiAlias(true);
@@ -64,6 +61,7 @@ public class MXCircleProgressBar extends View {
         paint.setStrokeWidth(width);
         paint.setColor(color);
         paint.setTextAlign(Paint.Align.CENTER);
+        paint.setStrokeCap(Paint.Cap.ROUND);
         return paint;
     }
 
@@ -79,6 +77,8 @@ public class MXCircleProgressBar extends View {
         ovalPgs.right = radius + ovalPgs.left - borderWidth;
         ovalPgs.bottom = radius + ovalPgs.top - borderWidth;
         txtPaint = createPaint(Paint.Style.FILL, 0, txtColor);
+        txtSize = (ovalPgs.height() / 4);
+        txtY = ovalPgs.centerY() + txtSize / 3;
     }
 
     @Override
@@ -87,30 +87,24 @@ public class MXCircleProgressBar extends View {
 
 
         canvas.drawArc(ovalPgs, startPos, endPos, false, circlePaint);
-        canvas.drawArc(ovalPgs, startPos, progress / maxProgress * endPos, false, pgsPaint);
-        float txtY = ovalPgs.centerY() - txtSize/2;
-        String pgs = String.valueOf(progress);
+        canvas.drawArc(ovalPgs, startPos, (float) (progress / maxProgress * endPos), false, pgsPaint);
+
+        String pgs = String.valueOf(progress).concat("%");
         String[] nums = pgs.split("\\.");
-
-
         float[] tmp = new float[pgs.length()];
-        int txtCounts = txtPaint.getTextWidths(nums[0], tmp);
-        Log.e("pgs" + getId(), "length：" + txtCounts);
-        int txtWidth = 0;
-        for(int i = 0; i < txtCounts; i++){
-            txtWidth += tmp[i];
-        }
-        txtPaint.getTextWidths(".", tmp);
-        float pointWidth = tmp[0];
-
-        txtPaint.setTextSize((ovalPgs.height() / 4));
+        canvas.drawText(nums[0], getTxtX(txtSize, nums[0], tmp, 0.5f), txtY, txtPaint);
         canvas.drawText(".", ovalPgs.centerX(), txtY, txtPaint);
-        canvas.drawText(nums[0], ovalPgs.centerX() - txtWidth - pointWidth, txtY, txtPaint);
-        txtPaint.setTextSize(ovalPgs.height() / 8);
-        canvas.drawText(nums[1].concat("%"), ovalPgs.centerX() + pointWidth * 2, txtY, txtPaint);
+        canvas.drawText(nums[1], getTxtX(txtSize*2.f/3.f, nums[1], tmp, -2.f / 3.f), txtY, txtPaint);
     }
 
-    public void setProgress(float pgs) {
+    private float getTxtX(float txtSize, String txt, float[] tmp, float offsetX){
+        txtPaint.setTextSize(txtSize);
+        int txtCounts = txtPaint.getTextWidths(txt, tmp);
+        float txtWidth = txtCounts * tmp[0] * offsetX;
+        return ovalPgs.centerX() - txtWidth;
+    }
+
+    public void setProgress(double pgs) {
         progress = pgs;
         invalidate();
     }

@@ -93,7 +93,6 @@ public class AddFriendActivity extends SuperActivity {
 
             @Override
             public void onFailed(int code) {
-                DialogMaker.dismissProgressDialog();
                 if (code == 408) {
                     Toast.makeText(AddFriendActivity.this, R.string.network_is_not_available, Toast.LENGTH_SHORT).show();
                 } else {
@@ -103,7 +102,6 @@ public class AddFriendActivity extends SuperActivity {
 
             @Override
             public void onException(Throwable exception) {
-                DialogMaker.dismissProgressDialog();
                 Toast.makeText(AddFriendActivity.this, "on exception:" + exception.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

@@ -2,16 +2,13 @@ package com.westepper.step.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.netease.nim.uikit.NimUIKit;
 import com.netease.nim.uikit.cache.NimUserInfoCache;
-import com.netease.nim.uikit.common.ui.imageview.HeadImageView;
 import com.netease.nim.uikit.common.ui.widget.UserLayout;
 import com.netease.nim.uikit.common.util.sys.NetworkUtil;
 import com.netease.nim.uikit.contact_selector.activity.ContactSelectActivity;
@@ -29,11 +26,9 @@ import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.TitleBar;
 import com.westepper.step.customViews.ToggleBox;
-import com.westepper.step.utils.ActivityManager;
-import com.westepper.step.utils.TeamCreateHelper;
+import com.westepper.step.utils.ContactsHelper;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 
@@ -171,7 +166,7 @@ public class P2PSessionDetailActivity extends SuperActivity implements View.OnCl
         switch (requestCode){
             case Constants.REQUEST_CODE_ADVANCED:
                 final ArrayList<String> selected = data.getStringArrayListExtra(ContactSelectActivity.RESULT_DATA);
-                TeamCreateHelper.createAdvancedTeam(this, selected, null);
+                ContactsHelper.createAdvancedTeam(this, selected, null);
                 break;
 
         }

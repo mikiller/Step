@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class CityProgress implements Serializable {
     private String cityName;
-    private double rechedPercent;
+    private double reachedPercent;
 
     public String getCityName() {
         return cityName;
@@ -18,11 +18,11 @@ public class CityProgress implements Serializable {
         this.cityName = cityName;
     }
 
-    public double getRechedPercent() {
-        return rechedPercent;
+    public double getReachedPercent() {
+        return reachedPercent;
     }
 
-    public void setRechedPercent(double rechedPercent) {
-        this.rechedPercent = rechedPercent;
+    public void setReachedPercent(double reachedPercent) {
+        this.reachedPercent = reachedPercent;
     }
 }

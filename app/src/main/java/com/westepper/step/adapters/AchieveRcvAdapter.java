@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -16,14 +15,12 @@ import com.westepper.step.R;
 import com.westepper.step.activities.MyCityActivity;
 import com.westepper.step.base.Constants;
 import com.westepper.step.customViews.AchieveBadge;
-import com.westepper.step.responses.AchieveArea;
 import com.westepper.step.responses.AchieveProgress;
 import com.westepper.step.responses.CityProgress;
 import com.westepper.step.responses.MyAchievements;
 import com.westepper.step.utils.ActivityManager;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static android.view.View.GONE;
@@ -116,7 +113,7 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
                 ((AchProgressHolder)holder).setTitle(cityPgs.getCityName());
                 ((AchProgressHolder)holder).setNeedSubTitle(false);
                 ((AchProgressHolder)holder).setNeedNext(myAchieve.getType() == Constants.ACH_AREA ? false : true);
-                ((AchProgressHolder)holder).setPgs(cityPgs.getRechedPercent());
+                ((AchProgressHolder)holder).setPgs(cityPgs.getReachedPercent());
                 title = cityPgs.getCityName();
             }
             if(listener != null && ((AchProgressHolder) holder).canClick() && !"初识STEP".equals(title)){

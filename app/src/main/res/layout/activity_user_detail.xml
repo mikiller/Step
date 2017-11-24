@@ -1,66 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:menu="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/cancel_btn_bg">
 
-    <com.westepper.step.customViews.TitleBar
-        xmlns:bar="http://schemas.android.com/apk/res-auto"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.westepper.step.customViews.UserInfoLayout xmlns:usr="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/userLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                usr:canEdit="false"
+                usr:needGoSession="true"
+                usr:needOpt="false" />
+
+            <com.uilib.mxmenuitem.MyMenuItem
+                android:id="@+id/menu_city"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                menu:menuTitle="城市"
+                menu:needNext="false"
+                menu:needSubText="true"/>
+
+            <com.uilib.mxmenuitem.MyMenuItem
+                android:id="@+id/menu_mood"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                menu:menuTitle="心情"
+                menu:needNext="true" />
+
+            <com.uilib.mxmenuitem.MyMenuItem
+                android:id="@+id/menu_outGo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                menu:menuTitle="约行"
+                menu:needLine="false"
+                menu:needNext="true" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:layout_marginBottom="10dp">
+
+                <com.uilib.mxmenuitem.MyMenuItem
+                    android:id="@+id/menu_discovery"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    menu:menuTitle="探索"
+                    menu:needLine="false"
+                    menu:needNext="true"
+                    menu:needSubText="true" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rcv_dis"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <com.uilib.mxmenuitem.MyMenuItem
+                    android:id="@+id/menu_achieve"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    menu:menuTitle="成就"
+                    menu:needLine="false"
+                    menu:needNext="true"
+                    menu:needSubText="true" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rcv_ach"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <com.westepper.step.customViews.TitleBar xmlns:bar="http://schemas.android.com/apk/res-auto"
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        bar:titleTxt=" "
         bar:subStyle="IMG"
-        bar:titleBgColor="@android:color/transparent"/>
-
-    <com.westepper.step.customViews.UserInfoLayout
-        xmlns:usr="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/userLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        usr:canEdit="false"
-        usr:needOpt="false"
-        usr:needGoSession="true" />
-
-    <com.uilib.mxmenuitem.MyMenuItem
-        android:id="@+id/menu_mood"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/userLayout"
-        menu:menuTitle="心情"
-        menu:needNext="true" />
-
-    <com.uilib.mxmenuitem.MyMenuItem
-        android:id="@+id/menu_outGo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/menu_mood"
-        menu:menuTitle="约行"
-        menu:needNext="true"
-        menu:needLine="false"
-        android:layout_marginBottom="10dp"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@+id/menu_outGo"
-        android:background="@color/white">
-
-        <com.uilib.mxprogressbar.MXCircleProgressBar
-            android:id="@+id/pgs1"
-            menu:startPos="90"
-            menu:borderWidth="3dp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="60dp" />
-
-        <com.uilib.mxprogressbar.MXCircleProgressBar
-            android:id="@+id/pgs2"
-            menu:startPos="90"
-            menu:borderWidth="3dp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="60dp" />
-    </LinearLayout>
+        bar:titleBgColor="@android:color/transparent"
+        bar:titleTxt=" " />
 </RelativeLayout>

@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.netease.nim.uikit.contact_selector.activity.ContactSelectActivity;
 import com.westepper.step.R;
 import com.westepper.step.adapters.MainFragmentAdapter;
@@ -15,19 +14,15 @@ import com.westepper.step.base.BaseModel;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.UntouchableViewPager;
-import com.westepper.step.logics.GetReachedListLogic;
 import com.westepper.step.logics.GetUserInfoLogic;
 import com.westepper.step.logics.RankListLogic;
 import com.westepper.step.models.RankModel;
-import com.westepper.step.models.ReachedModel;
 import com.westepper.step.responses.MapData;
 import com.westepper.step.responses.RankList;
-import com.westepper.step.responses.ReachedList;
 import com.westepper.step.responses.UserInfo;
 import com.westepper.step.utils.FileUtils;
-import com.westepper.step.utils.MXPreferenceUtils;
 import com.westepper.step.utils.MapUtils;
-import com.westepper.step.utils.TeamCreateHelper;
+import com.westepper.step.utils.ContactsHelper;
 
 import java.util.ArrayList;
 
@@ -151,7 +146,7 @@ public class MainActivity extends SuperActivity {
                 break;
             case Constants.REQUEST_CODE_ADVANCED:
                 final ArrayList<String> selected = data.getStringArrayListExtra(ContactSelectActivity.RESULT_DATA);
-                TeamCreateHelper.createAdvancedTeam(MainActivity.this, selected, null);
+                ContactsHelper.createAdvancedTeam(MainActivity.this, selected, null);
                 break;
 
         }

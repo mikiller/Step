@@ -7,6 +7,7 @@ import com.westepper.step.base.BaseModel;
  */
 
 public class Privacy extends BaseModel {
+    public static final int ONLY_ME = 0, ALL = 1, FRIEND = 2;
     private int needFriendVerifi;
     private int moodScope;
     private int outgoScope;
