@@ -150,7 +150,7 @@ public class MyDiscoveryActivity extends SuperActivity {
             @Override
             public void onSuccess(DiscoveryList response) {
                 if(page == 1) {
-                    adapter.setDiscoveryList(response.getDiscoveryList());
+                    adapter.setDiscoveryList(response.getDiscoveryList(), type);
                     adapter.setUserInfo(SuperActivity.userInfo);
                     swipeLayout.setRefreshing(false);
                 }
@@ -165,7 +165,7 @@ public class MyDiscoveryActivity extends SuperActivity {
                 Log.e(TAG, code + ", " + msg);
                 if(swipeLayout.isRefreshing()){
                     swipeLayout.setRefreshing(false);
-                    adapter.setDiscoveryList(new ArrayList<Discovery>());
+                    adapter.setDiscoveryList(new ArrayList<Discovery>(), type);
                     Toast.makeText(MyDiscoveryActivity.this, msg, Toast.LENGTH_SHORT).show();
 //                    Toast.makeText(MyDiscoveryActivity.this, "没有你的相关约行", Toast.LENGTH_SHORT).show();
                 }else if(swipeLayout.isLoadingMore()){

@@ -10,15 +10,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
+import com.netease.nim.uikit.NimUIKit;
+import com.netease.nim.uikit.cache.SimpleCallback;
+import com.netease.nim.uikit.cache.TeamDataCache;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.RequestCallback;
+import com.netease.nimlib.sdk.team.TeamService;
+import com.netease.nimlib.sdk.team.model.Team;
+import com.netease.nimlib.sdk.team.model.TeamMember;
+import com.uilib.customdialog.CustomDialog;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.uilib.mxgallery.models.ItemModel;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
 import com.westepper.step.activities.DiscoveryDetailActivity;
+import com.westepper.step.activities.JoinUserSelectorActivity;
+import com.westepper.step.activities.MyDiscoveryActivity;
 import com.westepper.step.base.Constants;
+import com.westepper.step.base.SuperActivity;
 import com.westepper.step.responses.Discovery;
 import com.westepper.step.responses.DiscoveryList;
 import com.westepper.step.responses.ImgDetail;
@@ -43,16 +56,17 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
     Context mContext;
     List<Discovery> discoveryList;
     UserInfo userInfo;
-    int disKind;
+    int disKind, type;
     int[] ids = new int[]{R.id.iv_img1, R.id.iv_img2, R.id.iv_img3};
 
-    public void setDiscoveryList(List<Discovery> discoveryList) {
+    public void setDiscoveryList(List<Discovery> discoveryList, int type) {
+        this.type = type;
         this.discoveryList = discoveryList;
         notifyDataSetChanged();
     }
 
-    public void addDiscoveryList(List<Discovery> discoveryList){
-        if(this.discoveryList == null)
+    public void addDiscoveryList(List<Discovery> discoveryList) {
+        if (this.discoveryList == null)
             this.discoveryList = new ArrayList<>();
         int startPos = this.discoveryList.size();
         this.discoveryList.addAll(discoveryList);
@@ -77,11 +91,11 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
     @Override
     public void onBindViewHolder(DisHolder holder, int position) {
         final Discovery discovery = discoveryList.get(position);
-        if(isToday(discovery.getPushTime())){
+        if (isToday(discovery.getPushTime())) {
             holder.tv_date1.setText("今天");
             holder.tv_date2.setText("");
-        }else {
-            holder.tv_date1.setText(getDate("dd", discovery.getPushTime())+"/");
+        } else {
+            holder.tv_date1.setText(getDate("dd", discovery.getPushTime()) + "/");
             holder.tv_date2.setText(getDate("M", discovery.getPushTime()));
         }
         holder.tv_msg.setText(discovery.getInfo());
@@ -89,15 +103,15 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
         holder.tv_good.setText(String.valueOf(discovery.getGoodNum()));
         holder.tv_commit.setText(String.valueOf(discovery.getCommitNum()));
         int i = 0;
-        for(ImgDetail img : discovery.getImgList()){
-            if(i >= 3)
+        for (ImgDetail img : discovery.getImgList()) {
+            if (i >= 3)
                 break;
             GlideImageLoader.getInstance().loadImage(mContext, img.getImg_url(), R.mipmap.placeholder, holder.iv_imgs[i++], 0);
         }
-        if(disKind == Constants.OUTGO) {
-            holder.ll_chat.setVisibility(View.VISIBLE );
-            if(discovery.getTotalCount() == 0)
-                holder.tv_joinNum.setText(String.format("邀约不限，已报名%1$s", discovery.getJoinCount()));
+        if (disKind == Constants.OUTGO) {
+            holder.ll_chat.setVisibility(View.VISIBLE);
+            if (discovery.getTotalCount() == 0)
+                holder.tv_joinNum.setText(String.format("邀约不限，已报名%1$s人", discovery.getJoinCount()));
             else
                 holder.tv_joinNum.setText(String.format("邀约%1$s人, 已报名%2$s人", discovery.getTotalCount(), discovery.getJoinCount()));
         }
@@ -116,20 +130,96 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
         holder.tv_chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                getTeamMembers(discovery);
+//                if (type == 1 && discovery.getJoinCount() > 0) {
+//                    //选择报名人员
+//                    Map<String, Object> args = new HashMap<String, Object>();
+//                    args.put(Constants.DIS_ID, discovery.getDiscoveryId());
+//                    args.put(Constants.TEAM_ID, discovery.getTeamId());
+//                    ActivityManager.startActivity((Activity) mContext, JoinUserSelectorActivity.class, args);
+//                } else if (type == 2) {
+//
+//                } else {
+//                    //进入群聊
+//                    NimUIKit.startTeamSession(mContext, discovery.getTeamId());
+//                }
             }
         });
     }
 
-    private String getDate(String format, long time){
+    private String getDate(String format, long time) {
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.CHINA);
         return sdf.format(new Date(time));
     }
 
-    private boolean isToday(long time){
+    private boolean isToday(long time) {
         String d1 = getDate("dd", System.currentTimeMillis()),
-        d2 = getDate("dd", time);
+                d2 = getDate("dd", time);
         return d1.equals(d2);
+    }
+
+    private void getTeamMembers(final Discovery discovery) {
+        TeamDataCache.getInstance().fetchTeamMemberList(discovery.getTeamId(), new SimpleCallback<List<TeamMember>>() {
+            @Override
+            public void onResult(boolean success, List<TeamMember> members) {
+                if (success && members != null) {
+//                    getJoinUserLogic(members);
+                    if (type == 1) {
+                        if (discovery.getJoinCount() > 0) {
+                            Map<String, Object> args = new HashMap<String, Object>();
+                            args.put(Constants.DIS_ID, discovery.getDiscoveryId());
+                            args.put(Constants.TEAM_ID, discovery.getTeamId());
+                            args.put(Constants.TEAM_MEMBER, members);
+                            ActivityManager.startActivity((Activity) mContext, JoinUserSelectorActivity.class, args);
+                        } else {
+                            NimUIKit.startTeamSession(mContext, discovery.getTeamId());
+                            ((SuperActivity) mContext).back();
+                        }
+                    } else if (type == 2) {
+                        for (TeamMember member : members) {
+                            if (member.getAccount().equals(SuperActivity.userInfo.getUserId())) {
+                                NimUIKit.startTeamSession(mContext, discovery.getTeamId());
+                                ((SuperActivity) mContext).back();
+                                return;
+                            }
+                        }
+                        //send join request
+                        requestJoin(discovery.getTeamId());
+                    }
+                }
+            }
+        });
+    }
+
+    private void requestJoin(final String teamId) {
+        final CustomDialog dlg = new CustomDialog(mContext);
+        dlg.setTitle("已报名参加约行").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
+            @Override
+            public void onCancel() {
+                ((SuperActivity) mContext).hideInputMethod(dlg.getCurrentFocus());
+            }
+
+            @Override
+            public void onSure() {
+                NIMClient.getService(TeamService.class).applyJoinTeam(teamId, dlg.getMsg()).setCallback(new RequestCallback<Team>() {
+                    @Override
+                    public void onSuccess(Team team) {
+                        Toast.makeText(mContext, "申请加群成功，等待验证", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailed(int i) {
+                        Toast.makeText(mContext, "申请加群失败， code：" + i, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onException(Throwable throwable) {
+
+                    }
+                });
+                ((SuperActivity) mContext).hideInputMethod(dlg.getCurrentFocus());
+            }
+        }).show();
     }
 
     @Override
@@ -137,7 +227,7 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
         return discoveryList == null ? 0 : discoveryList.size();
     }
 
-    protected class DisHolder extends RecyclerView.ViewHolder{
+    protected class DisHolder extends RecyclerView.ViewHolder {
 
         private TextView tv_date1, tv_date2, tv_msg, tv_pos, tv_good, tv_commit, tv_joinNum, tv_chat;
         private SelectableRoundedImageView[] iv_imgs = new SelectableRoundedImageView[3];
@@ -153,7 +243,7 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
             tv_commit = (TextView) itemView.findViewById(R.id.tv_commit);
             tv_joinNum = (TextView) itemView.findViewById(R.id.tv_joinNum);
             tv_chat = (TextView) itemView.findViewById(R.id.tv_chat);
-            for(int i = 0; i < 3; i++) {
+            for (int i = 0; i < 3; i++) {
                 iv_imgs[i] = (SelectableRoundedImageView) itemView.findViewById(ids[i]);
             }
             ll_chat = (LinearLayout) itemView.findViewById(R.id.ll_chat);

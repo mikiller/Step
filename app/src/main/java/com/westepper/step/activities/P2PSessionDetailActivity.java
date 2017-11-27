@@ -166,7 +166,7 @@ public class P2PSessionDetailActivity extends SuperActivity implements View.OnCl
         switch (requestCode){
             case Constants.REQUEST_CODE_ADVANCED:
                 final ArrayList<String> selected = data.getStringArrayListExtra(ContactSelectActivity.RESULT_DATA);
-                ContactsHelper.createAdvancedTeam(this, selected, null);
+                ContactsHelper.createAdvancedTeam(this, userInfo.getNickName().concat("的群聊"), selected, null);
                 break;
 
         }

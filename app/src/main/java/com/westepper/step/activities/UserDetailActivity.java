@@ -107,7 +107,7 @@ public class UserDetailActivity extends SuperActivity implements View.OnClickLis
             @Override
             public void onBtnClick(int id) {
                 if(id == R.id.btn_mood){
-
+                    //添加备注
                 }else{
                     ConfirmDelFriend();
                 }

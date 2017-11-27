@@ -15,7 +15,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
+import com.netease.nim.uikit.cache.NimUserInfoCache;
+import com.netease.nimlib.sdk.RequestCallback;
+import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 import com.uilib.customdialog.CustomDialog;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.westepper.step.R;
@@ -30,12 +34,14 @@ import com.westepper.step.logics.JoinLogic;
 import com.westepper.step.models.CommitModel;
 import com.westepper.step.models.DisModel;
 import com.westepper.step.models.JoinModel;
+import com.westepper.step.models.Privacy;
 import com.westepper.step.responses.Commit;
 import com.westepper.step.responses.Discovery;
 import com.westepper.step.responses.GoodCount;
 import com.westepper.step.responses.ImgDetail;
 import com.westepper.step.responses.JoinResponse;
 import com.westepper.step.utils.ActivityManager;
+import com.westepper.step.utils.ContactsHelper;
 import com.westepper.step.utils.MXPreferenceUtils;
 import com.westepper.step.utils.MXTimeUtils;
 
@@ -108,6 +114,7 @@ public class DiscoveryAdapter extends PagerAdapter {
                 //getUserinfo from yunxin
                 // get ext info
                 // call contactshelper.addfriend
+                getUserInfoFromRemote(v, discover.getDiscoveryUserId());
             }
         });
         holder.setOnCommitListener(discover.getDiscoveryUserId(), discover.getNickName(), new OnCommitListener() {
@@ -150,35 +157,26 @@ public class DiscoveryAdapter extends PagerAdapter {
         });
 
         if(discover.getDiscoveryKind() == Constants.OUTGO) {
-            holder.setJoinBtn(discover.getDiscoveryUserId(), discover.getPushTime());
+            holder.setJoinBtn(discover.isJoin(), discover.getDiscoveryUserId(), discover.getPushTime());
             holder.btn_join.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final CustomDialog dlg = new CustomDialog(mContext);
-                    dlg.setTitle("已报名参加约行").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
+//                    getJoinLogic(holder, discover.getDiscoveryId(), discover.getTeamId());
+                    JoinLogic logic = new JoinLogic(mContext, new JoinModel(discover.getDiscoveryId(), discover.getTeamId()));
+                    logic.setCallback(new BaseLogic.LogicCallback<JoinResponse>() {
                         @Override
-                        public void onCancel() {
-                            ((SuperActivity)mContext).hideInputMethod(dlg.getCurrentFocus());
+                        public void onSuccess(JoinResponse response) {
+                            discover.setJoin(1);
+                            holder.setBtnJoinEnabled(false, "已报名");
+                            cancelTask();
                         }
 
                         @Override
-                        public void onSure() {
-                            JoinLogic logic = new JoinLogic(mContext, new JoinModel(discover.getDiscoveryId(), "0"));
-                            logic.setCallback(new BaseLogic.LogicCallback<JoinResponse>() {
-                                @Override
-                                public void onSuccess(JoinResponse response) {
-                                    holder.setBtnJoinEnabled(false, "已报名");
-                                }
-
-                                @Override
-                                public void onFailed(String code, String msg, JoinResponse localData) {
-                                    Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                            logic.sendRequest();
-                            ((SuperActivity)mContext).hideInputMethod(dlg.getCurrentFocus());
+                        public void onFailed(String code, String msg, JoinResponse localData) {
+                            Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
                         }
-                    }).show();
+                    });
+                    logic.sendRequest();
                 }
             });
         }
@@ -188,6 +186,30 @@ public class DiscoveryAdapter extends PagerAdapter {
 
     private boolean getHasGood(String key){
         return !MXPreferenceUtils.getInstance().getBoolean(key);
+    }
+
+    private void getUserInfoFromRemote(final View btn, final String account){
+        NimUserInfoCache.getInstance().getUserInfoFromRemote(account, new RequestCallback<NimUserInfo>() {
+            @Override
+            public void onSuccess(NimUserInfo nimUserInfo) {
+                Privacy privacy = new Gson().fromJson(nimUserInfo.getExtension(), Privacy.class);
+                ContactsHelper.addFriend(btn, account, (privacy != null && privacy.getNeedFriendVerifi() == 1));
+            }
+
+            @Override
+            public void onFailed(int code) {
+                if (code == 408) {
+                    Toast.makeText(mContext, R.string.network_is_not_available, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "on failed:" + code, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onException(Throwable throwable) {
+                Toast.makeText(mContext, "on exception:" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void setDataList(List<Discovery> dataList) {
@@ -327,14 +349,18 @@ public class DiscoveryAdapter extends PagerAdapter {
             btn_addFriend.setOnClickListener(listener);
         }
 
-        public void updateLeftTime(final String id, final long time){
+        public void updateLeftTime(final boolean isJoin, final String id, final long time){
+            if(isJoin) {
+                cancelTask();
+                return;
+            }
             timer.schedule(timerTask = new TimerTask() {
                 @Override
                 public void run() {
                     btn_join.post(new Runnable() {
                         @Override
                         public void run() {
-                            setJoinBtn(id, time);
+                            setJoinBtn(isJoin, id, time);
                         }
                     });
                 }
@@ -347,8 +373,10 @@ public class DiscoveryAdapter extends PagerAdapter {
             btn_join.setText(txt);
         }
 
-        private void setJoinBtn(String id, long time){
-            if(MXTimeUtils.isOutofLimit(time, MXTimeUtils.DAY))
+        private void setJoinBtn(boolean isJoin, String id, long time){
+            if(isJoin)
+                setBtnJoinEnabled(false, "已报名");
+            else if(MXTimeUtils.isOutofLimit(time, MXTimeUtils.DAY))
                 setBtnJoinEnabled(false, "已结束");
             else if(id.equals(MXPreferenceUtils.getInstance().getString("account")))
                 setBtnJoinEnabled(false, "参加约行");

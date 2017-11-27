@@ -146,7 +146,7 @@ public class MainActivity extends SuperActivity {
                 break;
             case Constants.REQUEST_CODE_ADVANCED:
                 final ArrayList<String> selected = data.getStringArrayListExtra(ContactSelectActivity.RESULT_DATA);
-                ContactsHelper.createAdvancedTeam(MainActivity.this, selected, null);
+                ContactsHelper.createAdvancedTeam(MainActivity.this, userInfo.getNickName().concat("的群聊"), selected, null);
                 break;
 
         }

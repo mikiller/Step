@@ -25,14 +25,16 @@ public class Discovery implements Parcelable {
     private List<ImgDetail> imgList;
     private long goodNum;
     private long commitNum;
+    private int isJoin;
     private long pushTime;
     private long endTime;
     private int totalCount;
     private int joinCount;
     private String teamId;
 
-    public Discovery(){}
 
+
+    public Discovery(){}
 
     protected Discovery(Parcel in) {
         discoveryId = in.readString();
@@ -46,6 +48,7 @@ public class Discovery implements Parcelable {
         imgList = in.createTypedArrayList(ImgDetail.CREATOR);
         goodNum = in.readLong();
         commitNum = in.readLong();
+        isJoin = in.readInt();
         pushTime = in.readLong();
         endTime = in.readLong();
         totalCount = in.readInt();
@@ -66,6 +69,7 @@ public class Discovery implements Parcelable {
         dest.writeTypedList(imgList);
         dest.writeLong(goodNum);
         dest.writeLong(commitNum);
+        dest.writeInt(isJoin);
         dest.writeLong(pushTime);
         dest.writeLong(endTime);
         dest.writeInt(totalCount);
@@ -184,6 +188,14 @@ public class Discovery implements Parcelable {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public boolean isJoin() {
+        return isJoin == 1;
+    }
+
+    public void setJoin(int join) {
+        isJoin = join;
     }
 
     public long getPushTime() {

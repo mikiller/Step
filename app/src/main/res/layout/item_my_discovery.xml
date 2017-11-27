@@ -132,7 +132,7 @@
                 android:textSize="13sp"
                 android:textColor="@color/colorPrimary"
                 android:gravity="center"
-                android:text="邀约0人，已报名0人"/>
+                android:text="邀约不限，已报名0人"/>
 
             <TextView
                 android:id="@+id/tv_chat"

@@ -116,9 +116,11 @@ public class MsgFragment extends BaseFragment {
             public void onBtnClick(int id) {
                 switch (id){
                     case R.id.btn_mood:
+                        //添加朋友
                         ActivityManager.startActivity(getActivity(), AddFriendActivity.class);
                         break;
                     case R.id.btn_outgo:
+                        //发起群聊
                         ContactSelectActivity.Option advancedOption = TeamHelper.getCreateContactSelectOption(null, 50);
                         NimUIKit.startContactSelect(getActivity(), advancedOption, Constants.REQUEST_CODE_ADVANCED);
                         break;

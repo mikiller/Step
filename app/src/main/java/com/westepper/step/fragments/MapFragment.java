@@ -177,7 +177,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
                     adapter.setCurrentHolderListener(new DiscoveryAdapter.getCurrentHolderListener() {
                         @Override
                         public void getCurrentHolder(DiscoveryAdapter.DiscoveryHolder holder) {
-                            holder.updateLeftTime(disc.getDiscoveryUserId(), disc.getPushTime());
+                            holder.updateLeftTime(disc.isJoin(), disc.getDiscoveryUserId(), disc.getPushTime());
                         }
                     });
                 }

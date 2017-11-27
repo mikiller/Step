@@ -10,6 +10,7 @@ import com.netease.nim.uikit.NimUIKit;
 import com.netease.nim.uikit.team.helper.TeamHelper;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallback;
+import com.netease.nimlib.sdk.ResponseCode;
 import com.netease.nimlib.sdk.friend.FriendService;
 import com.netease.nimlib.sdk.friend.constant.VerifyType;
 import com.netease.nimlib.sdk.friend.model.AddFriendData;
@@ -20,6 +21,7 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.team.TeamService;
+import com.netease.nimlib.sdk.team.constant.TeamBeInviteModeEnum;
 import com.netease.nimlib.sdk.team.constant.TeamFieldEnum;
 import com.netease.nimlib.sdk.team.constant.TeamTypeEnum;
 import com.netease.nimlib.sdk.team.model.CreateTeamResult;
@@ -47,14 +49,12 @@ public class ContactsHelper {
     /**
      * 创建高级群
      */
-    public static void createAdvancedTeam(final Context context, List<String> memberAccounts, final NewDiscoveryModel model) {
-
-        String teamName = "高级群";
-
+    public static void createAdvancedTeam(final Context context, String teamName, List<String> memberAccounts, final NewDiscoveryModel model) {
         // 创建群
         TeamTypeEnum type = TeamTypeEnum.Advanced;
         HashMap<TeamFieldEnum, Serializable> fields = new HashMap<>();
         fields.put(TeamFieldEnum.Name, teamName);
+        //fields.put(TeamFieldEnum.BeInviteMode, TeamBeInviteModeEnum.NoAuth);
         NIMClient.getService(TeamService.class).createTeam(fields, type, "",
                 memberAccounts).setCallback(
                 new RequestCallback<CreateTeamResult>() {
@@ -135,6 +135,36 @@ public class ContactsHelper {
             NewDiscoveryLogic logic = new NewDiscoveryLogic(context, model);
             logic.sendRequest();
         }
+    }
+
+    public static void inviteMembers(final Context context, final String teamId, List<String> accounts){
+        NIMClient.getService(TeamService.class).addMembers(teamId, accounts).setCallback(new RequestCallback<List<String>>() {
+            @Override
+            public void onSuccess(List<String> failedAccounts) {
+                if (failedAccounts == null || failedAccounts.isEmpty()) {
+                    Toast.makeText(context, "添加群成员成功", Toast.LENGTH_SHORT).show();
+                    NimUIKit.startTeamSession(context, teamId);
+                } else {
+                    TeamHelper.onMemberTeamNumOverrun(failedAccounts, context);
+                }
+            }
+
+            @Override
+            public void onFailed(int code) {
+                if (code == ResponseCode.RES_TEAM_INVITE_SUCCESS) {
+                    Toast.makeText(context, R.string.team_invite_members_success, Toast.LENGTH_SHORT).show();
+                    NimUIKit.startTeamSession(context, teamId);
+                } else {
+                    Toast.makeText(context, "invite members failed, code=" + code, Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "invite members failed, code=" + code);
+                }
+            }
+
+            @Override
+            public void onException(Throwable exception) {
+
+            }
+        });
     }
 
     public static void addFriend(View addBtn, String account, boolean needVerif){

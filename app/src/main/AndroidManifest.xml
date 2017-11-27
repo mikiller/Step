@@ -172,6 +172,7 @@
         <activity android:name=".activities.P2PSessionDetailActivity" />
         <activity android:name=".activities.AddFriendActivity" />
         <activity android:name=".activities.UserDetailActivity" />
+        <activity android:name=".activities.JoinUserSelectorActivity" />
     </application>
 
 </manifest>

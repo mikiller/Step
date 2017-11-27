@@ -5,9 +5,14 @@ import android.content.Intent;
 
 import com.netease.nim.uikit.NimUIKit;
 import com.netease.nim.uikit.session.SessionEventListener;
+import com.netease.nim.uikit.session.module.MsgForwardFilter;
 import com.netease.nimlib.sdk.avchat.model.AVChatAttachment;
 import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
+import com.netease.nimlib.sdk.msg.constant.AttachStatusEnum;
+import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
+import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.netease.nimlib.sdk.robot.model.RobotAttachment;
 import com.westepper.step.activities.UserDetailActivity;
 import com.westepper.step.base.Constants;
 import com.westepper.step.widgets.CustomP2PSessionCustomization;
@@ -25,6 +30,7 @@ public class SessionHelper {
         initCustomSessionCustomization();
         registerViewHolders();
         setSessionListener();
+        registerMsgForwardFilter();
     }
 
     private static void initCustomSessionCustomization(){
@@ -54,6 +60,24 @@ public class SessionHelper {
         };
 
         NimUIKit.setSessionListener(listener);
+    }
+
+    /**
+     * 消息转发过滤器
+     */
+    private static void registerMsgForwardFilter() {
+        NimUIKit.setMsgForwardFilter(new MsgForwardFilter() {
+            @Override
+            public boolean shouldIgnore(IMMessage message) {
+                if (message.getDirect() == MsgDirectionEnum.In
+                        && (message.getAttachStatus() == AttachStatusEnum.transferring
+                        || message.getAttachStatus() == AttachStatusEnum.fail)) {
+                    // 接收到的消息，附件没有下载成功，不允许转发
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
 }

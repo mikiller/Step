@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/nim_contact_checkbox_checked_grey" android:state_enabled="false" />
+    <item android:drawable="@drawable/nim_contact_checkbox_checked_green" android:state_enabled="true" android:state_checked="true" />
+    <item android:drawable="@drawable/nim_contact_checkbox_unchecked" android:state_enabled="true" android:state_checked="false" />
+</selector>
