@@ -6,6 +6,7 @@ package com.westepper.step.responses;
 
 public class L2Progress extends MyDiscovery {
     private double percent;
+    private String point;
 
     public double getPercent() {
         return percent;
@@ -13,5 +14,13 @@ public class L2Progress extends MyDiscovery {
 
     public void setPercent(double percent) {
         this.percent = percent;
+    }
+
+    public String getPoint() {
+        return point;
+    }
+
+    public void setPoint(String point) {
+        this.point = point;
     }
 }

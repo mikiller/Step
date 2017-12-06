@@ -25,6 +25,15 @@
             android:gravity="center"
             android:ems="4"/>
 
+            <TextView
+                android:id="@+id/menu_point"
+                style="@style/nomal_text_style"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/menu_title"
+                android:text="(0/0)"
+                android:ems="4"
+                android:visibility="gone"/>
+
             <ImageView
                 android:id="@+id/menu_icon"
                 android:layout_width="wrap_content"

@@ -9,6 +9,7 @@ import java.io.Serializable;
 public class CityProgress implements Serializable {
     private String cityName;
     private double reachedPercent;
+    private String point;
 
     public String getCityName() {
         return cityName;
@@ -24,5 +25,13 @@ public class CityProgress implements Serializable {
 
     public void setReachedPercent(double reachedPercent) {
         this.reachedPercent = reachedPercent;
+    }
+
+    public String getPoint() {
+        return point;
+    }
+
+    public void setPoint(String point) {
+        this.point = point;
     }
 }

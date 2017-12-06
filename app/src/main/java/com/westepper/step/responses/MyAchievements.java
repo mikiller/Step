@@ -103,6 +103,7 @@ public class MyAchievements implements Serializable {
             CityProgress cp = new CityProgress();
             cp.setCityName(lp.getAreaName());
             cp.setReachedPercent(lp.getPercent());
+            cp.setPoint(lp.getPoint());
             discoverCityList.add(cp);
         }
     }

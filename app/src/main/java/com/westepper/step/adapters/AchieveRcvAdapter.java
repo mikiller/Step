@@ -3,6 +3,7 @@ package com.westepper.step.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,6 +112,7 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
             } else {
                 CityProgress cityPgs = myAchieve.getDiscoverCityList().get(holder.getAdapterPosition() - ((needHead ? 1 : 0)));
                 ((AchProgressHolder)holder).setTitle(cityPgs.getCityName());
+                ((AchProgressHolder)holder).setPoint(cityPgs.getPoint());
                 ((AchProgressHolder)holder).setNeedSubTitle(false);
                 ((AchProgressHolder)holder).setNeedNext(myAchieve.getType() == Constants.ACH_AREA ? false : true);
                 ((AchProgressHolder)holder).setPgs(cityPgs.getReachedPercent());
@@ -208,13 +210,14 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
     }
 
     protected class AchProgressHolder extends RecyclerView.ViewHolder{
-        private TextView menu_title, tv_subAchTitle, tv_pgs;
+        private TextView menu_title, menu_point, tv_subAchTitle, tv_pgs;
         private ProgressBar pgs;
         private ImageView iv_next;
         private ImageView menu_icon;
         public AchProgressHolder(View itemView) {
             super(itemView);
             menu_title = (TextView) itemView.findViewById(R.id.menu_title);
+            menu_point = (TextView) itemView.findViewById(R.id.menu_point);
             menu_icon = (ImageView) itemView.findViewById(R.id.menu_icon);
             tv_subAchTitle = (TextView) itemView.findViewById(R.id.tv_subAchTitle);
             tv_pgs = (TextView) itemView.findViewById(R.id.tv_pgs);
@@ -224,6 +227,15 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
 
         public void setTitle(String title){
             menu_title.setText(title);
+        }
+
+        public void setPoint(String point){
+            if (TextUtils.isEmpty(point)){
+                menu_point.setVisibility(GONE);
+            }else {
+                menu_point.setVisibility(VISIBLE);
+                menu_point.setText("(".concat(point).concat(")"));
+            }
         }
 
         public void setSubTitle(String sub){

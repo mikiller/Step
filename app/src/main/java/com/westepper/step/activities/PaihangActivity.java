@@ -109,14 +109,19 @@ public class PaihangActivity extends SuperActivity {
                 iv_headers[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Map<String, Object> args = new HashMap<>();
-                        args.put(Constants.USERINFO, rankList.getRankList().get(finalI).getUserId());
-                        ActivityManager.startActivity(PaihangActivity.this, UserDetailActivity.class, args);
+                        if (!rankList.getRankList().get(finalI).getUserId().equals(userInfo.getUserId())){
+//                            back();
+//                        }else {
+                            Map<String, Object> args = new HashMap<>();
+                            args.put(Constants.USERINFO, rankList.getRankList().get(finalI).getUserId());
+                            ActivityManager.startActivity(PaihangActivity.this, UserDetailActivity.class, args);
+                        }
                     }
                 });
             } else {
                 iv_headers[i].setImageResource(R.mipmap.ic_default_head);
             }
+            tv_headers[i].setTxtColor(rankList.getRankList().get(i).getUserId().equals(userInfo.getUserId()));
         }
         adapter.setDatas(rankList.getUserRank(), rankList.getRankList());
     }

@@ -1,6 +1,7 @@
 package com.westepper.step.customViews;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
@@ -57,5 +58,11 @@ public class PaihangTextView extends LinearLayout {
         }else{
             tv_ach_num.setText(String.valueOf(num));
         }
+    }
+
+    public void setTxtColor(boolean isUser){
+        tv_name.setTextColor(Color.parseColor(isUser? "#ff00a8ff" : "#ff323c46"));
+        tv_dis_num.setTextColor(getResources().getColor(isUser? R.color.colorPrimary : R.color.text_color_black));
+        tv_ach_num.setTextColor(getResources().getColor(isUser ? R.color.colorPrimary : R.color.mainTabTxt));
     }
 }

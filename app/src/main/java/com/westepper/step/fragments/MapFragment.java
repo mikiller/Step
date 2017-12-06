@@ -427,6 +427,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
                 layout_achSetting.show();
                 break;
             case R.id.btn_new:
+                ((SuperActivity)getActivity()).hideInputMethod(commitInput);
                 showNewDisDlg();
                 break;
             case R.id.btn_selection:
