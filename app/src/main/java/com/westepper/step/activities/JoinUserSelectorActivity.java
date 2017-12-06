@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 
 import com.netease.nim.uikit.NimUIKit;
 import com.netease.nim.uikit.cache.SimpleCallback;
@@ -20,6 +21,7 @@ import com.westepper.step.models.JoinModel;
 import com.westepper.step.responses.JoinUsers;
 import com.westepper.step.responses.UserInfo;
 import com.westepper.step.utils.ContactsHelper;
+import com.westepper.step.utils.MXTimeUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -44,11 +46,11 @@ public class JoinUserSelectorActivity extends SuperActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             disId = savedInstanceState.getString(Constants.DIS_ID);
             teamId = savedInstanceState.getString(Constants.TEAM_ID);
             teamMembers = (List<TeamMember>) savedInstanceState.getSerializable(Constants.TEAM_MEMBER);
-        }else if(getIntent() != null){
+        } else if (getIntent() != null) {
             disId = getIntent().getStringExtra(Constants.DIS_ID);
             teamId = getIntent().getStringExtra(Constants.TEAM_ID);
             teamMembers = (List<TeamMember>) getIntent().getSerializableExtra(Constants.TEAM_MEMBER);
@@ -75,7 +77,10 @@ public class JoinUserSelectorActivity extends SuperActivity {
 
             @Override
             protected void onSubClicked() {
-                ContactsHelper.inviteMembers(JoinUserSelectorActivity.this, teamId, adapter.getAccounts());
+                if (TextUtils.isEmpty(teamId)){
+                    ContactsHelper.createAdvancedTeam(JoinUserSelectorActivity.this,  userInfo.getNickName().concat("的约行").concat(MXTimeUtils.getFormatTime("yy/MM/dd HH:mm", System.currentTimeMillis())), adapter.getAccounts(), null);
+                }else
+                    ContactsHelper.inviteMembers(JoinUserSelectorActivity.this, teamId, adapter.getAccounts());
             }
         });
 
@@ -100,20 +105,22 @@ public class JoinUserSelectorActivity extends SuperActivity {
 //        });
 //    }
 
-    private void getJoinUserLogic(){
+    private void getJoinUserLogic() {
         GetJoinUsersLogic logic = new GetJoinUsersLogic(this, new JoinModel(disId, null));
         logic.setCallback(new BaseLogic.LogicCallback<JoinUsers>() {
             @Override
             public void onSuccess(JoinUsers response) {
-                for(TeamMember member : teamMembers){
-                    for(UserInfo user : response.getJoinUser()){
-                        if(user.getUserId().equals(userInfo.getUserId())) {
-                            response.getJoinUser().remove(user);
-                            break;
-                        }
-                        if(member.getAccount().equals(user.getUserId())){
-                            response.getJoinUser().remove(user);
-                            break;
+                if (teamMembers != null) {
+                    for (TeamMember member : teamMembers) {
+                        for (UserInfo user : response.getJoinUser()) {
+                            if (user.getUserId().equals(userInfo.getUserId())) {
+                                response.getJoinUser().remove(user);
+                                break;
+                            }
+                            if (member.getAccount().equals(user.getUserId())) {
+                                response.getJoinUser().remove(user);
+                                break;
+                            }
                         }
                     }
                 }

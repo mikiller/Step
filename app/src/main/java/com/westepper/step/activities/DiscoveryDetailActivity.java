@@ -3,31 +3,24 @@ package com.westepper.step.activities;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.netease.nim.uikit.NimUIKit;
 import com.uilib.customdialog.CustomDialog;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
 import com.westepper.step.adapters.DetailImgVpAdapter;
 import com.westepper.step.adapters.DisDetailRcvAdapter;
 import com.westepper.step.base.BaseLogic;
-import com.westepper.step.base.BaseModel;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.CommitEditView;
@@ -35,25 +28,19 @@ import com.westepper.step.customViews.TitleBar;
 import com.westepper.step.logics.CommitLogic;
 import com.westepper.step.logics.GetCommitListLogic;
 import com.westepper.step.logics.GetDisDetailInfoLogic;
-import com.westepper.step.logics.GetDiscoveryListLogic;
 import com.westepper.step.logics.JoinLogic;
 import com.westepper.step.models.CommitModel;
 import com.westepper.step.models.DisBase;
 import com.westepper.step.models.JoinModel;
 import com.westepper.step.responses.DiscoveryDetailInfo;
 import com.westepper.step.responses.JoinResponse;
-import com.westepper.step.utils.MXPreferenceUtils;
 import com.westepper.step.utils.MXTimeUtils;
-import com.westepper.step.widgets.CommitGlobalLayoutListener;
-import com.westepper.step.responses.Commit;
 import com.westepper.step.responses.Discovery;
 import com.westepper.step.responses.ImgDetail;
 import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.AnimUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -266,7 +253,8 @@ public class DiscoveryDetailActivity extends SuperActivity {
             public void onClick(View v) {
                 //show dlg for input join words
                 //after get team id from yunxin send request
-                joinOutGo();
+//                joinOutGo();
+                joinOutgoLogic();
 //                final CustomDialog dlg = new CustomDialog(DiscoveryDetailActivity.this);
 //                dlg.setTitle("已报名参加约行").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
 //                    @Override
@@ -333,28 +321,24 @@ public class DiscoveryDetailActivity extends SuperActivity {
             tv_joinNum.setText(String.format(getString(R.string.join_num), discovery.getTotalCount(), joinCount));
     }
 
-    private void joinOutGo(){
-        final CustomDialog dlg = new CustomDialog(DiscoveryDetailActivity.this);
-        dlg.setTitle("已报名参加约行").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
-            @Override
-            public void onCancel() {
-                hideInputMethod(dlg.getCurrentFocus());
-            }
+//    private void joinOutGo(){
+//        final CustomDialog dlg = new CustomDialog(DiscoveryDetailActivity.this);
+//        dlg.setTitle("已报名参加约行").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
+//            @Override
+//            public void onCancel() {
+//                hideInputMethod(dlg.getCurrentFocus());
+//            }
+//
+//            @Override
+//            public void onSure() {
+//                NimUIKit.applyJoinTeam(DiscoveryDetailActivity.this, discovery.getTeamId(), dlg.getMsg());
+//                joinOutgoLogic();
+//                hideInputMethod(dlg.getCurrentFocus());
+//            }
+//        }).show();
+//    }
 
-            @Override
-            public void onSure() {
-                NimUIKit.applyJoinTeam(DiscoveryDetailActivity.this, discovery.getTeamId(), dlg.getMsg());
-                getJoinLogic();
-                hideInputMethod(dlg.getCurrentFocus());
-            }
-        }).show();
-    }
-
-    private void joinTeam(String msg){
-
-    }
-
-    private void getJoinLogic(){
+    private void joinOutgoLogic(){
         JoinLogic logic = new JoinLogic(DiscoveryDetailActivity.this, new JoinModel(discovery.getDiscoveryId(), discovery.getTeamId()));
         logic.setCallback(new BaseLogic.LogicCallback<JoinResponse>() {
             @Override

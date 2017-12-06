@@ -3,11 +3,13 @@ package com.westepper.step.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
 import com.netease.nim.uikit.NimUIKit;
@@ -25,6 +27,8 @@ import com.westepper.step.responses.Discovery;
 import com.westepper.step.responses.ImgDetail;
 import com.westepper.step.responses.UserInfo;
 import com.westepper.step.utils.ActivityManager;
+import com.westepper.step.utils.ContactsHelper;
+import com.westepper.step.utils.MXTimeUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -95,6 +99,9 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
                 break;
             GlideImageLoader.getInstance().loadImage(mContext, img.getImg_url(), R.mipmap.placeholder, holder.iv_imgs[i++], 0);
         }
+        while (i<3){
+            holder.iv_imgs[i++].setImageDrawable(null);
+        }
         if (disKind == Constants.OUTGO) {
             holder.ll_chat.setVisibility(View.VISIBLE);
             if (discovery.getTotalCount() == 0)
@@ -117,7 +124,13 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
         holder.tv_chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getTeamMembers(discovery);
+                if(TextUtils.isEmpty(discovery.getTeamId())){
+                    if (type == 1)
+                        createTeam(discovery);
+                    else
+                        Toast.makeText(mContext, "暂未创建群聊", Toast.LENGTH_SHORT).show();
+                }else
+                    getTeamMembers(discovery);
 //                if (type == 1 && discovery.getJoinCount() > 0) {
 //                    //选择报名人员
 //                    Map<String, Object> args = new HashMap<String, Object>();
@@ -145,6 +158,17 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
         return d1.equals(d2);
     }
 
+    private void createTeam(Discovery discovery){
+        if(discovery.getJoinCount() > 0) {
+            Map<String, Object> args = new HashMap<String, Object>();
+            args.put(Constants.DIS_ID, discovery.getDiscoveryId());
+            args.put(Constants.TEAM_ID, discovery.getTeamId());
+            ActivityManager.startActivity((Activity) mContext, JoinUserSelectorActivity.class, args);
+        }else {
+            ContactsHelper.createAdvancedTeam(mContext, userInfo.getNickName().concat("的约行").concat(MXTimeUtils.getFormatTime("yy/MM/dd HH:mm", System.currentTimeMillis())), new ArrayList<String>(), null);
+        }
+    }
+
     private void getTeamMembers(final Discovery discovery) {
         TeamDataCache.getInstance().fetchTeamMemberList(discovery.getTeamId(), new SimpleCallback<List<TeamMember>>() {
             @Override
@@ -152,6 +176,7 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
                 if (success && members != null) {
 //                    getJoinUserLogic(members);
                     if (type == 1) {
+                        //我发布的
                         if (discovery.getJoinCount() > 0) {
                             Map<String, Object> args = new HashMap<String, Object>();
                             args.put(Constants.DIS_ID, discovery.getDiscoveryId());
@@ -163,6 +188,7 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
                             ((SuperActivity) mContext).back();
                         }
                     } else if (type == 2) {
+                        //我报名的
                         for (TeamMember member : members) {
                             if (member.getAccount().equals(SuperActivity.userInfo.getUserId())) {
                                 NimUIKit.startTeamSession(mContext, discovery.getTeamId());
@@ -171,14 +197,14 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
                             }
                         }
                         //send join request
-                        joinOutGo(discovery.getTeamId());
+                        joinOutGoTeam(discovery.getTeamId());
                     }
                 }
             }
         });
     }
 
-    private void joinOutGo(final String teamId) {
+    private void joinOutGoTeam(final String teamId) {
         final CustomDialog dlg = new CustomDialog(mContext);
         dlg.setTitle("已报名参加约行").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
             @Override

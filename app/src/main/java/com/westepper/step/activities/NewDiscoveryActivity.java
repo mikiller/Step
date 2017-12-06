@@ -198,7 +198,9 @@ public class NewDiscoveryActivity extends SuperActivity {
             NewDiscoveryLogic logic = new NewDiscoveryLogic(this, model);
             logic.sendRequest();
         }else{
-            ContactsHelper.createAdvancedTeam(this, userInfo.getNickName().concat("的约行").concat(MXTimeUtils.getFormatTime("yy/MM/dd HH:mm", System.currentTimeMillis())), new ArrayList<String>(), model);
+            //ContactsHelper.createAdvancedTeam(this, userInfo.getNickName().concat("的约行").concat(MXTimeUtils.getFormatTime("yy/MM/dd HH:mm", System.currentTimeMillis())), new ArrayList<String>(), model);
+            NewDiscoveryLogic logic = new NewDiscoveryLogic(this, model);
+            logic.sendRequest();
         }
     }
 

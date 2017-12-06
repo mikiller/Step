@@ -163,7 +163,7 @@ public class DiscoveryAdapter extends PagerAdapter {
             holder.btn_join.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    joinOutGo(holder, discover);
+                    joinOutGoLogic(holder, discover);
 //                    JoinLogic logic = new JoinLogic(mContext, new JoinModel(discover.getDiscoveryId(), discover.getTeamId()));
 //                    logic.setCallback(new BaseLogic.LogicCallback<JoinResponse>() {
 //                        @Override
@@ -214,35 +214,36 @@ public class DiscoveryAdapter extends PagerAdapter {
         });
     }
 
-    private void joinOutGo(final DiscoveryHolder holder, final Discovery discover){
-        final CustomDialog dlg = new CustomDialog(mContext);
-                dlg.setTitle("已报名参加约行").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
-                    @Override
-                    public void onCancel() {
-                        ((SuperActivity)mContext).hideInputMethod(dlg.getCurrentFocus());
-                    }
+    private void joinOutGoLogic(final DiscoveryHolder holder, final Discovery discover){
+        JoinLogic logic = new JoinLogic(mContext, new JoinModel(discover.getDiscoveryId(), discover.getTeamId()));
+        logic.setCallback(new BaseLogic.LogicCallback<JoinResponse>() {
+            @Override
+            public void onSuccess(JoinResponse response) {
+                discover.setJoin(1);
+                holder.setBtnJoinEnabled(false, "已报名");
+                cancelTask();
+            }
 
-                    @Override
-                    public void onSure() {
-                        NimUIKit.applyJoinTeam(mContext, discover.getTeamId(), dlg.getMsg());
-                        JoinLogic logic = new JoinLogic(mContext, new JoinModel(discover.getDiscoveryId(), discover.getTeamId()));
-                        logic.setCallback(new BaseLogic.LogicCallback<JoinResponse>() {
-                            @Override
-                            public void onSuccess(JoinResponse response) {
-                                discover.setJoin(1);
-                                holder.setBtnJoinEnabled(false, "已报名");
-                                cancelTask();
-                            }
-
-                            @Override
-                            public void onFailed(String code, String msg, JoinResponse localData) {
-                                Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        logic.sendRequest();
-                        ((SuperActivity)mContext).hideInputMethod(dlg.getCurrentFocus());
-                    }
-                }).show();
+            @Override
+            public void onFailed(String code, String msg, JoinResponse localData) {
+                Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+        logic.sendRequest();
+//        final CustomDialog dlg = new CustomDialog(mContext);
+//                dlg.setTitle("已报名参加约行").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
+//                    @Override
+//                    public void onCancel() {
+//                        ((SuperActivity)mContext).hideInputMethod(dlg.getCurrentFocus());
+//                    }
+//
+//                    @Override
+//                    public void onSure() {
+//                        NimUIKit.applyJoinTeam(mContext, discover.getTeamId(), dlg.getMsg());
+//
+//                        ((SuperActivity)mContext).hideInputMethod(dlg.getCurrentFocus());
+//                    }
+//                }).show();
     }
 
     public void setDataList(List<Discovery> dataList) {

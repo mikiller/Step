@@ -128,6 +128,7 @@ public class MyDiscoveryActivity extends SuperActivity {
         rcv_mydis = (RecyclerView) swipeLayout.getTargetView();
         rcv_mydis.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new MyDiscoveryRcvAdapter(this, disKind);
+        adapter.setUserInfo(SuperActivity.userInfo);
         rcv_mydis.setAdapter(adapter);
         rcv_mydis.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
@@ -151,7 +152,6 @@ public class MyDiscoveryActivity extends SuperActivity {
             public void onSuccess(DiscoveryList response) {
                 if(page == 1) {
                     adapter.setDiscoveryList(response.getDiscoveryList(), type);
-                    adapter.setUserInfo(SuperActivity.userInfo);
                     swipeLayout.setRefreshing(false);
                 }
                 else {
