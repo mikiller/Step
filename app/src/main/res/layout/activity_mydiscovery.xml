@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/cancel_btn_bg">
 
@@ -16,6 +16,7 @@
         android:id="@+id/tab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/titleBar"
         android:visibility="gone"
         android:layout_marginBottom="10dp"/>
 
@@ -24,7 +25,7 @@
         android:id="@+id/swipeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/rl_headlayout"
+        android:layout_below="@+id/tab"
         app:swipe_style="classic">
 
         <include android:id="@id/swipe_refresh_header"
@@ -39,4 +40,4 @@
         <include android:id="@id/swipe_load_more_footer"
             layout="@layout/layout_classic_footer" />
     </com.uilib.swipetoloadlayout.SwipeToLoadLayout>
-</LinearLayout>
+</RelativeLayout>

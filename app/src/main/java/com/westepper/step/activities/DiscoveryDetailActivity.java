@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.netease.nim.uikit.NimUIKit;
 import com.uilib.customdialog.CustomDialog;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
@@ -265,7 +266,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
             public void onClick(View v) {
                 //show dlg for input join words
                 //after get team id from yunxin send request
-                getJoinLogic();
+                joinOutGo();
 //                final CustomDialog dlg = new CustomDialog(DiscoveryDetailActivity.this);
 //                dlg.setTitle("已报名参加约行").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
 //                    @Override
@@ -330,6 +331,27 @@ public class DiscoveryDetailActivity extends SuperActivity {
             tv_joinNum.setText(String.format(getString(R.string.join_num1), joinCount));
         else
             tv_joinNum.setText(String.format(getString(R.string.join_num), discovery.getTotalCount(), joinCount));
+    }
+
+    private void joinOutGo(){
+        final CustomDialog dlg = new CustomDialog(DiscoveryDetailActivity.this);
+        dlg.setTitle("已报名参加约行").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
+            @Override
+            public void onCancel() {
+                hideInputMethod(dlg.getCurrentFocus());
+            }
+
+            @Override
+            public void onSure() {
+                NimUIKit.applyJoinTeam(DiscoveryDetailActivity.this, discovery.getTeamId(), dlg.getMsg());
+                getJoinLogic();
+                hideInputMethod(dlg.getCurrentFocus());
+            }
+        }).show();
+    }
+
+    private void joinTeam(String msg){
+
     }
 
     private void getJoinLogic(){

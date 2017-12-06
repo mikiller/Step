@@ -21,8 +21,9 @@
             android:id="@+id/menu_title"
             style="@style/nomal_text_style"
             android:layout_centerVertical="true"
-            android:layout_marginRight="30dp"
-            android:text="上海" />
+            android:text="上海"
+            android:gravity="center"
+            android:ems="4"/>
 
             <ImageView
                 android:id="@+id/menu_icon"

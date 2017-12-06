@@ -292,8 +292,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
                     mapUtils.moveToUserPos();
                 } else {
                     mapUtils.setAreaType(Graphics.ACHEIVE, areaId);
-
-                    mapUtils.moveCamera(mapUtils.getCenterLatLng(centerId));
+                    mapUtils.moveCamera(mapUtils.getCenterLatLng(centerId), 15);
                 }
                 mapUtils.setShowAreaIds(areaId);
             }

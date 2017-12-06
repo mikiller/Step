@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.netease.nim.uikit.cache.DataCacheManager;
 import com.netease.nim.uikit.cache.TeamDataCache;
@@ -40,6 +41,7 @@ import com.netease.nimlib.sdk.auth.LoginInfo;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.netease.nimlib.sdk.team.TeamService;
 import com.netease.nimlib.sdk.team.constant.TeamTypeEnum;
 import com.netease.nimlib.sdk.team.model.Team;
 import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
@@ -330,6 +332,25 @@ public final class NimUIKit {
             NormalTeamInfoActivity.start(context, teamId); // 启动讨论组资料页
         }
 
+    }
+
+    public static void applyJoinTeam(final Context context, String teamId, String msg){
+        NIMClient.getService(TeamService.class).applyJoinTeam(teamId, msg).setCallback(new RequestCallback<Team>() {
+            @Override
+            public void onSuccess(Team team) {
+                Toast.makeText(context, "申请加群成功，等待验证", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailed(int i) {
+                Toast.makeText(context, "申请加群失败， code：" + i, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onException(Throwable throwable) {
+
+            }
+        });
     }
 
     public static Context getContext() {

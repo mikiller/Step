@@ -19,6 +19,7 @@
         style="@style/nomal_text_style"
         android:layout_toRightOf="@+id/iv_menu_icon"
         android:layout_marginBottom="14dp"
+        android:layout_marginRight="15dp"
         android:layout_centerVertical="true" />
 
     <ImageView
@@ -37,8 +38,11 @@
         style="@style/hint_text_style"
         android:visibility="visible"
         android:layout_toLeftOf="@+id/iv_next"
+        android:layout_toRightOf="@+id/tv_menu_name"
         android:layout_centerVertical="true"
-        android:lines="1"/>
+        android:gravity="right"
+        android:lines="1"
+        android:ellipsize="end"/>
 
     <View
         android:id="@+id/bottom_line"

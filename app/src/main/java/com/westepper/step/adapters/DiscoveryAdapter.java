@@ -2,6 +2,7 @@ package com.westepper.step.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
+import com.netease.nim.uikit.NimUIKit;
 import com.netease.nim.uikit.cache.NimUserInfoCache;
 import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
@@ -161,22 +163,22 @@ public class DiscoveryAdapter extends PagerAdapter {
             holder.btn_join.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    getJoinLogic(holder, discover.getDiscoveryId(), discover.getTeamId());
-                    JoinLogic logic = new JoinLogic(mContext, new JoinModel(discover.getDiscoveryId(), discover.getTeamId()));
-                    logic.setCallback(new BaseLogic.LogicCallback<JoinResponse>() {
-                        @Override
-                        public void onSuccess(JoinResponse response) {
-                            discover.setJoin(1);
-                            holder.setBtnJoinEnabled(false, "已报名");
-                            cancelTask();
-                        }
-
-                        @Override
-                        public void onFailed(String code, String msg, JoinResponse localData) {
-                            Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    logic.sendRequest();
+                    joinOutGo(holder, discover);
+//                    JoinLogic logic = new JoinLogic(mContext, new JoinModel(discover.getDiscoveryId(), discover.getTeamId()));
+//                    logic.setCallback(new BaseLogic.LogicCallback<JoinResponse>() {
+//                        @Override
+//                        public void onSuccess(JoinResponse response) {
+//                            discover.setJoin(1);
+//                            holder.setBtnJoinEnabled(false, "已报名");
+//                            cancelTask();
+//                        }
+//
+//                        @Override
+//                        public void onFailed(String code, String msg, JoinResponse localData) {
+//                            Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+//                    logic.sendRequest();
                 }
             });
         }
@@ -210,6 +212,37 @@ public class DiscoveryAdapter extends PagerAdapter {
                 Toast.makeText(mContext, "on exception:" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void joinOutGo(final DiscoveryHolder holder, final Discovery discover){
+        final CustomDialog dlg = new CustomDialog(mContext);
+                dlg.setTitle("已报名参加约行").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
+                    @Override
+                    public void onCancel() {
+                        ((SuperActivity)mContext).hideInputMethod(dlg.getCurrentFocus());
+                    }
+
+                    @Override
+                    public void onSure() {
+                        NimUIKit.applyJoinTeam(mContext, discover.getTeamId(), dlg.getMsg());
+                        JoinLogic logic = new JoinLogic(mContext, new JoinModel(discover.getDiscoveryId(), discover.getTeamId()));
+                        logic.setCallback(new BaseLogic.LogicCallback<JoinResponse>() {
+                            @Override
+                            public void onSuccess(JoinResponse response) {
+                                discover.setJoin(1);
+                                holder.setBtnJoinEnabled(false, "已报名");
+                                cancelTask();
+                            }
+
+                            @Override
+                            public void onFailed(String code, String msg, JoinResponse localData) {
+                                Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        logic.sendRequest();
+                        ((SuperActivity)mContext).hideInputMethod(dlg.getCurrentFocus());
+                    }
+                }).show();
     }
 
     public void setDataList(List<Discovery> dataList) {
@@ -271,7 +304,7 @@ public class DiscoveryAdapter extends PagerAdapter {
     public class DiscoveryHolder{
         private SelectableRoundedImageView iv_userHeader;
         private TextView tv_nickName, tv_msg, tv_time;
-        private ImageView iv_gender;
+//        private ImageView iv_gender;
         private SelectableRoundedImageView[] iv_imgList = new SelectableRoundedImageView[3];
         private ImageButton btn_good, btn_discuss, btn_addFriend;
         private LinearLayout ll_join;
@@ -281,7 +314,7 @@ public class DiscoveryAdapter extends PagerAdapter {
             tv_nickName = (TextView) root.findViewById(R.id.tv_nickName);
             tv_msg = (TextView) root.findViewById(R.id.tv_msg);
             tv_time = (TextView) root.findViewById(R.id.tv_time);
-            iv_gender = (ImageView) root.findViewById(R.id.iv_gender);
+//            iv_gender = (ImageView) root.findViewById(R.id.iv_gender);
             iv_imgList[0] = (SelectableRoundedImageView) root.findViewById(R.id.iv_img1);
             iv_imgList[1] = (SelectableRoundedImageView) root.findViewById(R.id.iv_img2);
             iv_imgList[2] = (SelectableRoundedImageView) root.findViewById(R.id.iv_img3);
@@ -301,7 +334,9 @@ public class DiscoveryAdapter extends PagerAdapter {
         }
 
         public void setGender(int gender){
-            iv_gender.setImageResource(gender == 1 ? R.mipmap.male : R.mipmap.female);
+            Drawable drawable = mContext.getResources().getDrawable(gender == 1 ? R.mipmap.male : R.mipmap.female);
+            drawable.setBounds(0,0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            tv_nickName.setCompoundDrawables(null, null, drawable, null);
         }
 
         public void setMsg(String msg){

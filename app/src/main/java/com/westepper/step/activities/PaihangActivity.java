@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.RadioGroup;
 
 import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
@@ -19,6 +20,10 @@ import com.westepper.step.customViews.TitleBar;
 import com.westepper.step.logics.RankListLogic;
 import com.westepper.step.models.RankModel;
 import com.westepper.step.responses.RankList;
+import com.westepper.step.utils.ActivityManager;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -92,7 +97,7 @@ public class PaihangActivity extends SuperActivity {
         });
     }
 
-    private void updateRankList(RankList rankList) {
+    private void updateRankList(final RankList rankList) {
         int size = rankList.getRankList().size();
         for (int i = 0; i < 3; i++) {
             tv_headers[i].setName(i < size ? rankList.getRankList().get(i).getNickName() : "虚位以待");
@@ -100,7 +105,15 @@ public class PaihangActivity extends SuperActivity {
             tv_headers[i].setAchNum(i < size ? Long.parseLong(rankList.getRankList().get(i).getAchievedNum()) : 0);
             if (i < size) {
                 GlideImageLoader.getInstance().loadImage(this, rankList.getRankList().get(i).getHeadUrl(), R.mipmap.ic_default_head, iv_headers[i], 0);
-                Log.e(TAG, "i: " + i + ", url: " + rankList.getRankList().get(i).getHeadUrl());
+                final int finalI = i;
+                iv_headers[i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Map<String, Object> args = new HashMap<>();
+                        args.put(Constants.USERINFO, rankList.getRankList().get(finalI).getUserId());
+                        ActivityManager.startActivity(PaihangActivity.this, UserDetailActivity.class, args);
+                    }
+                });
             } else {
                 iv_headers[i].setImageResource(R.mipmap.ic_default_head);
             }

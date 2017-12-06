@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.ImageButton;
 
 import com.westepper.step.R;
 import com.westepper.step.adapters.AchieveRcvAdapter;
@@ -36,6 +38,8 @@ import butterknife.BindView;
 public class MyAchieveActivity extends SuperActivity {
     @BindView(R.id.titleBar)
     TitleBar titleBar;
+    @BindView(R.id.btn_info)
+    ImageButton btn_info;
     @BindView(R.id.rcv_ach)
     RecyclerView rcv_ach;
 
@@ -68,22 +72,19 @@ public class MyAchieveActivity extends SuperActivity {
         titleBar.setTitleListener(new TitleBar.TitleListener() {
             @Override
             protected void onBackClicked() {
-//                if(adapter.isNeedHead())
-//                    back();
-//                else{
-//                    adapter.setNeedHead(true);
-////                    adapter.setPgsList(createData());
-//                    getMyAchieves();
-//                    if(rcv_ach.getAdapter() instanceof ReachedAchRcvAdapter)
-//                        rcv_ach.setAdapter(adapter);
-//                    titleBar.setTitle(achKind == Constants.ACH_CITY ? "探索" : "成就");
-//                }
                 back();
             }
 
             @Override
             protected void onMoreClicked() {
                 super.onMoreClicked();
+            }
+        });
+
+        btn_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 

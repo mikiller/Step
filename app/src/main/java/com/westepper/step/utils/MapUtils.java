@@ -98,7 +98,12 @@ public class MapUtils {
     }
 
     public void moveCamera(LatLng latLng) {
-        aMap.animateCamera(new CameraUpdateFactory().newCameraPosition(new CameraPosition(latLng, currentZoom, 0, 0)));
+//        aMap.animateCamera(new CameraUpdateFactory().newCameraPosition(new CameraPosition(latLng, currentZoom, 0, 0)));
+        moveCamera(latLng, currentZoom);
+    }
+
+    public void moveCamera(LatLng latLng, float zoom){
+        aMap.animateCamera(new CameraUpdateFactory().newCameraPosition(new CameraPosition(latLng, zoom, 0, 0)));
     }
 
     public void moveToUserPos(){

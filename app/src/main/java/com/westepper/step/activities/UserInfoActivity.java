@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -59,7 +62,7 @@ public class UserInfoActivity extends SuperActivity implements View.OnClickListe
     @BindView(R.id.menu_city)
     MyMenuItem menu_city;
     @BindView(R.id.tv_sign)
-    TextView tv_sign;
+    EditText tv_sign;
     @BindView(R.id.tv_signNum)
     TextView tv_signNum;
     @BindView(R.id.commitInput)
@@ -69,7 +72,7 @@ public class UserInfoActivity extends SuperActivity implements View.OnClickListe
     @BindView(R.id.layout_citylist)
     CityListLayout layout_citylist;
 
-    int signNum = 140;
+    int signNum = 30;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -112,6 +115,24 @@ public class UserInfoActivity extends SuperActivity implements View.OnClickListe
         menu_nickname.setOnClickListener(this);
         menu_city.setOnClickListener(this);
         tv_sign.setOnClickListener(this);
+        tv_sign.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                tv_signNum.setText(String.valueOf(signNum - tv_sign.getText().length()));
+                userInfo.setSign(tv_sign.getText().toString());
+                titleBar.setSubTxtEnabled(true);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         commitInput.setOnSendListener(new CommitEditView.OnSendListener() {
             @Override
             public void onSend(View focuseView, String txt) {
@@ -125,11 +146,11 @@ public class UserInfoActivity extends SuperActivity implements View.OnClickListe
                         userInfo.setNickName(txt);
                         menu_nickname.setSubText(txt);
                         break;
-                    case R.id.tv_sign:
-                        tv_sign.setText(txt);
-                        tv_signNum.setText(String.valueOf(signNum - tv_sign.getText().length()));
-                        userInfo.setSign(tv_sign.getText().toString());
-                        break;
+//                    case R.id.tv_sign:
+//                        tv_sign.setText(txt);
+//                        tv_signNum.setText(String.valueOf(signNum - tv_sign.getText().length()));
+//                        userInfo.setSign(tv_sign.getText().toString());
+//                        break;
                 }
                 hideInputMethod(commitInput);
                 titleBar.setSubTxtEnabled(true);
@@ -190,9 +211,10 @@ public class UserInfoActivity extends SuperActivity implements View.OnClickListe
                 showCityList();
                 break;
             case R.id.tv_sign:
-                commitInput.setHint("写下你的个性签名");
-                commitInput.setFocuceView(v);
-                showInputMethod(commitInput);
+//                commitInput.setHint("写下你的个性签名");
+//                commitInput.setFocuceView(v);
+//                showInputMethod(commitInput);
+                commitInput.setNeedShow(false);
                 break;
         }
     }

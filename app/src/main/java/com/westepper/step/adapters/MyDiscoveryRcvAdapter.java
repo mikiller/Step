@@ -2,42 +2,29 @@ package com.westepper.step.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
 import com.netease.nim.uikit.NimUIKit;
 import com.netease.nim.uikit.cache.SimpleCallback;
 import com.netease.nim.uikit.cache.TeamDataCache;
-import com.netease.nimlib.sdk.NIMClient;
-import com.netease.nimlib.sdk.RequestCallback;
-import com.netease.nimlib.sdk.team.TeamService;
-import com.netease.nimlib.sdk.team.model.Team;
 import com.netease.nimlib.sdk.team.model.TeamMember;
 import com.uilib.customdialog.CustomDialog;
 import com.uilib.joooonho.SelectableRoundedImageView;
-import com.uilib.mxgallery.models.ItemModel;
-import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
 import com.westepper.step.activities.DiscoveryDetailActivity;
 import com.westepper.step.activities.JoinUserSelectorActivity;
-import com.westepper.step.activities.MyDiscoveryActivity;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.responses.Discovery;
-import com.westepper.step.responses.DiscoveryList;
 import com.westepper.step.responses.ImgDetail;
 import com.westepper.step.responses.UserInfo;
 import com.westepper.step.utils.ActivityManager;
-import com.westepper.step.utils.MXPreferenceUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -184,14 +171,14 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
                             }
                         }
                         //send join request
-                        requestJoin(discovery.getTeamId());
+                        joinOutGo(discovery.getTeamId());
                     }
                 }
             }
         });
     }
 
-    private void requestJoin(final String teamId) {
+    private void joinOutGo(final String teamId) {
         final CustomDialog dlg = new CustomDialog(mContext);
         dlg.setTitle("已报名参加约行").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
             @Override
@@ -201,22 +188,7 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
 
             @Override
             public void onSure() {
-                NIMClient.getService(TeamService.class).applyJoinTeam(teamId, dlg.getMsg()).setCallback(new RequestCallback<Team>() {
-                    @Override
-                    public void onSuccess(Team team) {
-                        Toast.makeText(mContext, "申请加群成功，等待验证", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onFailed(int i) {
-                        Toast.makeText(mContext, "申请加群失败， code：" + i, Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onException(Throwable throwable) {
-
-                    }
-                });
+                NimUIKit.applyJoinTeam(mContext, teamId, dlg.getMsg());
                 ((SuperActivity) mContext).hideInputMethod(dlg.getCurrentFocus());
             }
         }).show();

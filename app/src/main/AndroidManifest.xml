@@ -158,7 +158,8 @@
         <activity android:name=".activities.DiscoveryDetailActivity" />
         <activity android:name=".activities.ReportAdviceActivity" />
         <activity android:name=".activities.AllCommitsActivity" />
-        <activity android:name=".activities.UserInfoActivity" />
+        <activity android:name=".activities.UserInfoActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".activities.SettingActivity" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>

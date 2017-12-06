@@ -27,19 +27,24 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
+            android:layout_marginRight="105dp"
             android:layout_toRightOf="@+id/iv_header"
             android:textColor="@color/text_color_black"
             android:textSize="16sp"
-            android:text="name"/>
+            android:text="nickname"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:drawablePadding="7dp"
+            android:drawableRight="@mipmap/male"/>
 
-        <ImageView
-            android:id="@+id/iv_gender"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="7dp"
-            android:layout_toRightOf="@+id/tv_nickName"
-            android:src="@mipmap/male" />
+        <!--<ImageView-->
+            <!--android:id="@+id/iv_gender"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginLeft="7dp"-->
+            <!--android:layout_toRightOf="@+id/tv_nickName"-->
+            <!--android:src="" />-->
 
         <ImageButton
             android:id="@+id/btn_commit"

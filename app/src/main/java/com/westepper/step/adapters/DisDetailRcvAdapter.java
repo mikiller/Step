@@ -2,6 +2,7 @@ package com.westepper.step.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -120,7 +121,9 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private void updateDetailHolder(final DetailHolder holder){
         holder.tv_nickName.setText(discovery.getNickName());
         GlideImageLoader.getInstance().loadImage(mContext, discovery.getHeadUrl(), R.mipmap.ic_default_head, holder.iv_header, 0);
-        holder.iv_gender.setImageResource(discovery.getGender() == 1 ? R.mipmap.male : R.mipmap.female);
+        Drawable drawable = mContext.getResources().getDrawable(discovery.getGender() == 1 ? R.mipmap.male : R.mipmap.female);
+        drawable.setBounds(0,0,drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        holder.tv_nickName.setCompoundDrawables(null, null, drawable, null);
         holder.tv_goodNum.setText(getGoodNum());
         holder.tv_detailMsg.setText(discovery.getInfo());
         holder.tv_detailPos.setText(discovery.getUserPos().getPoiTitle());
@@ -222,7 +225,7 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     protected class DetailHolder extends RecyclerView.ViewHolder{
         private SelectableRoundedImageView iv_header;
         private TextView tv_nickName, tv_goodNum, tv_detailMsg, tv_detailPos, tv_time, tv_joinTime;
-        private ImageView iv_gender;
+//        private ImageView iv_gender;
         private ImageButton btn_good, btn_commit;
         private RelativeLayout rl_join;
         public DetailHolder(View itemView) {
@@ -234,7 +237,7 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             tv_detailPos = (TextView) itemView.findViewById(R.id.tv_detailPos);
             tv_time = (TextView) itemView.findViewById(R.id.tv_time);
             tv_joinTime = (TextView) itemView.findViewById(R.id.tv_joinTime);
-            iv_gender = (ImageView) itemView.findViewById(R.id.iv_gender);
+//            iv_gender = (ImageView) itemView.findViewById(R.id.iv_gender);
             btn_good = (ImageButton) itemView.findViewById(R.id.btn_good);
             btn_commit = (ImageButton) itemView.findViewById(R.id.btn_commit);
             rl_join = (RelativeLayout) itemView.findViewById(R.id.rl_join);

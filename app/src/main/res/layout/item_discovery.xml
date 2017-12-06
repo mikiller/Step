@@ -21,35 +21,34 @@
             android:layout_marginTop="9dp"
             android:layout_marginRight="15dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_toLeftOf="@+id/tv_time">
 
             <TextView
                 android:id="@+id/tv_nickName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="昵称"
+                android:text="昵称急急jijijijijijijijijijijij急急"
                 android:textColor="@color/blackPrimary"
-                android:textSize="16dp" />
-
-            <ImageView
-                android:id="@+id/iv_gender"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:src="@mipmap/male" />
-
-            <TextView
-                android:id="@+id/tv_time"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:text="1小时前"
-                android:textColor="@color/discovery_time"
-                android:textSize="12sp" />
-
+                android:textSize="16dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:drawablePadding="5dp"
+                android:drawableRight="@mipmap/male"/>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/ll_name"
+            android:layout_alignBottom="@+id/ll_name"
+            android:layout_marginRight="15dp"
+            android:gravity="right|center_vertical"
+            android:text="1小时前"
+            android:textColor="@color/discovery_time"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/tv_msg"

@@ -9,16 +9,22 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.coremedia.iso.boxes.apple.AppleReferenceMovieDescriptorBox;
 import com.google.gson.Gson;
 import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.RequestCallback;
+import com.netease.nimlib.sdk.ResponseCode;
 import com.netease.nimlib.sdk.auth.AuthService;
+import com.netease.nimlib.sdk.mixpush.MixPushService;
+import com.netease.nimlib.sdk.settings.model.NoDisturbConfig;
 import com.uilib.customdialog.CustomDialog;
 import com.westepper.step.R;
 import com.westepper.step.base.BaseLogic;
@@ -112,6 +118,40 @@ public class SettingActivity extends SuperActivity implements View.OnClickListen
                     back();
             }
         });
+
+        ckb_newNotify.setChecked(NIMClient.getService(MixPushService.class).isEnable());
+        ckb_newNotify.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
+                NIMClient.getService(MixPushService.class).enable(isChecked).setCallback(new RequestCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(SettingActivity.this, "设置成功", Toast.LENGTH_SHORT).show();
+                        NIMClient.toggleNotification(isChecked);
+                    }
+
+                    @Override
+                    public void onFailed(int code) {
+                        if (code == ResponseCode.RES_UNSUPPORT) {
+                            NIMClient.toggleNotification(isChecked);
+                        } else if (code == ResponseCode.RES_EFREQUENTLY) {
+                            Toast.makeText(SettingActivity.this, "操作太频繁", Toast.LENGTH_SHORT).show();
+                            buttonView.setChecked(!isChecked);
+                        } else {
+                            Toast.makeText(SettingActivity.this, "设置失败，请稍后重试", Toast.LENGTH_SHORT).show();
+                            buttonView.setChecked(!isChecked);
+                        }
+                    }
+
+                    @Override
+                    public void onException(Throwable throwable) {
+                        buttonView.setChecked(!isChecked);
+                    }
+                });
+            }
+        });
+
+        Log.e(TAG, "isenable: "+NIMClient.getService(MixPushService.class).isEnable());
 
         ckb_needVerif.setChecked(privacy.getNeedFriendVerifi() == 1);
         ckb_needVerif.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

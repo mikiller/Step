@@ -3,6 +3,7 @@ package com.westepper.step.customViews;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -42,10 +43,10 @@ import java.util.Map;
 
 public class UserInfoLayout extends RelativeLayout implements View.OnClickListener {
     SelectableRoundedImageView iv_header;
-    ImageView iv_header_bg, iv_gender, iv_user_edit;
+    ImageView iv_header_bg, iv_user_edit;
     RelativeLayout rl_opt;
     TextView tv_city, tv_user_name, tv_userId, tv_signature, btn_goSession;
-    ImageButton btn_setting, btn_info;
+    ImageButton btn_setting;
 
     boolean canEdit = true;
 
@@ -67,7 +68,6 @@ public class UserInfoLayout extends RelativeLayout implements View.OnClickListen
         iv_header = (SelectableRoundedImageView) findViewById(R.id.iv_header);
         iv_header_bg = (ImageView) findViewById(R.id.iv_header_bg);
         iv_user_edit = (ImageView) findViewById(R.id.iv_user_edit);
-        iv_gender = (ImageView) findViewById(R.id.iv_gender);
         rl_opt = (RelativeLayout) findViewById(R.id.rl_opt);
         tv_city = (TextView) findViewById(R.id.tv_city);
         tv_user_name = (TextView) findViewById(R.id.tv_user_name);
@@ -75,7 +75,6 @@ public class UserInfoLayout extends RelativeLayout implements View.OnClickListen
         tv_signature = (TextView) findViewById(R.id.tv_signature);
         btn_goSession = (TextView) findViewById(R.id.btn_goSession);
         btn_setting = (ImageButton) findViewById(R.id.btn_setting);
-        btn_info = (ImageButton) findViewById(R.id.btn_info);
 
         if(attrs != null){
             TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.UserInfoLayout);
@@ -96,7 +95,6 @@ public class UserInfoLayout extends RelativeLayout implements View.OnClickListen
             iv_header_bg.setOnClickListener(this);
             iv_header.setOnClickListener(this);
             btn_setting.setOnClickListener(this);
-            btn_info.setOnClickListener(this);
         }
     }
 
@@ -117,8 +115,6 @@ public class UserInfoLayout extends RelativeLayout implements View.OnClickListen
             case R.id.btn_setting:
                 ActivityManager.startActivity((Activity) getContext(), SettingActivity.class);
                 break;
-            case R.id.btn_info:
-                break;
         }
     }
 
@@ -127,9 +123,11 @@ public class UserInfoLayout extends RelativeLayout implements View.OnClickListen
             return;
         tv_city.setText(userInfo.getCity());
         tv_user_name.setText(userInfo.getNickName());
+        Drawable drawable = getContext().getResources().getDrawable(userInfo.getGender() == 1 ? R.mipmap.male : R.mipmap.female);
+        drawable.setBounds(0,0,drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        tv_user_name.setCompoundDrawables(null, null, drawable, null);
         tv_userId.setText("ID: ".concat(userInfo.getUserId()));
         tv_signature.setText(userInfo.getSign());
-        iv_gender.setImageResource(userInfo.getGender() == 1 ? R.mipmap.male : R.mipmap.female);
         GlideImageLoader.getInstance().loadImage(getContext(), userInfo.getHeadImg(), R.mipmap.ic_default_head, iv_header, 100);
         if(TextUtils.isEmpty(userInfo.getCover())){
             iv_header_bg.setScaleType(ImageView.ScaleType.CENTER_INSIDE);

@@ -49,18 +49,6 @@
                 android:background="@null"
                 android:padding="15dp"
                 android:src="@mipmap/ic_setting" />
-
-            <ImageButton
-                android:id="@+id/btn_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_toLeftOf="@+id/btn_setting"
-                android:background="@null"
-                android:paddingBottom="15dp"
-                android:paddingLeft="15dp"
-                android:paddingTop="15dp"
-                android:src="@mipmap/ic_info" />
         </RelativeLayout>
     </RelativeLayout>
 
@@ -80,28 +68,18 @@
             android:orientation="vertical"
             android:padding="15dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_user_name"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tv_user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="昵称"
-                    android:textColor="@color/text_color_black"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:id="@+id/iv_gender"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:src="@mipmap/male" />
-            </LinearLayout>
+                android:drawablePadding="5sp"
+                android:drawableRight="@mipmap/male"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="昵称"
+                android:textColor="@color/text_color_black"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tv_userId"

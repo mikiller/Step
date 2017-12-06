@@ -37,6 +37,11 @@
             android:translationZ="4dp" />
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:background="@drawable/shape_statusbar" />
+
     <ImageButton
         android:id="@+id/btn_loc"
         android:layout_width="wrap_content"

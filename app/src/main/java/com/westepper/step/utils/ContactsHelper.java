@@ -54,7 +54,7 @@ public class ContactsHelper {
         TeamTypeEnum type = TeamTypeEnum.Advanced;
         HashMap<TeamFieldEnum, Serializable> fields = new HashMap<>();
         fields.put(TeamFieldEnum.Name, teamName);
-        //fields.put(TeamFieldEnum.BeInviteMode, TeamBeInviteModeEnum.NoAuth);
+        fields.put(TeamFieldEnum.BeInviteMode, model == null ? TeamBeInviteModeEnum.NoAuth : TeamBeInviteModeEnum.NeedAuth);
         NIMClient.getService(TeamService.class).createTeam(fields, type, "",
                 memberAccounts).setCallback(
                 new RequestCallback<CreateTeamResult>() {
