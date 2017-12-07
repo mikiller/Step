@@ -9,6 +9,7 @@
     <color name="blackPrimary">#323c46</color>
     <color name="bg_mask">#cc323c46</color>
     <color name="cover_mask">#33000000</color>
+    <color name="img_mask">#66000000</color>
     <color name="congratulation_masktop">#88000000</color>
     <color name="congratulation_maskbottom">#f9000000</color>
     <color name="colorHint">#f0f0f0</color>

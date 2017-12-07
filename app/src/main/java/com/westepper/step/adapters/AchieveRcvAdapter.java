@@ -21,6 +21,7 @@ import com.westepper.step.responses.CityProgress;
 import com.westepper.step.responses.MyAchievements;
 import com.westepper.step.utils.ActivityManager;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -266,8 +267,7 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
 
         public void setPgs(double percent){
             pgs.setProgress((int) percent);
-            tv_pgs.setText(percent + "%");
-            tv_pgs.setTextColor(percent > 0 ? mContext.getResources().getColor(R.color.text_color_black) : mContext.getResources().getColor(R.color.discovery_kind_unchecked));
+            tv_pgs.setText(String.format("%.2f", percent));
         }
 
         public void setAchMenuClickListener(View.OnClickListener listener){

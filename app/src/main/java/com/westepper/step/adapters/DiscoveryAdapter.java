@@ -116,6 +116,7 @@ public class DiscoveryAdapter extends PagerAdapter {
                 //getUserinfo from yunxin
                 // get ext info
                 // call contactshelper.addfriend
+//                showAddFriendDlg();
                 getUserInfoFromRemote(v, discover.getDiscoveryUserId());
             }
         });
@@ -189,6 +190,21 @@ public class DiscoveryAdapter extends PagerAdapter {
     private boolean getHasGood(String key){
         return !MXPreferenceUtils.getInstance().getBoolean(key);
     }
+
+//    private void showAddFriendDlg(){
+//        CustomDialog dlg = new CustomDialog(mContext);
+//        dlg.setTitle("打个招呼呗").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
+//            @Override
+//            public void onCancel() {
+//
+//            }
+//
+//            @Override
+//            public void onSure() {
+//
+//            }
+//        });
+//    }
 
     private void getUserInfoFromRemote(final View btn, final String account){
         NimUserInfoCache.getInstance().getUserInfoFromRemote(account, new RequestCallback<NimUserInfo>() {

@@ -129,33 +129,26 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         holder.tv_detailPos.setText(discovery.getUserPos().getPoiTitle());
         holder.rl_join.setVisibility(discovery.getDiscoveryKind() == 1 ? View.GONE : View.VISIBLE);
         holder.tv_time.setText(MXTimeUtils.getFormatTime("yyyy/MM/dd", discovery.getPushTime()));
-        holder.btn_commit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(commitListener != null)
-                    commitListener.onCommit(discovery.getDiscoveryUserId(), discovery.getNickName());
-            }
-        });
-        holder.btn_good.setEnabled(!MXPreferenceUtils.getInstance().getBoolean(discovery.getDiscoveryId() + SuperActivity.userInfo.getUserId()));
-        holder.btn_good.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.setEnabled(false);
-                GoodLogic logic = new GoodLogic(mContext, new DisModel(discovery.getDiscoveryId(), discovery.getDiscoveryKind()));
-                logic.setCallback(new BaseLogic.LogicCallback<GoodCount>() {
-                    @Override
-                    public void onSuccess(GoodCount response) {
-                        holder.tv_goodNum.setText(String.valueOf(response.getCount()));
-                    }
-
-                    @Override
-                    public void onFailed(String code, String msg, GoodCount localData) {
-
-                    }
-                });
-                logic.sendRequest();
-            }
-        });
+//        holder.btn_good.setEnabled(!MXPreferenceUtils.getInstance().getBoolean(discovery.getDiscoveryId() + SuperActivity.userInfo.getUserId()));
+//        holder.btn_good.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                v.setEnabled(false);
+//                GoodLogic logic = new GoodLogic(mContext, new DisModel(discovery.getDiscoveryId(), discovery.getDiscoveryKind()));
+//                logic.setCallback(new BaseLogic.LogicCallback<GoodCount>() {
+//                    @Override
+//                    public void onSuccess(GoodCount response) {
+//                        holder.tv_goodNum.setText(String.valueOf(response.getCount()));
+//                    }
+//
+//                    @Override
+//                    public void onFailed(String code, String msg, GoodCount localData) {
+//
+//                    }
+//                });
+//                logic.sendRequest();
+//            }
+//        });
 
         if(discovery.getDiscoveryKind() == Constants.OUTGO){
             holder.tv_joinTime.setText(discovery.getEndTime() == 0 ? "不限" : MXTimeUtils.getFormatTime("yyyy年MM月dd日", discovery.getEndTime()));
@@ -225,8 +218,6 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     protected class DetailHolder extends RecyclerView.ViewHolder{
         private SelectableRoundedImageView iv_header;
         private TextView tv_nickName, tv_goodNum, tv_detailMsg, tv_detailPos, tv_time, tv_joinTime;
-//        private ImageView iv_gender;
-        private ImageButton btn_good, btn_commit;
         private RelativeLayout rl_join;
         public DetailHolder(View itemView) {
             super(itemView);
@@ -237,9 +228,6 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             tv_detailPos = (TextView) itemView.findViewById(R.id.tv_detailPos);
             tv_time = (TextView) itemView.findViewById(R.id.tv_time);
             tv_joinTime = (TextView) itemView.findViewById(R.id.tv_joinTime);
-//            iv_gender = (ImageView) itemView.findViewById(R.id.iv_gender);
-            btn_good = (ImageButton) itemView.findViewById(R.id.btn_good);
-            btn_commit = (ImageButton) itemView.findViewById(R.id.btn_commit);
             rl_join = (RelativeLayout) itemView.findViewById(R.id.rl_join);
         }
     }

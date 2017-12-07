@@ -8,13 +8,17 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
 import com.uilib.customdialog.CustomDialog;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
@@ -28,12 +32,16 @@ import com.westepper.step.customViews.TitleBar;
 import com.westepper.step.logics.CommitLogic;
 import com.westepper.step.logics.GetCommitListLogic;
 import com.westepper.step.logics.GetDisDetailInfoLogic;
+import com.westepper.step.logics.GoodLogic;
 import com.westepper.step.logics.JoinLogic;
 import com.westepper.step.models.CommitModel;
 import com.westepper.step.models.DisBase;
+import com.westepper.step.models.DisModel;
 import com.westepper.step.models.JoinModel;
 import com.westepper.step.responses.DiscoveryDetailInfo;
+import com.westepper.step.responses.GoodCount;
 import com.westepper.step.responses.JoinResponse;
+import com.westepper.step.utils.MXPreferenceUtils;
 import com.westepper.step.utils.MXTimeUtils;
 import com.westepper.step.responses.Discovery;
 import com.westepper.step.responses.ImgDetail;
@@ -56,10 +64,16 @@ public class DiscoveryDetailActivity extends SuperActivity {
     TitleBar titleBar;
     @BindView(R.id.rl_img)
     RelativeLayout rl_img;
+    @BindView(R.id.rl_imgNum)
+    RelativeLayout rl_imgNum;
     @BindView(R.id.vp_img)
     ViewPager vp_img;
     @BindView(R.id.tv_imgNum)
     TextView tv_imgNum;
+    @BindView(R.id.btn_good)
+    ImageButton btn_good;
+    @BindView(R.id.btn_commit)
+    ImageButton btn_commit;
     @BindView(R.id.rcv_detail)
     RecyclerView rcv_detail;
     @BindView(R.id.ll_joinOpt)
@@ -78,6 +92,8 @@ public class DiscoveryDetailActivity extends SuperActivity {
     TextView tv_sec;
     @BindView(R.id.commitInput)
     CommitEditView commitInput;
+    @BindView(R.id.iv_prev)
+    ImageView iv_prev;
 
     DetailImgVpAdapter vpAdapter;
 
@@ -144,6 +160,14 @@ public class DiscoveryDetailActivity extends SuperActivity {
             }
         });
 
+        iv_prev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                iv_prev.setImageDrawable(null);
+                iv_prev.setVisibility(View.GONE);
+            }
+        });
+
         vp_img.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             int minHeight = DisplayUtil.getScreenWidth(DiscoveryDetailActivity.this) / 4 * 3;
             int maxHeight = DisplayUtil.getScreenHeight(DiscoveryDetailActivity.this) / 4 * 3;
@@ -179,29 +203,25 @@ public class DiscoveryDetailActivity extends SuperActivity {
 
             }
         });
+
         vpAdapter = new DetailImgVpAdapter(this, discovery.getImgList());
+
         vp_img.setAdapter(vpAdapter);
         if (vpAdapter.getCount() == 0) {
             startAlpha(0, 1f);
             vp_img.getLayoutParams().height = 0;
         }
-        setImgNum(0);
-
-        rcvMgr = new MyLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        rcv_detail.setLayoutManager(rcvMgr);
-        rcvAdapter = new DisDetailRcvAdapter(this, rcv_detail);
-        rcvAdapter.setDiscovery(discovery);
-        rcvAdapter.setCommitListener(new DisDetailRcvAdapter.OnCommitListener() {
+        btn_commit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCommit(final String id, String nickName) {
+            public void onClick(View v) {
                 if (!commitInput.isVisible()) {
                     commitInput.setNeedTransY(false);
-                    commitInput.setHint(String.format("回复:%1$s", nickName));
+                    commitInput.setHint(String.format("回复:%1$s", discovery.getNickName()));
                     showInputMethod(commitInput);
                     commitInput.setOnSendListener(new CommitEditView.OnSendListener() {
                         @Override
                         public void onSend(View focuseView, String txt) {
-                            CommitLogic logic = new CommitLogic(DiscoveryDetailActivity.this, new CommitModel(id, discovery.getDiscoveryId(), discovery.getDiscoveryKind(), txt));
+                            CommitLogic logic = new CommitLogic(DiscoveryDetailActivity.this, new CommitModel(discovery.getDiscoveryUserId(), discovery.getDiscoveryId(), discovery.getDiscoveryKind(), txt));
                             logic.setCallbackObject(commitInput, rcvAdapter).sendRequest();
 
                         }
@@ -209,6 +229,32 @@ public class DiscoveryDetailActivity extends SuperActivity {
                 }
             }
         });
+        btn_good.setEnabled(!MXPreferenceUtils.getInstance().getBoolean(discovery.getDiscoveryId() + userInfo.getUserId()));
+        btn_good.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setEnabled(false);
+                GoodLogic logic = new GoodLogic(DiscoveryDetailActivity.this, new DisModel(discovery.getDiscoveryId(), discovery.getDiscoveryKind()));
+                logic.setCallback(new BaseLogic.LogicCallback<GoodCount>() {
+                    @Override
+                    public void onSuccess(GoodCount response) {
+                        //holder.tv_goodNum.setText(String.valueOf(response.getCount()));
+                    }
+
+                    @Override
+                    public void onFailed(String code, String msg, GoodCount localData) {
+
+                    }
+                });
+                logic.sendRequest();
+            }
+        });
+        setImgNum(0);
+
+        rcvMgr = new MyLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        rcv_detail.setLayoutManager(rcvMgr);
+        rcvAdapter = new DisDetailRcvAdapter(this, rcv_detail);
+        rcvAdapter.setDiscovery(discovery);
         rcv_detail.setAdapter(rcvAdapter);
         rcv_detail.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -251,37 +297,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
         tv_joinOpt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //show dlg for input join words
-                //after get team id from yunxin send request
-//                joinOutGo();
                 joinOutgoLogic();
-//                final CustomDialog dlg = new CustomDialog(DiscoveryDetailActivity.this);
-//                dlg.setTitle("已报名参加约行").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
-//                    @Override
-//                    public void onCancel() {
-//                        hideInputMethod(dlg.getCurrentFocus());
-//                    }
-//
-//                    @Override
-//                    public void onSure() {
-//                        JoinLogic logic = new JoinLogic(DiscoveryDetailActivity.this, new JoinModel(discovery.getDiscoveryId(), discovery.getTeamId()));
-//                        logic.setCallback(new BaseLogic.LogicCallback<JoinResponse>() {
-//                            @Override
-//                            public void onSuccess(JoinResponse response) {
-//                                setJoinNum(response.getJoinCount());
-//                                tv_joinOpt.setText("已报名");
-//                                tv_joinOpt.setEnabled(false);
-//                            }
-//
-//                            @Override
-//                            public void onFailed(String code, String msg, JoinResponse localData) {
-//                                Toast.makeText(DiscoveryDetailActivity.this, msg, Toast.LENGTH_SHORT).show();
-//                            }
-//                        });
-//                        logic.sendRequest();
-//                        hideInputMethod(dlg.getCurrentFocus());
-//                    }
-//                }).show();
 
             }
         });
@@ -314,8 +330,8 @@ public class DiscoveryDetailActivity extends SuperActivity {
         }, 0, 1000);
     }
 
-    private void setJoinNum(int joinCount){
-        if(discovery.getTotalCount() == 0)
+    private void setJoinNum(int joinCount) {
+        if (discovery.getTotalCount() == 0)
             tv_joinNum.setText(String.format(getString(R.string.join_num1), joinCount));
         else
             tv_joinNum.setText(String.format(getString(R.string.join_num), discovery.getTotalCount(), joinCount));
@@ -338,7 +354,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
 //        }).show();
 //    }
 
-    private void joinOutgoLogic(){
+    private void joinOutgoLogic() {
         JoinLogic logic = new JoinLogic(DiscoveryDetailActivity.this, new JoinModel(discovery.getDiscoveryId(), discovery.getTeamId()));
         logic.setCallback(new BaseLogic.LogicCallback<JoinResponse>() {
             @Override
@@ -365,7 +381,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
             commitLogic.sendRequest();
         }
 
-        if(detailLogic == null){
+        if (detailLogic == null) {
             detailLogic = new GetDisDetailInfoLogic(this, new DisBase(discovery.getDiscoveryId(), discovery.getDiscoveryKind())).setRcvAdapter(rcvAdapter);
             detailLogic.setCallback(new BaseLogic.LogicCallback<DiscoveryDetailInfo>() {
                 @Override
@@ -409,7 +425,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
                 titleAlpha = titleBar.getBgAlpha();
                 ActDownX = ev.getX();
                 ActDownY = isAnimRunning ? -1 : ev.getY();
-                isTouchImgVp = ActDownY < rcvTransY + titleBar.getHeight();
+                isTouchImgVp = ActDownY < rcvTransY + titleBar.getHeight() - rl_imgNum.getMeasuredHeight();
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (Math.abs(ev.getY()) > 150) {
@@ -446,6 +462,9 @@ public class DiscoveryDetailActivity extends SuperActivity {
                         startScroll(rcv_detail, rcvTransY + rcvDY, rcvTransY);
                     }
 
+                } else if (isTouchImgVp && ActDownY == ev.getY() && !commitInput.isVisible()) {
+                    iv_prev.setVisibility(View.VISIBLE);
+                    GlideImageLoader.getInstance().loadImage(DiscoveryDetailActivity.this, vpAdapter.getCurrentImg(vp_img.getCurrentItem()), R.mipmap.placeholder, iv_prev, 0);
                 }
                 break;
         }

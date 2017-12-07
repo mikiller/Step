@@ -106,8 +106,9 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
     DiscoveryAdapter adapter;
     MapUtils mapUtils;
     private boolean isTrack = true;
-    float searchHeight, headTransY, vpTransY, optTransY, locTransY;
+    float /*searchHeight*/headHeight, headTransY, vpTransY, optTransY, locTransY;
     int scope = Constants.FRIEND, disKind = Constants.MOOD, gender = 0;
+    double lat = 0.0, lon = 0.0;
 
     @Override
     protected void setLayoutRes() {
@@ -143,10 +144,22 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
                         @Override
                         public void onGeocodeSearched(GeocodeResult geocodeResult, int rstCode) {
-                            if(rstCode != AMapException.CODE_AMAP_SUCCESS)
+                            if(rstCode != AMapException.CODE_AMAP_SUCCESS) {
+                                if(!isTrack) {
+                                    lat = mapUtils.getMapLocation().getLatitude();
+                                    lon = mapUtils.getMapLocation().getLongitude();
+                                    getDiscoveryList();
+                                }
                                 return;
+                            }
                             LatLonPoint point = geocodeResult.getGeocodeAddressList().get(0).getLatLonPoint();
-                            mapUtils.moveCamera(new LatLng(point.getLatitude(), point.getLongitude()));
+                            if (isTrack)
+                                mapUtils.moveCamera(new LatLng(point.getLatitude(), point.getLongitude()));
+                            else {
+                                lat = point.getLatitude();
+                                lon = point.getLongitude();
+                                getDiscoveryList();
+                            }
                         }
                     });
                 }
@@ -309,15 +322,19 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
             return;
         }
 
-        if (searchHeight <= 0) {
-            searchHeight = ll_search.getMeasuredHeight();
+//        if (searchHeight <= 0) {
+        if (headHeight <= 0){
+//            searchHeight = ll_search.getMeasuredHeight();
+            headHeight = rl_head.getMeasuredHeight() - DisplayUtil.dip2px(getActivity(), 20);
             headTransY = rl_head.getTranslationY();
             vpTransY = vp_discoveryList.getTranslationY();
             optTransY = (int) ll_discovery_opt.getTranslationY();
             locTransY = btn_loc.getMeasuredHeight() + DisplayUtil.dip2px(getActivity(), 14);
         }
+        btn_acheivement.setVisibility(isTrack?View.VISIBLE : View.INVISIBLE);
         if (isTrack) {
-            AnimUtils.startObjectAnim(ll_search, "translationY", -searchHeight, 0, 300);
+//            AnimUtils.startObjectAnim(ll_search, "translationY", -searchHeight, 0, 300);
+            AnimUtils.startObjectAnim(ll_search, "translationY", headHeight, 0, 300);
             AnimUtils.startObjectAnim(rl_head, "translationY", 0, headTransY, 300);
             AnimUtils.startObjectAnim(ll_discovery_opt, "translationY", 0, optTransY, 400);
             AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vp_discoveryList.getTranslationY(), vpTransY, 800);
@@ -325,11 +342,16 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
             mapUtils.removeMarker();
             mapUtils.setIsNeedArea(true);
         } else {
-            AnimUtils.startObjectAnim(ll_search, "translationY", 0, -searchHeight, 300);
+//            AnimUtils.startObjectAnim(ll_search, "translationY", 0, -searchHeight, 300);
+            AnimUtils.startObjectAnim(ll_search, "translationY", 0, headHeight, 300);
             AnimUtils.startObjectAnim(rl_head, "translationY", headTransY, 0, 300);
             AnimUtils.startObjectAnim(ll_discovery_opt, "translationY", optTransY, 0, 400);
             AnimUtils.startObjectAnim(btn_loc, "translationY", 0, locTransY, 300);
             mapUtils.setIsNeedArea(false);
+            if(lat == 0.0) {
+                lat = mapUtils.getMapLocation().getLatitude();
+                lon = mapUtils.getMapLocation().getLongitude();
+            }
             getDiscoveryList();
         }
 
@@ -341,7 +363,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
                 AnimUtils.startObjectAnim(vp_discoveryList, "translationY", 0, vpTransY, 400);
             mapUtils.removeMarker();
         }
-        GetDiscoveryListLogic logic = new GetDiscoveryListLogic(getActivity(), new DiscoveryListModel(scope == Constants.FRIEND ? 0 : gender, disKind, scope, mapUtils.getMapLocation().getLatitude(), mapUtils.getMapLocation().getLongitude()));
+        GetDiscoveryListLogic logic = new GetDiscoveryListLogic(getActivity(), new DiscoveryListModel(scope == Constants.FRIEND ? 0 : gender, disKind, scope, lat, lon));
         logic.setCallback(new BaseLogic.LogicCallback<DiscoveryList>() {
             @Override
             public void onSuccess(DiscoveryList response) {
