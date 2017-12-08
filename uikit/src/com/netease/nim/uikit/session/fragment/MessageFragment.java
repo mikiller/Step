@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.netease.nim.uikit.CustomPushContentProvider;
 import com.netease.nim.uikit.NimUIKit;
@@ -65,6 +66,8 @@ public class MessageFragment extends TFragment implements ModuleProxy {
     protected MessageListPanelEx messageListPanel;
 
     protected AitManager aitManager;
+
+    private boolean isAllowSendMsg = true;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -165,9 +168,13 @@ public class MessageFragment extends TFragment implements ModuleProxy {
     /**
      * ************************* 消息收发 **********************************
      */
+    public void setIsAllowSendMsg(boolean isAllow){
+        isAllowSendMsg = isAllow;
+    }
+
     // 是否允许发送消息
     protected boolean isAllowSendMessage(final IMMessage message) {
-        return true;
+        return isAllowSendMsg;
     }
 
     /**
@@ -209,6 +216,7 @@ public class MessageFragment extends TFragment implements ModuleProxy {
     @Override
     public boolean sendMessage(IMMessage message) {
         if (!isAllowSendMessage(message)) {
+            Toast.makeText(getActivity(), "您现在不是对方好友，请先添加好友！", Toast.LENGTH_SHORT).show();
             return false;
         }
 

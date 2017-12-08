@@ -23,9 +23,12 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.geocoder.GeocodeQuery;
 import com.amap.api.services.geocoder.GeocodeSearch;
+import com.amap.api.services.geocoder.RegeocodeAddress;
+import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.autonavi.amap.mapcore.Inner_3dMap_location;
 import com.westepper.step.R;
@@ -119,7 +122,8 @@ public class MapUtils {
 
     public void initLocationStyle(Context context, long interval) {
         setCustomStyle(context);
-        createLocalStyle(interval);
+        aMap.setMyLocationStyle(locationStyle = createLocalStyle(interval));
+        aMap.setMyLocationEnabled(true);
         aMap.getUiSettings().setZoomControlsEnabled(false);
         aMap.getUiSettings().setRotateGesturesEnabled(false);
 //        aMap.animateCamera(CameraUpdateFactory.zoomTo(currentZoom));
@@ -212,16 +216,18 @@ public class MapUtils {
     }
 
     private MyLocationStyle createLocalStyle(long interval) {
-        locationStyle = new MyLocationStyle();
-        locationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
+        return createLocalStyle(interval, MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
+    }
+
+    public MyLocationStyle createLocalStyle(long interval, int locationType){
+        MyLocationStyle locationStyle = new MyLocationStyle();
+        locationStyle.myLocationType(locationType);
         locationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_loaction));
         locationStyle.anchor(0.5f, 0.5f);
         locationStyle.radiusFillColor(Color.TRANSPARENT);
         locationStyle.strokeWidth(0f);
         locationStyle.showMyLocation(true);
         locationStyle.interval(interval);
-        aMap.setMyLocationStyle(locationStyle);
-        aMap.setMyLocationEnabled(true);
 
         return locationStyle;
     }
@@ -461,6 +467,13 @@ public class MapUtils {
         GeocodeSearch geoSearch = new GeocodeSearch(context);
         geoSearch.setOnGeocodeSearchListener(listener);
         geoSearch.getFromLocationNameAsyn(new GeocodeQuery(keyWord, city));
+    }
+
+    public void searchAddressFromLatlng(Context context, LatLng latLng, GeocodeSearch.OnGeocodeSearchListener listener){
+        GeocodeSearch geocodeSearch = new GeocodeSearch(context);
+        geocodeSearch.setOnGeocodeSearchListener(listener);
+        geocodeSearch.getFromLocationAsyn(new RegeocodeQuery(new LatLonPoint(latLng.latitude, latLng.longitude), 200, GeocodeSearch.AMAP));
+
     }
 
     public void clearMapLocation(){

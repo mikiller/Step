@@ -103,6 +103,7 @@ public class P2PMessageActivity extends BaseMessageActivity {
         @Override
         public void onDeletedFriends(List<String> accounts) {
             setTitle(UserInfoHelper.getUserTitleName(sessionId, SessionTypeEnum.P2P));
+            messageFragment.setIsAllowSendMsg(false);
         }
 
         @Override

@@ -2,37 +2,28 @@ package com.westepper.step.base;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 
+import com.netease.nim.uikit.LocationProvider;
 import com.netease.nim.uikit.NimUIKit;
 import com.netease.nim.uikit.contact.core.query.PinYin;
 import com.netease.nim.uikit.custom.DefaultUserInfoProvider;
 import com.netease.nim.uikit.session.viewholder.MsgViewHolderThumbBase;
 import com.netease.nimlib.sdk.NIMClient;
-import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.SDKOptions;
-import com.netease.nimlib.sdk.ServerAddresses;
 import com.netease.nimlib.sdk.StatusBarNotificationConfig;
-import com.netease.nimlib.sdk.StatusCode;
-import com.netease.nimlib.sdk.auth.AuthServiceObserver;
 import com.netease.nimlib.sdk.auth.LoginInfo;
 import com.netease.nimlib.sdk.msg.MessageNotifierCustomization;
-import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
-import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 import com.tendcloud.tenddata.TCAgent;
-import com.uilib.utils.DisplayUtil;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 import com.westepper.step.R;
 import com.westepper.step.activities.MainActivity;
-import com.westepper.step.activities.WelcomeActivity;
-import com.westepper.step.utils.ActivityManager;
+import com.westepper.step.activities.SessionLocationActivity;
 import com.westepper.step.utils.MXPreferenceUtils;
 import com.westepper.step.utils.SessionHelper;
 
@@ -145,6 +136,19 @@ public class MyApplication extends Application {
             PinYin.validate();
             NimUIKit.init(this);
             SessionHelper.init();
+            NimUIKit.setLocationProvider(new LocationProvider() {
+                @Override
+                public void requestLocation(Context context, Callback callback) {
+                    SessionLocationActivity.callback = callback;
+                    Intent intent = new Intent(context, SessionLocationActivity.class);
+                    startActivity(intent);
+                }
+
+                @Override
+                public void openMap(Context context, double longitude, double latitude, String address) {
+
+                }
+            });
         }
     }
 
