@@ -38,8 +38,6 @@ import butterknife.BindView;
 public class MyAchieveActivity extends SuperActivity {
     @BindView(R.id.titleBar)
     TitleBar titleBar;
-    @BindView(R.id.btn_info)
-    ImageButton btn_info;
     @BindView(R.id.rcv_ach)
     RecyclerView rcv_ach;
 
@@ -78,13 +76,6 @@ public class MyAchieveActivity extends SuperActivity {
             @Override
             protected void onMoreClicked() {
                 super.onMoreClicked();
-            }
-        });
-
-        btn_info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
             }
         });
 

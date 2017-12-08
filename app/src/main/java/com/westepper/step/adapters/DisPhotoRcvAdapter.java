@@ -60,7 +60,7 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.needCamera = needCamera;
         itemSize = (int) ((context.getResources().getDisplayMetrics().widthPixels - (column+1) * margin) / column);
         this.margin = margin;
-        LatLonPoint point = new LatLonPoint(MapUtils.getInstance().getMapLocation().getLatitude(), MapUtils.getInstance().getMapLocation().getLongitude());
+//        LatLonPoint point = new LatLonPoint(MapUtils.getInstance().getMapLocation().getLatitude(), MapUtils.getInstance().getMapLocation().getLongitude());
         //poiItem = new PoiItem("default", point, "上海市", "");
     }
 
@@ -70,7 +70,7 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public String getInfo(){
-        return info;
+        return TextUtils.isEmpty(info) ? "" : info;
     }
 
     @Override
@@ -185,7 +185,7 @@ public class DisPhotoRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             poiItem = new PoiItem("default",
                     new LatLonPoint(MapUtils.getInstance().getMapLocation().getLatitude(), MapUtils.getInstance().getMapLocation().getLongitude()),
                     MapUtils.getInstance().getMapLocation().getCity(), "");
-            holder.tv_pos.setText("未选择");
+            holder.tv_pos.setText("请选择位置(默认为当前位置)");
         }else {
             String city = TextUtils.isEmpty(poiItem.getCityName()) ? poiItem.getTitle() : poiItem.getCityName() + ", " + poiItem.getTitle();
             holder.tv_pos.setText(city);

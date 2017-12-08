@@ -2,6 +2,7 @@ package com.westepper.step.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -98,6 +99,7 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
         if(holder instanceof HeadHolder){
             ((HeadHolder)holder).setBgColor();
             ((HeadHolder)holder).setTv_score(myAchieve.getCredit());
+            ((HeadHolder)holder).setInfoBtn();
             ((HeadHolder)holder).setBadgeTitle();
             ((HeadHolder)holder).setBadge(myAchieve.getL1(), myAchieve.getL2(), myAchieve.getL3(), myAchieve.getL4());
             ((HeadHolder)holder).setAchTitle();
@@ -147,6 +149,7 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
         TextView tv_score;
         TextView tv_badgeTitle;
         TextView tv_achTitle;
+        TextView btn_info;
         AchieveBadge myAchCity, myAchL1, myAchL2, myAchL3;
         public HeadHolder(View itemView) {
             super(itemView);
@@ -154,6 +157,7 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
             tv_score = (TextView) itemView.findViewById(R.id.tv_score);
             tv_badgeTitle = (TextView) itemView.findViewById(R.id.tv_badgeTitle);
             tv_achTitle = (TextView) itemView.findViewById(R.id.tv_achTitle);
+            btn_info = (TextView) itemView.findViewById(R.id.btn_info);
             myAchCity = (AchieveBadge) itemView.findViewById(R.id.myAchCity);
             myAchL1 = (AchieveBadge) itemView.findViewById(R.id.myAchL1);
             myAchL2 = (AchieveBadge) itemView.findViewById(R.id.myAchL2);
@@ -207,6 +211,18 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
 
         public void setAchTitle(){
             tv_achTitle.setText(achKind == Constants.ACH_CITY ? "发现城市" : "获得成就");
+        }
+
+        public void setInfoBtn(){
+            Drawable drawable = mContext.getResources().getDrawable(achKind == Constants.ACH_CITY ? R.mipmap.ic_ach_info : R.mipmap.ic_dis_info);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            btn_info.setCompoundDrawables(drawable, null, null, null);
+            btn_info.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
         }
     }
 

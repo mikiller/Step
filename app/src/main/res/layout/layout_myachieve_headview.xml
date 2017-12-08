@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/rl_scoreBg"
@@ -13,21 +14,34 @@
             android:id="@+id/tv_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="34dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="4dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="34dp"
             android:text="0"
             android:textColor="@android:color/white"
             android:textSize="72sp" />
 
         <TextView
+            android:id="@+id/tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/tv_score"
             android:layout_toRightOf="@+id/tv_score"
             android:text="分"
             android:textColor="@color/colorPrimaryLight"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/btn_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="34dp"
+            android:layout_marginTop="10dp"
+            android:drawablePadding="5dp"
+            android:text="积分说明"
+            android:textColor="@color/discovery_kind_unchecked"
             android:textSize="12sp" />
     </RelativeLayout>
 
@@ -55,19 +69,19 @@
 
             <com.westepper.step.customViews.AchieveBadge
                 android:id="@+id/myAchCity"
-                style="@style/my_ach_badge"/>
+                style="@style/my_ach_badge" />
 
             <com.westepper.step.customViews.AchieveBadge
                 android:id="@+id/myAchL1"
-                style="@style/my_ach_badge"/>
+                style="@style/my_ach_badge" />
 
             <com.westepper.step.customViews.AchieveBadge
                 android:id="@+id/myAchL2"
-                style="@style/my_ach_badge"/>
+                style="@style/my_ach_badge" />
 
             <com.westepper.step.customViews.AchieveBadge
                 android:id="@+id/myAchL3"
-                style="@style/my_ach_badge"/>
+                style="@style/my_ach_badge" />
         </LinearLayout>
     </LinearLayout>
 
