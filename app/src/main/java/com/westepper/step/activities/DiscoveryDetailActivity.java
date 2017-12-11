@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
 import com.uilib.customdialog.CustomDialog;
 import com.uilib.utils.DisplayUtil;
+import com.uilib.zoomimageview.PinchImageView;
 import com.westepper.step.R;
 import com.westepper.step.adapters.DetailImgVpAdapter;
 import com.westepper.step.adapters.DisDetailRcvAdapter;
@@ -92,8 +93,10 @@ public class DiscoveryDetailActivity extends SuperActivity {
     TextView tv_sec;
     @BindView(R.id.commitInput)
     CommitEditView commitInput;
+    @BindView(R.id.ll_prev)
+    LinearLayout ll_prev;
     @BindView(R.id.iv_prev)
-    ImageView iv_prev;
+    PinchImageView iv_prev;
 
     DetailImgVpAdapter vpAdapter;
 
@@ -164,7 +167,8 @@ public class DiscoveryDetailActivity extends SuperActivity {
             @Override
             public void onClick(View v) {
                 iv_prev.setImageDrawable(null);
-                iv_prev.setVisibility(View.GONE);
+                iv_prev.reset();
+                ll_prev.setVisibility(View.GONE);
             }
         });
 
@@ -425,7 +429,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
                 titleAlpha = titleBar.getBgAlpha();
                 ActDownX = ev.getX();
                 ActDownY = isAnimRunning ? -1 : ev.getY();
-                isTouchImgVp = ActDownY < rcvTransY + titleBar.getHeight() - rl_imgNum.getMeasuredHeight();
+                isTouchImgVp = ActDownY < rcvTransY + titleBar.getHeight() - rl_imgNum.getMeasuredHeight() && ActDownY > titleBar.getMeasuredHeight();
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (Math.abs(ev.getY()) > 150) {
@@ -463,7 +467,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
                     }
 
                 } else if (isTouchImgVp && ActDownY == ev.getY() && !commitInput.isVisible()) {
-                    iv_prev.setVisibility(View.VISIBLE);
+                    ll_prev.setVisibility(View.VISIBLE);
                     GlideImageLoader.getInstance().loadImage(DiscoveryDetailActivity.this, vpAdapter.getCurrentImg(vp_img.getCurrentItem()), R.mipmap.placeholder, iv_prev, 0);
                 }
                 break;
@@ -498,6 +502,9 @@ public class DiscoveryDetailActivity extends SuperActivity {
             rcvDY = 0;
             rst = false;
         } else if (isMaxY() || isMinY()) {
+            rcvDY = 0;
+            rst = false;
+        } else if (ll_prev.getVisibility() == View.VISIBLE){
             rcvDY = 0;
             rst = false;
         }
