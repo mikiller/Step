@@ -4,9 +4,11 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
 
+import com.amap.api.maps.model.LatLng;
 import com.netease.nim.uikit.LocationProvider;
 import com.netease.nim.uikit.NimUIKit;
 import com.netease.nim.uikit.contact.core.query.PinYin;
@@ -146,7 +148,11 @@ public class MyApplication extends Application {
 
                 @Override
                 public void openMap(Context context, double longitude, double latitude, String address) {
-
+                    Intent intent = new Intent(context, SessionLocationActivity.class);
+                    intent.putExtra(Constants.LOC_TYPE, SessionLocationActivity.PREVIEW_LOC);
+                    intent.putExtra(Constants.LOC, new LatLng(latitude, longitude));
+                    intent.putExtra(Constants.ADDRESS, address);
+                    startActivity(intent);
                 }
             });
         }

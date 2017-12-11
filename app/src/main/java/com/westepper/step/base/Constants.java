@@ -30,6 +30,9 @@ public class Constants {
     public static final String ACH_CATEGORY = "ach_category";
     public static final String TEAM_ID = "team_id";
     public static final String TEAM_MEMBER = "team_member";
+    public static final String LOC_TYPE = "loc_type";
+    public static final String LOC = "loc";
+    public static final String ADDRESS = "address";
     public static final int MOOD = 1;
     public static final int OUTGO = 2;
     public static final int FRIEND = 1;

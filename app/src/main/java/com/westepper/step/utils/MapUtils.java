@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 
 import com.amap.api.fence.GeoFenceClient;
 import com.amap.api.location.AMapLocation;
@@ -362,16 +363,20 @@ public class MapUtils {
     }
 
     public void addMarker(LatLng lbs) {
-        if(markerImg == null)
-            markerImg = BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker);
         removeMarker();
+        lastMarker = addMarker(aMap, lbs);
+        moveCamera(lbs);
+    }
+
+    public Marker addMarker(AMap aMap, LatLng lbs){
+        if(markerImg == null || markerImg.getBitmap() == null)
+            markerImg = BitmapDescriptorFactory.fromResource(R.mipmap.ic_marker);
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(lbs)
                 .draggable(true).anchor(0.5f, 1.0f)
                 .icon(markerImg);
+        return aMap.addMarker(markerOptions);
 
-        lastMarker = aMap.addMarker(markerOptions);
-        moveCamera(lbs);
     }
 
     public void removeMarker() {
@@ -472,7 +477,7 @@ public class MapUtils {
     public void searchAddressFromLatlng(Context context, LatLng latLng, GeocodeSearch.OnGeocodeSearchListener listener){
         GeocodeSearch geocodeSearch = new GeocodeSearch(context);
         geocodeSearch.setOnGeocodeSearchListener(listener);
-        geocodeSearch.getFromLocationAsyn(new RegeocodeQuery(new LatLonPoint(latLng.latitude, latLng.longitude), 200, GeocodeSearch.AMAP));
+        geocodeSearch.getFromLocationAsyn(new RegeocodeQuery(new LatLonPoint(latLng.latitude, latLng.longitude), 50, GeocodeSearch.AMAP));
 
     }
 
