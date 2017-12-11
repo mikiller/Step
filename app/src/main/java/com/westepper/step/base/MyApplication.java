@@ -35,11 +35,12 @@ import com.westepper.step.utils.SessionHelper;
  */
 
 public class MyApplication extends Application {
-    private final String TAG= this.getClass().getSimpleName();
+    private final String TAG = this.getClass().getSimpleName();
 //    private SdkWrapper sdkWrapper;
 
     public static UMShareAPI shareAPI;
     public static boolean isLogin = false;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -48,7 +49,7 @@ public class MyApplication extends Application {
         TCAgent.setReportUncaughtExceptions(true);
 
         shareAPI = UMShareAPI.get(this);
-        PlatformConfig.setWeixin("wxc691f0095ed06444","c8e1d200ef7b427992635c1bf2b090c7");
+        PlatformConfig.setWeixin("wxc691f0095ed06444", "c8e1d200ef7b427992635c1bf2b090c7");
 //        PlatformConfig.setQQZone("","");
 //        PlatformConfig.setSinaWeibo("","","");
 
@@ -126,14 +127,15 @@ public class MyApplication extends Application {
         String account = MXPreferenceUtils.getInstance(this, MXPreferenceUtils.REPORTS).getString("account");
         String token = MXPreferenceUtils.getInstance().getString("token");
         if (!TextUtils.isEmpty(account) && !TextUtils.isEmpty(token)) {
+            NimUIKit.setAccount(account);
             return new LoginInfo(account, token);
         } else {
-        return null;
+            return null;
         }
     }
 
-    private void initUIKit(){
-        if(inMainProcess()) {
+    private void initUIKit() {
+        if (inMainProcess()) {
             PinYin.init(this);
             PinYin.validate();
             NimUIKit.init(this);

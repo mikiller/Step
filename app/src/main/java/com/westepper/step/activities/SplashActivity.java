@@ -75,7 +75,6 @@ public class SplashActivity extends SuperActivity {
                 if (statusCode.wontAutoLogin()) {
                     //返回登录页
                     if(MyApplication.isLogin) {
-                        Log.e(TAG, "wontAutoLogin");
                         ActivityManager.startActivity(ActivityManager.lastActivity, WelcomeActivity.class);
                         ActivityManager.lastActivity.back();
                     }
@@ -127,16 +126,12 @@ public class SplashActivity extends SuperActivity {
                     Pair.create((View)iv_logo, getString(R.string.splash_trans)),
                     Pair.create((View)iv_label, getString(R.string.splash_label)));
             ActivityCompat.startActivity(SplashActivity.this, intent, option.toBundle());
-            back();
         } else {
             //进入主页
-            NimUIKit.setAccount(MXPreferenceUtils.getInstance().getString("account"));
-            DataCacheManager.buildDataCacheAsync();
-            NimUIKit.getImageLoaderKit().buildImageCache();
             ActivityManager.startActivity(SplashActivity.this, MainActivity.class);
             overridePendingTransition(R.anim.alpha_in, R.anim.alpha_out);
-            back();
         }
+        back();
     }
 
     @Override
