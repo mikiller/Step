@@ -3,6 +3,7 @@ package com.westepper.step.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -46,13 +47,13 @@ public class MainActivity extends SuperActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
-
+long time1, time2, time3;
     @Override
     protected void initView() {
         rdg_guideBar.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId){
+                switch (checkedId) {
                     case R.id.rdb_msg:
                         vp_content.setCurrentItem(0);
                         break;
@@ -61,9 +62,10 @@ public class MainActivity extends SuperActivity {
                         getRankList();
                         break;
                     default:
+                        time3 = System.currentTimeMillis();
+                        Log.e(TAG, "timec:" + (time3 - time2));
                         vp_content.setCurrentItem(1);
                         adapter.getItem(1).fragmentCallback(checkedId, null);
-//                        ((MapFragment)rcvAdapter.getItem(1)).setIsTrack(checkedId == R.id.rdb_track);
                         break;
                 }
             }
@@ -71,17 +73,19 @@ public class MainActivity extends SuperActivity {
         vp_content.setTouchable(false);
         vp_content.setOffscreenPageLimit(1);
         vp_content.setAdapter(adapter = new MainFragmentAdapter(getSupportFragmentManager()));
-        rdg_guideBar.check(R.id.rdb_track);
+        vp_content.setCurrentItem(1);
+        //rdg_guideBar.check(R.id.rdb_track);
 //        new Thread(new Runnable() {
 //            @Override
 //            public void run() {
-                MapUtils.getInstance().mapData = FileUtils.getDataFromLocal(FileUtils.getFilePath(MainActivity.this, Constants.MAP_DATA), MapData.class);
-                if (MapUtils.getInstance().mapData == null) {
-                    MapUtils.getInstance().mapData = new MapData();
-                    //for test
-//            createTestData();
-//            mapData = FileUtils.getDataFromLocal(FileUtils.getFilePath(getActivity(), "area.data"), MapData.class);
-                }
+
+//        MapUtils.getInstance().mapData = FileUtils.getDataFromLocal(FileUtils.getFilePath(MainActivity.this, Constants.MAP_DATA), MapData.class);
+//        if (MapUtils.getInstance().mapData == null) {
+//            MapUtils.getInstance().mapData = new MapData();
+//            //for test
+////            createTestData();
+////            mapData = FileUtils.getDataFromLocal(FileUtils.getFilePath(getActivity(), "area.data"), MapData.class);
+//        }
 //                adapter.getItem(1).fragmentCallback(Constants.GET_MAPDATA, null);
 //            }
 //        }).start();
@@ -90,7 +94,7 @@ public class MainActivity extends SuperActivity {
 
     }
 
-    private void getUserInfo(){
+    private void getUserInfo() {
         GetUserInfoLogic logic = new GetUserInfoLogic(this, new BaseModel());
         logic.setCallback(new BaseLogic.LogicCallback<UserInfo>() {
             @Override
@@ -107,7 +111,7 @@ public class MainActivity extends SuperActivity {
         logic.sendRequest();
     }
 
-    private void getRankList(){
+    private void getRankList() {
         RankListLogic logic = new RankListLogic(this, new RankModel(Constants.RANK_FRIEND));
         logic.setCallback(new BaseLogic.LogicCallback<RankList>() {
             @Override
@@ -133,9 +137,9 @@ public class MainActivity extends SuperActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode != RESULT_OK)
+        if (resultCode != RESULT_OK)
             return;
-        switch (requestCode){
+        switch (requestCode) {
             case Constants.CHANGE_HEADER:
             case Constants.CHANGE_USER_BG:
                 adapter.getItem(2).fragmentCallback(requestCode, data);

@@ -51,6 +51,7 @@ public class Constants {
     public static final String USERINFO = "userinfo";
     public static final String ISREPORT = "ISREPORT";
     public static final String REACHED_LIST = "reachedlist";
+    public static final String REACHED_ID = "reached_id";
 
     private final String wxkey="9ab30dbefd4be514ffa7950d497438a3";
     public static final int WX_LOGIN = 0X10;

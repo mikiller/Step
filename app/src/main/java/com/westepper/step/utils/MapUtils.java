@@ -7,7 +7,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.amap.api.fence.GeoFence;
 import com.amap.api.fence.GeoFenceClient;
+import com.amap.api.fence.GeoFenceListener;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
@@ -32,12 +34,18 @@ import com.amap.api.services.geocoder.RegeocodeAddress;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.autonavi.amap.mapcore.Inner_3dMap_location;
+import com.google.gson.Gson;
+import com.netease.nimlib.sdk.auth.LoginInfo;
 import com.westepper.step.R;
 import com.westepper.step.base.Constants;
+import com.westepper.step.base.SuperActivity;
+import com.westepper.step.responses.Achieve;
 import com.westepper.step.responses.AchieveArea;
 import com.westepper.step.responses.Area;
+import com.westepper.step.responses.City;
 import com.westepper.step.responses.Graphics;
 import com.westepper.step.responses.MapData;
+import com.westepper.step.responses.ReachedList;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -64,6 +72,7 @@ public class MapUtils {
     private Inner_3dMap_location mapLocation;
 
     public MapData mapData;
+    public ReachedList reachedList;
     Map<String, Area> areas = new HashMap<>();
     Map<String, Area> achieveAreas = new HashMap<>();
     Map<String, AchieveArea> achievements = new HashMap<>();
@@ -95,6 +104,20 @@ public class MapUtils {
 
     public Inner_3dMap_location getMapLocation() {
         return mapLocation;
+    }
+
+    public ReachedList getReachedList() {
+        return reachedList;
+    }
+
+    public void setReachedList(ReachedList reachedList) {
+        if(this.reachedList == null)
+            this.reachedList = new ReachedList();
+        this.reachedList.updateReachedList(reachedList);
+    }
+
+    public void saveReachedList(){
+        MXPreferenceUtils.getInstance().setString(Constants.REACHED_ID + SuperActivity.userInfo.getUserId(), new Gson().toJson(reachedList));
     }
 
     public void setGetLocationListener(OnGetLocationListener getLocationListener) {
@@ -288,33 +311,67 @@ public class MapUtils {
         }
     }
 
-    public void clearAll() {
-        aMap.clear();
+    public void clearMapData() {
+        areas.clear();
+        achieveAreas.clear();
+        achievements.clear();
     }
 
     public int getAreasSize() {
         return areas.size();
     }
 
-    public void addArea(Area area, int graphicType) {
-        addArea(areas, area, graphicType);
+    public void analyzeMapData(){
+        for (Area area : mapData.getAchievementAreaList()) {
+            addArea(achieveAreas, area, Graphics.ACHEIVE);
+        }
+        for (City city : mapData.getCityList()) {
+            if (!city.getCityName().contains("上海"))
+                continue;
+            for (Area area : city.getAreaList()) {
+                addArea(areas, area, Graphics.MAP);
+            }
+        }
+        for (Achieve achieve : mapData.getAchievementList()) {
+            for (AchieveArea achArea : achieve.getAchieveAreaList()) {
+                switch (achArea.getCredit_level()) {
+                    case "1":
+                        achArea.setImgId(R.mipmap.ic_ach_l1);
+                        break;
+                    case "10":
+                        achArea.setImgId(R.mipmap.ic_ach_l2);
+                        break;
+                    case "100":
+                        achArea.setImgId(R.mipmap.ic_ach_l3);
+                        break;
+                    case "1000":
+                        achArea.setImgId(R.mipmap.ic_ach_l4);
+                        break;
+                }
+                addAchievement(achArea);
+            }
+        }
     }
 
-    public void addAchieveArea(Area area) {
-        addArea(achieveAreas, area, Graphics.ACHEIVE);
-    }
+//    public void addArea(Area area, int graphicType) {
+//        addArea(areas, area, graphicType);
+//    }
+
+//    public void addAchieveArea(Area area) {
+//        addArea(achieveAreas, area, Graphics.ACHEIVE);
+//    }
 
     private void addArea(Map<String, Area> areas, Area area, int graphicType) {
-        if (areas.get(area.getAreaId()) == null) {
-            area.createGraphics(aMap, graphicType);
+//        if (areas.get(area.getAreaId()) == null) {
+//        if (areas.size() == 0){
             if (area.getAreaType() == Area.POLYGON)
                 createGeoFence(area.getAreaId(), area.getBorderList());
             else if (area.getAreaType() == Area.CIRCLE)
                 createGeoFence(area.getAreaId(), area.getCircle().getLatlng(), area.getCircle().getRadius());
+            area.createGraphics(aMap, graphicType);
             areas.put(area.getAreaId(), area);
-        } else {
-            areas.get(area.getAreaId()).createGraphics(aMap, graphicType);
-        }
+//        }
+
     }
 
     public void addAchievement(AchieveArea ach){
@@ -425,7 +482,14 @@ public class MapUtils {
     public void initGeoClient(Context context) {
         if (geoFenceClient == null) {
             geoFenceClient = new GeoFenceClient(context);
-            geoFenceClient.createPendingIntent("com.map.baidumapdemo.broadcast");
+            geoFenceClient.createPendingIntent(context.getString(R.string.geo_receiver));
+//            geoFenceClient.setGeoFenceListener(new GeoFenceListener() {
+//                @Override
+//                public void onGeoFenceCreateFinished(List<GeoFence> list, int i, String s) {
+//                    Log.e(TAG, "errcode : " + i);
+//                    Log.e(TAG, "s:" + s + ", " + list.size());
+//                }
+//            });
         }
     }
 

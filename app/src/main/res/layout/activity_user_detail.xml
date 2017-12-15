@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     menu:menuTitle="探索"
                     menu:needLine="false"
-                    menu:needNext="true"
+                    menu:needNext="false"
                     menu:needSubText="true" />
 
                 <android.support.v7.widget.RecyclerView
@@ -81,7 +81,7 @@
                     android:layout_height="wrap_content"
                     menu:menuTitle="成就"
                     menu:needLine="false"
-                    menu:needNext="true"
+                    menu:needNext="false"
                     menu:needSubText="true" />
 
                 <android.support.v7.widget.RecyclerView

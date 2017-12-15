@@ -138,7 +138,7 @@
                     android:text="秒" />
             </LinearLayout>
 
-            <TextView
+            <Button
                 android:id="@+id/tv_joinOpt"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

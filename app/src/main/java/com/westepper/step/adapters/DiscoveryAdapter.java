@@ -165,21 +165,6 @@ public class DiscoveryAdapter extends PagerAdapter {
                 @Override
                 public void onClick(View v) {
                     joinOutGoLogic(holder, discover);
-//                    JoinLogic logic = new JoinLogic(mContext, new JoinModel(discover.getDiscoveryId(), discover.getTeamId()));
-//                    logic.setCallback(new BaseLogic.LogicCallback<JoinResponse>() {
-//                        @Override
-//                        public void onSuccess(JoinResponse response) {
-//                            discover.setJoin(1);
-//                            holder.setBtnJoinEnabled(false, "已报名");
-//                            cancelTask();
-//                        }
-//
-//                        @Override
-//                        public void onFailed(String code, String msg, JoinResponse localData) {
-//                            Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//                    logic.sendRequest();
                 }
             });
         }
@@ -190,21 +175,6 @@ public class DiscoveryAdapter extends PagerAdapter {
     private boolean getHasGood(String key){
         return !MXPreferenceUtils.getInstance().getBoolean(key);
     }
-
-//    private void showAddFriendDlg(){
-//        CustomDialog dlg = new CustomDialog(mContext);
-//        dlg.setTitle("打个招呼呗").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
-//            @Override
-//            public void onCancel() {
-//
-//            }
-//
-//            @Override
-//            public void onSure() {
-//
-//            }
-//        });
-//    }
 
     private void getUserInfoFromRemote(final View btn, final String account){
         NimUserInfoCache.getInstance().getUserInfoFromRemote(account, new RequestCallback<NimUserInfo>() {
@@ -246,20 +216,6 @@ public class DiscoveryAdapter extends PagerAdapter {
             }
         });
         logic.sendRequest();
-//        final CustomDialog dlg = new CustomDialog(mContext);
-//                dlg.setTitle("已报名参加约行").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
-//                    @Override
-//                    public void onCancel() {
-//                        ((SuperActivity)mContext).hideInputMethod(dlg.getCurrentFocus());
-//                    }
-//
-//                    @Override
-//                    public void onSure() {
-//                        NimUIKit.applyJoinTeam(mContext, discover.getTeamId(), dlg.getMsg());
-//
-//                        ((SuperActivity)mContext).hideInputMethod(dlg.getCurrentFocus());
-//                    }
-//                }).show();
     }
 
     public void setDataList(List<Discovery> dataList) {
@@ -422,6 +378,7 @@ public class DiscoveryAdapter extends PagerAdapter {
 
         public void setBtnJoinEnabled(boolean enabled, String txt){
             btn_join.setEnabled(enabled);
+            btn_join.setVisibility(enabled ? View.VISIBLE : View.INVISIBLE);
             btn_join.setText(txt);
         }
 

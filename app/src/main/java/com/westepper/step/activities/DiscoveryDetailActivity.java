@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -82,7 +83,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
     @BindView(R.id.tv_joinNum)
     TextView tv_joinNum;
     @BindView(R.id.tv_joinOpt)
-    TextView tv_joinOpt;
+    Button tv_joinOpt;
     @BindView(R.id.ll_leftTime)
     LinearLayout ll_leftTime;
     @BindView(R.id.tv_hour)
@@ -305,7 +306,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
 
             }
         });
-        tv_joinOpt.setEnabled(!discovery.getDiscoveryUserId().equals(SuperActivity.userInfo.getUserId()));
+//        tv_joinOpt.setEnabled());
 
         timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -341,23 +342,6 @@ public class DiscoveryDetailActivity extends SuperActivity {
             tv_joinNum.setText(String.format(getString(R.string.join_num), discovery.getTotalCount(), joinCount));
     }
 
-//    private void joinOutGo(){
-//        final CustomDialog dlg = new CustomDialog(DiscoveryDetailActivity.this);
-//        dlg.setTitle("已报名参加约行").setDlgEditable(true).setDlgButtonListener(new CustomDialog.onButtonClickListener() {
-//            @Override
-//            public void onCancel() {
-//                hideInputMethod(dlg.getCurrentFocus());
-//            }
-//
-//            @Override
-//            public void onSure() {
-//                NimUIKit.applyJoinTeam(DiscoveryDetailActivity.this, discovery.getTeamId(), dlg.getMsg());
-//                joinOutgoLogic();
-//                hideInputMethod(dlg.getCurrentFocus());
-//            }
-//        }).show();
-//    }
-
     private void joinOutgoLogic() {
         JoinLogic logic = new JoinLogic(DiscoveryDetailActivity.this, new JoinModel(discovery.getDiscoveryId(), discovery.getTeamId()));
         logic.setCallback(new BaseLogic.LogicCallback<JoinResponse>() {
@@ -391,7 +375,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
                 @Override
                 public void onSuccess(DiscoveryDetailInfo response) {
                     setJoinNum(response.getJoinCount());
-                    tv_joinOpt.setEnabled(!response.isJoin());
+                    tv_joinOpt.setEnabled(!response.isJoin() &&!discovery.getDiscoveryUserId().equals(SuperActivity.userInfo.getUserId()));
                     tv_joinOpt.setText(response.isJoin() ? "已报名" : "参加约行");
                 }
 

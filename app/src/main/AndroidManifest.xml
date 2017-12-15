@@ -80,7 +80,7 @@
         <receiver android:name=".widgets.GeoReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="com.map.baidumapdemo.broadcast" />
+                <action android:name="com.westepper.step.widgets.georeceiver" />
             </intent-filter>
         </receiver>
 

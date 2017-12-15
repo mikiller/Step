@@ -109,7 +109,7 @@ public class MyAchieveActivity extends SuperActivity {
 //                    for(Achieve achieve: MainActivity.mapData.getAchievementList()){
                     for(Achieve achieve : MapUtils.getInstance().mapData.getAchievementList()){
                         if(achieve.getAchieveKind().equals(title)){
-                            reachedAdapter.setReachIds(MapUtils.getInstance().mapData.getReachedAchieveIdList());
+                            reachedAdapter.setReachIds(MapUtils.getInstance().getReachedList().getReachedAchievementIds());
                             reachedAdapter.setAchAreaList(achieve.getAchieveAreaList());
                             rcv_ach.setAdapter(reachedAdapter);
                             break;

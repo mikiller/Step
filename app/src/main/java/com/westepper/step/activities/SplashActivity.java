@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -45,6 +46,8 @@ import com.westepper.step.utils.FileUtils;
 import com.westepper.step.utils.MXPreferenceUtils;
 import com.westepper.step.utils.MapUtils;
 
+import org.apache.lucene.util.automaton.RunAutomaton;
+
 import java.util.Map;
 
 import butterknife.BindView;
@@ -58,8 +61,7 @@ public class SplashActivity extends SuperActivity {
     SelectableRoundedImageView iv_logo;
     @BindView(R.id.iv_label)
     ImageView iv_label;
-
-//    public boolean isLogin = true;
+    MapData tmp;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +85,18 @@ public class SplashActivity extends SuperActivity {
             }
         }, true);
 
-        getMapData();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                tmp = FileUtils.getDataFromLocal(FileUtils.getFilePath(SplashActivity.this, Constants.MAP_DATA), MapData.class);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getMapData();
+                    }
+                });
+            }
+        }).start();
 
         getWindow().getDecorView().postDelayed(new Runnable() {
             @Override
@@ -95,21 +108,20 @@ public class SplashActivity extends SuperActivity {
 
     private void getMapData(){
         try {
-            MapDataModel model = new MapDataModel(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+            MapDataModel model = new MapDataModel(tmp == null ? getPackageManager().getPackageInfo(getPackageName(), 0).versionName : tmp.getVersion());
             GetMapDataLogic logic = new GetMapDataLogic(this, model);
             logic.setCallback(new BaseLogic.LogicCallback<MapData>() {
                 @Override
                 public void onSuccess(MapData response) {
-//                    MapUtils.getInstance().mapData = response;
+
                     String data = new Gson().toJson(response);
                     FileUtils.saveToLocal(data, FileUtils.getFilePath(SplashActivity.this, Constants.MAP_DATA));
-//                    startApp();
+                    MapUtils.getInstance().mapData = response;
                 }
 
                 @Override
                 public void onFailed(String code, String msg, MapData localData) {
-//                    MapUtils.getInstance().mapData = FileUtils.getDataFromLocal(FileUtils.getFilePath(SplashActivity.this, Constants.MAP_DATA), MapData.class);
-                    Toast.makeText(SplashActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    MapUtils.getInstance().mapData = tmp;
                 }
             });
             logic.sendRequest();
@@ -138,4 +150,5 @@ public class SplashActivity extends SuperActivity {
     protected void initData() {
 
     }
+
 }

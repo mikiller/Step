@@ -32,6 +32,7 @@
             android:id="@+id/rdb_track"
             style="@style/mainTab"
             android:drawableTop="@drawable/selector_tab_track"
+            android:checked="true"
             android:text="足迹" />
 
         <RadioButton

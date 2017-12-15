@@ -1,6 +1,10 @@
 package com.westepper.step.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
@@ -105,8 +109,9 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
     DiscoveryAdapter adapter;
     MapUtils mapUtils;
+    //    MapDataReceiver receiver;
     private boolean isTrack = true;
-    float /*searchHeight*/headHeight, headTransY, vpTransY, optTransY, locTransY;
+    float searchHeight, headHeight, headTransY, vpTransY, optTransY, locTransY;
     int scope = Constants.FRIEND, disKind = Constants.MOOD, gender = 0;
     double lat = 0.0, lon = 0.0;
 
@@ -117,11 +122,13 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
     @Override
     protected void initView() {
+//        getActivity().registerReceiver(receiver = new MapDataReceiver(), new IntentFilter("act"));
         mapView.onCreate(saveBundle);
 
         initMapUtil();
-        initAcheiveSetting();
-        getReachedList();
+        drawMap();
+//        initAcheiveSetting();
+//        getReachedList();
         search.setOnClickListener(this);
         btn_loc.setOnClickListener(this);
         btn_acheivement.setOnClickListener(this);
@@ -134,8 +141,8 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
         search.setSearchListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(final TextView v, int actionId, KeyEvent event) {
-                if(actionId == EditorInfo.IME_ACTION_SEARCH){
-                    ((SuperActivity)getActivity()).hideInputMethod(search);
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    ((SuperActivity) getActivity()).hideInputMethod(search);
                     mapUtils.searchMapAddress(getActivity(), v.getText().toString(), mapUtils.getMapLocation().getCity(), new GeocodeSearch.OnGeocodeSearchListener() {
                         @Override
                         public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
@@ -144,8 +151,8 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
                         @Override
                         public void onGeocodeSearched(GeocodeResult geocodeResult, int rstCode) {
-                            if(rstCode != AMapException.CODE_AMAP_SUCCESS) {
-                                if(!isTrack) {
+                            if (rstCode != AMapException.CODE_AMAP_SUCCESS) {
+                                if (!isTrack) {
                                     lat = mapUtils.getMapLocation().getLatitude();
                                     lon = mapUtils.getMapLocation().getLongitude();
                                     getDiscoveryList();
@@ -207,35 +214,6 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
     private void initMapUtil() {
         mapUtils = MapUtils.getInstance();
         mapUtils.init(getActivity().getApplicationContext(), mapView.getMap());
-        for (City city : mapUtils.mapData.getCityList()) {
-            if (!city.getCityName().equals("上海"))
-                continue;
-            for (Area area : city.getAreaList()) {
-                mapUtils.addArea(area, Graphics.MAP);
-            }
-        }
-        for (Area area : mapUtils.mapData.getAchievementAreaList()) {
-            mapUtils.addAchieveArea(area);
-        }
-        for (Achieve achieve : mapUtils.mapData.getAchievementList()) {
-            for (AchieveArea achArea : achieve.getAchieveAreaList()) {
-                switch (achArea.getCredit_level()) {
-                    case "1":
-                        achArea.setImgId(R.mipmap.ic_ach_l1);
-                        break;
-                    case "10":
-                        achArea.setImgId(R.mipmap.ic_ach_l2);
-                        break;
-                    case "100":
-                        achArea.setImgId(R.mipmap.ic_ach_l3);
-                        break;
-                    case "1000":
-                        achArea.setImgId(R.mipmap.ic_ach_l4);
-                        break;
-                }
-                mapUtils.addAchievement(achArea);
-            }
-        }
         mapUtils.setGetLocationListener(new MapUtils.OnGetLocationListener() {
             @Override
             public void onGetLocation(final String cityName) {
@@ -255,7 +233,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
                         final CustomDialog dlg = new CustomDialog(getActivity());
                         dlg.setLayoutRes(R.layout.layout_congratulation).setCancelable(true);
                         View view = dlg.getCustomView();
-                        ((TextView)view.findViewById(R.id.tv_con_txt)).setText("发现" + cityName);
+                        ((TextView) view.findViewById(R.id.tv_con_txt)).setText("发现" + cityName);
                         view.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -276,23 +254,27 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
     }
 
-    private void getReachedList() {
-        GetReachedListLogic logic = new GetReachedListLogic(getActivity(), new ReachedModel(""));
-        logic.setCallback(new BaseLogic.LogicCallback<ReachedList>() {
+    private void drawMap() {
+        new Thread(new Runnable() {
             @Override
-            public void onSuccess(ReachedList response) {
-                for (String id : response.getReachedLists()) {
-                    mapUtils.setAreaChecked(id);
+            public void run() {
+                while (true) {
+                    if (mapUtils.mapData != null)
+                        break;
                 }
-                mapUtils.mapData.setReachedAchieveIdList(response.getReachedAchievementIds());
+                mapUtils.clearMapData();
+                mapUtils.analyzeMapData();
+                mapView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        initAcheiveSetting();
+                        getReachedList();
+                    }
+                }, 100);
+
             }
 
-            @Override
-            public void onFailed(String code, String msg, ReachedList localData) {
-
-            }
-        });
-        logic.sendRequest();
+        }).start();
     }
 
     private void initAcheiveSetting() {
@@ -312,29 +294,49 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
         });
     }
 
+    private void getReachedList() {
+        GetReachedListLogic logic = new GetReachedListLogic(getActivity(), new ReachedModel(""));
+        logic.setCallback(new BaseLogic.LogicCallback<ReachedList>() {
+            @Override
+            public void onSuccess(ReachedList response) {
+                for (String id : response.getReachedLists()) {
+                    mapUtils.setAreaChecked(id);
+                }
+                mapUtils.setReachedList(response);
+                mapUtils.saveReachedList();
+                mapUtils.setShowAreaIds(null);
+            }
+
+            @Override
+            public void onFailed(String code, String msg, ReachedList localData) {
+
+            }
+        });
+        logic.sendRequest();
+    }
+
     public void setIsTrack(boolean isTrack) {
         if (this.isTrack == isTrack)
             return;
         else
             this.isTrack = isTrack;
-
         if (ll_search == null || rl_head == null || vp_discoveryList == null) {
             return;
         }
 
 //        if (searchHeight <= 0) {
-        if (headHeight <= 0){
-//            searchHeight = ll_search.getMeasuredHeight();
+        if (headHeight <= 0) {
+            searchHeight = ll_search.getMeasuredHeight();
             headHeight = rl_head.getMeasuredHeight() - DisplayUtil.dip2px(getActivity(), 20);
             headTransY = rl_head.getTranslationY();
             vpTransY = vp_discoveryList.getTranslationY();
             optTransY = (int) ll_discovery_opt.getTranslationY();
             locTransY = btn_loc.getMeasuredHeight() + DisplayUtil.dip2px(getActivity(), 14);
         }
-        btn_acheivement.setVisibility(isTrack?View.VISIBLE : View.INVISIBLE);
+        btn_acheivement.setVisibility(isTrack ? View.VISIBLE : View.INVISIBLE);
         if (isTrack) {
 //            AnimUtils.startObjectAnim(ll_search, "translationY", -searchHeight, 0, 300);
-            AnimUtils.startObjectAnim(ll_search, "translationY", headHeight, 0, 300);
+            AnimUtils.startObjectAnim(ll_search, "translationY", disKind == Constants.MOOD ? -searchHeight : headHeight, 0, 300);
             AnimUtils.startObjectAnim(rl_head, "translationY", 0, headTransY, 300);
             AnimUtils.startObjectAnim(ll_discovery_opt, "translationY", 0, optTransY, 400);
             AnimUtils.startObjectAnim(vp_discoveryList, "translationY", vp_discoveryList.getTranslationY(), vpTransY, 800);
@@ -343,12 +345,12 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
             mapUtils.setIsNeedArea(true);
         } else {
 //            AnimUtils.startObjectAnim(ll_search, "translationY", 0, -searchHeight, 300);
-            AnimUtils.startObjectAnim(ll_search, "translationY", 0, headHeight, 300);
+            AnimUtils.startObjectAnim(ll_search, "translationY", 0, disKind == Constants.MOOD ? -searchHeight : headHeight, 300);
             AnimUtils.startObjectAnim(rl_head, "translationY", headTransY, 0, 300);
             AnimUtils.startObjectAnim(ll_discovery_opt, "translationY", optTransY, 0, 400);
             AnimUtils.startObjectAnim(btn_loc, "translationY", 0, locTransY, 300);
             mapUtils.setIsNeedArea(false);
-            if(lat == 0.0) {
+            if (lat == 0.0) {
                 lat = mapUtils.getMapLocation().getLatitude();
                 lon = mapUtils.getMapLocation().getLongitude();
             }
@@ -416,10 +418,12 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
     @Override
     public void onDestroyView() {
+//        getActivity().unregisterReceiver(receiver);
         mapView.onDestroy();
 //        mapUtils.destory();
         mapUtils.setShowAreaIds(null);
         mapUtils.clearMapLocation();
+        mapUtils.mapData = null;
         super.onDestroyView();
     }
 
@@ -431,7 +435,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
             layout_achSetting.checkAchItem(cateId, achId);
         } else {
             setIsTrack(type == R.id.rdb_track);
-            if(layout_achSetting != null && layout_achSetting.isShown())
+            if (layout_achSetting != null && layout_achSetting.isShown())
                 layout_achSetting.hide();
         }
     }
@@ -449,7 +453,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
                 layout_achSetting.show();
                 break;
             case R.id.btn_new:
-                ((SuperActivity)getActivity()).hideInputMethod(commitInput);
+                ((SuperActivity) getActivity()).hideInputMethod(commitInput);
                 showNewDisDlg();
                 break;
             case R.id.btn_selection:
@@ -521,9 +525,11 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
                 break;
             case R.id.rdb_mood:
                 disKind = Constants.MOOD;
+                AnimUtils.startObjectAnim(ll_search, "translationY", headHeight, -searchHeight, 300);
                 break;
             case R.id.rdb_join:
                 disKind = Constants.OUTGO;
+                AnimUtils.startObjectAnim(ll_search, "translationY", -searchHeight, headHeight, 300);
                 break;
         }
         getDiscoveryList();

@@ -26,6 +26,7 @@ import com.umeng.socialize.UMShareAPI;
 import com.westepper.step.R;
 import com.westepper.step.activities.MainActivity;
 import com.westepper.step.activities.SessionLocationActivity;
+import com.westepper.step.responses.ReachedList;
 import com.westepper.step.utils.MXPreferenceUtils;
 import com.westepper.step.utils.SessionHelper;
 

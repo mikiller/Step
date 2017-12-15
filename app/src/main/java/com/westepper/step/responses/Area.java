@@ -107,6 +107,7 @@ public class Area implements Parcelable{
         }
         setGraphicsType(graphicType);
         setReached(false);
+        hide();
     }
 
     public void hide(){

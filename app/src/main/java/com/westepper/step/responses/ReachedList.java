@@ -1,6 +1,8 @@
 package com.westepper.step.responses;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
@@ -12,6 +14,30 @@ public class ReachedList implements Serializable {
     List<String> reachedAchievementIds;
     String reachedL2Id;
     String reachedL3Id;
+
+    public ReachedList() {
+        reachedLists = new ArrayList<>();
+        reachedAchievementIds = new ArrayList<>();
+    }
+
+    public void updateReachedList(ReachedList rl){
+        if (rl == null)
+            return;
+        reachedLists.addAll(rl.getReachedLists());
+        reachedLists = new ArrayList<>(new LinkedHashSet<>(reachedLists));
+        reachedAchievementIds.addAll(rl.getReachedAchievementIds());
+        reachedAchievementIds = new ArrayList<>(new LinkedHashSet<>(reachedAchievementIds));
+        reachedL2Id = rl.reachedL2Id;
+        reachedL3Id = rl.reachedL3Id;
+    }
+
+    public void addReachedId(String id){
+        reachedLists.add(id);
+    }
+
+    public boolean hasReachedId(String id){
+        return reachedLists.contains(id);
+    }
 
     public List<String> getReachedLists() {
         return reachedLists;
