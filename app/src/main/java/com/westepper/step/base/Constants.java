@@ -40,8 +40,11 @@ public class Constants {
     public static final int ACH_CITY = 1;
     public static final int ACH_BADGE = 2;
     public static final int ACH_AREA = 3;
-    public static final int CITY = 1;
-    public static final int LEVEL = 2;
+//    public static final int CITY = 1;
+    public static final int LEVEL1 = 1;
+    public static final int LEVEL2 = 2;
+    public static final int LEVEL3 = 3;
+    public static final int LEVEL4 = 4;
     public static final int RANK_FRIEND = 1;
     public static final int RANK_ALL = 2;
     public static final String GALLERY_TYPE = "gallery_type";

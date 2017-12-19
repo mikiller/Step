@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ public class MainActivity extends SuperActivity {
     RadioGroup rdg_guideBar;
 
     MainFragmentAdapter adapter;
+    boolean canQuit = false;
 //    public static MapData mapData;
 
     @Override
@@ -47,7 +49,7 @@ public class MainActivity extends SuperActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
-long time1, time2, time3;
+
     @Override
     protected void initView() {
         rdg_guideBar.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -62,8 +64,6 @@ long time1, time2, time3;
                         getRankList();
                         break;
                     default:
-                        time3 = System.currentTimeMillis();
-                        Log.e(TAG, "timec:" + (time3 - time2));
                         vp_content.setCurrentItem(1);
                         adapter.getItem(1).fragmentCallback(checkedId, null);
                         break;
@@ -74,21 +74,6 @@ long time1, time2, time3;
         vp_content.setOffscreenPageLimit(1);
         vp_content.setAdapter(adapter = new MainFragmentAdapter(getSupportFragmentManager()));
         vp_content.setCurrentItem(1);
-        //rdg_guideBar.check(R.id.rdb_track);
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-
-//        MapUtils.getInstance().mapData = FileUtils.getDataFromLocal(FileUtils.getFilePath(MainActivity.this, Constants.MAP_DATA), MapData.class);
-//        if (MapUtils.getInstance().mapData == null) {
-//            MapUtils.getInstance().mapData = new MapData();
-//            //for test
-////            createTestData();
-////            mapData = FileUtils.getDataFromLocal(FileUtils.getFilePath(getActivity(), "area.data"), MapData.class);
-//        }
-//                adapter.getItem(1).fragmentCallback(Constants.GET_MAPDATA, null);
-//            }
-//        }).start();
 
         getUserInfo();
 
@@ -154,5 +139,25 @@ long time1, time2, time3;
                 break;
 
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode){
+            case KeyEvent.KEYCODE_BACK:
+                if(!canQuit){
+                    Toast.makeText(this, "再按一次返回键退出",Toast.LENGTH_SHORT).show();
+                    canQuit = true;
+                    rdg_guideBar.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            canQuit = false;
+                        }
+                    }, 1000);
+                    return false;
+                }else
+                    break;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

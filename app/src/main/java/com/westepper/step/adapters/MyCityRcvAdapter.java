@@ -7,12 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.westepper.step.R;
 import com.westepper.step.base.Constants;
-import com.westepper.step.responses.DisCity;
+import com.westepper.step.responses.AchCity;
 
 import java.util.List;
 
@@ -21,12 +20,14 @@ import java.util.List;
  */
 
 public class MyCityRcvAdapter extends RecyclerView.Adapter<MyCityRcvAdapter.CityHolder> {
-    private List<DisCity> dataList;
+    private List<AchCity> dataList;
+    private int achKind;
 
-    public MyCityRcvAdapter() {
+    public MyCityRcvAdapter(int ach) {
+        achKind = ach;
     }
 
-    public void setDataList(List<DisCity> dataList) {
+    public void setDataList(List<AchCity> dataList) {
         this.dataList = dataList;
         notifyDataSetChanged();
     }
@@ -39,10 +40,13 @@ public class MyCityRcvAdapter extends RecyclerView.Adapter<MyCityRcvAdapter.City
 
     @Override
     public void onBindViewHolder(CityHolder holder, int position) {
-        DisCity city = dataList.get(position);
+        AchCity city = dataList.get(position);
         holder.setTv_dis_city(city.getTitle());
         holder.setTv_date(city.getDate());
-        holder.setType(city.getType());
+        if (achKind == Constants.ACH_CITY)
+            holder.setDisType(city.getType());
+        else
+            holder.setAchType(city.getType());
         if(position < getItemCount() - 1){
             holder.showLine();
         }
@@ -65,10 +69,34 @@ public class MyCityRcvAdapter extends RecyclerView.Adapter<MyCityRcvAdapter.City
             tv_date = (TextView) itemView.findViewById(R.id.tv_date);
         }
 
-        public void setType(int type){
-            iv_city_logo.setImageResource(type == Constants.CITY ? R.mipmap.ic_city_logo : R.mipmap.ic_level_logo);
+        public void setDisType(int type){
+            iv_city_logo.setImageResource(type == Constants.LEVEL1 ? R.mipmap.ic_city_logo : R.mipmap.ic_level_logo);
             GradientDrawable gd = (GradientDrawable) line.getBackground();
-            gd.setColor(type == Constants.CITY ? Color.parseColor("#00a8ff"):Color.parseColor("#fab446"));
+            gd.setColor(type == Constants.LEVEL1 ? Color.parseColor("#00a8ff"):Color.parseColor("#fab446"));
+            line.setBackgroundDrawable(gd);
+        }
+
+        public void setAchType(int type){
+            GradientDrawable gd = (GradientDrawable) line.getBackground();
+            switch (type){
+                case Constants.LEVEL1:
+                    iv_city_logo.setImageResource(R.mipmap.ic_ach1_logo);
+                    gd.setColor(Color.parseColor("#dcb284"));
+                    break;
+                case Constants.LEVEL2:
+                    iv_city_logo.setImageResource(R.mipmap.ic_ach2_logo);
+                    gd.setColor(Color.parseColor("#a4b6c3"));
+                    break;
+                case Constants.LEVEL3:
+                    iv_city_logo.setImageResource(R.mipmap.ic_ach3_logo);
+                    gd.setColor(Color.parseColor("#ffcc37"));
+                    break;
+                case Constants.LEVEL4:
+                    iv_city_logo.setImageResource(R.mipmap.ic_ach4_logo);
+                    gd.setColor(Color.parseColor("#ffbe75"));
+                    break;
+
+            }
             line.setBackgroundDrawable(gd);
         }
 

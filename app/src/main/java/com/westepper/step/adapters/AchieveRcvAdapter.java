@@ -19,10 +19,9 @@ import com.westepper.step.base.Constants;
 import com.westepper.step.customViews.AchieveBadge;
 import com.westepper.step.responses.AchieveProgress;
 import com.westepper.step.responses.CityProgress;
-import com.westepper.step.responses.MyAchievements;
+import com.westepper.step.responses.MyCreditAndPercents;
 import com.westepper.step.utils.ActivityManager;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,7 +43,7 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
 //    private View.OnClickListener listener;
     private OnMenuClickListener listener;
 //    private List<AchieveProgress> pgsList;
-    private MyAchievements myAchieve = new MyAchievements();
+    private MyCreditAndPercents myAchieve = new MyCreditAndPercents();
 
     public AchieveRcvAdapter(Context mContext, int achKind) {
         this.mContext = mContext;
@@ -69,11 +68,11 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
 //    }
 
 
-    public MyAchievements getMyAchieve() {
+    public MyCreditAndPercents getMyAchieve() {
         return myAchieve;
     }
 
-    public void setMyAchieve(MyAchievements myAchieve) {
+    public void setMyAchieve(MyCreditAndPercents myAchieve) {
         this.myAchieve = myAchieve;
         notifyDataSetChanged();
     }
@@ -182,28 +181,29 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
                 public void onClick(View v) {
                     Map<String, Object> args = new HashMap<String, Object>();
                     args.put(Constants.BADGE_KIND, (int)v.getTag());
+                    args.put(Constants.ACH_KIND, achKind);
                     Map<String, View> trans = new HashMap<String, View>();
                     trans.put(mContext.getString(R.string.city_badge), v);
                     ActivityManager.startActivityWithTransAnim((Activity) mContext, MyCityActivity.class, trans, args);
                 }
             };
-            if(achKind == Constants.ACH_CITY){
+            //if(achKind == Constants.ACH_CITY){
                 myAchCity.setOnClickListener(listener);
                 myAchL1.setOnClickListener(listener);
                 myAchL2.setOnClickListener(listener);
                 myAchL3.setOnClickListener(listener);
-            }
+            //}
             myAchCity.setBadgeImg(achKind == Constants.ACH_CITY ? R.mipmap.ic_dis_city : R.mipmap.ic_ach_l1);
-            myAchCity.setBadgeKind(1);
+            myAchCity.setBadgeKind(Constants.LEVEL1);
             myAchCity.setBadgeNum(l1);
             myAchL1.setBadgeImg(achKind == Constants.ACH_CITY ? R.mipmap.ic_dis_l1 : R.mipmap.ic_ach_l2);
-            myAchL1.setBadgeKind(2);
+            myAchL1.setBadgeKind(Constants.LEVEL2);
             myAchL1.setBadgeNum(l2);
             myAchL2.setBadgeImg(achKind == Constants.ACH_CITY ? R.mipmap.ic_dis_l2 : R.mipmap.ic_ach_l3);
-            myAchL2.setBadgeKind(3);
+            myAchL2.setBadgeKind(Constants.LEVEL3);
             myAchL2.setBadgeNum(l3);
             myAchL3.setBadgeImg(achKind == Constants.ACH_CITY ? R.mipmap.ic_dis_l3 : R.mipmap.ic_ach_l4);
-            myAchL3.setBadgeKind(4);
+            myAchL3.setBadgeKind(Constants.LEVEL4);
             myAchL3.setBadgeNum(l4);
 
 

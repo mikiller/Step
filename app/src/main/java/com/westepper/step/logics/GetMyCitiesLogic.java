@@ -4,13 +4,13 @@ import android.content.Context;
 
 import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.BaseModel;
-import com.westepper.step.responses.MyAchievements;
+import com.westepper.step.responses.MyCreditAndPercents;
 
 /**
  * Created by Mikiller on 2017/11/8.
  */
 
-public class GetMyCitiesLogic extends BaseLogic<MyAchievements> {
+public class GetMyCitiesLogic extends BaseLogic<MyCreditAndPercents> {
     public GetMyCitiesLogic(Context context, BaseModel model) {
         super(context, model);
     }
@@ -35,12 +35,12 @@ public class GetMyCitiesLogic extends BaseLogic<MyAchievements> {
     }
 
     @Override
-    public void onSuccess(MyAchievements response) {
+    public void onSuccess(MyCreditAndPercents response) {
 
     }
 
     @Override
-    public void onFailed(String code, String msg, MyAchievements localData) {
+    public void onFailed(String code, String msg, MyCreditAndPercents localData) {
 
     }
 }

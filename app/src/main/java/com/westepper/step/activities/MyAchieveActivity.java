@@ -4,9 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
-import android.view.View;
-import android.widget.ImageButton;
 
 import com.westepper.step.R;
 import com.westepper.step.adapters.AchieveRcvAdapter;
@@ -22,12 +19,10 @@ import com.westepper.step.models.BaseInfoModel;
 import com.westepper.step.responses.Achieve;
 import com.westepper.step.responses.AchieveProgress;
 import com.westepper.step.responses.DiscoveryBaseInfo;
-import com.westepper.step.responses.MyAchievements;
+import com.westepper.step.responses.MyCreditAndPercents;
 import com.westepper.step.utils.MapUtils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import butterknife.BindView;
 
@@ -131,7 +126,7 @@ public class MyAchieveActivity extends SuperActivity {
 
     @Override
     protected void initData() {
-
+        //adapter.notifyDataSetChanged();
     }
 
     private void getMyAchieves(){
@@ -143,9 +138,9 @@ public class MyAchieveActivity extends SuperActivity {
         achList[4] = createAchMenu(5, "限时成就", 0);
         GetMyAchievementsLogic logic = new GetMyAchievementsLogic(this, new BaseModel());
         logic.setType(achKind);
-        logic.setCallback(new BaseLogic.LogicCallback<MyAchievements>() {
+        logic.setCallback(new BaseLogic.LogicCallback<MyCreditAndPercents>() {
             @Override
-            public void onSuccess(MyAchievements response) {
+            public void onSuccess(MyCreditAndPercents response) {
                 if(achKind == Constants.ACH_BADGE) {
                     for (AchieveProgress ap : response.getPercentList()) {
                         achList[ap.getCategoryId() - 1] = ap;
@@ -156,7 +151,7 @@ public class MyAchieveActivity extends SuperActivity {
             }
 
             @Override
-            public void onFailed(String code, String msg, MyAchievements localData) {
+            public void onFailed(String code, String msg, MyCreditAndPercents localData) {
 
             }
         });

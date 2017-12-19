@@ -1,7 +1,6 @@
 package com.westepper.step.activities;
 
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,14 +12,14 @@ import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.TitleBar;
+import com.westepper.step.logics.GetMyAchieveBaseInfoLogic;
 import com.westepper.step.logics.GetMyDiscoverBaseInfoLogic;
 import com.westepper.step.models.BaseInfoModel;
-import com.westepper.step.responses.BaseInfo;
-import com.westepper.step.responses.DisCity;
-import com.westepper.step.responses.Discovery;
+import com.westepper.step.responses.AchievementBaseInfo;
+import com.westepper.step.responses.AchCity;
 import com.westepper.step.responses.DiscoveryBaseInfo;
+import com.westepper.step.responses.MyAchieve;
 import com.westepper.step.responses.MyDiscovery;
-import com.westepper.step.utils.MXTimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,13 +39,16 @@ public class MyCityActivity extends SuperActivity {
     RecyclerView rcv_citier;
 
     int badge;
+    int achKind;
     MyCityRcvAdapter adapter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         if(savedInstanceState != null){
             badge = savedInstanceState.getInt(Constants.BADGE_KIND);
+            achKind = savedInstanceState.getInt(Constants.ACH_KIND);
         }else if(getIntent() != null){
             badge = getIntent().getIntExtra(Constants.BADGE_KIND, 0);
+            achKind = getIntent().getIntExtra(Constants.ACH_KIND, Constants.ACH_CITY);
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dis_city);
@@ -55,6 +57,7 @@ public class MyCityActivity extends SuperActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(Constants.BADGE_KIND, badge);
+        outState.putInt(Constants.ACH_KIND, achKind);
         super.onSaveInstanceState(outState);
     }
 
@@ -68,51 +71,41 @@ public class MyCityActivity extends SuperActivity {
         });
 
         rcv_citier.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        rcv_citier.setAdapter(adapter = new MyCityRcvAdapter());
+        rcv_citier.setAdapter(adapter = new MyCityRcvAdapter(achKind));
         switch (badge){
             case 1:
-                titleBar.setTitle("发现城市");
-                iv_city_badge.setImageResource(R.mipmap.ic_dis_city);
-//                adapter.setDataList(createCitys(Constants.CITY, "发现上海", "发现杭州", "发现北京", "发现广州"));
+                titleBar.setTitle(achKind == Constants.ACH_CITY ? "发现城市" : "完成A1成就");
+                iv_city_badge.setImageResource(achKind == Constants.ACH_CITY ? R.mipmap.ic_dis_city : R.mipmap.ic_ach_l1);
                 break;
             case 2:
-                titleBar.setTitle("点亮L1区域");
-                iv_city_badge.setImageResource(R.mipmap.ic_dis_l1);
-//                adapter.setDataList(createCitys(Constants.LEVEL, "点亮L1区域1", "点亮L1区域2", "点亮L1区域3", "点亮L1区域4"));
+                titleBar.setTitle(achKind == Constants.ACH_CITY ? "点亮L1区域" : "完成A2成就");
+                iv_city_badge.setImageResource(achKind == Constants.ACH_CITY ? R.mipmap.icon_dis_l1 : R.mipmap.ic_ach_l2);
                 break;
             case 3:
-                titleBar.setTitle("点亮L2区域");
-                iv_city_badge.setImageResource(R.mipmap.ic_dis_l2);
-//                adapter.setDataList(createCitys(Constants.LEVEL, "点亮L2区域1", "点亮L2区域2", "点亮L2区域3", "点亮L2区域4"));
+                titleBar.setTitle(achKind == Constants.ACH_CITY ? "点亮L2区域" : "完成A3成就");
+                iv_city_badge.setImageResource(achKind == Constants.ACH_CITY ? R.mipmap.icon_dis_l2 : R.mipmap.ic_ach_l3);
                 break;
             case 4:
-                titleBar.setTitle("点亮L3区域");
-                iv_city_badge.setImageResource(R.mipmap.ic_dis_l3);
-//                adapter.setDataList(createCitys(Constants.LEVEL, "点亮L3区域1", "点亮L3区域2", "点亮L3区域3", "点亮L3区域4"));
+                titleBar.setTitle(achKind == Constants.ACH_CITY ? "点亮L3区域" : "完成A4成就");
+                iv_city_badge.setImageResource(achKind == Constants.ACH_CITY ? R.mipmap.icon_dis_l3 : R.mipmap.ic_ach_l4);
                 break;
         }
 
-    }
-
-    private List<DisCity> createCitys(int type, String... titles){
-        List<DisCity> list = new ArrayList<>();
-        for(int i = 0; i < 4; i++){
-            DisCity city = new DisCity();
-            city.setType(type);
-            city.setTitle(titles[i]);
-            city.setDate("17/10/12");
-            list.add(city);
-        }
-        return list;
     }
 
     @Override
     protected void initData() {
+        if (achKind == Constants.ACH_CITY)
+            getDiscoverBaseInfoLogic();
+        else
+            getAchieveBaseInfoLogic();
+    }
+
+    private void getDiscoverBaseInfoLogic(){
         GetMyDiscoverBaseInfoLogic logic = new GetMyDiscoverBaseInfoLogic(this, new BaseInfoModel(badge));
         logic.setCallback(new BaseLogic.LogicCallback<DiscoveryBaseInfo>() {
             @Override
             public void onSuccess(DiscoveryBaseInfo response) {
-                ArrayList<String> names = new ArrayList<String>();
                 List<MyDiscovery> baseInfo = new ArrayList<MyDiscovery>();
                 switch (badge){
                     case 1:
@@ -129,7 +122,7 @@ public class MyCityActivity extends SuperActivity {
                         break;
                 }
 
-                adapter.setDataList(createMyDiscoveries(badge == 1 ? Constants.CITY : Constants.LEVEL, baseInfo));
+                adapter.setDataList(createMyDiscoveries(baseInfo));
             }
 
             @Override
@@ -140,20 +133,41 @@ public class MyCityActivity extends SuperActivity {
         logic.sendRequest();
     }
 
-    private List<DisCity> createMyDiscoveries(int type, List<MyDiscovery> disList){
-        List<DisCity> list = new ArrayList<>();
+    private List<AchCity> createMyDiscoveries(List<MyDiscovery> disList){
+        List<AchCity> list = new ArrayList<>();
         for(MyDiscovery dis : disList){
-            DisCity city = new DisCity();
-            city.setType(type);
-            String title;
-            if(type == Constants.CITY)
-                title = dis.getCity_name();
-            else if(badge == 2)
-                title = "点亮L1区域";
-            else
-                title = dis.getAreaName();
-            city.setTitle(title);
-            city.setDate(MXTimeUtils.getFormatTime("yy/MM/dd", dis.getCreated_at()));
+            AchCity city = new AchCity();
+            city.setType(badge);
+            city.setTitle(badge == Constants.LEVEL1 ? dis.getCity_name() : dis.getAreaName());
+            city.setDate(dis.getFormatCreated_at());
+            list.add(city);
+        }
+        return list;
+    }
+
+    private void getAchieveBaseInfoLogic(){
+        GetMyAchieveBaseInfoLogic logic = new GetMyAchieveBaseInfoLogic(this, new BaseInfoModel(badge));
+        logic.setCallback(new BaseLogic.LogicCallback<AchievementBaseInfo>() {
+            @Override
+            public void onSuccess(AchievementBaseInfo response) {
+                adapter.setDataList(createMyAchieves(response.getReachedList()));
+            }
+
+            @Override
+            public void onFailed(String code, String msg, AchievementBaseInfo localData) {
+
+            }
+        });
+        logic.sendRequest();
+    }
+
+    private List<AchCity> createMyAchieves(List<MyAchieve> achieveList){
+        List<AchCity> list = new ArrayList<>();
+        for(MyAchieve ach : achieveList){
+            AchCity city = new AchCity();
+            city.setType(badge);
+            city.setTitle(ach.getAchievementName());
+            city.setDate(ach.getFormatReached_at());
             list.add(city);
         }
         return list;

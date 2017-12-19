@@ -24,7 +24,7 @@ import com.westepper.step.customViews.UserInfoLayout;
 import com.westepper.step.logics.GetMyAchievementsLogic;
 import com.westepper.step.logics.GetUserInfoLogic;
 import com.westepper.step.models.Privacy;
-import com.westepper.step.responses.MyAchievements;
+import com.westepper.step.responses.MyCreditAndPercents;
 import com.westepper.step.responses.UserInfo;
 
 import butterknife.BindView;
@@ -199,9 +199,9 @@ public class UserDetailActivity extends SuperActivity implements View.OnClickLis
     private void getMyAchievementsLogic(final int kind){
         GetMyAchievementsLogic logic = new GetMyAchievementsLogic(this, model);
         logic.setType(kind);
-        logic.setCallback(new BaseLogic.LogicCallback<MyAchievements>() {
+        logic.setCallback(new BaseLogic.LogicCallback<MyCreditAndPercents>() {
             @Override
-            public void onSuccess(MyAchievements response) {
+            public void onSuccess(MyCreditAndPercents response) {
                 if(kind == Constants.ACH_CITY){
                     menu_discovery.setSubText(String.valueOf(response.getCredit()));
                     cityAdapter.setCityData(response.getDiscoverCityList());
@@ -212,7 +212,7 @@ public class UserDetailActivity extends SuperActivity implements View.OnClickLis
             }
 
             @Override
-            public void onFailed(String code, String msg, MyAchievements localData) {
+            public void onFailed(String code, String msg, MyCreditAndPercents localData) {
                 Toast.makeText(UserDetailActivity.this, msg, Toast.LENGTH_SHORT).show();
             }
         });

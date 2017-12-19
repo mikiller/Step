@@ -8,13 +8,13 @@ import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.BaseModel;
 import com.westepper.step.base.BaseResponse;
 import com.westepper.step.base.Constants;
-import com.westepper.step.responses.MyAchievements;
+import com.westepper.step.responses.MyCreditAndPercents;
 
 /**
  * Created by Mikiller on 2017/11/7.
  */
 
-public class GetMyAchievementsLogic extends BaseLogic<MyAchievements> {
+public class GetMyAchievementsLogic extends BaseLogic<MyCreditAndPercents> {
     int type = Constants.ACH_CITY;
     public GetMyAchievementsLogic(Context context, BaseModel model) {
         super(context, model);
@@ -27,7 +27,7 @@ public class GetMyAchievementsLogic extends BaseLogic<MyAchievements> {
 
     @Override
     protected void setResponseType() {
-        responseType = new TypeToken<BaseResponse<MyAchievements>>(){}.getType();
+        responseType = new TypeToken<BaseResponse<MyCreditAndPercents>>(){}.getType();
     }
 
     @Override
@@ -46,12 +46,12 @@ public class GetMyAchievementsLogic extends BaseLogic<MyAchievements> {
     }
 
     @Override
-    public void onSuccess(MyAchievements response) {
+    public void onSuccess(MyCreditAndPercents response) {
         response.setType(type);
     }
 
     @Override
-    public void onFailed(String code, String msg, MyAchievements localData) {
+    public void onFailed(String code, String msg, MyCreditAndPercents localData) {
 
     }
 }

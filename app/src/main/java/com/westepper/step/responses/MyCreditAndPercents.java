@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Mikiller on 2017/11/7.
  */
 
-public class MyAchievements implements Serializable {
+public class MyCreditAndPercents implements Serializable {
     private int type;
     private int credit;
     private int L1, L2, L3, L4;

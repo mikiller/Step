@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by Mikiller on 2017/10/23.
  */
 
-public class DisCity implements Serializable {
+public class AchCity implements Serializable {
 
     int type;
     String title, date;
