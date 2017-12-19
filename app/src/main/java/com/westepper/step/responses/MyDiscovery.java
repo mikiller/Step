@@ -18,7 +18,7 @@ public class MyDiscovery extends BaseInfo {
     }
 
     public String getAreaName() {
-        return "点亮" + areaName;
+        return areaName;
     }
 
     public void setAreaName(String areaName) {

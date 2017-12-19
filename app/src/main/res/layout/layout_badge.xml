@@ -3,7 +3,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:gravity="center_horizontal">
+    android:gravity="center_horizontal"
+    >
 
     <ImageButton
         android:id="@+id/btn_badge"
@@ -11,9 +12,10 @@
         android:layout_height="55dp"
         android:layout_marginBottom="5dp"
         android:src="@mipmap/ic_dis_city"
-        android:scaleType="centerInside"
-        android:background="@null"
-        android:transitionName="@string/city_badge"/>
+        android:scaleType="fitCenter"
+        android:background="@android:color/transparent"
+        android:transitionName="@string/city_badge"
+        android:translationZ="100dp"/>
 
     <TextView
         android:id="@+id/tv_badge"

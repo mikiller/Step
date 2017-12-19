@@ -138,7 +138,7 @@ public class MyCityActivity extends SuperActivity {
         for(MyDiscovery dis : disList){
             AchCity city = new AchCity();
             city.setType(badge);
-            city.setTitle(badge == Constants.LEVEL1 ? dis.getCity_name() : dis.getAreaName());
+            city.setTitle(badge == Constants.LEVEL1 ? dis.getCity_name() : "点亮" + dis.getAreaName());
             city.setDate(dis.getFormatCreated_at());
             list.add(city);
         }

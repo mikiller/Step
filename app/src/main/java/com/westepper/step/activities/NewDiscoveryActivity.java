@@ -326,11 +326,11 @@ public class NewDiscoveryActivity extends SuperActivity {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK&& ll_pick.getVisibility() == View.VISIBLE) {
+    public void onBackPressed() {
+        if (ll_pick.getVisibility() == View.VISIBLE){
             ll_pick.setVisibility(View.GONE);
-            return true;
-        }else
-            return super.onKeyDown(keyCode, event);
+            return;
+        }
+        super.onBackPressed();
     }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,9 +41,7 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
     private boolean needHead = true;
     private int achKind;
 
-//    private View.OnClickListener listener;
     private OnMenuClickListener listener;
-//    private List<AchieveProgress> pgsList;
     private MyCreditAndPercents myAchieve = new MyCreditAndPercents();
 
     public AchieveRcvAdapter(Context mContext, int achKind) {
@@ -57,16 +56,6 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
     public void setNeedHead(boolean needHead) {
         this.needHead = needHead;
     }
-
-//    public List<AchieveProgress> getPgsList() {
-//        return pgsList;
-//    }
-
-//    public void setPgsList(List<AchieveProgress> pgsList) {
-//        this.pgsList = pgsList;
-//        notifyDataSetChanged();
-//    }
-
 
     public MyCreditAndPercents getMyAchieve() {
         return myAchieve;
@@ -84,10 +73,10 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-        if(viewType == HEADER){
+        if (viewType == HEADER) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_myachieve_headview, parent, false);
             return new HeadHolder(view);
-        }else{
+        } else {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_myach_city, parent, false);
             return new AchProgressHolder(view);
         }
@@ -95,33 +84,34 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if(holder instanceof HeadHolder){
-            ((HeadHolder)holder).setBgColor();
-            ((HeadHolder)holder).setTv_score(myAchieve.getCredit());
-            ((HeadHolder)holder).setInfoBtn();
-            ((HeadHolder)holder).setBadgeTitle();
-            ((HeadHolder)holder).setBadge(myAchieve.getL1(), myAchieve.getL2(), myAchieve.getL3(), myAchieve.getL4());
-            ((HeadHolder)holder).setAchTitle();
-        }else if(holder instanceof AchProgressHolder){
+        Log.e("ach adapter", "bind viewholder");
+        if (holder instanceof HeadHolder) {
+            ((HeadHolder) holder).setBgColor();
+            ((HeadHolder) holder).setTv_score(myAchieve.getCredit());
+            ((HeadHolder) holder).setInfoBtn();
+            ((HeadHolder) holder).setBadgeTitle();
+            ((HeadHolder) holder).setBadge(myAchieve.getL1(), myAchieve.getL2(), myAchieve.getL3(), myAchieve.getL4());
+            ((HeadHolder) holder).setAchTitle();
+        } else if (holder instanceof AchProgressHolder) {
             final String title;
             if (myAchieve.getType() == Constants.ACH_BADGE) {
                 final AchieveProgress achPgs = myAchieve.getPercentList().get(holder.getAdapterPosition() - (needHead ? 1 : 0));
-                ((AchProgressHolder)holder).setMenu_icon(achIcons[achPgs.getCategoryId() - 1]);
-                ((AchProgressHolder)holder).setSubTitle(achPgs.getCategoryName());
-                ((AchProgressHolder)holder).setNeedSubTitle(true);
-                ((AchProgressHolder)holder).setPgs(achPgs.getPercent());
+                ((AchProgressHolder) holder).setMenu_icon(achIcons[achPgs.getCategoryId() - 1]);
+                ((AchProgressHolder) holder).setSubTitle(achPgs.getCategoryName());
+                ((AchProgressHolder) holder).setNeedSubTitle(true);
+                ((AchProgressHolder) holder).setPgs(achPgs.getPercent());
                 title = achPgs.getCategoryName();
             } else {
                 CityProgress cityPgs = myAchieve.getDiscoverCityList().get(holder.getAdapterPosition() - ((needHead ? 1 : 0)));
-                ((AchProgressHolder)holder).setTitle(cityPgs.getCityName());
-                ((AchProgressHolder)holder).setPoint(cityPgs.getPoint());
-                ((AchProgressHolder)holder).setNeedSubTitle(false);
-                ((AchProgressHolder)holder).setNeedNext(myAchieve.getType() == Constants.ACH_AREA ? false : true);
-                ((AchProgressHolder)holder).setPgs(cityPgs.getReachedPercent());
+                ((AchProgressHolder) holder).setTitle(cityPgs.getCityName());
+                ((AchProgressHolder) holder).setPoint(cityPgs.getPoint());
+                ((AchProgressHolder) holder).setNeedSubTitle(false);
+                ((AchProgressHolder) holder).setNeedNext(myAchieve.getType() == Constants.ACH_AREA ? false : true);
+                ((AchProgressHolder) holder).setPgs(cityPgs.getReachedPercent());
                 title = cityPgs.getCityName();
             }
-            if(listener != null && ((AchProgressHolder) holder).canClick() && !"初识STEP".equals(title)){
-                ((AchProgressHolder)holder).setAchMenuClickListener(new View.OnClickListener() {
+            if (listener != null && ((AchProgressHolder) holder).canClick() && !"初识STEP".equals(title)) {
+                ((AchProgressHolder) holder).setAchMenuClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         setNeedHead(false);
@@ -143,13 +133,14 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
         return (position == 0 && needHead) ? HEADER : PROGRESS;
     }
 
-    private class HeadHolder extends RecyclerView.ViewHolder{
+    private class HeadHolder extends RecyclerView.ViewHolder {
         RelativeLayout rl_scoreBg;
         TextView tv_score;
         TextView tv_badgeTitle;
         TextView tv_achTitle;
         TextView btn_info;
         AchieveBadge myAchCity, myAchL1, myAchL2, myAchL3;
+
         public HeadHolder(View itemView) {
             super(itemView);
             rl_scoreBg = (RelativeLayout) itemView.findViewById(R.id.rl_scoreBg);
@@ -163,36 +154,35 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
             myAchL3 = (AchieveBadge) itemView.findViewById(R.id.myAchL3);
         }
 
-        public void setBgColor(){
+        public void setBgColor() {
             rl_scoreBg.setBackgroundColor(achKind == Constants.ACH_CITY ? mContext.getResources().getColor(R.color.splash_label) : mContext.getResources().getColor(R.color.colorPrimary));
         }
 
-        public void setTv_score(int score){
+        public void setTv_score(int score) {
             tv_score.setText(String.valueOf(score));
         }
 
-        public void setBadgeTitle(){
+        public void setBadgeTitle() {
             tv_badgeTitle.setText(achKind == Constants.ACH_CITY ? "城市徽章" : "成就等级");
         }
 
-        public void setBadge(int l1, int l2, int l3, int l4){
+        public void setBadge(int l1, int l2, int l3, int l4) {
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Map<String, Object> args = new HashMap<String, Object>();
-                    args.put(Constants.BADGE_KIND, (int)v.getTag());
+                    args.put(Constants.BADGE_KIND, (int) v.getTag());
                     args.put(Constants.ACH_KIND, achKind);
                     Map<String, View> trans = new HashMap<String, View>();
                     trans.put(mContext.getString(R.string.city_badge), v);
                     ActivityManager.startActivityWithTransAnim((Activity) mContext, MyCityActivity.class, trans, args);
                 }
             };
-            //if(achKind == Constants.ACH_CITY){
-                myAchCity.setOnClickListener(listener);
-                myAchL1.setOnClickListener(listener);
-                myAchL2.setOnClickListener(listener);
-                myAchL3.setOnClickListener(listener);
-            //}
+            myAchCity.setOnClickListener(listener);
+            myAchL1.setOnClickListener(listener);
+            myAchL2.setOnClickListener(listener);
+            myAchL3.setOnClickListener(listener);
+
             myAchCity.setBadgeImg(achKind == Constants.ACH_CITY ? R.mipmap.ic_dis_city : R.mipmap.ic_ach_l1);
             myAchCity.setBadgeKind(Constants.LEVEL1);
             myAchCity.setBadgeNum(l1);
@@ -209,11 +199,11 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
 
         }
 
-        public void setAchTitle(){
+        public void setAchTitle() {
             tv_achTitle.setText(achKind == Constants.ACH_CITY ? "发现城市" : "获得成就");
         }
 
-        public void setInfoBtn(){
+        public void setInfoBtn() {
             Drawable drawable = mContext.getResources().getDrawable(achKind == Constants.ACH_CITY ? R.mipmap.ic_ach_info : R.mipmap.ic_dis_info);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             btn_info.setCompoundDrawables(drawable, null, null, null);
@@ -226,11 +216,12 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
         }
     }
 
-    protected class AchProgressHolder extends RecyclerView.ViewHolder{
+    protected class AchProgressHolder extends RecyclerView.ViewHolder {
         private TextView menu_title, menu_point, tv_subAchTitle, tv_pgs;
         private ProgressBar pgs;
         private ImageView iv_next;
         private ImageView menu_icon;
+
         public AchProgressHolder(View itemView) {
             super(itemView);
             menu_title = (TextView) itemView.findViewById(R.id.menu_title);
@@ -242,57 +233,57 @@ public class AchieveRcvAdapter extends RecyclerView.Adapter {
             iv_next = (ImageView) itemView.findViewById(R.id.iv_next);
         }
 
-        public void setTitle(String title){
+        public void setTitle(String title) {
             menu_title.setText(title);
         }
 
-        public void setPoint(String point){
-            if (TextUtils.isEmpty(point)){
+        public void setPoint(String point) {
+            if (TextUtils.isEmpty(point)) {
                 menu_point.setVisibility(GONE);
-            }else {
+            } else {
                 menu_point.setVisibility(VISIBLE);
                 menu_point.setText("(".concat(point).concat(")"));
             }
         }
 
-        public void setSubTitle(String sub){
+        public void setSubTitle(String sub) {
             tv_subAchTitle.setText(sub);
         }
 
-        public void setNeedSubTitle(boolean isNeed){
+        public void setNeedSubTitle(boolean isNeed) {
             tv_subAchTitle.setVisibility(isNeed ? VISIBLE : INVISIBLE);
         }
 
-        public void setNeedIcon(boolean isNeed){
+        public void setNeedIcon(boolean isNeed) {
             menu_icon.setVisibility(isNeed ? VISIBLE : GONE);
             menu_title.setVisibility(isNeed ? GONE : VISIBLE);
         }
 
-        public void setNeedNext(boolean isNeed){
+        public void setNeedNext(boolean isNeed) {
             iv_next.setVisibility(isNeed ? VISIBLE : GONE);
         }
 
-        public boolean canClick(){
+        public boolean canClick() {
             return iv_next.getVisibility() == VISIBLE;
         }
 
-        public void setMenu_icon(int resId){
+        public void setMenu_icon(int resId) {
             setNeedIcon(true);
             menu_icon.setImageResource(resId);
         }
 
-        public void setPgs(double percent){
+        public void setPgs(double percent) {
             pgs.setProgress((int) percent);
             tv_pgs.setText(String.format("%.2f", percent));
         }
 
-        public void setAchMenuClickListener(View.OnClickListener listener){
+        public void setAchMenuClickListener(View.OnClickListener listener) {
             itemView.setOnClickListener(listener);
 //            btn_next.setOnClickListener(listener);
         }
     }
 
-    public interface OnMenuClickListener{
+    public interface OnMenuClickListener {
         void onMenuClicked(String title, int kind);
     }
 }

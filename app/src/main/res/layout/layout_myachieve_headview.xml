@@ -69,7 +69,7 @@
 
             <com.westepper.step.customViews.AchieveBadge
                 android:id="@+id/myAchCity"
-                style="@style/my_ach_badge" />
+                style="@style/my_ach_badge"/>
 
             <com.westepper.step.customViews.AchieveBadge
                 android:id="@+id/myAchL1"

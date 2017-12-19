@@ -142,22 +142,18 @@ public class MainActivity extends SuperActivity {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        switch (keyCode){
-            case KeyEvent.KEYCODE_BACK:
-                if(!canQuit){
-                    Toast.makeText(this, "再按一次返回键退出",Toast.LENGTH_SHORT).show();
-                    canQuit = true;
-                    rdg_guideBar.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            canQuit = false;
-                        }
-                    }, 1000);
-                    return false;
-                }else
-                    break;
-        }
-        return super.onKeyDown(keyCode, event);
+    public void onBackPressed() {
+        if(!canQuit){
+            Toast.makeText(this, "再按一次返回键退出",Toast.LENGTH_SHORT).show();
+            canQuit = true;
+            rdg_guideBar.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    canQuit = false;
+                }
+            }, 1000);
+            return;
+        }else
+            super.onBackPressed();
     }
 }

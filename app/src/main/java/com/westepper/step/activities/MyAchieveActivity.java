@@ -74,46 +74,7 @@ public class MyAchieveActivity extends SuperActivity {
             }
         });
 
-        rcv_ach.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        rcv_ach.setAdapter(adapter = new AchieveRcvAdapter(this, achKind));
-        adapter.setListener(new AchieveRcvAdapter.OnMenuClickListener() {
-            @Override
-            public void onMenuClicked(String title, int kind) {
-                if(kind == Constants.ACH_CITY){
-                    titleBar.setTitle(title);
-                    GetMyDiscoverBaseInfoLogic logic = new GetMyDiscoverBaseInfoLogic(MyAchieveActivity.this, new BaseInfoModel(5));
-                    logic.setCallback(new BaseLogic.LogicCallback<DiscoveryBaseInfo>() {
-                        @Override
-                        public void onSuccess(DiscoveryBaseInfo response) {
-                            adapter.getMyAchieve().setType(Constants.ACH_AREA);
-                            adapter.getMyAchieve().setL2percent(response.getL2percent());
-                            adapter.notifyDataSetChanged();
-                        }
 
-                        @Override
-                        public void onFailed(String code, String msg, DiscoveryBaseInfo localData) {
-
-                        }
-                    });
-                    logic.sendRequest();
-
-                }else{
-                    //goto sub ach
-                    titleBar.setTitle(title);
-                    reachedAdapter = new ReachedAchRcvAdapter(MyAchieveActivity.this);
-//                    for(Achieve achieve: MainActivity.mapData.getAchievementList()){
-                    for(Achieve achieve : MapUtils.getInstance().mapData.getAchievementList()){
-                        if(achieve.getAchieveKind().equals(title)){
-                            reachedAdapter.setReachIds(MapUtils.getInstance().getReachedList().getReachedAchievementIds());
-                            reachedAdapter.setAchAreaList(achieve.getAchieveAreaList());
-                            rcv_ach.setAdapter(reachedAdapter);
-                            break;
-                        }
-                    }
-                }
-            }
-        });
-        getMyAchieves();
     }
 
     private AchieveProgress createAchMenu(int id, String title, int pgs) {
@@ -126,7 +87,52 @@ public class MyAchieveActivity extends SuperActivity {
 
     @Override
     protected void initData() {
-        //adapter.notifyDataSetChanged();
+        rcv_ach.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        if (adapter == null) {
+            rcv_ach.setAdapter(adapter = new AchieveRcvAdapter(this, achKind));
+            adapter.setListener(new AchieveRcvAdapter.OnMenuClickListener() {
+                @Override
+                public void onMenuClicked(String title, int kind) {
+                    if(kind == Constants.ACH_CITY){
+                        titleBar.setTitle(title);
+                        GetMyDiscoverBaseInfoLogic logic = new GetMyDiscoverBaseInfoLogic(MyAchieveActivity.this, new BaseInfoModel(5));
+                        logic.setCallback(new BaseLogic.LogicCallback<DiscoveryBaseInfo>() {
+                            @Override
+                            public void onSuccess(DiscoveryBaseInfo response) {
+                                adapter.getMyAchieve().setType(Constants.ACH_AREA);
+                                adapter.getMyAchieve().setL2percent(response.getL2percent());
+                                adapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onFailed(String code, String msg, DiscoveryBaseInfo localData) {
+
+                            }
+                        });
+                        logic.sendRequest();
+
+                    }else{
+                        //goto sub ach
+                        titleBar.setTitle(title);
+                        reachedAdapter = new ReachedAchRcvAdapter(MyAchieveActivity.this);
+//                    for(Achieve achieve: MainActivity.mapData.getAchievementList()){
+                        for(Achieve achieve : MapUtils.getInstance().mapData.getAchievementList()){
+                            if(achieve.getAchieveKind().equals(title)){
+                                reachedAdapter.setReachIds(MapUtils.getInstance().getReachedList().getReachedAchievementIds());
+                                reachedAdapter.setAchAreaList(achieve.getAchieveAreaList());
+                                rcv_ach.setAdapter(reachedAdapter);
+                                break;
+                            }
+                        }
+                    }
+                }
+            });
+            getMyAchieves();
+        }else
+            adapter.notifyDataSetChanged();
+
+
+
     }
 
     private void getMyAchieves(){
@@ -148,6 +154,7 @@ public class MyAchieveActivity extends SuperActivity {
                     response.setPercentList(Arrays.asList(achList));
                 }
                 adapter.setMyAchieve(response);
+
             }
 
             @Override
@@ -159,9 +166,9 @@ public class MyAchieveActivity extends SuperActivity {
     }
 
     @Override
-    public void back(){
+    public void onBackPressed(){
         if(adapter.isNeedHead())
-            super.back();
+            super.onBackPressed();
         else{
             adapter.setNeedHead(true);
 //                    adapter.setPgsList(createData());
