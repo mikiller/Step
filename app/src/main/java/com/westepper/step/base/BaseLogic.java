@@ -58,8 +58,8 @@ public abstract class BaseLogic<P> extends Callback<P> {
         httpMgr.init(httpBaseIp);
         if (context != null) {
             this.context = context;
-            networkDlg = new ProgressDialog(context,
-                    ProgressDialog.THEME_HOLO_LIGHT);
+            networkDlg = new ProgressDialog(BaseLogic.this.context,
+                            ProgressDialog.THEME_HOLO_LIGHT);
             networkDlg.setMessage("正在网络交互，请稍后...");
             networkDlg.setCanceledOnTouchOutside(false);
             networkDlg.setCancelable(true);
@@ -119,6 +119,22 @@ public abstract class BaseLogic<P> extends Callback<P> {
         else if (params != null) {
             OkHttpManager.getInstance().sendRequest(httpBaseIp.concat(url), requestType, params, files, this);
         }
+    }
+
+    protected void sendAnsyRequest(final OkHttpManager.RequestType requestType) {
+        if (needDlg)
+            showProgressDialog();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (model != null)
+                    OkHttpManager.getInstance().sendRequest(httpBaseIp.concat(url), requestType, model, files, BaseLogic.this);
+                else if (params != null) {
+                    OkHttpManager.getInstance().sendRequest(httpBaseIp.concat(url), requestType, params, files, BaseLogic.this);
+                }
+            }
+        }).start();
+
     }
 
     public abstract void sendRequest();

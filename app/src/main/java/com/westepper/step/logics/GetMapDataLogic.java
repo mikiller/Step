@@ -37,12 +37,12 @@ public class GetMapDataLogic extends BaseLogic<MapData> {
 
     @Override
     public void sendRequest() {
-        super.sendRequest(OkHttpManager.RequestType.JSONPOST);
+        super.sendAnsyRequest(OkHttpManager.RequestType.JSONPOST);
     }
 
     @Override
     public boolean isNeedDlg() {
-        return false;
+        return true;
     }
 
     @Override

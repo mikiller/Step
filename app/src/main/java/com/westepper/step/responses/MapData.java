@@ -17,6 +17,7 @@ public class MapData implements Parcelable {
     private List<City> cityList = new ArrayList<>();
     private List<Area> achievementAreaList = new ArrayList<>();
     private List<Achieve> achievementList = new ArrayList<>();
+    private AreaRelation relations;
 
     public MapData() {
     }
@@ -27,6 +28,7 @@ public class MapData implements Parcelable {
         cityList = in.createTypedArrayList(City.CREATOR);
         achievementAreaList = in.createTypedArrayList(Area.CREATOR);
         achievementList = in.createTypedArrayList(Achieve.CREATOR);
+        relations = in.readParcelable(AreaRelation.class.getClassLoader());
     }
 
     public static final Creator<MapData> CREATOR = new Creator<MapData>() {
@@ -81,6 +83,14 @@ public class MapData implements Parcelable {
         achievementList.add(area);
     }
 
+    public AreaRelation getRelations() {
+        return relations;
+    }
+
+    public void setRelations(AreaRelation relations) {
+        this.relations = relations;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -92,6 +102,7 @@ public class MapData implements Parcelable {
         dest.writeTypedList(cityList);
         dest.writeTypedList(achievementAreaList);
         dest.writeTypedList(achievementList);
+        dest.writeParcelable(relations, flags);
     }
 
 

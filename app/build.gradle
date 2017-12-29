@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        debug {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('D:/WorkSpace/Step/app/debug.keystore')
+            storePassword 'android'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion '25.0.3'
     defaultConfig {
@@ -19,6 +27,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+        debug {
+            signingConfig signingConfigs.debug
         }
     }
     productFlavors {
@@ -52,15 +64,15 @@ dependencies {
     compile project(':mk_uilib')
     compile project(':indexlib')
     compile 'com.android.support:multidex:'
-//    // 基础功能 (必需)
-//    compile 'com.netease.nimlib:basesdk:4.2.0'
-//    // 音视频需要
-//    compile 'com.netease.nimlib:avchat:4.2.0'
+    //    // 基础功能 (必需)
+    //    compile 'com.netease.nimlib:basesdk:4.2.0'
+    //    // 音视频需要
+    //    compile 'com.netease.nimlib:avchat:4.2.0'
     // 聊天室需要
     compile 'com.netease.nimlib:chatroom:4.2.0'
     // 实时会话服务需要
     compile 'com.netease.nimlib:rts:4.2.0'
-//    // 全文检索服务需要
-//    compile 'com.netease.nimlib:lucene:4.2.0'
+    //    // 全文检索服务需要
+    //    compile 'com.netease.nimlib:lucene:4.2.0'
     compile project(':uikit')
 }

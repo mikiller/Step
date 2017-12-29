@@ -153,7 +153,9 @@ public class MainActivity extends SuperActivity {
                 }
             }, 1000);
             return;
-        }else
+        }else {
+            MapUtils.getInstance().clearMapData();
             super.onBackPressed();
+        }
     }
 }

@@ -1,15 +1,10 @@
 package com.westepper.step.fragments;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.AsyncTask;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -24,18 +19,16 @@ import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
-import com.amap.api.services.core.PoiItem;
-import com.amap.api.services.geocoder.GeocodeAddress;
 import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeResult;
-import com.amap.api.services.poisearch.PoiResult;
-import com.amap.api.services.poisearch.PoiSearch;
 import com.google.gson.Gson;
+import com.netease.nim.uikit.common.util.file.FileUtil;
 import com.uilib.customdialog.CustomDialog;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
 import com.westepper.step.activities.GalleryActivity;
+import com.westepper.step.activities.SplashActivity;
 import com.westepper.step.adapters.DiscoveryAdapter;
 import com.westepper.step.base.BaseFragment;
 import com.westepper.step.base.BaseLogic;
@@ -46,21 +39,22 @@ import com.westepper.step.customViews.CommitEditView;
 import com.westepper.step.customViews.SearchView;
 import com.westepper.step.logics.DiscoverCityLogic;
 import com.westepper.step.logics.GetDiscoveryListLogic;
+import com.westepper.step.logics.GetMapDataLogic;
 import com.westepper.step.logics.GetReachedListLogic;
 import com.westepper.step.models.DiscoverCityModel;
 import com.westepper.step.models.DiscoveryListModel;
+import com.westepper.step.models.MapDataModel;
 import com.westepper.step.models.ReachedModel;
-import com.westepper.step.responses.Achieve;
-import com.westepper.step.responses.AchieveArea;
-import com.westepper.step.responses.Area;
-import com.westepper.step.responses.City;
 import com.westepper.step.responses.DiscoveredCities;
 import com.westepper.step.responses.DiscoveryList;
 import com.westepper.step.responses.Discovery;
 import com.westepper.step.responses.Graphics;
+import com.westepper.step.responses.MapData;
+import com.westepper.step.responses.ReachedId;
 import com.westepper.step.responses.ReachedList;
 import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.AnimUtils;
+import com.westepper.step.utils.FileUtils;
 import com.westepper.step.utils.MXPreferenceUtils;
 import com.westepper.step.utils.MXTimeUtils;
 import com.westepper.step.utils.MapUtils;
@@ -126,7 +120,8 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
         mapView.onCreate(saveBundle);
 
         initMapUtil();
-        drawMap();
+        getMapData();
+        //drawMap();
 //        initAcheiveSetting();
 //        getReachedList();
         search.setOnClickListener(this);
@@ -253,28 +248,52 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
         });
 
     }
-
-    private void drawMap() {
+    private void getMapData(){
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (true) {
-                    if (mapUtils.mapData != null)
-                        break;
-                }
-                mapUtils.clearMapData();
-                mapUtils.analyzeMapData();
-                mapView.postDelayed(new Runnable() {
+                mapUtils.mapData = FileUtils.getDataFromLocal(FileUtils.getFilePath(getContext(), Constants.MAP_DATA), MapData.class);
+                getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        initAcheiveSetting();
-                        getReachedList();
+                        try {
+                            MapDataModel model = new MapDataModel(mapUtils.mapData == null ? getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0).versionName : mapUtils.mapData.getVersion());
+                            GetMapDataLogic logic = new GetMapDataLogic(getActivity(), model);
+                            logic.setCallback(new BaseLogic.LogicCallback<MapData>() {
+                                @Override
+                                public void onSuccess(final MapData response) {
+                                    mapUtils.mapData = response;
+                                    FileUtils.saveToLocal(new Gson().toJson(mapUtils.mapData), FileUtils.getFilePath(getActivity(), Constants.MAP_DATA));
+                                    drawMap();
+                                }
+
+                                @Override
+                                public void onFailed(String code, String msg, MapData localData) {
+                                    drawMap();
+                                }
+                            });
+                            logic.sendRequest();
+                        } catch (PackageManager.NameNotFoundException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }, 100);
-
+                });
             }
-
         }).start();
+
+    }
+
+    private void drawMap() {
+        mapUtils.analyzeMapData();
+        String reachedStr = MXPreferenceUtils.getInstance().getString(Constants.REACHED_LIST);
+        mapUtils.reachedList = TextUtils.isEmpty(reachedStr)? new ReachedList() : new Gson().fromJson(reachedStr, ReachedList.class);
+        mapView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                initAcheiveSetting();
+                getReachedList();
+            }
+        }, 100);
     }
 
     private void initAcheiveSetting() {
@@ -299,12 +318,14 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
         logic.setCallback(new BaseLogic.LogicCallback<ReachedList>() {
             @Override
             public void onSuccess(ReachedList response) {
-                for (String id : response.getReachedLists()) {
-                    mapUtils.setAreaChecked(id);
-                }
-                mapUtils.setReachedList(response);
-                mapUtils.saveReachedList();
                 mapUtils.setShowAreaIds(null);
+                for (ReachedId rId : response.getReachedLists()) {
+                    mapUtils.setAreaChecked(rId.getId(),rId.getIs_reached()==1);
+                }
+                //mapUtils.setLocalReachedList(response);
+                //mapUtils.saveLocalReachedList();
+                mapUtils.reachedList.updateReachedList(response);
+                mapUtils.reachedList.saveToLocal();
             }
 
             @Override

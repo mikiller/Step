@@ -52,9 +52,9 @@
 
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="59e70abdb27b0a6fb30011c0" >
+            android:value="59e70abdb27b0a6fb30011c" >
         </meta-data>
-
+        <!--59e70abdb27b0a6fb30011c-->
         <meta-data android:name="com.amap.api.v2.apikey"
             android:value="d63ac3eeeda75d8aede2469142f46d5f">
             //开发者申请的key

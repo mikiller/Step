@@ -2,6 +2,8 @@ package com.westepper.step.responses;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.model.Circle;
@@ -16,13 +18,29 @@ import java.util.List;
  * Created by Mikiller on 2017/9/30.
  */
 
-public class Graphics {
+public class Graphics implements Parcelable{
     private final int NORMAL_FILL = Color.parseColor("#6600A8FF"), NORMAL_STROKE = Color.parseColor("#D2D2D2");
     private final int ACHEIVE_FILL_REACHED = Color.parseColor("#8800cca3"), ACHEIVE_FILL = Color.parseColor("#66a0bed2");
     public static final int MAP = 1, ACHEIVE = 2;
     private int graphicsType;
     private Polygon polygon;
     private Circle circle;
+
+    protected Graphics(Parcel in) {
+        graphicsType = in.readInt();
+    }
+
+    public static final Creator<Graphics> CREATOR = new Creator<Graphics>() {
+        @Override
+        public Graphics createFromParcel(Parcel in) {
+            return new Graphics(in);
+        }
+
+        @Override
+        public Graphics[] newArray(int size) {
+            return new Graphics[size];
+        }
+    };
 
     public Circle getCircle() {
         return circle;
@@ -52,9 +70,8 @@ public class Graphics {
             polygon.setStrokeWidth(0f);
             polygon.setFillColor(NORMAL_FILL);
         }else{
-//            polygon.setStrokeWidth(4);
-//            polygon.setStrokeColor(NORMAL_STROKE);
-//            polygon.setFillColor(Color.TRANSPARENT);
+            polygon.setStrokeWidth(0f);
+            polygon.setFillColor(Color.TRANSPARENT);
             polygon.setVisible(false);
         }
     }
@@ -117,12 +134,21 @@ public class Graphics {
             circle.setVisible(false);
     }
 
-    public void show(boolean reached){
+    public void show(){
         if(polygon != null)
             polygon.setVisible(true);
         else if(circle != null)
             circle.setVisible(true);
-        setReached(reached);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(graphicsType);
     }
 
 //    private void showPolygon(boolean reached){

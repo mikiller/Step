@@ -4,12 +4,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 
-import com.amap.api.fence.GeoFence;
 import com.amap.api.fence.GeoFenceClient;
-import com.amap.api.fence.GeoFenceListener;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
@@ -17,7 +13,6 @@ import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.DPoint;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapUtils;
-import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
@@ -26,16 +21,13 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
-import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.geocoder.GeocodeQuery;
 import com.amap.api.services.geocoder.GeocodeSearch;
-import com.amap.api.services.geocoder.RegeocodeAddress;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.autonavi.amap.mapcore.Inner_3dMap_location;
 import com.google.gson.Gson;
-import com.netease.nimlib.sdk.auth.LoginInfo;
 import com.westepper.step.R;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
@@ -43,6 +35,7 @@ import com.westepper.step.responses.Achieve;
 import com.westepper.step.responses.AchieveArea;
 import com.westepper.step.responses.Area;
 import com.westepper.step.responses.City;
+import com.westepper.step.responses.DisArea;
 import com.westepper.step.responses.Graphics;
 import com.westepper.step.responses.MapData;
 import com.westepper.step.responses.ReachedList;
@@ -54,10 +47,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by Mikiller on 2017/3/27.
@@ -73,8 +66,10 @@ public class MapUtils {
 
     public MapData mapData;
     public ReachedList reachedList;
+    public List<String> localReachedIds;
     Map<String, Area> areas = new HashMap<>();
     Map<String, Area> achieveAreas = new HashMap<>();
+    Map<String, DisArea> districtAreas = new HashMap<>();
     Map<String, AchieveArea> achievements = new HashMap<>();
     List<String> showAreaIds = new ArrayList();
     boolean needArea = true;
@@ -106,18 +101,18 @@ public class MapUtils {
         return mapLocation;
     }
 
-    public ReachedList getReachedList() {
-        return reachedList;
+    public void setLocalReachedList(List<String> reachedList) {
+        if(this.localReachedIds == null)
+            this.localReachedIds = new ArrayList<>();
+        //this.reachedList.updateReachedList(reachedList);
+        if (reachedList != null) {
+            localReachedIds.addAll(reachedList);
+            localReachedIds = new ArrayList<>(new LinkedHashSet<>(reachedList));
+        }
     }
 
-    public void setReachedList(ReachedList reachedList) {
-        if(this.reachedList == null)
-            this.reachedList = new ReachedList();
-        this.reachedList.updateReachedList(reachedList);
-    }
-
-    public void saveReachedList(){
-        MXPreferenceUtils.getInstance().setString(Constants.REACHED_ID + SuperActivity.userInfo.getUserId(), new Gson().toJson(reachedList));
+    public void saveLocalReachedList(){
+        MXPreferenceUtils.getInstance().setString(Constants.REACHED_ID + SuperActivity.userInfo.getUserId(), new Gson().toJson(localReachedIds));
     }
 
     public void setGetLocationListener(OnGetLocationListener getLocationListener) {
@@ -153,6 +148,7 @@ public class MapUtils {
 //        aMap.animateCamera(CameraUpdateFactory.zoomTo(currentZoom));
 
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
+            boolean hasshow = false;
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
                 currentZoom = cameraPosition.zoom;
@@ -164,8 +160,12 @@ public class MapUtils {
                     return;
                 if (currentZoom < 11) {
                     hideArea();
+                    hasshow = false;
                 } else {
-                    showArea();
+                    if (!hasshow) {
+                        showArea();
+                        hasshow = true;
+                    }
                 }
             }
         });
@@ -265,7 +265,7 @@ public class MapUtils {
         }
     }
 
-    private void showArea() {
+    public void showArea() {
         if (showAreaIds.size() == 0) {
             for (Area area : areas.values()) {
                 area.show();
@@ -312,7 +312,9 @@ public class MapUtils {
     }
 
     public void clearMapData() {
+        currentZoom = 15;
         areas.clear();
+        districtAreas.clear();
         achieveAreas.clear();
         achievements.clear();
     }
@@ -331,6 +333,20 @@ public class MapUtils {
             for (Area area : city.getAreaList()) {
                 addArea(areas, area, Graphics.MAP);
             }
+        }
+        for (DisArea da : mapData.getRelations().getL1()){
+            if (areas.get(da.getId()) != null) {
+                areas.get(da.getId()).setP_id(da.getP_id());
+                areas.get(da.getId()).setName(da.getName());
+            }
+        }
+        for (DisArea da : mapData.getRelations().getL2()){
+            da.createGraphics(aMap, Graphics.MAP);
+            districtAreas.put(da.getId(), da);
+        }
+        for (DisArea da : mapData.getRelations().getL3()){
+            da.createGraphics(aMap, Graphics.MAP);
+            districtAreas.put(da.getId(), da);
         }
         for (Achieve achieve : mapData.getAchievementList()) {
             for (AchieveArea achArea : achieve.getAchieveAreaList()) {
@@ -353,25 +369,13 @@ public class MapUtils {
         }
     }
 
-//    public void addArea(Area area, int graphicType) {
-//        addArea(areas, area, graphicType);
-//    }
-
-//    public void addAchieveArea(Area area) {
-//        addArea(achieveAreas, area, Graphics.ACHEIVE);
-//    }
-
     private void addArea(Map<String, Area> areas, Area area, int graphicType) {
-//        if (areas.get(area.getAreaId()) == null) {
-//        if (areas.size() == 0){
             if (area.getAreaType() == Area.POLYGON)
                 createGeoFence(area.getAreaId(), area.getBorderList());
             else if (area.getAreaType() == Area.CIRCLE)
                 createGeoFence(area.getAreaId(), area.getCircle().getLatlng(), area.getCircle().getRadius());
             area.createGraphics(aMap, graphicType);
             areas.put(area.getAreaId(), area);
-//        }
-
     }
 
     public void addAchievement(AchieveArea ach){
@@ -380,15 +384,25 @@ public class MapUtils {
         }
     }
 
+    public Area getArea(String id){
+        return areas.get(id);
+    }
+
+    public DisArea getDistrictArea(String id){
+        return districtAreas.get(id);
+    }
+
     public AchieveArea getAchievement(String id){
         return achievements.get(id);
     }
 
-    public void setAreaChecked(String id) {
+    public void setAreaChecked(String id, boolean isReached) {
         if (areas.get(id) != null)
-            areas.get(id).setReached(true);
+            areas.get(id).setReached(isReached);
         else if (achieveAreas.get(id) != null)
-            achieveAreas.get(id).setReached(true);
+            achieveAreas.get(id).setReached(isReached);
+        else if (districtAreas.get(id) != null)
+            districtAreas.get(id).setReached(isReached);
         //save to local
     }
 

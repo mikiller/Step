@@ -13,16 +13,18 @@ import java.util.List;
  * Created by Mikiller on 2017/8/29.
  */
 
-public class Area implements Parcelable{
+public class Area extends Graphy /*implements Parcelable*/{
 
     public static final int CIRCLE = 2, POLYGON = 1;
     private String areaId;
     private int areaType;
     private List<LatLng> borderList = new ArrayList<>();
     private CirlclArea circle;
-    private boolean reached = false;
+    private String p_id;
+    private String name;
+    //private boolean reached = false;
 
-    private Graphics graphics;
+//    private Graphics graphics;
 
     public Area(String id) {
         this.areaId = id;
@@ -33,7 +35,9 @@ public class Area implements Parcelable{
         areaType = in.readInt();
         borderList = in.createTypedArrayList(LatLng.CREATOR);
         circle = in.readParcelable(CirlclArea.class.getClassLoader());
-        reached = in.readByte() != 0;
+        p_id = in.readString();
+        name = in.readString();
+        //reached = in.readByte() != 0;
     }
 
     public static final Creator<Area> CREATOR = new Creator<Area>() {
@@ -84,21 +88,27 @@ public class Area implements Parcelable{
         this.circle = circle;
     }
 
-    public boolean isReached() {
-        return reached;
+    public String getP_id() {
+        return p_id;
     }
 
-    public Area setReached(boolean reached) {
-        this.reached = reached;
-        graphics.setReached(reached);
-        return this;
+    public void setP_id(String p_id) {
+        this.p_id = p_id;
     }
 
-    public void setGraphicsType(int type){
-        graphics.setGraphicsType(type);
-        //graphics.setReached(reached);
+    public String getName() {
+        return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    //    public boolean isReached() {
+//        return reached;
+//    }
+
+    @Override
     public void createGraphics(AMap aMap, int graphicType){
         if(areaType == Area.POLYGON){
             graphics = new Graphics(aMap, borderList);
@@ -108,14 +118,6 @@ public class Area implements Parcelable{
         setGraphicsType(graphicType);
         setReached(false);
         hide();
-    }
-
-    public void hide(){
-        graphics.hide();
-    }
-
-    public void show(){
-        graphics.show(reached);
     }
 
     @Override
@@ -129,7 +131,9 @@ public class Area implements Parcelable{
         dest.writeInt(areaType);
         dest.writeTypedList(borderList);
         dest.writeParcelable(circle, flags);
-        dest.writeByte((byte) (reached ? 1 : 0));
+        dest.writeString(p_id);
+        dest.writeString(name);
+        //dest.writeByte((byte) (reached ? 1 : 0));
     }
 
     public static class CirlclArea implements Parcelable {

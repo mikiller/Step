@@ -61,7 +61,6 @@ public class SplashActivity extends SuperActivity {
     SelectableRoundedImageView iv_logo;
     @BindView(R.id.iv_label)
     ImageView iv_label;
-    MapData tmp;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,49 +84,12 @@ public class SplashActivity extends SuperActivity {
             }
         }, true);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                tmp = FileUtils.getDataFromLocal(FileUtils.getFilePath(SplashActivity.this, Constants.MAP_DATA), MapData.class);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        getMapData();
-                    }
-                });
-            }
-        }).start();
-
         getWindow().getDecorView().postDelayed(new Runnable() {
             @Override
             public void run() {
                 startApp();
             }
         }, 3000);
-    }
-
-    private void getMapData(){
-        try {
-            MapDataModel model = new MapDataModel(tmp == null ? getPackageManager().getPackageInfo(getPackageName(), 0).versionName : tmp.getVersion());
-            GetMapDataLogic logic = new GetMapDataLogic(this, model);
-            logic.setCallback(new BaseLogic.LogicCallback<MapData>() {
-                @Override
-                public void onSuccess(MapData response) {
-
-                    String data = new Gson().toJson(response);
-                    FileUtils.saveToLocal(data, FileUtils.getFilePath(SplashActivity.this, Constants.MAP_DATA));
-                    MapUtils.getInstance().mapData = response;
-                }
-
-                @Override
-                public void onFailed(String code, String msg, MapData localData) {
-                    MapUtils.getInstance().mapData = tmp;
-                }
-            });
-            logic.sendRequest();
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     private void startApp(){

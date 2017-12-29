@@ -12,6 +12,7 @@ import com.westepper.step.base.BaseModel;
 import com.westepper.step.base.BaseResponse;
 import com.westepper.step.base.Constants;
 import com.westepper.step.responses.ReachedList;
+import com.westepper.step.utils.MapUtils;
 
 /**
  * Created by Mikiller on 2017/11/14.
@@ -45,6 +46,7 @@ public class GeoFanceLogic extends BaseLogic<ReachedList> {
     @Override
     public void onSuccess(ReachedList response) {
         Log.e(TAG, "explord success");
+        MapUtils.getInstance().localReachedIds.clear();
         Intent intent = new Intent(context.getString(R.string.geo_fence_receiver));
         intent.putExtra(Constants.REACHED_LIST, response);
         context.sendBroadcast(intent);

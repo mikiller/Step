@@ -1,5 +1,12 @@
 package com.westepper.step.responses;
 
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.westepper.step.base.Constants;
+import com.westepper.step.utils.ContactsHelper;
+import com.westepper.step.utils.MXPreferenceUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -10,7 +17,7 @@ import java.util.List;
  */
 
 public class ReachedList implements Serializable {
-    List<String> reachedLists;
+    List<ReachedId> reachedLists;
     List<String> reachedAchievementIds;
     String reachedL2Id;
     String reachedL3Id;
@@ -23,27 +30,27 @@ public class ReachedList implements Serializable {
     public void updateReachedList(ReachedList rl){
         if (rl == null)
             return;
-        reachedLists.addAll(rl.getReachedLists());
-        reachedLists = new ArrayList<>(new LinkedHashSet<>(reachedLists));
-        reachedAchievementIds.addAll(rl.getReachedAchievementIds());
-        reachedAchievementIds = new ArrayList<>(new LinkedHashSet<>(reachedAchievementIds));
+        rl.getReachedLists().addAll(reachedLists);
+        reachedLists = new ArrayList<>(new LinkedHashSet<>(rl.getReachedLists()));
+        rl.getReachedAchievementIds().addAll(reachedAchievementIds);
+        reachedAchievementIds = new ArrayList<>(new LinkedHashSet<>(rl.getReachedAchievementIds()));
         reachedL2Id = rl.reachedL2Id;
         reachedL3Id = rl.reachedL3Id;
     }
 
+    public boolean contains(String id){
+        return reachedLists.contains(new ReachedId(id,0));
+    }
+
     public void addReachedId(String id){
-        reachedLists.add(id);
+        reachedLists.add(new ReachedId(id, 1));
     }
 
-    public boolean hasReachedId(String id){
-        return reachedLists.contains(id);
-    }
-
-    public List<String> getReachedLists() {
+    public List<ReachedId> getReachedLists() {
         return reachedLists;
     }
 
-    public void setReachedLists(List<String> reachedLists) {
+    public void setReachedLists(List<ReachedId> reachedLists) {
         this.reachedLists = reachedLists;
     }
 
@@ -69,5 +76,9 @@ public class ReachedList implements Serializable {
 
     public void setReachedAchievementIds(List<String> reachedAchievementIds) {
         this.reachedAchievementIds = reachedAchievementIds;
+    }
+
+    public void saveToLocal(){
+        MXPreferenceUtils.getInstance().setString(Constants.REACHED_LIST, new Gson().toJson(this));
     }
 }
