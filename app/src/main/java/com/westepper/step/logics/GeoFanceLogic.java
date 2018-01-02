@@ -46,7 +46,7 @@ public class GeoFanceLogic extends BaseLogic<ReachedList> {
     @Override
     public void onSuccess(ReachedList response) {
         Log.e(TAG, "explord success");
-        MapUtils.getInstance().localReachedIds.clear();
+        MapUtils.getInstance().saveLocalReachedList(null);
         Intent intent = new Intent(context.getString(R.string.geo_fence_receiver));
         intent.putExtra(Constants.REACHED_LIST, response);
         context.sendBroadcast(intent);

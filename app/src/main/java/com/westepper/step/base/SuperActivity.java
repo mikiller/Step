@@ -147,12 +147,12 @@ public abstract class SuperActivity extends AppCompatActivity {
                 reachedList = (ReachedList) intent.getSerializableExtra(Constants.REACHED_LIST);
             showCongraDlg("点亮L1区域", R.mipmap.icon_dis_l1);
 
-            if(!TextUtils.isEmpty(reachedList.getReachedL2Id())){
-                showCongraDlg(reachedList.getReachedL2Id(), R.mipmap.icon_dis_l2);
-            }
-            if(!TextUtils.isEmpty(reachedList.getReachedL3Id())){
-                showCongraDlg(reachedList.getReachedL3Id(), R.mipmap.icon_dis_l3);
-            }
+//            if(!TextUtils.isEmpty(reachedList.getReachedL2Id())){
+//                showCongraDlg(reachedList.getReachedL2Id(), R.mipmap.icon_dis_l2);
+//            }
+//            if(!TextUtils.isEmpty(reachedList.getReachedL3Id())){
+//                showCongraDlg(reachedList.getReachedL3Id(), R.mipmap.icon_dis_l3);
+//            }
             if(reachedList.getReachedAchievementIds() != null && reachedList.getReachedAchievementIds().size() > 0){
                 for(String id : reachedList.getReachedAchievementIds()) {
                     AchieveArea ach = MapUtils.getInstance().getAchievement(id);

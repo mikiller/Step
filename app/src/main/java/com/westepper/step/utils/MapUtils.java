@@ -104,14 +104,19 @@ public class MapUtils {
     public void setLocalReachedList(List<String> reachedList) {
         if(this.localReachedIds == null)
             this.localReachedIds = new ArrayList<>();
-        //this.reachedList.updateReachedList(reachedList);
         if (reachedList != null) {
             localReachedIds.addAll(reachedList);
             localReachedIds = new ArrayList<>(new LinkedHashSet<>(reachedList));
         }
     }
 
-    public void saveLocalReachedList(){
+    public void saveLocalReachedList(String id){
+        if (localReachedIds.contains(id))
+            return;
+        if (id == null)
+            localReachedIds.clear();
+        else
+            localReachedIds.add(id);
         MXPreferenceUtils.getInstance().setString(Constants.REACHED_ID + SuperActivity.userInfo.getUserId(), new Gson().toJson(localReachedIds));
     }
 
@@ -263,6 +268,9 @@ public class MapUtils {
         for (Area area : achieveAreas.values()) {
             area.hide();
         }
+        for (DisArea area : districtAreas.values()){
+            area.hide();
+        }
     }
 
     public void showArea() {
@@ -273,6 +281,9 @@ public class MapUtils {
             for (Area area : achieveAreas.values()) {
                 area.hide();
             }
+            for (DisArea area : districtAreas.values()){
+                area.show();
+            }
         } else {
             hideArea();
             for (String id : showAreaIds) {
@@ -281,6 +292,12 @@ public class MapUtils {
                 else if (achieveAreas.get(id) != null)
                     achieveAreas.get(id).show();
             }
+        }
+    }
+
+    public void showDisArea(String id){
+        if (districtAreas.get(id) != null){
+            districtAreas.get(id).show();
         }
     }
 
@@ -401,9 +418,12 @@ public class MapUtils {
             areas.get(id).setReached(isReached);
         else if (achieveAreas.get(id) != null)
             achieveAreas.get(id).setReached(isReached);
-        else if (districtAreas.get(id) != null)
-            districtAreas.get(id).setReached(isReached);
         //save to local
+    }
+
+    public void setDisAreaChecked(String id, boolean isReached){
+        if (districtAreas.get(id) != null)
+            districtAreas.get(id).setReached(isReached);
     }
 
     public void setAreaType(int type) {

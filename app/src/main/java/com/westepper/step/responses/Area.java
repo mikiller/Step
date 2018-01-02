@@ -104,10 +104,6 @@ public class Area extends Graphy /*implements Parcelable*/{
         this.name = name;
     }
 
-    //    public boolean isReached() {
-//        return reached;
-//    }
-
     @Override
     public void createGraphics(AMap aMap, int graphicType){
         if(areaType == Area.POLYGON){

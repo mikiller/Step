@@ -322,10 +322,16 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
                 for (ReachedId rId : response.getReachedLists()) {
                     mapUtils.setAreaChecked(rId.getId(),rId.getIs_reached()==1);
                 }
-                //mapUtils.setLocalReachedList(response);
-                //mapUtils.saveLocalReachedList();
+                for (ReachedId rId : response.getReachedL2Id()){
+                    mapUtils.setDisAreaChecked(rId.getId(), rId.getIs_reached() == 1);
+                }
+                for (ReachedId rId : response.getReachedL3Id()){
+                    mapUtils.setDisAreaChecked(rId.getId(), rId.getIs_reached() == 1);
+                }
                 mapUtils.reachedList.updateReachedList(response);
                 mapUtils.reachedList.saveToLocal();
+
+
             }
 
             @Override

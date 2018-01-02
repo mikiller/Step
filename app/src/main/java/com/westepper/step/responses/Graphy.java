@@ -11,10 +11,15 @@ import com.amap.api.maps.AMap;
 
 public abstract class Graphy implements Parcelable {
     protected Graphics graphics;
+    private boolean isReached;
 
     public void setReached(boolean reached) {
-        //this.reached = reached;
+        isReached = reached;
         graphics.setReached(reached);
+    }
+
+    public boolean isReached(){
+        return isReached;
     }
 
     public void setGraphicsType(int type){
