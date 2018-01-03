@@ -54,15 +54,16 @@
             android:name="UMENG_APPKEY"
             android:value="59e70abdb27b0a6fb30011c" >
         </meta-data>
-        <!--59e70abdb27b0a6fb30011c-->
+        <!-- 高德 -->
         <meta-data android:name="com.amap.api.v2.apikey"
             android:value="d63ac3eeeda75d8aede2469142f46d5f">
             //开发者申请的key
         </meta-data>
-
+        <!-- 云信 -->
         <meta-data
             android:name="com.netease.nim.appKey"
             android:value="23b9d29dc4cbfff89a0bfead16afb1a3" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="@string/file_provider"
@@ -73,6 +74,14 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_path" />
         </provider>
+
+        <!-- ====================个推=================== -->
+        <service android:name="com.westepper.step.widgets.getui.GetuiPushService"
+            android:exported="true"
+            android:label="PushService"
+            android:process=":pushservice"/>
+
+        <service android:name=".widgets.getui.GetuiIntentService"/>
 
         <!-- ====================高德=================== -->
         <service android:name="com.amap.api.location.APSService" />

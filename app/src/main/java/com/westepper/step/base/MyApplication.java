@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 
 import com.amap.api.maps.model.LatLng;
+import com.igexin.sdk.PushManager;
 import com.netease.nim.uikit.LocationProvider;
 import com.netease.nim.uikit.NimUIKit;
 import com.netease.nim.uikit.contact.core.query.PinYin;
@@ -27,9 +28,12 @@ import com.umeng.socialize.UMShareAPI;
 import com.westepper.step.R;
 import com.westepper.step.activities.MainActivity;
 import com.westepper.step.activities.SessionLocationActivity;
+import com.westepper.step.models.CidModel;
 import com.westepper.step.responses.ReachedList;
 import com.westepper.step.utils.MXPreferenceUtils;
 import com.westepper.step.utils.SessionHelper;
+import com.westepper.step.widgets.getui.GetuiIntentService;
+import com.westepper.step.widgets.getui.GetuiPushService;
 
 
 /**
@@ -42,6 +46,7 @@ public class MyApplication extends Application {
 
     public static UMShareAPI shareAPI;
     public static boolean isLogin = false;
+    public static String cId = "";
 
     @Override
     public void onCreate() {
@@ -55,6 +60,8 @@ public class MyApplication extends Application {
 //        PlatformConfig.setQQZone("","");
 //        PlatformConfig.setSinaWeibo("","","");
 
+        PushManager.getInstance().initialize(this, GetuiPushService.class);
+        PushManager.getInstance().registerPushIntentService(this, GetuiIntentService.class);
         NIMClient.init(this, loginInfo(), options());
         initUIKit();
     }

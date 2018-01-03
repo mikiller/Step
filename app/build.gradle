@@ -19,8 +19,13 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        manifestPlaceholders = [
+                GETUI_APP_ID : "wZlICCYfSH60TtD766kkx5",
+                GETUI_APP_KEY : "iyCWhStPIE7d7sb14YGPT",
+                GETUI_APP_SECRET : "Y79HThqpqO65OmEyFwMvsA"
+        ]
         ndk {
-            abiFilters "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
+            abiFilters "armeabi", "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
         }
     }
     buildTypes {
@@ -75,4 +80,5 @@ dependencies {
     //    // 全文检索服务需要
     //    compile 'com.netease.nimlib:lucene:4.2.0'
     compile project(':uikit')
+    compile 'com.getui:sdk:+'
 }
