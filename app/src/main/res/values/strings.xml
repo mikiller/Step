@@ -17,6 +17,7 @@
     <string name="dialog_title_tip">提示</string>
 
     <string name="menu_paihang">排行榜</string>
+    <string name="menu_msg">收到的评论和赞</string>
     <string name="menu_mood">心情</string>
     <string name="menu_go">约行</string>
     <string name="menu_discovery">探索</string>

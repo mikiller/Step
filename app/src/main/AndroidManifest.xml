@@ -184,6 +184,7 @@
         <activity android:name=".activities.UserDetailActivity" />
         <activity android:name=".activities.JoinUserSelectorActivity" />
         <activity android:name=".activities.SessionLocationActivity" />
+        <activity android:name=".activities.MyMessageListActivity" />
     </application>
 
 </manifest>

@@ -113,6 +113,14 @@
                 </LinearLayout>
 
                 <com.uilib.mxmenuitem.MyMenuItem
+                    android:id="@+id/menu_msg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    menu:menuIcon="@mipmap/icon_msg"
+                    menu:menuTitle="@string/menu_msg"
+                    menu:needNext="true" />
+
+                <com.uilib.mxmenuitem.MyMenuItem
                     android:id="@+id/menu_mood"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

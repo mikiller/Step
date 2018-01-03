@@ -19,6 +19,7 @@ import com.westepper.step.R;
 import com.westepper.step.activities.GalleryActivity;
 import com.westepper.step.activities.MyAchieveActivity;
 import com.westepper.step.activities.MyDiscoveryActivity;
+import com.westepper.step.activities.MyMessageListActivity;
 import com.westepper.step.activities.PaihangActivity;
 import com.westepper.step.activities.SettingActivity;
 import com.westepper.step.activities.UserInfoActivity;
@@ -58,6 +59,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     SelectableRoundedImageView[] rankHeads;
     @BindView(R.id.menu_paihang)
     MyMenuItem menu_paihang;
+    @BindView(R.id.menu_msg)
+    MyMenuItem menu_msg;
     @BindView(R.id.menu_mood)
     MyMenuItem menu_mood;
     @BindView(R.id.menu_go)
@@ -85,6 +88,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     protected void initView() {
         menu_paihang.setOnClickListener(this);
         menu_paihang.setSubText("NO.");
+        menu_msg.setOnClickListener(this);
         menu_mood.setOnClickListener(this);
         menu_go.setOnClickListener(this);
         menu_discovery.setOnClickListener(this);
@@ -157,6 +161,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 args = new HashMap<>();
                 args.put(Constants.RANKLIST1, rankList);
                 ActivityManager.startActivity(getActivity(), PaihangActivity.class, args);
+                break;
+            case R.id.menu_msg:
+                ActivityManager.startActivity(getActivity(), MyMessageListActivity.class);
                 break;
             case R.id.menu_mood:
                 args = new HashMap<>();
