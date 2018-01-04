@@ -1,10 +1,14 @@
 package com.westepper.step.logics;
 
 import android.content.Context;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.netlib.mkokhttp.OkHttpManager;
+import com.uilib.customdialog.CustomDialog;
+import com.westepper.step.R;
 import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.BaseModel;
 import com.westepper.step.base.BaseResponse;
@@ -43,7 +47,17 @@ public class DiscoverCityLogic extends BaseLogic<DiscoveredCities> {
     @Override
     public void onSuccess(DiscoveredCities response) {
         MXPreferenceUtils.getInstance().setString(model.getUserId() + "_discities", new Gson().toJson(response));
-
+//        final CustomDialog dlg = new CustomDialog(context);
+//        dlg.setLayoutRes(R.layout.layout_congratulation).setCancelable(true);
+//        View view = dlg.getCustomView();
+//        ((TextView) view.findViewById(R.id.tv_con_txt)).setText("发现" + response.);
+//        view.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dlg.dismiss();
+//            }
+//        });
+//        dlg.show();
     }
 
     @Override

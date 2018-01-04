@@ -24,6 +24,8 @@
     <string name="menu_acheive">成就</string>
     <string name="menu_setting">设置</string>
 
+    <string name="good_user_title">这些用户点赞了该%1$s</string>
+
     <string name="join_num">邀约%1$d人, 已报名%2$d人</string>
     <string name="join_num1">邀约不限, 已报名%1$d人</string>
     <string name="commit_title">共%1$d条留言</string>

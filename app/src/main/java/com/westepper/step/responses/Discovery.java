@@ -24,6 +24,7 @@ public class Discovery implements Parcelable {
     private UserPos userPos;
     private List<ImgDetail> imgList;
     private long goodNum;
+    private int isGood;
     private long commitNum;
     private int isJoin;
     private long pushTime;
@@ -46,6 +47,7 @@ public class Discovery implements Parcelable {
         info = in.readString();
         userPos = in.readParcelable(UserPos.class.getClassLoader());
         imgList = in.createTypedArrayList(ImgDetail.CREATOR);
+        isGood = in.readInt();
         goodNum = in.readLong();
         commitNum = in.readLong();
         isJoin = in.readInt();
@@ -67,6 +69,7 @@ public class Discovery implements Parcelable {
         dest.writeString(info);
         dest.writeParcelable(userPos, flags);
         dest.writeTypedList(imgList);
+        dest.writeInt(isGood);
         dest.writeLong(goodNum);
         dest.writeLong(commitNum);
         dest.writeInt(isJoin);
@@ -212,6 +215,14 @@ public class Discovery implements Parcelable {
 
     public void setCommitNum(long commitNum) {
         this.commitNum = commitNum;
+    }
+
+    public boolean getIsGood() {
+        return isGood == 1;
+    }
+
+    public void setIsGood(boolean isGood) {
+        this.isGood = isGood ? 1 : 0;
     }
 
     public long getGoodNum() {

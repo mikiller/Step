@@ -23,6 +23,7 @@ import com.westepper.step.activities.DiscoveryDetailActivity;
 import com.westepper.step.activities.JoinUserSelectorActivity;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
+import com.westepper.step.models.DisBase;
 import com.westepper.step.responses.Discovery;
 import com.westepper.step.responses.ImgDetail;
 import com.westepper.step.responses.UserInfo;
@@ -114,8 +115,7 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
             @Override
             public void onClick(View v) {
                 Map<String, Object> args = new HashMap<>();
-                discovery.setUserInfo(userInfo);
-                args.put(Constants.DISCOVERY_DETAIL, discovery);
+                args.put(Constants.DISCOVERY_DETAIL, new DisBase(discovery.getDiscoveryId(), discovery.getDiscoveryKind()));
                 args.put(Constants.DIS_SCOPE, Constants.FRIEND);
                 ActivityManager.startActivity((Activity) mContext, DiscoveryDetailActivity.class, args);
             }

@@ -47,6 +47,7 @@ public class Constants {
     public static final int LEVEL4 = 4;
     public static final int RANK_FRIEND = 1;
     public static final int RANK_ALL = 2;
+    public static final int MY_MESSAGE = 1;
     public static final String GALLERY_TYPE = "gallery_type";
     public static final String ISMULTIPLE = "sMultiple";
     public static final String DISCOVERY_DETAIL = "discovery_detail";
@@ -55,6 +56,7 @@ public class Constants {
     public static final String ISREPORT = "ISREPORT";
     public static final String REACHED_LIST = "reachedlist";
     public static final String REACHED_ID = "reached_id";
+    public static final String IS_MESSAGE = "is_message";
 
     private final String wxkey="9ab30dbefd4be514ffa7950d497438a3";
     public static final int WX_LOGIN = 0X10;

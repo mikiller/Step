@@ -88,7 +88,7 @@ public class MyMsgList implements Serializable {
         }
 
         public long getCreated_at() {
-            return created_at;
+            return created_at * 1000l;
         }
 
         public void setCreated_at(long created_at) {

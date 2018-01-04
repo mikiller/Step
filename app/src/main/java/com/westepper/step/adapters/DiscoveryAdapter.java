@@ -34,6 +34,7 @@ import com.westepper.step.logics.CommitLogic;
 import com.westepper.step.logics.GoodLogic;
 import com.westepper.step.logics.JoinLogic;
 import com.westepper.step.models.CommitModel;
+import com.westepper.step.models.DisBase;
 import com.westepper.step.models.DisModel;
 import com.westepper.step.models.JoinModel;
 import com.westepper.step.models.Privacy;
@@ -154,7 +155,7 @@ public class DiscoveryAdapter extends PagerAdapter {
             public void onClick(View v) {
                 Map<String, Object> args = new HashMap<String, Object>();
                 args.put(Constants.DIS_SCOPE, scope);
-                args.put(Constants.DISCOVERY_DETAIL, discover);
+                args.put(Constants.DISCOVERY_DETAIL, new DisBase(discover.getDiscoveryId(), discover.getDiscoveryKind()));
                 ActivityManager.startActivity((Activity) mContext, DiscoveryDetailActivity.class, args);
             }
         });

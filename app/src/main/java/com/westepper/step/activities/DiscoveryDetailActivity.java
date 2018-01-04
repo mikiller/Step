@@ -8,12 +8,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -33,17 +31,15 @@ import com.westepper.step.customViews.CommitEditView;
 import com.westepper.step.customViews.TitleBar;
 import com.westepper.step.logics.CommitLogic;
 import com.westepper.step.logics.GetCommitListLogic;
-import com.westepper.step.logics.GetDisDetailInfoLogic;
+import com.westepper.step.logics.GetDisciveryDetailLogic;
 import com.westepper.step.logics.GoodLogic;
 import com.westepper.step.logics.JoinLogic;
 import com.westepper.step.models.CommitModel;
 import com.westepper.step.models.DisBase;
 import com.westepper.step.models.DisModel;
 import com.westepper.step.models.JoinModel;
-import com.westepper.step.responses.DiscoveryDetailInfo;
 import com.westepper.step.responses.GoodCount;
 import com.westepper.step.responses.JoinResponse;
-import com.westepper.step.utils.MXPreferenceUtils;
 import com.westepper.step.utils.MXTimeUtils;
 import com.westepper.step.responses.Discovery;
 import com.westepper.step.responses.ImgDetail;
@@ -105,8 +101,8 @@ public class DiscoveryDetailActivity extends SuperActivity {
     MyLinearLayoutManager rcvMgr;
     boolean isTouchImgVp = false;
     GetCommitListLogic commitLogic;
-    GetDisDetailInfoLogic detailLogic;
-
+    GetDisciveryDetailLogic detailLogic;
+    DisBase disModel;
     Discovery discovery;
     int scope;
     Timer timer;
@@ -121,10 +117,10 @@ public class DiscoveryDetailActivity extends SuperActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            discovery = savedInstanceState.getParcelable(Constants.DISCOVERY_DETAIL);
+            disModel = (DisBase) savedInstanceState.getSerializable(Constants.DISCOVERY_DETAIL);
             scope = savedInstanceState.getInt(Constants.DIS_SCOPE);
         } else if (getIntent() != null) {
-            discovery = getIntent().getParcelableExtra(Constants.DISCOVERY_DETAIL);
+            disModel = (DisBase) getIntent().getSerializableExtra(Constants.DISCOVERY_DETAIL);
             scope = getIntent().getIntExtra(Constants.DIS_SCOPE, Constants.NEARBY);
         }
         super.onCreate(savedInstanceState);
@@ -133,7 +129,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(Constants.DISCOVERY_DETAIL, discovery);
+        outState.putSerializable(Constants.DISCOVERY_DETAIL, disModel);
         outState.putInt(Constants.DIS_SCOPE, scope);
         super.onSaveInstanceState(outState);
     }
@@ -209,13 +205,6 @@ public class DiscoveryDetailActivity extends SuperActivity {
             }
         });
 
-        vpAdapter = new DetailImgVpAdapter(this, discovery.getImgList());
-
-        vp_img.setAdapter(vpAdapter);
-        if (vpAdapter.getCount() == 0) {
-            startAlpha(0, 1f);
-            vp_img.getLayoutParams().height = 0;
-        }
         btn_commit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -234,7 +223,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
                 }
             }
         });
-        btn_good.setEnabled(!MXPreferenceUtils.getInstance().getBoolean(discovery.getDiscoveryId() + userInfo.getUserId()));
+
         btn_good.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -243,7 +232,8 @@ public class DiscoveryDetailActivity extends SuperActivity {
                 logic.setCallback(new BaseLogic.LogicCallback<GoodCount>() {
                     @Override
                     public void onSuccess(GoodCount response) {
-                        //holder.tv_goodNum.setText(String.valueOf(response.getCount()));
+                        discovery.setGoodNum(response.getCount());
+                        rcvAdapter.setDiscovery(discovery);
                     }
 
                     @Override
@@ -254,13 +244,9 @@ public class DiscoveryDetailActivity extends SuperActivity {
                 logic.sendRequest();
             }
         });
-        setImgNum(0);
 
-        rcvMgr = new MyLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        rcv_detail.setLayoutManager(rcvMgr);
-        rcvAdapter = new DisDetailRcvAdapter(this, rcv_detail);
-        rcvAdapter.setDiscovery(discovery);
-        rcv_detail.setAdapter(rcvAdapter);
+        rcv_detail.setLayoutManager(rcvMgr = new MyLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        rcv_detail.setAdapter(rcvAdapter = new DisDetailRcvAdapter(this, rcv_detail));
         rcv_detail.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -273,12 +259,6 @@ public class DiscoveryDetailActivity extends SuperActivity {
                 }
             }
         });
-
-        ll_joinOtp.setVisibility(discovery.getDiscoveryKind() == Constants.MOOD ? View.GONE : View.VISIBLE);
-        if (discovery.getDiscoveryKind() == Constants.OUTGO) {
-            initJoinOpt();
-        }
-
 
         vp_img.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
@@ -297,8 +277,61 @@ public class DiscoveryDetailActivity extends SuperActivity {
         tv_imgNum.setText(imgCount);
     }
 
+    @Override
+    protected void initData() {
+        if (detailLogic == null) {
+            detailLogic = new GetDisciveryDetailLogic(this, disModel);
+            detailLogic.setCallback(new BaseLogic.LogicCallback<Discovery>() {
+                @Override
+                public void onSuccess(Discovery response) {
+                    discovery = response;
+                    setDisImgAdapter();
+                    setImgNum(0);
+                    rcvAdapter.setDiscovery(discovery);
+                    btn_good.setEnabled(!discovery.getIsGood());
+                    setJoinOpt();
+
+                    if (scope == Constants.FRIEND) {
+                        if (commitLogic == null) {
+                            commitLogic = new GetCommitListLogic(DiscoveryDetailActivity.this, new CommitModel(disModel.getDiscoveryId(), disModel.getDiscoveryKind())).setAdapter(rcvAdapter);
+                        }
+                        commitLogic.sendRequest();
+                    }
+                    //setJoinNum(response.getJoinCount());
+//                    tv_joinOpt.setEnabled(!response.isJoin() &&!discovery.getDiscoveryUserId().equals(SuperActivity.userInfo.getUserId()));
+//                    tv_joinOpt.setText(response.isJoin() ? "已报名" : "参加约行");
+                }
+
+                @Override
+                public void onFailed(String code, String msg, Discovery localData) {
+
+                }
+            });
+        }
+        detailLogic.sendRequest();
+    }
+
+    private void setDisImgAdapter(){
+        vpAdapter = new DetailImgVpAdapter(this, discovery.getImgList());
+
+        vp_img.setAdapter(vpAdapter);
+        if (vpAdapter.getCount() == 0) {
+            startAlpha(0, 1f);
+            vp_img.getLayoutParams().height = 0;
+        }
+    }
+
+    private void setJoinOpt(){
+        ll_joinOtp.setVisibility(discovery.getDiscoveryKind() == Constants.MOOD ? View.GONE : View.VISIBLE);
+        if (discovery.getDiscoveryKind() == Constants.OUTGO) {
+            initJoinOpt();
+        }
+    }
+
     private void initJoinOpt() {
         setJoinNum(discovery.getJoinCount());
+        tv_joinOpt.setEnabled(!discovery.isJoin() &&!discovery.getDiscoveryUserId().equals(SuperActivity.userInfo.getUserId()));
+        tv_joinOpt.setText(discovery.isJoin() ? "已报名" : "参加约行");
         tv_joinOpt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -361,34 +394,6 @@ public class DiscoveryDetailActivity extends SuperActivity {
     }
 
     @Override
-    protected void initData() {
-        if (scope == Constants.FRIEND) {
-            if (commitLogic == null) {
-                commitLogic = new GetCommitListLogic(this, new CommitModel(discovery.getDiscoveryId(), discovery.getDiscoveryKind())).setAdapter(rcvAdapter);
-            }
-            commitLogic.sendRequest();
-        }
-
-        if (detailLogic == null) {
-            detailLogic = new GetDisDetailInfoLogic(this, new DisBase(discovery.getDiscoveryId(), discovery.getDiscoveryKind())).setRcvAdapter(rcvAdapter);
-            detailLogic.setCallback(new BaseLogic.LogicCallback<DiscoveryDetailInfo>() {
-                @Override
-                public void onSuccess(DiscoveryDetailInfo response) {
-                    setJoinNum(response.getJoinCount());
-                    tv_joinOpt.setEnabled(!response.isJoin() &&!discovery.getDiscoveryUserId().equals(SuperActivity.userInfo.getUserId()));
-                    tv_joinOpt.setText(response.isJoin() ? "已报名" : "参加约行");
-                }
-
-                @Override
-                public void onFailed(String code, String msg, DiscoveryDetailInfo localData) {
-
-                }
-            });
-        }
-        detailLogic.sendRequest();
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
     }
@@ -404,10 +409,8 @@ public class DiscoveryDetailActivity extends SuperActivity {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
-
                 rcvTransY = rcv_detail.getTranslationY();
                 rlImgTransY = rl_img.getTranslationY();
                 titleAlpha = titleBar.getBgAlpha();

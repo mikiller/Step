@@ -17,6 +17,7 @@ import com.mikiller.mkglidelib.imageloader.GlideImageLoader;
 import com.uilib.joooonho.SelectableRoundedImageView;
 import com.westepper.step.R;
 import com.westepper.step.activities.AllCommitsActivity;
+import com.westepper.step.activities.MyMessageListActivity;
 import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.Constants;
 import com.uilib.mxmenuitem.MyMenuItem;
@@ -124,11 +125,21 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         Drawable drawable = mContext.getResources().getDrawable(discovery.getGender() == 1 ? R.mipmap.male : R.mipmap.female);
         drawable.setBounds(0,0,drawable.getMinimumWidth(), drawable.getMinimumHeight());
         holder.tv_nickName.setCompoundDrawables(null, null, drawable, null);
-        holder.tv_goodNum.setText(getGoodNum());
+        holder.tv_goodNum.setText("赞·".concat(getGoodNum()));
         holder.tv_detailMsg.setText(discovery.getInfo());
         holder.tv_detailPos.setText(discovery.getUserPos().getPoiTitle());
         holder.rl_join.setVisibility(discovery.getDiscoveryKind() == 1 ? View.GONE : View.VISIBLE);
         holder.tv_time.setText(MXTimeUtils.getFormatTime("yyyy/MM/dd", discovery.getPushTime()));
+        holder.tv_goodNum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, Object> args = new HashMap<String, Object>();
+                args.put(Constants.IS_MESSAGE, 0);
+                args.put(Constants.DIS_ID, discovery.getDiscoveryId());
+                args.put(Constants.DIS_KIND, discovery.getDiscoveryKind());
+                ActivityManager.startActivity((Activity) mContext, MyMessageListActivity.class, args);
+            }
+        });
 //        holder.btn_good.setEnabled(!MXPreferenceUtils.getInstance().getBoolean(discovery.getDiscoveryId() + SuperActivity.userInfo.getUserId()));
 //        holder.btn_good.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -156,11 +167,7 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private String getGoodNum(){
-        int num = MXPreferenceUtils.getInstance().getInt(discovery.getDiscoveryId() + "goodNum");
-        if(num <= 0){
-            num = (int) discovery.getGoodNum();
-        }
-        return String.valueOf(num);
+        return String.valueOf(discovery.getGoodNum());
     }
 
     private void updateCommitHolder(CommitHolder holder, final Commit commit){
@@ -209,7 +216,7 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        if(isDetail)
+        if(isDetail && discovery != null)
             return commits == null ? 1 : commits.size() + 2;
         else
             return commits == null ? 0 : commits.size();
