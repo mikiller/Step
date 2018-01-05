@@ -8,22 +8,13 @@ import java.util.List;
  */
 
 public class CommitList implements Serializable {
-    private int commitNum;
-    private List<Commit> commitList;
+    private List<Commit> comment_list;
 
-    public List<Commit> getCommitList() {
-        return commitList;
+    public List<Commit> getComment_list() {
+        return comment_list;
     }
 
-    public void setCommitList(List<Commit> commitList) {
-        this.commitList = commitList;
-    }
-
-    public int getCommitNum() {
-        return commitNum;
-    }
-
-    public void setCommitNum(int commitNum) {
-        this.commitNum = commitNum;
+    public void setComment_list(List<Commit> comment_list) {
+        this.comment_list = comment_list;
     }
 }

@@ -1,31 +1,21 @@
 package com.westepper.step.logics;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 import com.netlib.mkokhttp.OkHttpManager;
-import com.westepper.step.adapters.DisDetailRcvAdapter;
 import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.BaseModel;
 import com.westepper.step.base.BaseResponse;
 import com.westepper.step.responses.CommitList;
 
 /**
- * Created by Mikiller on 2017/11/1.
+ * Created by Mikiller on 2018/1/5.
  */
 
-public class GetCommitListLogic extends BaseLogic<CommitList> {
-    DisDetailRcvAdapter rcvAdapter;
-    boolean hasTips = false;
-
-    public GetCommitListLogic(Context context, BaseModel model) {
+public class GetCommitDetailLogic extends BaseLogic<CommitList> {
+    public GetCommitDetailLogic(Context context, BaseModel model) {
         super(context, model);
-    }
-
-    public GetCommitListLogic setAdapter(DisDetailRcvAdapter adapter){
-        rcvAdapter = adapter;
-        return this;
     }
 
     @Override
@@ -35,7 +25,7 @@ public class GetCommitListLogic extends BaseLogic<CommitList> {
 
     @Override
     protected void setUrl() {
-        url = "map/getdiscoverycommit";
+        url = "map/getalldiscoverycommit";
     }
 
     @Override
@@ -50,14 +40,11 @@ public class GetCommitListLogic extends BaseLogic<CommitList> {
 
     @Override
     public void onSuccess(CommitList response) {
-        rcvAdapter.setCommits(response.getComment_list());
+
     }
 
     @Override
     public void onFailed(String code, String msg, CommitList localData) {
-        if("0".equals(code) && !hasTips){
-            Toast.makeText(context, msg.concat(", 赶紧抢个沙发吧！"), Toast.LENGTH_SHORT).show();
-            hasTips = true;
-        }
+
     }
 }

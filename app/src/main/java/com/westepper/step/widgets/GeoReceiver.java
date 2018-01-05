@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.amap.api.fence.GeoFence;
 import com.google.gson.Gson;
+import com.westepper.step.R;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.logics.GeoFanceLogic;
@@ -98,8 +99,16 @@ public class GeoReceiver extends BroadcastReceiver {
         }
     }
 
+    private void sendReachedBoardcast(String id, int level){
+        Intent intent = new Intent(context.getString(R.string.geo_fence_receiver));
+        intent.putExtra(Constants.REACHED_ID, id);
+        intent.putExtra(Constants.REACHED_LEVEL, level);
+        context.sendBroadcast(intent);
+    }
+
     private void checkedArea(String id, int level, List<String> disIds) {
         mapUtils.reachedList.addReachedId(id, level);
+        sendReachedBoardcast(id, level);
         if (level == 1) {
             mapUtils.setAreaChecked(id, true);
             mapUtils.saveLocalReachedList(id);
@@ -114,6 +123,8 @@ public class GeoReceiver extends BroadcastReceiver {
             }
         }
     }
+
+
 
     private boolean searchAreaId(List<String> rIds, List<ReachedId> reachedIds, int level) {
         boolean needShow = true;

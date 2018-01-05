@@ -140,26 +140,6 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 ActivityManager.startActivity((Activity) mContext, MyMessageListActivity.class, args);
             }
         });
-//        holder.btn_good.setEnabled(!MXPreferenceUtils.getInstance().getBoolean(discovery.getDiscoveryId() + SuperActivity.userInfo.getUserId()));
-//        holder.btn_good.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                v.setEnabled(false);
-//                GoodLogic logic = new GoodLogic(mContext, new DisModel(discovery.getDiscoveryId(), discovery.getDiscoveryKind()));
-//                logic.setCallback(new BaseLogic.LogicCallback<GoodCount>() {
-//                    @Override
-//                    public void onSuccess(GoodCount response) {
-//                        holder.tv_goodNum.setText(String.valueOf(response.getCount()));
-//                    }
-//
-//                    @Override
-//                    public void onFailed(String code, String msg, GoodCount localData) {
-//
-//                    }
-//                });
-//                logic.sendRequest();
-//            }
-//        });
 
         if(discovery.getDiscoveryKind() == Constants.OUTGO){
             holder.tv_joinTime.setText(discovery.getEndTime() == 0 ? "不限" : MXTimeUtils.getFormatTime("yyyy年MM月dd日", discovery.getEndTime()));
@@ -173,13 +153,13 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private void updateCommitHolder(CommitHolder holder, final Commit commit){
         if(commit == null)
             return;
-        holder.tv_nickName.setText((TextUtils.isEmpty(commit.getNickName()) ? commit.getUserId() : commit.getNickName()).concat(":"));
-        holder.tv_commit.setText(commit.getMsg());
+        holder.tv_nickName.setText(commit.getUserInfo().getNickName());
+        holder.tv_commit.setText(commit.getComment_content());
         View.OnClickListener itemListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(commitListener != null)
-                    commitListener.onCommit(commit.getCommitUserId(), commit.getNickName());
+                    commitListener.onCommit(commit.getUserInfo().getUserId(), commit.getUserInfo().getNickName());
             }
         };
         holder.tv_nickName.setOnClickListener(itemListener);
@@ -194,7 +174,7 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void addCommit(Commit commit){
         if(commits == null)
             commits = new ArrayList<>();
-        this.commits.add(0, commit);
+        this.commits.add(commit);
         notifyItemInserted(isDetail ? 2 : 0);
         rcv.scrollToPosition(0);
         if(isDetail)

@@ -139,7 +139,7 @@ public class MapUtils {
 
     public void init(Context context, AMap aMap) {
         this.aMap = aMap;
-        initLocationStyle(context, 2000);
+        initLocationStyle(context, 5000);
 //        initLocationClient(context);
         initGeoClient(context);
     }
@@ -180,9 +180,10 @@ public class MapUtils {
             public void onMyLocationChange(Location location) {
                 if(mapLocation == null) {
                     moveCamera(new LatLng(location.getLatitude(), location.getLongitude()));
-                    if (getLocationListener != null){
-                        getLocationListener.onGetLocation( ((Inner_3dMap_location) location).getCity());
-                    }
+
+                }
+                if (getLocationListener != null){
+                    getLocationListener.onGetLocation( ((Inner_3dMap_location) location).getCity());
                 }
                 mapLocation = (Inner_3dMap_location) location;
 //                Log.e(TAG, String.format("relocation: %1$f, %2$f", mapLocation.getLatitude(), mapLocation.getLongitude()));

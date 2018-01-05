@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <com.netease.nim.uikit.common.ui.imageview.HeadImageView
+        android:id="@+id/iv_header"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="15dp"
+        android:src="@mipmap/ic_default_head"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="15dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            android:id="@+id/tv_nickName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/text_color_black"
+            android:textSize="16sp"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
+        <TextView
+            android:id="@+id/tv_commit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:textSize="12sp"
+                android:textColor="@color/text_color_black"/>
+
+            <TextView
+                android:id="@+id/tv_reply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/text_color_black"
+                android:textSize="12sp"
+                android:text="回复"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_subReply"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/cancel_btn_bg"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="有几条回复"
+                android:textSize="12sp"
+                android:textColor="@color/colorPrimary"
+                android:layout_margin="5dp"/>
+        </LinearLayout>
+
+        <View
+            style="@style/sliptline"
+            android:layout_marginTop="15dp"/>
+    </LinearLayout>
+</LinearLayout>

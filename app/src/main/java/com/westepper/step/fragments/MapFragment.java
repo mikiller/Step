@@ -23,12 +23,10 @@ import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.google.gson.Gson;
-import com.netease.nim.uikit.common.util.file.FileUtil;
 import com.uilib.customdialog.CustomDialog;
 import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
 import com.westepper.step.activities.GalleryActivity;
-import com.westepper.step.activities.SplashActivity;
 import com.westepper.step.adapters.DiscoveryAdapter;
 import com.westepper.step.base.BaseFragment;
 import com.westepper.step.base.BaseLogic;
@@ -209,45 +207,8 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
     private void initMapUtil() {
         mapUtils = MapUtils.getInstance();
         mapUtils.init(getActivity().getApplicationContext(), mapView.getMap());
-        mapUtils.setGetLocationListener(new MapUtils.OnGetLocationListener() {
-            @Override
-            public void onGetLocation(final String cityName) {
-                DiscoverCityModel model = new DiscoverCityModel(cityName);
-                final String tmp = MXPreferenceUtils.getInstance().getString(model.getUserId() + "_discities");
-                DiscoveredCities disCity = new Gson().fromJson(tmp, DiscoveredCities.class);
-                if (disCity != null) {
-                    for (DiscoveredCities.DiscoverCity city : disCity.getDiscoverCitys()) {
-                        if (cityName.equals(city.getCity_name()))
-                            return;
-                    }
-                }
-                DiscoverCityLogic logic = new DiscoverCityLogic(getActivity(), new DiscoverCityModel(cityName));
-                logic.setCallback(new BaseLogic.LogicCallback() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        final CustomDialog dlg = new CustomDialog(getActivity());
-                        dlg.setLayoutRes(R.layout.layout_congratulation).setCancelable(true);
-                        View view = dlg.getCustomView();
-                        ((TextView) view.findViewById(R.id.tv_con_txt)).setText("发现" + cityName);
-                        view.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dlg.dismiss();
-                            }
-                        });
-                        dlg.show();
-                    }
-
-                    @Override
-                    public void onFailed(String code, String msg, Object localData) {
-
-                    }
-                });
-                logic.sendRequest();
-            }
-        });
-
     }
+
     private void getMapData(){
         new Thread(new Runnable() {
             @Override
@@ -292,6 +253,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
             public void run() {
                 initAcheiveSetting();
                 getReachedList();
+                setLocationListener();
             }
         }, 100);
     }
@@ -340,6 +302,46 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
             }
         });
         logic.sendRequest();
+    }
+
+    private void setLocationListener(){
+        mapUtils.setGetLocationListener(new MapUtils.OnGetLocationListener() {
+            @Override
+            public void onGetLocation(final String cityName) {
+                DiscoverCityModel model = new DiscoverCityModel(cityName);
+                final String tmp = MXPreferenceUtils.getInstance().getString(model.getUserId() + "_discities");
+                DiscoveredCities disCity = new Gson().fromJson(tmp, DiscoveredCities.class);
+                if (disCity != null) {
+                    for (DiscoveredCities.DiscoverCity city : disCity.getDiscoverCitys()) {
+                        if (cityName.equals(city.getCityName()))
+                            return;
+                    }
+                }
+                DiscoverCityLogic logic = new DiscoverCityLogic(getActivity(), new DiscoverCityModel(cityName));
+                logic.setCallback(new BaseLogic.LogicCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        final CustomDialog dlg = new CustomDialog(getActivity());
+                        dlg.setLayoutRes(R.layout.layout_congratulation).setCancelable(true);
+                        View view = dlg.getCustomView();
+                        ((TextView) view.findViewById(R.id.tv_con_txt)).setText("发现" + cityName);
+                        view.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dlg.dismiss();
+                            }
+                        });
+                        dlg.show();
+                    }
+
+                    @Override
+                    public void onFailed(String code, String msg, Object localData) {
+
+                    }
+                });
+                logic.sendRequest();
+            }
+        });
     }
 
     public void setIsTrack(boolean isTrack) {

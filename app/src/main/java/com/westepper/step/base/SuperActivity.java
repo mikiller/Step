@@ -25,10 +25,17 @@ import android.widget.TextView;
 import com.uilib.customdialog.CustomDialog;
 import com.westepper.step.R;
 import com.westepper.step.responses.AchieveArea;
+import com.westepper.step.responses.Area;
+import com.westepper.step.responses.DisArea;
+import com.westepper.step.responses.ReachedId;
 import com.westepper.step.responses.ReachedList;
 import com.westepper.step.responses.UserInfo;
+import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.MapUtils;
 import com.westepper.step.utils.PermissionUtils;
+
+import java.util.List;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -140,26 +147,33 @@ public abstract class SuperActivity extends AppCompatActivity {
     }
 
     public class OnGetGeoFenceReceiver extends BroadcastReceiver{
-        ReachedList reachedList;
+        String id;
+        List<String> achIds;
+        int level;
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent != null)
-                reachedList = (ReachedList) intent.getSerializableExtra(Constants.REACHED_LIST);
-            showCongraDlg("点亮L1区域", R.mipmap.icon_dis_l1);
+            if(intent != null){
+                id = intent.getStringExtra(Constants.REACHED_ID);
+                level = intent.getIntExtra(Constants.REACHED_LEVEL, 4);
+                achIds = intent.getStringArrayListExtra(Constants.REACHED_LIST);
+            }
 
-//            if(!TextUtils.isEmpty(reachedList.getReachedL2Id())){
-//                showCongraDlg(reachedList.getReachedL2Id(), R.mipmap.icon_dis_l2);
-//            }
-//            if(!TextUtils.isEmpty(reachedList.getReachedL3Id())){
-//                showCongraDlg(reachedList.getReachedL3Id(), R.mipmap.icon_dis_l3);
-//            }
-            if(reachedList.getReachedAchievementIds() != null && reachedList.getReachedAchievementIds().size() > 0){
-                for(String id : reachedList.getReachedAchievementIds()) {
-                    AchieveArea ach = MapUtils.getInstance().getAchievement(id);
-                    if(ach != null){
-                        showCongraDlg("达成"+ach.getAchieveAreaName()+"成就", ach.getImgId());
+            if (level == 1){
+                Area area = MapUtils.getInstance().getArea(id);
+                if (area != null)
+                    showCongraDlg("点亮".concat(area.getName()), R.mipmap.icon_dis_l1);
+            }else if (level == 4){
+                //成就
+                for (String id : achIds){
+                    AchieveArea achArea = MapUtils.getInstance().getAchievement(id);
+                    if (achArea != null){
+                        showCongraDlg("达成"+achArea.getAchieveAreaName()+"成就", achArea.getImgId());
                     }
                 }
+//
+            }else {
+                DisArea area = MapUtils.getInstance().getDistrictArea(id);
+                showCongraDlg("点亮".concat(area.getName()), level == 2 ? R.mipmap.icon_dis_l2 : R.mipmap.icon_dis_l3);
             }
         }
 

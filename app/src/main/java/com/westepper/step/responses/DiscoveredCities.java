@@ -1,5 +1,7 @@
 package com.westepper.step.responses;
 
+import com.westepper.step.utils.MapUtils;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -20,15 +22,23 @@ public class DiscoveredCities implements Serializable {
 
     public static class DiscoverCity {
         private int id;
-        private String city_name;
+        private String city_id;
         private String created_at;
 
-        public String getCity_name() {
-            return city_name;
+        public String getCityName(){
+            String name = "";
+            if (MapUtils.getInstance().getDistrictArea(city_id) != null){
+                name = MapUtils.getInstance().getDistrictArea(city_id).getName();
+            }
+            return name;
         }
 
-        public void setCity_name(String city_name) {
-            this.city_name = city_name;
+        public String getCity_id() {
+            return city_id;
+        }
+
+        public void setCity_id(String city_id) {
+            this.city_id = city_id;
         }
 
         public String getCreated_at() {

@@ -14,6 +14,9 @@ import com.westepper.step.base.Constants;
 import com.westepper.step.responses.ReachedList;
 import com.westepper.step.utils.MapUtils;
 
+import java.io.Serializable;
+import java.util.List;
+
 /**
  * Created by Mikiller on 2017/11/14.
  */
@@ -47,8 +50,12 @@ public class GeoFanceLogic extends BaseLogic<ReachedList> {
     public void onSuccess(ReachedList response) {
         Log.e(TAG, "explord success");
         MapUtils.getInstance().saveLocalReachedList(null);
+        List<String> oldIds = MapUtils.getInstance().reachedList.getReachedAchievementIds();
+        List<String> newIds = response.getReachedAchievementIds();
+        newIds.removeAll(oldIds);
+
         Intent intent = new Intent(context.getString(R.string.geo_fence_receiver));
-        intent.putExtra(Constants.REACHED_LIST, response);
+        intent.putExtra(Constants.REACHED_LIST, (Serializable) newIds);
         context.sendBroadcast(intent);
 
 

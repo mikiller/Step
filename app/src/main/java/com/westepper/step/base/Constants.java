@@ -56,6 +56,7 @@ public class Constants {
     public static final String ISREPORT = "ISREPORT";
     public static final String REACHED_LIST = "reachedlist";
     public static final String REACHED_ID = "reached_id";
+    public static final String REACHED_LEVEL = "reached_level";
     public static final String IS_MESSAGE = "is_message";
 
     private final String wxkey="9ab30dbefd4be514ffa7950d497438a3";
