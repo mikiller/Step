@@ -38,6 +38,7 @@ import com.westepper.step.models.CommitModel;
 import com.westepper.step.models.DisBase;
 import com.westepper.step.models.DisModel;
 import com.westepper.step.models.JoinModel;
+import com.westepper.step.responses.Commit;
 import com.westepper.step.responses.GoodCount;
 import com.westepper.step.responses.JoinResponse;
 import com.westepper.step.utils.MXTimeUtils;
@@ -99,7 +100,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
 
     DisDetailRcvAdapter rcvAdapter;
     MyLinearLayoutManager rcvMgr;
-    boolean isTouchImgVp = false;
+    boolean isTouchImgVp = false, isCommit = false;
     GetCommitListLogic commitLogic;
     GetDisciveryDetailLogic detailLogic;
     DisBase disModel;
@@ -287,6 +288,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
                     discovery = response;
                     setDisImgAdapter();
                     setImgNum(0);
+                    rcv_detail.scrollToPosition(0);
                     rcvAdapter.setDiscovery(discovery);
                     btn_good.setEnabled(!discovery.getIsGood());
                     setJoinOpt();
@@ -296,6 +298,18 @@ public class DiscoveryDetailActivity extends SuperActivity {
                             commitLogic = new GetCommitListLogic(DiscoveryDetailActivity.this, new CommitModel(disModel.getDiscoveryId(), disModel.getDiscoveryKind())).setAdapter(rcvAdapter);
                         }
                         commitLogic.sendRequest();
+                        rcvAdapter.setCommitListener(new DisDetailRcvAdapter.OnCommitListener() {
+                            @Override
+                            public void onCommit(Commit commit) {
+                                Map<String, Object> args = new HashMap<String, Object>();
+                                args.put(Constants.DISUSER_ID, discovery.getDiscoveryUserId());
+                                args.put(Constants.DIS_ID, commit.getComment_blog_id());
+                                args.put(Constants.DIS_KIND, commit.getComment_blog_kind());
+                                args.put(Constants.COMMIT_ID, commit.getCommentId());
+                                ActivityManager.startActivity(DiscoveryDetailActivity.this, AllCommitsActivity.class, args);
+                                isCommit = true;
+                            }
+                        });
                     }
                     //setJoinNum(response.getJoinCount());
 //                    tv_joinOpt.setEnabled(!response.isJoin() &&!discovery.getDiscoveryUserId().equals(SuperActivity.userInfo.getUserId()));
@@ -308,6 +322,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
                 }
             });
         }
+
         detailLogic.sendRequest();
     }
 

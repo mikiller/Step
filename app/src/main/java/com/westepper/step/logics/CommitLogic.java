@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 import com.netlib.mkokhttp.OkHttpManager;
+import com.westepper.step.adapters.CommitImpl;
 import com.westepper.step.adapters.DisDetailRcvAdapter;
 import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.BaseModel;
@@ -20,7 +21,7 @@ import com.westepper.step.responses.Commit;
 
 public class CommitLogic extends BaseLogic<Commit> {
     View inputView;
-    DisDetailRcvAdapter rcvAdapter;
+    CommitImpl rcvAdapter;
 
     public CommitLogic(Context context, BaseModel model) {
         super(context, model);
@@ -46,7 +47,7 @@ public class CommitLogic extends BaseLogic<Commit> {
         return true;
     }
 
-    public CommitLogic setCallbackObject(View view, DisDetailRcvAdapter adapter){
+    public CommitLogic setCallbackObject(View view, CommitImpl adapter){
         inputView = view;
         rcvAdapter = adapter;
         return this;

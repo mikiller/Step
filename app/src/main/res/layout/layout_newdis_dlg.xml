@@ -21,7 +21,8 @@
             android:textColor="@color/mainTabTxt"
             android:padding="15dp"
             android:textSize="15sp"
-            android:text="发布心情"/>
+            android:text="发布心情"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/btn_outgo"
@@ -33,7 +34,8 @@
             android:padding="15dp"
             android:textColor="@color/mainTabTxt"
             android:textSize="15sp"
-            android:text="发布约行"/>
+            android:text="发布约行"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <Button

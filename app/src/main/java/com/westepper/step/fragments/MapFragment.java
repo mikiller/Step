@@ -119,9 +119,6 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
         initMapUtil();
         getMapData();
-        //drawMap();
-//        initAcheiveSetting();
-//        getReachedList();
         search.setOnClickListener(this);
         btn_loc.setOnClickListener(this);
         btn_acheivement.setOnClickListener(this);
@@ -292,7 +289,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
                 }
                 mapUtils.reachedList.updateReachedList(response);
                 mapUtils.reachedList.saveToLocal();
-
+                mapUtils.setIsNeedArea(isTrack);
 
             }
 
@@ -364,7 +361,6 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
         }
         btn_acheivement.setVisibility(isTrack ? View.VISIBLE : View.INVISIBLE);
         if (isTrack) {
-//            AnimUtils.startObjectAnim(ll_search, "translationY", -searchHeight, 0, 300);
             AnimUtils.startObjectAnim(ll_search, "translationY", disKind == Constants.MOOD ? -searchHeight : headHeight, 0, 300);
             AnimUtils.startObjectAnim(rl_head, "translationY", 0, headTransY, 300);
             AnimUtils.startObjectAnim(ll_discovery_opt, "translationY", 0, optTransY, 400);
@@ -373,7 +369,6 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
             mapUtils.removeMarker();
             mapUtils.setIsNeedArea(true);
         } else {
-//            AnimUtils.startObjectAnim(ll_search, "translationY", 0, -searchHeight, 300);
             AnimUtils.startObjectAnim(ll_search, "translationY", 0, disKind == Constants.MOOD ? -searchHeight : headHeight, 300);
             AnimUtils.startObjectAnim(rl_head, "translationY", headTransY, 0, 300);
             AnimUtils.startObjectAnim(ll_discovery_opt, "translationY", optTransY, 0, 400);
@@ -447,9 +442,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
     @Override
     public void onDestroyView() {
-//        getActivity().unregisterReceiver(receiver);
         mapView.onDestroy();
-//        mapUtils.destory();
         mapUtils.setShowAreaIds(null);
         mapUtils.clearMapLocation();
         mapUtils.mapData = null;
@@ -463,6 +456,8 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
             String cateId = data.getStringExtra(Constants.ACH_CATEGORY);
             layout_achSetting.checkAchItem(cateId, achId);
         } else {
+            if (mapUtils.getMapLocation() == null)
+                return;
             setIsTrack(type == R.id.rdb_track);
             if (layout_achSetting != null && layout_achSetting.isShown())
                 layout_achSetting.hide();

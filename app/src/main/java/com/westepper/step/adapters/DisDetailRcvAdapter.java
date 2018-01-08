@@ -30,6 +30,7 @@ import com.westepper.step.responses.GoodCount;
 import com.westepper.step.utils.ActivityManager;
 import com.westepper.step.utils.MXPreferenceUtils;
 import com.westepper.step.utils.MXTimeUtils;
+import com.westepper.step.widgets.CommitHolder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +41,7 @@ import java.util.Map;
  * Created by Mikiller on 2017/9/21.
  */
 
-public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements CommitImpl{
 
     private final int DETAIL = 0, COMMITS = 1, COMMIT_TITLE = 2;
     private Context mContext;
@@ -86,7 +87,7 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             viewHolder = new CommitTitleHolder(view);
         }
         else{
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dis_commitlist, null);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_comment_detail, null);
             viewHolder = new CommitHolder(view);
         }
         return viewHolder;
@@ -107,7 +108,7 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 @Override
                 public void onClick(View v) {
                     Map<String, Object> args = new HashMap<>();
-                    args.put(Constants.COMMIT_LIST, commits);
+                    args.put(Constants.DISUSER_ID, discovery.getDiscoveryUserId());
                     args.put(Constants.DIS_KIND, discovery.getDiscoveryKind());
                     args.put(Constants.DIS_ID, discovery.getDiscoveryId());
                     ActivityManager.startActivity((Activity) mContext, AllCommitsActivity.class, args);
@@ -153,24 +154,31 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private void updateCommitHolder(CommitHolder holder, final Commit commit){
         if(commit == null)
             return;
-        holder.tv_nickName.setText(commit.getUserInfo().getNickName());
-        holder.tv_commit.setText(commit.getComment_content());
+        holder.setUserInfo(mContext, commit.getUserInfo().getNickName(), commit.getUserInfo().getHeadImg());
+        holder.setTv_commit(commit.getComment_content());
+        holder.setTv_time(commit.getCreate_time());
+//        holder.tv_nickName.setText(commit.getUserInfo().getNickName());
+//        holder.tv_commit.setText(commit.getComment_content());
         View.OnClickListener itemListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(commitListener != null)
-                    commitListener.onCommit(commit.getUserInfo().getUserId(), commit.getUserInfo().getNickName());
+                    commitListener.onCommit(commit);
             }
         };
-        holder.tv_nickName.setOnClickListener(itemListener);
-        holder.tv_commit.setOnClickListener(itemListener);
+        holder.setResPonseCounts(commit.getResponses_count(),itemListener);
+        holder.setReplyClickListener(itemListener);
+//        holder.tv_nickName.setOnClickListener(itemListener);
+//        holder.tv_commit.setOnClickListener(itemListener);
     }
 
+    @Override
     public void setCommits(List commits){
         this.commits = commits;
         notifyDataSetChanged();
     }
 
+    @Override
     public void addCommit(Commit commit){
         if(commits == null)
             commits = new ArrayList<>();
@@ -226,19 +234,7 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    public class CommitHolder extends RecyclerView.ViewHolder{
-        private TextView tv_nickName, tv_commit, tv_commitTime;
-        private ImageButton btn_recommit;
-        public CommitHolder(View itemView) {
-            super(itemView);
-            tv_commit = (TextView) itemView.findViewById(R.id.tv_commit);
-            tv_nickName = (TextView) itemView.findViewById(R.id.tv_nickName);
-            tv_commitTime = (TextView) itemView.findViewById(R.id.tv_commitTime);
-            btn_recommit = (ImageButton) itemView.findViewById(R.id.btn_recommit);
-        }
-    }
-
     public interface OnCommitListener{
-        void onCommit(String id, String nickName);
+        void onCommit(Commit commit);
     }
 }

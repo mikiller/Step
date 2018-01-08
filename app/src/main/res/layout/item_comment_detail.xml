@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@android:color/white">
 
     <com.netease.nim.uikit.common.ui.imageview.HeadImageView
@@ -15,6 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_toRightOf="@+id/iv_header"
         android:paddingTop="15dp"
         android:paddingRight="15dp">
 
@@ -68,7 +69,8 @@
             android:visibility="gone">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_resCounts"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="有几条回复"
                 android:textSize="12sp"
@@ -80,4 +82,4 @@
             style="@style/sliptline"
             android:layout_marginTop="15dp"/>
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>
