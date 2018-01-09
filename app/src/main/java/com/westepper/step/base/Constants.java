@@ -17,6 +17,7 @@ public class Constants {
     public static final int GET_RANK = 0x106;
     public static final int GET_MAPDATA = 0X107;
     public static final int REQUEST_CODE_ADVANCED = 0x108;
+    public static final int GET_NOTIFY = 0x109;
     public static final String DIS_ID = "DIS_ID";
     public static final String DIS_KIND = "DIS_KIND";
     public static final String DIS_SCOPE = "DIS_SCOPE";
@@ -60,6 +61,7 @@ public class Constants {
     public static final String REACHED_ID = "reached_id";
     public static final String REACHED_LEVEL = "reached_level";
     public static final String IS_MESSAGE = "is_message";
+    public static final String HAS_NOTIFY = "has_notify";
 
     private final String wxkey="9ab30dbefd4be514ffa7950d497438a3";
     public static final int WX_LOGIN = 0X10;

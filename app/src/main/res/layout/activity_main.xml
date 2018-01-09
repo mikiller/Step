@@ -41,7 +41,7 @@
             android:drawableTop="@drawable/selector_tab_discovery"
             android:text="发现" />
 
-        <RadioButton
+        <com.westepper.step.customViews.NotifyRadioButton
             android:id="@+id/rdb_mine"
             style="@style/mainTab"
             android:drawableTop="@drawable/selector_tab_mine"

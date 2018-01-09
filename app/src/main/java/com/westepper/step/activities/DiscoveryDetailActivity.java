@@ -247,7 +247,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
         });
 
         rcv_detail.setLayoutManager(rcvMgr = new MyLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        rcv_detail.setAdapter(rcvAdapter = new DisDetailRcvAdapter(this, rcv_detail));
+        rcv_detail.setAdapter(rcvAdapter = new DisDetailRcvAdapter(this));
         rcv_detail.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -289,31 +289,15 @@ public class DiscoveryDetailActivity extends SuperActivity {
                     setDisImgAdapter();
                     setImgNum(0);
                     rcv_detail.scrollToPosition(0);
+                    startAlpha(titleDA, 0.01f);
+                    startScroll(rl_img, rl_img.getTranslationY(), 0);
                     rcvAdapter.setDiscovery(discovery);
                     btn_good.setEnabled(!discovery.getIsGood());
                     setJoinOpt();
 
                     if (scope == Constants.FRIEND) {
-                        if (commitLogic == null) {
-                            commitLogic = new GetCommitListLogic(DiscoveryDetailActivity.this, new CommitModel(disModel.getDiscoveryId(), disModel.getDiscoveryKind())).setAdapter(rcvAdapter);
-                        }
-                        commitLogic.sendRequest();
-                        rcvAdapter.setCommitListener(new DisDetailRcvAdapter.OnCommitListener() {
-                            @Override
-                            public void onCommit(Commit commit) {
-                                Map<String, Object> args = new HashMap<String, Object>();
-                                args.put(Constants.DISUSER_ID, discovery.getDiscoveryUserId());
-                                args.put(Constants.DIS_ID, commit.getComment_blog_id());
-                                args.put(Constants.DIS_KIND, commit.getComment_blog_kind());
-                                args.put(Constants.COMMIT_ID, commit.getCommentId());
-                                ActivityManager.startActivity(DiscoveryDetailActivity.this, AllCommitsActivity.class, args);
-                                isCommit = true;
-                            }
-                        });
+                        getCommitList();
                     }
-                    //setJoinNum(response.getJoinCount());
-//                    tv_joinOpt.setEnabled(!response.isJoin() &&!discovery.getDiscoveryUserId().equals(SuperActivity.userInfo.getUserId()));
-//                    tv_joinOpt.setText(response.isJoin() ? "已报名" : "参加约行");
                 }
 
                 @Override
@@ -406,6 +390,25 @@ public class DiscoveryDetailActivity extends SuperActivity {
             }
         });
         logic.sendRequest();
+    }
+
+    private void getCommitList(){
+        if (commitLogic == null) {
+            commitLogic = new GetCommitListLogic(DiscoveryDetailActivity.this, new CommitModel(disModel.getDiscoveryId(), disModel.getDiscoveryKind())).setAdapter(rcvAdapter);
+        }
+        commitLogic.sendRequest();
+        rcvAdapter.setCommitListener(new DisDetailRcvAdapter.OnCommitListener() {
+            @Override
+            public void onCommit(Commit commit) {
+                Map<String, Object> args = new HashMap<String, Object>();
+                args.put(Constants.DISUSER_ID, discovery.getDiscoveryUserId());
+                args.put(Constants.DIS_ID, commit.getComment_blog_id());
+                args.put(Constants.DIS_KIND, discovery.getDiscoveryKind());
+                args.put(Constants.COMMIT_ID, commit.getCommentId());
+                ActivityManager.startActivity(DiscoveryDetailActivity.this, AllCommitsActivity.class, args);
+                isCommit = true;
+            }
+        });
     }
 
     @Override

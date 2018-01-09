@@ -109,6 +109,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         super.setUserVisibleHint(isVisibleToUser);
         if((isVisible = getUserVisibleHint()) && userLayout != null){
             userLayout.setUserInfo(userInfo);
+            menu_msg.setNeedNotify(MXPreferenceUtils.getInstance().getBoolean(Constants.HAS_NOTIFY));
         }
     }
 
@@ -132,6 +133,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             for(int i = 0; i < ((rankList.getRankList().size() < 3) ? rankList.getRankList().size() : 3); i++){
                 GlideImageLoader.getInstance().loadImage(getActivity(), rankList.getRankList().get(i).getHeadUrl(), R.mipmap.ic_default_head, rankHeads[i], 0);
             }
+        }else if (type == Constants.GET_NOTIFY){
+            menu_msg.setNeedNotify(true);
         }
     }
 
@@ -164,6 +167,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.menu_msg:
                 ActivityManager.startActivity(getActivity(), MyMessageListActivity.class);
+                menu_msg.setNeedNotify(false);
+                MXPreferenceUtils.getInstance().setBoolean(Constants.HAS_NOTIFY, false);
                 break;
             case R.id.menu_mood:
                 args = new HashMap<>();

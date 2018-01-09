@@ -12,6 +12,10 @@ public class DeleteCommitModel extends DisModel {
         super(discoveryId, discoveryKind);
     }
 
+    public DeleteCommitModel(int discoveryKind){
+        super(null, discoveryKind);
+    }
+
     public String getCommentId() {
         return commentId;
     }

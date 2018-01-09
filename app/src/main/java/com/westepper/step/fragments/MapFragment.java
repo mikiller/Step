@@ -216,7 +216,7 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
                     public void run() {
                         try {
                             MapDataModel model = new MapDataModel(mapUtils.mapData == null ? getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0).versionName : mapUtils.mapData.getVersion());
-                            GetMapDataLogic logic = new GetMapDataLogic(getActivity(), model);
+                            final GetMapDataLogic logic = new GetMapDataLogic(getActivity(), model);
                             logic.setCallback(new BaseLogic.LogicCallback<MapData>() {
                                 @Override
                                 public void onSuccess(final MapData response) {
@@ -227,7 +227,10 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
                                 @Override
                                 public void onFailed(String code, String msg, MapData localData) {
-                                    drawMap();
+                                    if (mapUtils.mapData == null)
+                                        logic.sendRequest();
+                                    else
+                                        drawMap();
                                 }
                             });
                             logic.sendRequest();

@@ -140,6 +140,21 @@ public class CommentDetailAdapter extends RecyclerView.Adapter<CommitHolder> imp
         notifyItemChanged(pos);
     }
 
+    public void deleteCommit(Commit commit, Commit.SubCommit subCommit){
+        int pos = commits.indexOf(commit);
+        if (subCommit != null){
+            commits.get(pos).getComment_responses().remove(subCommit);
+            commits.get(pos).setResponses_count(commits.get(pos).getResponses_count() - 1);
+            notifyItemChanged(pos);
+        }else {
+            commits.remove(commit);
+            notifyItemRemoved(pos);
+        }
+
+
+
+    }
+
     public void setOptListener(CommitOptLostener optListener) {
         this.optListener = optListener;
     }

@@ -33,6 +33,15 @@
         android:layout_centerVertical="true"
         android:visibility="invisible"/>
 
+    <View
+        android:id="@+id/iv_notify"
+        android:layout_width="30px"
+        android:layout_height="30px"
+        android:background="@drawable/shape_notify_redpoint"
+        android:layout_toLeftOf="@+id/iv_next"
+        android:layout_centerVertical="true"
+        android:visibility="gone"/>
+
     <TextView
         android:id="@+id/tv_info"
         style="@style/hint_text_style"

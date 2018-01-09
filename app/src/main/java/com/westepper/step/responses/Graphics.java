@@ -12,6 +12,7 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Polygon;
 import com.amap.api.maps.model.PolygonOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,7 +52,7 @@ public class Graphics implements Parcelable{
     }
 
     public Graphics(AMap aMap, List<LatLng>borderList){
-        polygon = aMap.addPolygon(new PolygonOptions().addAll(borderList));
+        polygon = aMap.addPolygon(new PolygonOptions().addAll(borderList == null ? new ArrayList<LatLng>() : borderList));
     }
 
     public Graphics(AMap aMap, LatLng latLng, int radius){

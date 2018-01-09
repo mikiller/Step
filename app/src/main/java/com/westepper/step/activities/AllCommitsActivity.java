@@ -15,8 +15,11 @@ import com.westepper.step.base.SuperActivity;
 import com.westepper.step.customViews.CommitEditView;
 import com.westepper.step.customViews.TitleBar;
 import com.westepper.step.logics.CommitLogic;
+import com.westepper.step.logics.DeleteCommitLogic;
 import com.westepper.step.logics.GetCommitDetailLogic;
+import com.westepper.step.logics.GetJoinUsersLogic;
 import com.westepper.step.models.CommitModel;
+import com.westepper.step.models.DeleteCommitModel;
 import com.westepper.step.models.DisBase;
 import com.westepper.step.responses.Commit;
 import com.westepper.step.responses.CommitList;
@@ -85,7 +88,7 @@ public class AllCommitsActivity extends SuperActivity {
 
             @Override
             public void onDelete(Commit commit, Commit.SubCommit subCommit) {
-
+                deleteCommit(commit, subCommit);
             }
         });
     }
@@ -107,23 +110,32 @@ public class AllCommitsActivity extends SuperActivity {
                         model.setMsg(txt);
                         model.setTime(System.currentTimeMillis());
                         CommitLogic logic = new CommitLogic(AllCommitsActivity.this, model).setCallbackObject(commitInput, adapter);
-                        logic.setCallback(new BaseLogic.LogicCallback<Commit>() {
-                            @Override
-                            public void onSuccess(Commit response) {
-
-                            }
-
-                            @Override
-                            public void onFailed(String code, String msg, Commit localData) {
-
-                            }
-                        });
                         logic.sendRequest();
                     }
                 });
             }
         }, 200);
 
+    }
+
+    private void deleteCommit(final Commit commit, final Commit.SubCommit subCommit){
+        DeleteCommitModel model = new DeleteCommitModel(commit.getComment_blog_kind());
+        model.setCommentId(commit.getCommentId());
+        if (subCommit != null)
+            model.setResponseId(subCommit.getId());
+        DeleteCommitLogic logic = new DeleteCommitLogic(this, model);
+        logic.setCallback(new BaseLogic.LogicCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                adapter.deleteCommit(commit, subCommit);
+            }
+
+            @Override
+            public void onFailed(String code, String msg, Object localData) {
+
+            }
+        });
+        logic.sendRequest();
     }
 
     @Override

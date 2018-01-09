@@ -15,6 +15,7 @@ public class Commit implements Serializable {
     private int comment_blog_kind;
     private SignModel userInfo;
     private String comment_content;
+    private String msg;
     private long create_time;
     private int responses_count;
     private List<SubCommit> comment_responses;
@@ -57,6 +58,14 @@ public class Commit implements Serializable {
 
     public void setComment_content(String comment_content) {
         this.comment_content = comment_content;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public long getCreate_time() {

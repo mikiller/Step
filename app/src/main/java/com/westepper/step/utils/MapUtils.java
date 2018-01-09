@@ -134,12 +134,13 @@ public class MapUtils {
     }
 
     public void moveToUserPos(){
-        moveCamera(new LatLng(mapLocation.getLatitude(), mapLocation.getLongitude()));
+        if (mapLocation != null)
+            moveCamera(new LatLng(mapLocation.getLatitude(), mapLocation.getLongitude()));
     }
 
     public void init(Context context, AMap aMap) {
         this.aMap = aMap;
-        initLocationStyle(context, 5000);
+        initLocationStyle(context, 3000);
 //        initLocationClient(context);
         initGeoClient(context);
     }
@@ -190,28 +191,6 @@ public class MapUtils {
 
             }
         });
-
-//        aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
-//            @Override
-//            public void onTouch(MotionEvent motionEvent) {
-//                if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-//                    relocationTimer.cancel();
-//                    aMap.setMyLocationEnabled(false);
-//                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP ) {
-//                    relocationTimer = new Timer();
-//                    relocationTimer.schedule(new TimerTask() {
-//                        @Override
-//                        public void run() {
-//                            if(needArea) {
-//                                aMap.setMyLocationStyle(locationStyle);
-//                                aMap.setMyLocationEnabled(true);
-//                            }
-//                        }
-//                    }, 8000);
-//                }
-//            }
-//        });
-
     }
 
     private void setCustomStyle(Context context) {

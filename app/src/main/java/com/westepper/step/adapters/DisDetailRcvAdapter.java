@@ -47,19 +47,19 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private Context mContext;
     private Discovery discovery;
     private List<Commit> commits;
-    private RecyclerView rcv;
+    //private RecyclerView rcv;
     private OnCommitListener commitListener;
 
     private boolean isDetail = true;
 
 
-    public DisDetailRcvAdapter(Context context, RecyclerView recyclerView) {
+    public DisDetailRcvAdapter(Context context) {
         this.mContext = context;
-        rcv = recyclerView;
+        //rcv = recyclerView;
     }
 
-    public DisDetailRcvAdapter(Context context, RecyclerView recyclerView, boolean isDetail) {
-        this(context, recyclerView);
+    public DisDetailRcvAdapter(Context context, boolean isDetail) {
+        this(context);
         this.isDetail = isDetail;
     }
 
@@ -155,7 +155,7 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(commit == null)
             return;
         holder.setUserInfo(mContext, commit.getUserInfo().getNickName(), commit.getUserInfo().getHeadImg());
-        holder.setTv_commit(commit.getComment_content());
+        holder.setTv_commit(TextUtils.isEmpty(commit.getComment_content()) ? commit.getMsg() : commit.getComment_content());
         holder.setTv_time(commit.getCreate_time());
 //        holder.tv_nickName.setText(commit.getUserInfo().getNickName());
 //        holder.tv_commit.setText(commit.getComment_content());
@@ -182,9 +182,9 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void addCommit(Commit commit){
         if(commits == null)
             commits = new ArrayList<>();
-        this.commits.add(commit);
+        this.commits.add(0, commit);
         notifyItemInserted(isDetail ? 2 : 0);
-        rcv.scrollToPosition(0);
+        //rcv.scrollToPosition(0);
         if(isDetail)
             notifyItemChanged(1);
     }
@@ -205,7 +205,7 @@ public class DisDetailRcvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public int getItemCount() {
         if(isDetail && discovery != null)
-            return commits == null ? 1 : commits.size() + 2;
+            return (commits == null || commits.size() == 0) ? 1 : commits.size() + 2;
         else
             return commits == null ? 0 : commits.size();
     }

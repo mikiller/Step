@@ -1,7 +1,14 @@
 package com.westepper.step.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -15,6 +22,7 @@ import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.BaseModel;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
+import com.westepper.step.customViews.NotifyRadioButton;
 import com.westepper.step.customViews.UntouchableViewPager;
 import com.westepper.step.logics.GetUserInfoLogic;
 import com.westepper.step.logics.RankListLogic;
@@ -23,8 +31,10 @@ import com.westepper.step.responses.MapData;
 import com.westepper.step.responses.RankList;
 import com.westepper.step.responses.UserInfo;
 import com.westepper.step.utils.FileUtils;
+import com.westepper.step.utils.MXPreferenceUtils;
 import com.westepper.step.utils.MapUtils;
 import com.westepper.step.utils.ContactsHelper;
+import com.westepper.step.widgets.getui.GetuiIntentService;
 
 import java.util.ArrayList;
 
@@ -39,10 +49,13 @@ public class MainActivity extends SuperActivity {
     UntouchableViewPager vp_content;
     @BindView(R.id.rdg_guideBar)
     RadioGroup rdg_guideBar;
+    @BindView(R.id.rdb_mine)
+    NotifyRadioButton rdb_mine;
 
     MainFragmentAdapter adapter;
     boolean canQuit = false;
 //    public static MapData mapData;
+    private ServiceConnection scon;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +75,7 @@ public class MainActivity extends SuperActivity {
                     case R.id.rdb_mine:
                         vp_content.setCurrentItem(2);
                         getRankList();
+                        rdb_mine.setHasNotify(false);
                         break;
                     default:
                         vp_content.setCurrentItem(1);
@@ -77,6 +91,26 @@ public class MainActivity extends SuperActivity {
 
         getUserInfo();
 
+        scon = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                ((GetuiIntentService.Binder)service).getService().setCallback(new GetuiIntentService.Callback() {
+                    @Override
+                    public void onNotify() {
+                        MXPreferenceUtils.getInstance().setBoolean(Constants.HAS_NOTIFY, true);
+                        if (rdb_mine != null)
+                            rdb_mine.setHasNotify(true);
+                        adapter.getItem(2).fragmentCallback(Constants.GET_NOTIFY, null);
+                    }
+                });
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        };
+        bindService(new Intent(this, GetuiIntentService.class), scon, Context.BIND_AUTO_CREATE);
     }
 
     private void getUserInfo() {
@@ -158,4 +192,5 @@ public class MainActivity extends SuperActivity {
             super.onBackPressed();
         }
     }
+
 }

@@ -24,6 +24,7 @@ public class MyMenuItem extends RelativeLayout {
     private View bottom_line;
     public TextView tv_info;
     private ImageView iv_next;
+    private View iv_notify;
 
     private Drawable menuIcon;
     private String menuName;
@@ -110,6 +111,7 @@ public class MyMenuItem extends RelativeLayout {
         iv_next = (ImageView) findViewById(R.id.iv_next);
         menu_bg = (RelativeLayout) findViewById(R.id.menu_bg);
         bottom_line = findViewById(R.id.bottom_line);
+        iv_notify = findViewById(R.id.iv_notify);
 
         if(attrs == null)
             return;
@@ -131,31 +133,18 @@ public class MyMenuItem extends RelativeLayout {
         iv_next.setVisibility(needNext ? VISIBLE : INVISIBLE);
     }
 
-//    @Override
-//    protected void onFinishInflate() {
-//        super.onFinishInflate();
-//
-//        if(menuIcon!= null)
-//            iv_menu_icon.setImageDrawable(menuIcon);
-//        else
-//            iv_menu_icon.setVisibility(GONE);
-//        setMenuName(menuName);
-//        bottom_line.setVisibility(needLine ? VISIBLE : GONE);
-//        //this.setBackgroundResource(R.drawable.selector_menuitem);
-//
-//
-//        tv_info.setVisibility(needSubText ? VISIBLE : GONE);
-//        iv_next.setVisibility(needNext ? VISIBLE : INVISIBLE);
-//    }
-
-//    @Override
-//    public void setOnClickListener(OnClickListener l) {
-//        menu_bg.setOnClickListener(l);
-//        super.setOnClickListener(l);
-//    }
-
     public void setSubText(String text){
         tv_info.setText(text);
+    }
+
+    public void setNeedNotify(final boolean isNeed){
+        iv_notify.post(new Runnable() {
+            @Override
+            public void run() {
+                iv_notify.setVisibility(isNeed ? VISIBLE : GONE);
+            }
+        });
+
     }
 
     @Override
