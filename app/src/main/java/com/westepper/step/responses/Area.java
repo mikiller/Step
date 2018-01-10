@@ -61,7 +61,13 @@ public class Area extends Graphy /*implements Parcelable*/{
     }
 
     public List<LatLng> getBorderList() {
+        if (borderList == null)
+            borderList = new ArrayList<>();
         return borderList;
+    }
+
+    public void setBorderList(List<LatLng> borderList) {
+        this.borderList = borderList;
     }
 
     public int getAreaType() {
@@ -70,10 +76,6 @@ public class Area extends Graphy /*implements Parcelable*/{
 
     public void setAreaType(int areaType) {
         this.areaType = areaType;
-    }
-
-    public void setBorderList(List<LatLng> borderList) {
-        this.borderList = borderList;
     }
 
     public void setBorderCoord(double lat, double lon){
@@ -107,7 +109,9 @@ public class Area extends Graphy /*implements Parcelable*/{
     @Override
     public void createGraphics(AMap aMap, int graphicType){
         if(areaType == Area.POLYGON){
-            graphics = new Graphics(aMap, borderList);
+            ArrayList<List<LatLng>> coords = new ArrayList<>();
+            coords.add(borderList);
+            graphics = new Graphics(aMap, coords);
         }else if(areaType == Area.CIRCLE){
             graphics = new Graphics(aMap, circle.getLatlng(), circle.getRadius());
         }

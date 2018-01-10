@@ -15,6 +15,10 @@ public class JoinModel extends BaseModel {
         this.teamId = teamId;
     }
 
+    public JoinModel(String discoveryId) {
+        this.discoveryId = discoveryId;
+    }
+
     public String getDiscoveryId() {
         return discoveryId;
     }

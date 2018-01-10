@@ -1,6 +1,8 @@
 package com.westepper.step.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Paint;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -33,7 +35,9 @@ import com.netease.nimlib.sdk.team.model.Team;
 import com.uilib.customdialog.CustomDialog;
 import com.westepper.step.R;
 import com.westepper.step.base.SuperActivity;
+import com.westepper.step.logics.BindGroupChatLogic;
 import com.westepper.step.logics.NewDiscoveryLogic;
+import com.westepper.step.models.JoinModel;
 import com.westepper.step.models.NewDiscoveryModel;
 
 import java.io.Serializable;
@@ -53,12 +57,12 @@ public class ContactsHelper {
     /**
      * 创建高级群
      */
-    public static void createAdvancedTeam(final Context context, String teamName, List<String> memberAccounts, final NewDiscoveryModel model) {
+    public static void createAdvancedTeam(final Context context, String teamName, List<String> memberAccounts, final JoinModel model) {
         // 创建群
         TeamTypeEnum type = TeamTypeEnum.Advanced;
         HashMap<TeamFieldEnum, Serializable> fields = new HashMap<>();
         fields.put(TeamFieldEnum.Name, teamName);
-        fields.put(TeamFieldEnum.BeInviteMode, model == null ? TeamBeInviteModeEnum.NoAuth : TeamBeInviteModeEnum.NeedAuth);
+        fields.put(TeamFieldEnum.BeInviteMode, TeamBeInviteModeEnum.NeedAuth);
         NIMClient.getService(TeamService.class).createTeam(fields, type, "",
                 memberAccounts).setCallback(
                 new RequestCallback<CreateTeamResult>() {
@@ -94,7 +98,7 @@ public class ContactsHelper {
     /**
      * 群创建成功回调
      */
-    private static void onCreateSuccess(final Context context, CreateTeamResult result, NewDiscoveryModel model) {
+    private static void onCreateSuccess(final Context context, CreateTeamResult result, JoinModel model) {
         if (result == null) {
             Log.e(TAG, "onCreateSuccess exception: team is null");
             return;
@@ -116,33 +120,27 @@ public class ContactsHelper {
         }
 
         // 演示：向群里插入一条Tip消息，使得该群能立即出现在最近联系人列表（会话列表）中，满足部分开发者需求
-//        Map<String, Object> content = new HashMap<>(1);
-//        content.put("content", "成功创建高级群");
-//        IMMessage msg = MessageBuilder.createTipMessage(team.getId(), SessionTypeEnum.Team);
-//        msg.setRemoteExtension(content);
-//        CustomMessageConfig config = new CustomMessageConfig();
-//        config.enableUnreadCount = false;
-//        msg.setConfig(config);
-//        msg.setStatus(MsgStatusEnum.success);
-//        NIMClient.getService(MsgService.class).saveMessageToLocal(msg, true);
         SessionHelper.sendTipMessage("成功创建高级群", team.getId(), SessionTypeEnum.Team);
 
         // 发送后，稍作延时后跳转
-        if (model == null) {
-            new Handler(context.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    NimUIKit.startTeamSession(context, team.getId()); // 进入创建的群
-                }
-            }, 50);
-        }else{
-            model.setTeamId(team.getId());
-            NewDiscoveryLogic logic = new NewDiscoveryLogic(context, model);
-            logic.sendRequest();
-        }
+//        if (model == null) {
+        new Handler(context.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                NimUIKit.startTeamSession(context, team.getId()); // 进入创建的群
+                ((Activity) context).setResult(Activity.RESULT_OK);
+                ((SuperActivity) context).back();
+            }
+        }, 50);
+//        }else{
+        model.setTeamId(team.getId());
+        BindGroupChatLogic logic = new BindGroupChatLogic(context, model);
+//            NewDiscoveryLogic logic = new NewDiscoveryLogic(context, model);
+        logic.sendRequest();
+//        }
     }
 
-    public static void inviteMembers(final Context context, final String teamId, List<String> accounts){
+    public static void inviteMembers(final Context context, final String teamId, List<String> accounts) {
         NIMClient.getService(TeamService.class).addMembers(teamId, accounts).setCallback(new RequestCallback<List<String>>() {
             @Override
             public void onSuccess(List<String> failedAccounts) {
@@ -152,6 +150,8 @@ public class ContactsHelper {
                 } else {
                     TeamHelper.onMemberTeamNumOverrun(failedAccounts, context);
                 }
+                ((Activity) context).setResult(Activity.RESULT_OK);
+                ((SuperActivity) context).back();
             }
 
             @Override
@@ -159,6 +159,8 @@ public class ContactsHelper {
                 if (code == ResponseCode.RES_TEAM_INVITE_SUCCESS) {
                     Toast.makeText(context, R.string.team_invite_members_success, Toast.LENGTH_SHORT).show();
                     NimUIKit.startTeamSession(context, teamId);
+                    ((Activity) context).setResult(Activity.RESULT_OK);
+                    ((SuperActivity) context).back();
                 } else {
                     Toast.makeText(context, "invite members failed, code=" + code, Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "invite members failed, code=" + code);
@@ -172,19 +174,19 @@ public class ContactsHelper {
         });
     }
 
-    public static void addFriend(View addBtn, String account, boolean needVerif){
-        if(needVerif)
+    public static void addFriend(View addBtn, String account, boolean needVerif) {
+        if (needVerif)
             createVerifDlg(addBtn, account);
         else
             addFriend(addBtn, account, VerifyType.DIRECT_ADD, "");
     }
 
-    private static void createVerifDlg(final View addBtn, final String account){
+    private static void createVerifDlg(final View addBtn, final String account) {
         final CustomDialog dlg = new CustomDialog(addBtn.getContext());
         dlg.setDlgEditable(true).setTitle("添加好友").setDlgButtonListener(new CustomDialog.onButtonClickListener() {
             @Override
             public void onCancel() {
-                ((SuperActivity)addBtn.getContext()).hideInputMethod(dlg.getCurrentFocus());
+                ((SuperActivity) addBtn.getContext()).hideInputMethod(dlg.getCurrentFocus());
             }
 
             @Override
@@ -194,7 +196,7 @@ public class ContactsHelper {
         }).show();
     }
 
-    private static void addFriend(final View addBtn, String account, final VerifyType verifyType, String msg){
+    private static void addFriend(final View addBtn, String account, final VerifyType verifyType, String msg) {
         NIMClient.getService(FriendService.class).addFriend(new AddFriendData(account, verifyType, msg))
                 .setCallback(new RequestCallback<Void>() {
                     @Override

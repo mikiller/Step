@@ -1,5 +1,6 @@
 package com.westepper.step.activities;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -137,12 +138,13 @@ public class MyDiscoveryActivity extends SuperActivity {
                 outRect.bottom = DisplayUtil.dip2px(MyDiscoveryActivity.this, 10);
             }
         });
+        swipeLayout.setRefreshing(true);
     }
 
     @Override
     protected void initData() {
         //getMyDiscovery(page);
-        swipeLayout.setRefreshing(true);
+
     }
 
     private void getMyDiscovery(final int page) {
@@ -175,5 +177,12 @@ public class MyDiscoveryActivity extends SuperActivity {
             }
         });
         logic.sendRequest();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK){
+            back();
+        }
     }
 }

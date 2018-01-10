@@ -6,27 +6,28 @@ import android.os.Parcelable;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Mikiller on 2017/12/28.
  */
 
-public class DisArea extends Graphy{
+public class DisArea extends Graphy {
 
     private String id;
     private String name;
     private String p_id;
-    private List<LatLng> coords;
+    private List<List<LatLng>> coords = new ArrayList<>();
     private LatLng center;
     private List<String> areaIds;
     private List<String> districtIds;
+
 
     protected DisArea(Parcel in) {
         id = in.readString();
         name = in.readString();
         p_id = in.readString();
-        coords = in.createTypedArrayList(LatLng.CREATOR);
         center = in.readParcelable(LatLng.class.getClassLoader());
         areaIds = in.createStringArrayList();
         districtIds = in.createStringArrayList();
@@ -68,11 +69,11 @@ public class DisArea extends Graphy{
         this.p_id = p_id;
     }
 
-    public List<LatLng> getCoords() {
+    public List<List<LatLng>> getCoords() {
         return coords;
     }
 
-    public void setCoords(List<LatLng> coords) {
+    public void setCoords(List<List<LatLng>> coords) {
         this.coords = coords;
     }
 
@@ -107,18 +108,19 @@ public class DisArea extends Graphy{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+
         dest.writeString(id);
         dest.writeString(name);
         dest.writeString(p_id);
-        dest.writeTypedList(coords);
         dest.writeParcelable(center, flags);
         dest.writeStringList(areaIds);
         dest.writeStringList(districtIds);
     }
 
+
     @Override
     public void createGraphics(AMap aMap, int graphicType) {
-        graphics = new Graphics(aMap, coords);
+        graphics = new Graphics(aMap, coords == null ? new ArrayList<List<LatLng>>() : coords);
         setGraphicsType(graphicType);
         setReached(false);
         hide();

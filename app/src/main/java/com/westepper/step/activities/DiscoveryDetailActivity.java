@@ -375,7 +375,7 @@ public class DiscoveryDetailActivity extends SuperActivity {
     }
 
     private void joinOutgoLogic() {
-        JoinLogic logic = new JoinLogic(DiscoveryDetailActivity.this, new JoinModel(discovery.getDiscoveryId(), discovery.getTeamId()));
+        JoinLogic logic = new JoinLogic(DiscoveryDetailActivity.this, new JoinModel(discovery.getDiscoveryId()));
         logic.setCallback(new BaseLogic.LogicCallback<JoinResponse>() {
             @Override
             public void onSuccess(JoinResponse response) {

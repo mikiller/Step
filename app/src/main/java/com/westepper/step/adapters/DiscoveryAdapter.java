@@ -202,7 +202,7 @@ public class DiscoveryAdapter extends PagerAdapter {
     }
 
     private void joinOutGoLogic(final DiscoveryHolder holder, final Discovery discover){
-        JoinLogic logic = new JoinLogic(mContext, new JoinModel(discover.getDiscoveryId(), discover.getTeamId()));
+        JoinLogic logic = new JoinLogic(mContext, new JoinModel(discover.getDiscoveryId()));
         logic.setCallback(new BaseLogic.LogicCallback<JoinResponse>() {
             @Override
             public void onSuccess(JoinResponse response) {

@@ -78,11 +78,12 @@ public class JoinUserSelectorActivity extends SuperActivity {
             @Override
             protected void onSubClicked() {
                 if (TextUtils.isEmpty(teamId)){
-                    ContactsHelper.createAdvancedTeam(JoinUserSelectorActivity.this,  userInfo.getNickName().concat("的约行").concat(MXTimeUtils.getFormatTime("yy/MM/dd HH:mm", System.currentTimeMillis())), adapter.getAccounts(), null);
+                    ContactsHelper.createAdvancedTeam(JoinUserSelectorActivity.this,  userInfo.getNickName().concat("的约行").concat(MXTimeUtils.getFormatTime("yy/MM/dd HH:mm", System.currentTimeMillis())), adapter.getAccounts(), new JoinModel(disId));
                 }else
                     ContactsHelper.inviteMembers(JoinUserSelectorActivity.this, teamId, adapter.getAccounts());
             }
         });
+        titleBar.setSubTxtEnabled(true);
 
         rcv_users.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
     }
@@ -106,7 +107,7 @@ public class JoinUserSelectorActivity extends SuperActivity {
 //    }
 
     private void getJoinUserLogic() {
-        GetJoinUsersLogic logic = new GetJoinUsersLogic(this, new JoinModel(disId, null));
+        GetJoinUsersLogic logic = new GetJoinUsersLogic(this, new JoinModel(disId));
         logic.setCallback(new BaseLogic.LogicCallback<JoinUsers>() {
             @Override
             public void onSuccess(JoinUsers response) {

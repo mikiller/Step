@@ -18,6 +18,7 @@ public class Constants {
     public static final int GET_MAPDATA = 0X107;
     public static final int REQUEST_CODE_ADVANCED = 0x108;
     public static final int GET_NOTIFY = 0x109;
+    public static final int INVITE_TEAMMEMBER = 0X110;
     public static final String DIS_ID = "DIS_ID";
     public static final String DIS_KIND = "DIS_KIND";
     public static final String DIS_SCOPE = "DIS_SCOPE";

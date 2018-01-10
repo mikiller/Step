@@ -4,10 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,16 +22,19 @@ import com.netease.nim.uikit.cache.TeamDataCache;
 import com.netease.nimlib.sdk.team.model.TeamMember;
 import com.uilib.customdialog.CustomDialog;
 import com.uilib.joooonho.SelectableRoundedImageView;
+import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
 import com.westepper.step.activities.DiscoveryDetailActivity;
 import com.westepper.step.activities.JoinUserSelectorActivity;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
 import com.westepper.step.models.DisBase;
+import com.westepper.step.models.JoinModel;
 import com.westepper.step.responses.Discovery;
 import com.westepper.step.responses.ImgDetail;
 import com.westepper.step.responses.UserInfo;
 import com.westepper.step.utils.ActivityManager;
+import com.westepper.step.utils.AnimUtils;
 import com.westepper.step.utils.ContactsHelper;
 import com.westepper.step.utils.MXTimeUtils;
 
@@ -111,7 +118,7 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
                 holder.tv_joinNum.setText(String.format("邀约%1$s人, 已报名%2$s人", discovery.getTotalCount(), discovery.getJoinCount()));
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.rl_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Map<String, Object> args = new HashMap<>();
@@ -120,17 +127,27 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
                 ActivityManager.startActivity((Activity) mContext, DiscoveryDetailActivity.class, args);
             }
         });
+        holder.translateItem((int) holder.rl_item.getTranslationX(), 0);
+
+        holder.btn_del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
 
         holder.tv_chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(TextUtils.isEmpty(discovery.getTeamId())){
-                    if (type == 1)
+                    if (type == 1)//我发布的
                         createTeam(discovery);
                     else
                         Toast.makeText(mContext, "暂未创建群聊", Toast.LENGTH_SHORT).show();
                 }else
                     getTeamMembers(discovery);
+
+
 //                if (type == 1 && discovery.getJoinCount() > 0) {
 //                    //选择报名人员
 //                    Map<String, Object> args = new HashMap<String, Object>();
@@ -162,10 +179,10 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
         if(discovery.getJoinCount() > 0) {
             Map<String, Object> args = new HashMap<String, Object>();
             args.put(Constants.DIS_ID, discovery.getDiscoveryId());
-            args.put(Constants.TEAM_ID, discovery.getTeamId());
-            ActivityManager.startActivity((Activity) mContext, JoinUserSelectorActivity.class, args);
+            //args.put(Constants.TEAM_ID, discovery.getTeamId());
+            ActivityManager.startActivityforResult((Activity) mContext, JoinUserSelectorActivity.class, Constants.INVITE_TEAMMEMBER, args);
         }else {
-            ContactsHelper.createAdvancedTeam(mContext, userInfo.getNickName().concat("的约行").concat(MXTimeUtils.getFormatTime("yy/MM/dd HH:mm", System.currentTimeMillis())), new ArrayList<String>(), null);
+            ContactsHelper.createAdvancedTeam(mContext, userInfo.getNickName().concat("的约行").concat(MXTimeUtils.getFormatTime("yy/MM/dd HH:mm", System.currentTimeMillis())), new ArrayList<String>(), new JoinModel(discovery.getDiscoveryId()));
         }
     }
 
@@ -182,7 +199,7 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
                             args.put(Constants.DIS_ID, discovery.getDiscoveryId());
                             args.put(Constants.TEAM_ID, discovery.getTeamId());
                             args.put(Constants.TEAM_MEMBER, members);
-                            ActivityManager.startActivity((Activity) mContext, JoinUserSelectorActivity.class, args);
+                            ActivityManager.startActivityforResult((Activity) mContext, JoinUserSelectorActivity.class, Constants.INVITE_TEAMMEMBER, args);
                         } else {
                             NimUIKit.startTeamSession(mContext, discovery.getTeamId());
                             ((SuperActivity) mContext).back();
@@ -230,6 +247,8 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
         private TextView tv_date1, tv_date2, tv_msg, tv_pos, tv_good, tv_commit, tv_joinNum, tv_chat;
         private SelectableRoundedImageView[] iv_imgs = new SelectableRoundedImageView[3];
         private LinearLayout ll_chat;
+        private RelativeLayout rl_item;
+        private Button btn_del;
 
         public DisHolder(View itemView) {
             super(itemView);
@@ -245,6 +264,39 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
                 iv_imgs[i] = (SelectableRoundedImageView) itemView.findViewById(ids[i]);
             }
             ll_chat = (LinearLayout) itemView.findViewById(R.id.ll_chat);
+            rl_item = (RelativeLayout) itemView.findViewById(R.id.rl_item);
+            btn_del = (Button) itemView.findViewById(R.id.btn_del);
+
+            rl_item.setOnTouchListener(new View.OnTouchListener() {
+                float x = 0,dx;
+                int width = -DisplayUtil.dip2px(mContext, 50);
+                boolean isMove;
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()){
+                        case MotionEvent.ACTION_DOWN:
+                            x = event.getX();
+                            isMove = false;
+                            break;
+                        case MotionEvent.ACTION_MOVE:
+                            dx = event.getX() - x;
+                            if (dx < -100){
+                                //左移
+                                translateItem(0, width);
+                                isMove = true;
+                            }else if (dx > 100){
+                                translateItem(width, 0);
+                                isMove = true;
+                            }
+                            break;
+                    }
+                    return isMove;
+                }
+            });
+        }
+
+        private void translateItem(int start, int end){
+            AnimUtils.startObjectAnim(rl_item, "translationX", start, end, 300);
         }
     }
 }

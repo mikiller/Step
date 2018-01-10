@@ -1,6 +1,5 @@
 package com.westepper.step.responses;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -24,7 +23,7 @@ public class Graphics implements Parcelable{
     private final int ACHEIVE_FILL_REACHED = Color.parseColor("#8800cca3"), ACHEIVE_FILL = Color.parseColor("#66a0bed2");
     public static final int MAP = 1, ACHEIVE = 2;
     private int graphicsType;
-    private Polygon polygon;
+    private List<Polygon> polygons;
     private Circle circle;
 
     protected Graphics(Parcel in) {
@@ -47,12 +46,17 @@ public class Graphics implements Parcelable{
         return circle;
     }
 
-    public Polygon getPolygon() {
-        return polygon;
+    public List<Polygon> getPolygons() {
+        return polygons;
     }
 
-    public Graphics(AMap aMap, List<LatLng>borderList){
-        polygon = aMap.addPolygon(new PolygonOptions().addAll(borderList == null ? new ArrayList<LatLng>() : borderList));
+    public Graphics(AMap aMap, List<List<LatLng>>borderList){
+        polygons = new ArrayList<>();
+        for(List<LatLng> borders: borderList){
+            if (borders.size() > 0) {
+                polygons.add(aMap.addPolygon(new PolygonOptions().addAll(borders)));
+            }
+        }
     }
 
     public Graphics(AMap aMap, LatLng latLng, int radius){
@@ -60,20 +64,22 @@ public class Graphics implements Parcelable{
     }
 
     public void setGraphicsReached(boolean reached){
-        if(polygon != null)
+        if(polygons != null)
             setPolygonReached(reached);
         else if(circle != null)
             setCircleReached(reached);
     }
 
     private void setPolygonReached(boolean reached){
-        if(reached){
-            polygon.setStrokeWidth(0f);
-            polygon.setFillColor(NORMAL_FILL);
-        }else{
-            polygon.setStrokeWidth(0f);
-            polygon.setFillColor(Color.TRANSPARENT);
-            polygon.setVisible(false);
+        for (Polygon polygon : polygons) {
+            if(reached){
+                polygon.setStrokeWidth(0f);
+                polygon.setFillColor(NORMAL_FILL);
+            }else{
+                polygon.setStrokeWidth(0f);
+                polygon.setFillColor(Color.TRANSPARENT);
+                polygon.setVisible(false);
+            }
         }
     }
 
@@ -102,19 +108,21 @@ public class Graphics implements Parcelable{
     }
 
     public void setGraphicsAcheiveReached(boolean reached){
-        if(polygon != null)
+        if(polygons != null)
             setPolygonAcheiveReached(reached);
         else if(circle != null)
             setCircleAcheiveReached(reached);
     }
 
     private void setPolygonAcheiveReached(boolean reached){
-        if(reached){
-            polygon.setStrokeWidth(0);
-            polygon.setFillColor(ACHEIVE_FILL_REACHED);
-        }else{
-            polygon.setStrokeWidth(0);
-            polygon.setFillColor(ACHEIVE_FILL);
+        for (Polygon polygon : polygons) {
+            if (reached) {
+                polygon.setStrokeWidth(0);
+                polygon.setFillColor(ACHEIVE_FILL_REACHED);
+            } else {
+                polygon.setStrokeWidth(0);
+                polygon.setFillColor(ACHEIVE_FILL);
+            }
         }
     }
 
@@ -129,16 +137,18 @@ public class Graphics implements Parcelable{
     }
 
     public void hide(){
-        if(polygon != null)
-            polygon.setVisible(false);
-        else if(circle != null)
+        if(polygons != null) {
+            for (Polygon polygon : polygons)
+                polygon.setVisible(false);
+        }else if(circle != null)
             circle.setVisible(false);
     }
 
     public void show(){
-        if(polygon != null)
-            polygon.setVisible(true);
-        else if(circle != null)
+        if(polygons != null) {
+            for (Polygon polygon : polygons)
+                polygon.setVisible(true);
+        }else if(circle != null)
             circle.setVisible(true);
     }
 
@@ -151,38 +161,4 @@ public class Graphics implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(graphicsType);
     }
-
-//    private void showPolygon(boolean reached){
-//        polygon.setVisible(true);
-//
-//        if(reached){
-//            if(graphicsType == MAP)
-//                polygon.setFillColor(NORMAL_FILL);
-//            else if(graphicsType == ACHEIVE){
-//                polygon.setFillColor(ACHEIVE_FILL_REACHED);
-//            }
-//        }else{
-//            if(graphicsType == MAP) {
-//                polygon.setStrokeWidth(4);
-//            }else if(graphicsType == ACHEIVE){
-//                polygon.setFillColor(ACHEIVE_FILL);
-//            }
-//        }
-//    }
-
-//    private void showCircle(boolean reached){
-//        circle.setVisible(true);
-//        if(reached){
-//            if(graphicsType == MAP)
-//                circle.setFillColor(NORMAL_FILL);
-//            else if(graphicsType == ACHEIVE)
-//                circle.setFillColor(ACHEIVE_FILL_REACHED);
-//        }else{
-//            if(graphicsType == MAP) {
-//                circle.setStrokeWidth(4);
-//            }else if(graphicsType == ACHEIVE){
-//                circle.setFillColor(ACHEIVE_FILL);
-//            }
-//        }
-//    }
 }
