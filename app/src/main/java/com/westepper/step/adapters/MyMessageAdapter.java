@@ -86,7 +86,7 @@ public class MyMessageAdapter extends RecyclerView.Adapter<MyMessageAdapter.MsgH
         }
 
         public void setTv_userName(String userName, int msgType, int discoverKind){
-            String doing = msgType == 3 ? "点赞了你的" : "回复了你的";
+            String doing = msgType == 3 ? "点赞了你的" : (msgType == 4 ? "参加了你的" : "回复了你的");
             String part = msgType == 2 ? "评论" : (discoverKind == 1 ? "心情" : "约行");
             tv_userName.setText(userName.concat(doing).concat(part));
         }
@@ -96,7 +96,7 @@ public class MyMessageAdapter extends RecyclerView.Adapter<MyMessageAdapter.MsgH
         }
 
         public void setTv_commit(String commit, int isDelete, int msgType){
-            tv_commit.setVisibility(msgType == 3 ? View.GONE : View.VISIBLE);
+            tv_commit.setVisibility(msgType >= 3 ? View.GONE : View.VISIBLE);
             tv_commit.setText(isDelete == 1 ? "该评论已被删除" : commit);
         }
     }

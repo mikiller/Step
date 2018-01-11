@@ -12,8 +12,10 @@ import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -83,12 +85,19 @@ public class SettingActivity extends SuperActivity implements View.OnClickListen
     RadioGroup rdg_moodScope;
     @BindView(R.id.rdg_outgoScope)
     RadioGroup rdg_outgoScope;
+    @BindView(R.id.layout_service)
+    RelativeLayout layout_service;
+    @BindView(R.id.tv_service)
+    TextView tv_service;
+    @BindView(R.id.btn_close)
+    ImageButton btn_close;
 
     //UserInfo userInfo;
     Privacy privacy;
     Gson gson  = new Gson();
     int[] moodScope = new int[]{R.id.rdb_moodScopeSelf, R.id.rdb_moodScopeAll, R.id.rdb_moodScopeFriend};
     int[] outgoScope = new int[]{R.id.rdb_outgoScopeAll, R.id.rdb_outgoScopeFriend};
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -184,6 +193,8 @@ public class SettingActivity extends SuperActivity implements View.OnClickListen
             }
         });
 
+        tv_service.setText(Html.fromHtml(getString(R.string.service_doc)));
+
         menu_privacy.setOnClickListener(this);
         menu_advice.setOnClickListener(this);
         menu_about.setOnClickListener(this);
@@ -192,6 +203,7 @@ public class SettingActivity extends SuperActivity implements View.OnClickListen
         menu_grade.setOnClickListener(this);
         menu_service.setOnClickListener(this);
         menu_contact.setOnClickListener(this);
+        btn_close.setOnClickListener(this);
     }
 
     private void setPrivacyLogic(){
@@ -261,6 +273,12 @@ public class SettingActivity extends SuperActivity implements View.OnClickListen
                         }
                     }
                 }, R.id.btn_mood, R.id.btn_outgo).setCustomBtnText(phone, email).show();
+                break;
+            case R.id.menu_service:
+                AnimUtils.startAlphaAnim(layout_service, 0, 1, 300);
+                break;
+            case R.id.btn_close:
+                AnimUtils.startAlphaAnim(layout_service, 1, 0, 300);
                 break;
         }
     }

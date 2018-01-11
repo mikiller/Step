@@ -127,4 +127,10 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/titleBar"
         android:visibility="gone"/>
+
+    <include android:id="@+id/layout_service"
+        layout="@layout/layout_service"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 </RelativeLayout>

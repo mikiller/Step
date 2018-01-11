@@ -26,9 +26,12 @@ import com.uilib.utils.DisplayUtil;
 import com.westepper.step.R;
 import com.westepper.step.activities.DiscoveryDetailActivity;
 import com.westepper.step.activities.JoinUserSelectorActivity;
+import com.westepper.step.base.BaseLogic;
 import com.westepper.step.base.Constants;
 import com.westepper.step.base.SuperActivity;
+import com.westepper.step.logics.DeleteDiscoverLogic;
 import com.westepper.step.models.DisBase;
+import com.westepper.step.models.DisModel;
 import com.westepper.step.models.JoinModel;
 import com.westepper.step.responses.Discovery;
 import com.westepper.step.responses.ImgDetail;
@@ -88,7 +91,7 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
     }
 
     @Override
-    public void onBindViewHolder(DisHolder holder, int position) {
+    public void onBindViewHolder(DisHolder holder, final int position) {
         final Discovery discovery = discoveryList.get(position);
         if (isToday(discovery.getPushTime())) {
             holder.tv_date1.setText("今天");
@@ -107,7 +110,7 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
                 break;
             GlideImageLoader.getInstance().loadImage(mContext, img.getImg_url(), R.mipmap.placeholder, holder.iv_imgs[i++], 0);
         }
-        while (i<3){
+        while (i < 3) {
             holder.iv_imgs[i++].setImageDrawable(null);
         }
         if (disKind == Constants.OUTGO) {
@@ -132,34 +135,20 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
         holder.btn_del.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+                deleteDiscovery(position, discovery);
             }
         });
 
         holder.tv_chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(TextUtils.isEmpty(discovery.getTeamId())){
+                if (TextUtils.isEmpty(discovery.getTeamId())) {
                     if (type == 1)//我发布的
                         createTeam(discovery);
                     else
                         Toast.makeText(mContext, "暂未创建群聊", Toast.LENGTH_SHORT).show();
-                }else
+                } else
                     getTeamMembers(discovery);
-
-
-//                if (type == 1 && discovery.getJoinCount() > 0) {
-//                    //选择报名人员
-//                    Map<String, Object> args = new HashMap<String, Object>();
-//                    args.put(Constants.DIS_ID, discovery.getDiscoveryId());
-//                    args.put(Constants.TEAM_ID, discovery.getTeamId());
-//                    ActivityManager.startActivity((Activity) mContext, JoinUserSelectorActivity.class, args);
-//                } else if (type == 2) {
-//
-//                } else {
-//                    //进入群聊
-//                    NimUIKit.startTeamSession(mContext, discovery.getTeamId());
-//                }
             }
         });
     }
@@ -175,13 +164,13 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
         return d1.equals(d2);
     }
 
-    private void createTeam(Discovery discovery){
-        if(discovery.getJoinCount() > 0) {
+    private void createTeam(Discovery discovery) {
+        if (discovery.getJoinCount() > 0) {
             Map<String, Object> args = new HashMap<String, Object>();
             args.put(Constants.DIS_ID, discovery.getDiscoveryId());
             //args.put(Constants.TEAM_ID, discovery.getTeamId());
             ActivityManager.startActivityforResult((Activity) mContext, JoinUserSelectorActivity.class, Constants.INVITE_TEAMMEMBER, args);
-        }else {
+        } else {
             ContactsHelper.createAdvancedTeam(mContext, userInfo.getNickName().concat("的约行").concat(MXTimeUtils.getFormatTime("yy/MM/dd HH:mm", System.currentTimeMillis())), new ArrayList<String>(), new JoinModel(discovery.getDiscoveryId()));
         }
     }
@@ -237,6 +226,24 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
         }).show();
     }
 
+    private void deleteDiscovery(final int pos, final Discovery discovery){
+        DisModel model = new DisModel(discovery.getDiscoveryId(), discovery.getDiscoveryKind());
+        DeleteDiscoverLogic logic = new DeleteDiscoverLogic(mContext, model);
+        logic.setCallback(new BaseLogic.LogicCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                discoveryList.remove(discovery);
+                notifyItemRemoved(pos);
+            }
+
+            @Override
+            public void onFailed(String code, String msg, Object localData) {
+
+            }
+        });
+        logic.sendRequest();
+    }
+
     @Override
     public int getItemCount() {
         return discoveryList == null ? 0 : discoveryList.size();
@@ -268,25 +275,28 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
             btn_del = (Button) itemView.findViewById(R.id.btn_del);
 
             rl_item.setOnTouchListener(new View.OnTouchListener() {
-                float x = 0,dx;
+                float x = 0, dx;
                 int width = -DisplayUtil.dip2px(mContext, 50);
                 boolean isMove;
+
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    switch (event.getAction()){
+                    switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
                             x = event.getX();
                             isMove = false;
                             break;
                         case MotionEvent.ACTION_MOVE:
-                            dx = event.getX() - x;
-                            if (dx < -100){
-                                //左移
-                                translateItem(0, width);
-                                isMove = true;
-                            }else if (dx > 100){
-                                translateItem(width, 0);
-                                isMove = true;
+                            if (type != 2) {
+                                dx = event.getX() - x;
+                                if (dx < -100) {
+                                    //左移
+                                    translateItem(0, width);
+                                    isMove = true;
+                                } else if (dx > 100) {
+                                    translateItem(width, 0);
+                                    isMove = true;
+                                }
                             }
                             break;
                     }
@@ -295,7 +305,7 @@ public class MyDiscoveryRcvAdapter extends RecyclerView.Adapter<MyDiscoveryRcvAd
             });
         }
 
-        private void translateItem(int start, int end){
+        private void translateItem(int start, int end) {
             AnimUtils.startObjectAnim(rl_item, "translationX", start, end, 300);
         }
     }

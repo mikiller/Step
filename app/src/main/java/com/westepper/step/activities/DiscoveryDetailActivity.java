@@ -154,6 +154,8 @@ public class DiscoveryDetailActivity extends SuperActivity {
                     public void onBtnClick(int id) {
                         Map<String, Object> args = new HashMap<String, Object>();
                         args.put(Constants.ISREPORT, id == R.id.btn_mood ? ReportAdviceActivity.REPORT : ReportAdviceActivity.ADVICE);
+                        args.put(Constants.DIS_ID, discovery.getDiscoveryId());
+                        args.put(Constants.DIS_KIND, discovery.getDiscoveryKind());
                         ActivityManager.startActivity(DiscoveryDetailActivity.this, ReportAdviceActivity.class, args);
                         dlg.dismiss();
                     }

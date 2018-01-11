@@ -62,7 +62,7 @@ public class ContactsHelper {
         TeamTypeEnum type = TeamTypeEnum.Advanced;
         HashMap<TeamFieldEnum, Serializable> fields = new HashMap<>();
         fields.put(TeamFieldEnum.Name, teamName);
-        fields.put(TeamFieldEnum.BeInviteMode, TeamBeInviteModeEnum.NeedAuth);
+        fields.put(TeamFieldEnum.BeInviteMode, model == null ? TeamBeInviteModeEnum.NeedAuth : TeamBeInviteModeEnum.NoAuth);
         NIMClient.getService(TeamService.class).createTeam(fields, type, "",
                 memberAccounts).setCallback(
                 new RequestCallback<CreateTeamResult>() {
@@ -122,8 +122,13 @@ public class ContactsHelper {
         // 演示：向群里插入一条Tip消息，使得该群能立即出现在最近联系人列表（会话列表）中，满足部分开发者需求
         SessionHelper.sendTipMessage("成功创建高级群", team.getId(), SessionTypeEnum.Team);
 
+
+        if (model != null) {
+            model.setTeamId(team.getId());
+            BindGroupChatLogic logic = new BindGroupChatLogic(context, model);
+            logic.sendRequest();
+        }
         // 发送后，稍作延时后跳转
-//        if (model == null) {
         new Handler(context.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -132,12 +137,6 @@ public class ContactsHelper {
                 ((SuperActivity) context).back();
             }
         }, 50);
-//        }else{
-        model.setTeamId(team.getId());
-        BindGroupChatLogic logic = new BindGroupChatLogic(context, model);
-//            NewDiscoveryLogic logic = new NewDiscoveryLogic(context, model);
-        logic.sendRequest();
-//        }
     }
 
     public static void inviteMembers(final Context context, final String teamId, List<String> accounts) {

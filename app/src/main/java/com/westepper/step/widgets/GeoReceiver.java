@@ -124,8 +124,6 @@ public class GeoReceiver extends BroadcastReceiver {
         }
     }
 
-
-
     private boolean searchAreaId(List<String> rIds, List<ReachedId> reachedIds, int level) {
         boolean needShow = true;
         for (String id : rIds) {
