@@ -246,8 +246,6 @@ MapFragment extends BaseFragment implements View.OnClickListener, RadioGroup.OnC
 
     private void drawMap() {
         mapUtils.analyzeMapData();
-        String reachedStr = MXPreferenceUtils.getInstance().getString(Constants.REACHED_LIST);
-        mapUtils.reachedList = TextUtils.isEmpty(reachedStr)? new ReachedList() : new Gson().fromJson(reachedStr, ReachedList.class);
         mapView.postDelayed(new Runnable() {
             @Override
             public void run() {

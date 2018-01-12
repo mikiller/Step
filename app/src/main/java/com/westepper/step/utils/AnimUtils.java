@@ -4,6 +4,8 @@ import android.animation.FloatEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
+import android.app.Dialog;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -55,6 +57,33 @@ public class AnimUtils {
             public void onAnimationEnd(Animation animation) {
                 if(endV == 0.0f)
                     view.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        view.startAnimation(alphaAnim);
+    }
+
+    public static void dlgAlphaAnims(final Dialog dlg, final float startV, final float endV, int duration){
+        final View view = dlg.getWindow().getDecorView();
+        AlphaAnimation alphaAnim = new AlphaAnimation(startV, endV);
+        alphaAnim.setDuration(duration);
+        alphaAnim.setInterpolator(new DecelerateInterpolator());
+        alphaAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                if(startV == 0.0f)
+                    view.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if(endV == 0.0f)
+                    view.setVisibility(View.GONE);
+                dlg.dismiss();
             }
 
             @Override

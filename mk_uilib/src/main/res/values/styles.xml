@@ -81,4 +81,9 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/discovery_kind_unchecked</item>
     </style>
+
+    <style name="dlg_anim">
+        <item name="android:windowEnterAnimation">@anim/dlg_enter</item>
+        <item name="android:windowExitAnimation">@anim/dlg_exit</item>
+    </style>
 </resources>

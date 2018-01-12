@@ -3,6 +3,7 @@ package com.westepper.step.utils;
 import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.amap.api.fence.GeoFenceClient;
@@ -143,6 +144,13 @@ public class MapUtils {
         initLocationStyle(context, 3000);
 //        initLocationClient(context);
         initGeoClient(context);
+
+        getReachedList();
+    }
+
+    public void getReachedList(){
+        String reachedStr = MXPreferenceUtils.getInstance().getString(Constants.REACHED_LIST);
+        reachedList = TextUtils.isEmpty(reachedStr)? new ReachedList() : new Gson().fromJson(reachedStr, ReachedList.class);
     }
 
     public void initLocationStyle(Context context, long interval) {

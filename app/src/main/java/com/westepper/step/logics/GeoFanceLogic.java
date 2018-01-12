@@ -54,10 +54,11 @@ public class GeoFanceLogic extends BaseLogic<ReachedList> {
         List<String> newIds = response.getReachedAchievementIds();
         newIds.removeAll(oldIds);
 
-        Intent intent = new Intent(context.getString(R.string.geo_fence_receiver));
-        intent.putExtra(Constants.REACHED_LIST, (Serializable) newIds);
-        context.sendBroadcast(intent);
-
+        if (newIds.size() > 0) {
+            Intent intent = new Intent(context.getString(R.string.geo_fence_receiver));
+            intent.putExtra(Constants.REACHED_LIST, (Serializable) newIds);
+            context.sendBroadcast(intent);
+        }
 
     }
 

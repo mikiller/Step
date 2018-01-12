@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.EventLog;
 import android.util.Log;
 
@@ -37,19 +38,31 @@ public class GeoReceiver extends BroadcastReceiver {
     private GeoHandler handler = new GeoHandler();
     private Context context;
     private MapUtils mapUtils = MapUtils.getInstance();
+    private static Timer timer;
+    private static List<String> hasShowedIds;
 
     public GeoReceiver() {
-        MapUtils.getInstance().setLocalReachedList(new Gson().fromJson(MXPreferenceUtils.getInstance().getString(Constants.REACHED_ID + SuperActivity.userInfo.getUserId()), List.class));
+        mapUtils.setLocalReachedList(new Gson().fromJson(MXPreferenceUtils.getInstance().getString(Constants.REACHED_ID + SuperActivity.userInfo.getUserId()), List.class));
+        if (mapUtils.reachedList == null) {
+            mapUtils.getReachedList();
+        }
+        if (hasShowedIds == null){
+            String json = MXPreferenceUtils.getInstance().getString(Constants.SHOWED_ID);
+            hasShowedIds = TextUtils.isEmpty(json) ? new ArrayList<>() : new Gson().fromJson(json, List.class);
+        }
         startGeoTask();
     }
 
     private void startGeoTask() {
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                startGeoFenceLogic(mapUtils.localReachedIds);
-            }
-        }, 30000, 30000);
+        if (timer == null) {
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    startGeoFenceLogic(mapUtils.localReachedIds);
+                }
+            }, 30000, 30000);
+        }
     }
 
     private void startGeoFenceLogic(List<String> ids) {
@@ -67,14 +80,14 @@ public class GeoReceiver extends BroadcastReceiver {
     //String[] tmp = new String[]{"1474","1476","1479","1483","1488","1489","1490","1491","1492","1493","1494","1495","1496","1497","1498","1499","1500","1501","1502","1503","1504","1505","1506","1507","1508","1509","1510","1511","1512","1513","1514","1515","1516","1517","1518","1519","1520","1521","1522","1523","1524","1525","1526","1527","1528","1530","1531","1532","1533","1534","1535","1536","1537","1538","1539","1540","1541","1542","1543","1544","1545","1546","1547","1548"};
     @Override
     public void onReceive(Context context, Intent intent) {
-//        if(!isTrack)
-//            return;
         this.context = context;
+        Log.e("geo receiver", "start a new receiver: " + this.toString() + ", context:" + context.toString() + "name: " + context.getClass().getName());
         Bundle bundle = intent.getExtras();
         int status = bundle.getInt(GeoFence.BUNDLE_KEY_FENCESTATUS);
         String id = bundle.getString(GeoFence.BUNDLE_KEY_CUSTOMID);
 //        for(String id : tmp) {
-        if (status == 1 && !MapUtils.getInstance().reachedList.contains(id, 1)) {
+
+        if ((status == 1) && isNeedShow(id)) {
             checkedArea(id, 1, null);
             Area area = mapUtils.getArea(id);
             if (area != null) {
@@ -85,6 +98,10 @@ public class GeoReceiver extends BroadcastReceiver {
 
         //test
 //        mapUtils.saveLocalReachedList(null);
+    }
+
+    private boolean isNeedShow(String id){
+        return !MapUtils.getInstance().reachedList.contains(id, 1) || !hasShowedIds.contains(id);
     }
 
     private void searchDisArea(String pid, int level) {
@@ -99,7 +116,7 @@ public class GeoReceiver extends BroadcastReceiver {
         }
     }
 
-    private void sendReachedBoardcast(String id, int level){
+    private void sendReachedBoardcast(String id, int level) {
         Intent intent = new Intent(context.getString(R.string.geo_fence_receiver));
         intent.putExtra(Constants.REACHED_ID, id);
         intent.putExtra(Constants.REACHED_LEVEL, level);
@@ -107,21 +124,25 @@ public class GeoReceiver extends BroadcastReceiver {
     }
 
     private void checkedArea(String id, int level, List<String> disIds) {
-        mapUtils.reachedList.addReachedId(id, level);
-        sendReachedBoardcast(id, level);
-        if (level == 1) {
-            mapUtils.setAreaChecked(id, true);
-            mapUtils.saveLocalReachedList(id);
-        } else {
-            mapUtils.setDisAreaChecked(id, true);
-            mapUtils.showDisArea(id);
-            for (String l1 : disIds) {
-                if (level == 2)
-                    mapUtils.setAreaChecked(l1, false);
-                else
-                    mapUtils.setDisAreaChecked(l1, false);
+        hasShowedIds.add(id);
+        MXPreferenceUtils.getInstance().setString(Constants.SHOWED_ID, new Gson().toJson(hasShowedIds));
+        if (!mapUtils.reachedList.contains(id, level)) {
+            mapUtils.reachedList.addReachedId(id, level);
+            if (level == 1) {
+                mapUtils.setAreaChecked(id, true);
+                mapUtils.saveLocalReachedList(id);
+            } else {
+                mapUtils.setDisAreaChecked(id, true);
+                mapUtils.showDisArea(id);
+                for (String l1 : disIds) {
+                    if (level == 2)
+                        mapUtils.setAreaChecked(l1, false);
+                    else
+                        mapUtils.setDisAreaChecked(l1, false);
+                }
             }
         }
+        sendReachedBoardcast(id, level);
     }
 
     private boolean searchAreaId(List<String> rIds, List<ReachedId> reachedIds, int level) {

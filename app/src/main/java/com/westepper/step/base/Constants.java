@@ -37,6 +37,7 @@ public class Constants {
     public static final String ADDRESS = "address";
     public static final String COMMIT_ID = "commit_id";
     public static final String DISUSER_ID = "disuser_id";
+    public static final String SHOWED_ID = "showed_id";
     public static final int MOOD = 1;
     public static final int OUTGO = 2;
     public static final int FRIEND = 1;

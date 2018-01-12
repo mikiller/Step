@@ -31,6 +31,7 @@ import com.westepper.step.responses.ReachedId;
 import com.westepper.step.responses.ReachedList;
 import com.westepper.step.responses.UserInfo;
 import com.westepper.step.utils.ActivityManager;
+import com.westepper.step.utils.AnimUtils;
 import com.westepper.step.utils.MapUtils;
 import com.westepper.step.utils.PermissionUtils;
 
@@ -179,8 +180,8 @@ public abstract class SuperActivity extends AppCompatActivity {
 
         private void showCongraDlg(String txt, int imgId){
             final CustomDialog dlg = new CustomDialog(SuperActivity.this).setLayoutRes(R.layout.layout_congratulation);
+            dlg.getWindow().setWindowAnimations(R.style.dlg_anim);
             dlg.setCancelable(true);
-
             TextView tv = (TextView) dlg.getCustomView().findViewById(R.id.tv_con_txt);
             tv.setText(txt);
             ImageView iv = (ImageView) dlg.getCustomView().findViewById(R.id.iv_con_icon);
@@ -188,6 +189,7 @@ public abstract class SuperActivity extends AppCompatActivity {
             dlg.getCustomView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+//                    AnimUtils.dlgAlphaAnims(dlg, 1, 0, 300);
                     dlg.dismiss();
                 }
             });
